@@ -62,6 +62,7 @@ public:
 	static aatc_container_vector_tempspec* Factory(){return new aatc_container_vector_tempspec();}
 	static aatc_container_vector_tempspec* Factory_copy(const aatc_container_vector_tempspec& other){return new aatc_container_vector_tempspec(other);}
 	aatc_container_vector_tempspec& operator=(const aatc_container_vector_tempspec& other){ aatc_container_shared_1tp_tempspec::operator=(other); return *this; }
+	aatc_container_vector_tempspec& Swap(aatc_container_vector_tempspec& other){ aatc_container_shared_1tp_tempspec::swap(other); return *this; }
 };
 
 

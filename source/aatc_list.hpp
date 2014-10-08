@@ -63,6 +63,7 @@ public:
 	static aatc_container_list_tempspec* Factory(){return new aatc_container_list_tempspec();}
 	static aatc_container_list_tempspec* Factory_copy(const aatc_container_list_tempspec& other){return new aatc_container_list_tempspec(other);}
 	aatc_container_list_tempspec& operator=(const aatc_container_list_tempspec& other){ aatc_container_shared_1tp_tempspec::operator=(other); return *this; }
+	aatc_container_list_tempspec& Swap(aatc_container_list_tempspec& other){aatc_container_shared_1tp_tempspec::swap(other); return *this;}
 
 	void Remove(const T& value){ aatc_container_shared_1tp_tempspec::remove(value); }
 };

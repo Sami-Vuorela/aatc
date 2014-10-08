@@ -65,6 +65,7 @@ public:
 		return new aatc_container_map_template(other);
 	}
 	aatc_container_map_template& operator=(const aatc_container_map_template& other){ aatc_container_shared_map_template::operator=(other); return *this; }
+	aatc_container_map_template& Swap(aatc_container_map_template& other){ aatc_container_shared_map_template::swap(other); return *this; }
 };
 
 

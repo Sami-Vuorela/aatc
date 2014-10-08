@@ -697,6 +697,9 @@ void aatc_container_shared_1tp_template_Register(asIScriptEngine* engine, const 
 	sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_container_T, n_container_T);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, operator=), asCALL_THISCALL); assert(r >= 0);
 
+	sprintf_s(textbuf, 1000, "%s& swap(%s &in)", n_container_T, n_container_T);
+	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Swap), asCALL_THISCALL); assert(r >= 0);
+
 	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_ADDREF, "void f()", asMETHOD(T_container, refcount_Add), asCALL_THISCALL); assert(r >= 0);
 	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_RELEASE, "void f()", asMETHOD(T_container, refcount_Release), asCALL_THISCALL); assert(r >= 0);
 	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_SETGCFLAG, "void f()", asMETHOD(aatc_refcounted_GC, SetGCFlag), asCALL_THISCALL); assert(r >= 0);

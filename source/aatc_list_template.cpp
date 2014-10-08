@@ -57,6 +57,7 @@ public:
 		return new aatc_container_list_template(other);
 	}
 	aatc_container_list_template& operator=(const aatc_container_list_template& other){ aatc_container_shared_1tp_template::operator=(other); return *this; }
+	aatc_container_list_template& Swap(aatc_container_list_template& other){ aatc_container_shared_1tp_template::swap(other); return *this; }
 
 
 //doxygen skip

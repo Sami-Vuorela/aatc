@@ -728,6 +728,9 @@ template<class T_container> void aatc_container_shared_map_template_Register(asI
 	sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_container_T, n_container_T);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, operator=), asCALL_THISCALL); assert(r >= 0);
 
+	sprintf_s(textbuf, 1000, "%s& swap(%s &in)", n_container_T, n_container_T);
+	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Swap), asCALL_THISCALL); assert(r >= 0);
+
 	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_ADDREF, "void f()", asMETHOD(T_container, refcount_Add), asCALL_THISCALL); assert(r >= 0);
 	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_RELEASE, "void f()", asMETHOD(T_container, refcount_Release), asCALL_THISCALL); assert(r >= 0);
 	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_SETGCFLAG, "void f()", asMETHOD(aatc_refcounted_GC, SetGCFlag), asCALL_THISCALL); assert(r >= 0);
@@ -756,7 +759,7 @@ template<class T_container> void aatc_container_shared_map_template_Register(asI
 	r = engine->RegisterObjectMethod(n_container_T, "bool contains(const T_key&in)", asMETHOD(T_container, Contains_native), asCALL_THISCALL); assert(r >= 0);
 
 	r = engine->RegisterObjectMethod(n_container_T, "T_value& find(const T_key &in)", asMETHODPR(T_container, Find, (void*), const void*), asCALL_THISCALL); assert(r >= 0);
-	r = engine->RegisterObjectMethod(n_container_T, "T_value& find(const T_key &in,bool &out)", asMETHODPR(T_container, Find, (void*,bool&), const void*), asCALL_THISCALL); assert(r >= 0);
+	r = engine->RegisterObjectMethod(n_container_T, "T_value& find(const T_key &in,bool &out)", asMETHODPR(T_container, Find, (void*, bool&), const void*), asCALL_THISCALL); assert(r >= 0);
 }
 
 template<typename T_out, typename T_host> T_out aatc_reghelp_construct_hosted_iterator_map_template(T_host cont){
