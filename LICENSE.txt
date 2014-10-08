@@ -1,0 +1,5 @@
+This library uses the The zlib/libpng License, same thing that Angelscript itself uses.
+
+You can read the license over at
+http://opensource.org/licenses/zlib-license.php
+or in the source files.
