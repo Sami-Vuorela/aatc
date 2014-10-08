@@ -238,4 +238,4 @@ $RECYCLE.BIN/
 doxygen_output/
 
 #angelscript runtime things
-ASDEBUG/
+AS_DEBUG/
