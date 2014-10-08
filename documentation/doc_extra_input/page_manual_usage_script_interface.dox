@@ -1,8 +1,10 @@
 /*! \page page_manual_usage_script_interface Script Interface
-<p>How the containers appear in script.</p>
+<p>Script interfaces of the utilities:</p>
 - \subpage page_manual_usage_si_basics
 - \subpage page_manual_usage_si_iterators
 - \subpage page_manual_usage_si_funcpointer
+\n
+<p>Script interfaces of the containers themselves:</p>
 - \subpage page_manual_usage_si_vector
 - \subpage page_manual_usage_si_list
 - \subpage page_manual_usage_si_set

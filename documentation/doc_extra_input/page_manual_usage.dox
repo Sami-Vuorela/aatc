@@ -1,4 +1,7 @@
 /*! \page page_manual_usage Usage
+<p>This library adds bindings for STL containers, if you don't know how to use the STL containers, you should learn them first here:</p>
+http://www.cplusplus.com/reference/stl/
+\n
 - \subpage page_manual_usage_registration
 - \subpage page_manual_usage_registration_tempspec
 - \subpage page_manual_usage_script_interface
