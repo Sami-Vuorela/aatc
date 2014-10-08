@@ -1,0 +1,36 @@
+/*! \page page_manual_usage_si_vector vector
+\code{.cpp}
+template<typename T> class vector{
+	//default constructor
+	vector();
+	//copy constructor
+	vector(vector &in other);
+	//operator=
+	vector& opAssign(vector &in other);
+	
+	void SetDirectcomp(bool yesno);
+	
+	int size();
+	void clear();
+	bool empty();
+	
+	int count(T &in value);
+	
+	void reserve(int count);
+	
+	void push_back(T &in value);
+	void pop_back();
+	T& back();
+	T& front();
+	
+	void erase(int index);
+	
+	T& opIndex(int index);//operator[]
+	
+	//sort with opCmp
+	void sort(bool ascending = true);
+	//sort with another function
+	void sort(aatc_funcpointer@ func,bool ascending = true)
+};
+\endcode
+*/

@@ -1,0 +1,27 @@
+/*! \page page_manual_usage_si_unordered_map unordered_map
+\code{.cpp}
+template<typename T_key,typename T_value> class unordered_map{
+	//default constructor
+	unordered_map();
+	//copy constructor
+	unordered_map(unordered_map &in other);
+	//operator=
+	unordered_map& opAssign(unordered_map &in other);
+	
+	void SetDirectcomp(bool yesno);
+	
+	int size();
+	void clear();
+	bool empty();
+	
+	void insert(T_key &in key,T_value &in value);
+	void erase(T_key &in key);
+	bool contains(T_key &in key);
+	
+	//find without success notice
+	T_value& find(const T_key &in key);
+	//find with success notice
+	T_value& find(const T_key &in key,bool &out success);
+};
+\endcode
+*/

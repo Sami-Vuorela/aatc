@@ -1,0 +1,101 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="as addons">
+      <UniqueIdentifier>{25b912db-2eee-46ac-8feb-211737a714b9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="test">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="as addons\aatc">
+      <UniqueIdentifier>{18850757-3ca7-4426-ba67-818077540f93}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\as_engine.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\basics.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\main.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_common.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_list_template.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_map_template.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_registration.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_set_template.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_unordered_map_template.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_unordered_set_template.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_vector_template.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\Dev\VC2013\angelscript_2.29.1\add_on\scriptbuilder\scriptbuilder.cpp">
+      <Filter>as addons</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\Dev\VC2013\angelscript_2.29.1\add_on\scriptstdstring\scriptstdstring.cpp">
+      <Filter>as addons</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\as_engine.hpp">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\basics.hpp">
+      <Filter>test</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_common.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_config.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_list.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_set.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_shared_map_template.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_shared_template.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_shared_tempspec.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_unordered_set.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_vector.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>

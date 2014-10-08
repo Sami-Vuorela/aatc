@@ -1,0 +1,34 @@
+/*! \page page_manual_usage_si_list list
+\code{.cpp}
+template<typename T> class list{
+	//default constructor
+	list();
+	//copy constructor
+	list(list &in other);
+	//operator=
+	list& opAssign(list &in other);
+	
+	void SetDirectcomp(bool yesno);
+	
+	int size();
+	void clear();
+	bool empty();
+	
+	int count(T &in value);
+	
+	void push_back(T &in value);
+	void push_front(T &in value);
+	void pop_back();
+	void pop_front();
+	T& back();
+	T& front();
+	
+	void remove(T &in value);
+	
+	//sort with opCmp
+	void sort(bool ascending = true);
+	//sort with another function
+	void sort(aatc_funcpointer@ func,bool ascending = true)
+};
+\endcode
+*/

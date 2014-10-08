@@ -1,0 +1,22 @@
+/*! \page page_manual_usage_si_unordered_set unordered_set
+\code{.cpp}
+template<typename T> class unordered_set{
+	//default constructor
+	unordered_set();
+	//copy constructor
+	unordered_set(unordered_set &in other);
+	//operator=
+	unordered_set& opAssign(unordered_set &in other);
+	
+	void SetDirectcomp(bool yesno);
+	
+	int size();
+	void clear();
+	bool empty();
+	
+	void insert(T &in value);
+	void erase(T &in value);
+	bool contains(T &in value);
+};
+\endcode
+*/

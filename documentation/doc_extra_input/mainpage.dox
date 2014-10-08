@@ -1,0 +1,32 @@
+/*! \mainpage Manual
+<p>Angelscript addon: Template containers brings your old c++ friends, the STL containers to angelscript with quite a friendly and powerful interface.</p>
+
+<p>These container types are provided:</p>
+- vector
+- list
+- set
+- unordered_set
+- map
+- unordered_map
+
+<p>All containers can store primitives, objects or handles.</p>
+<p>You can make template specializations of containers of your favourite c++ classes for extra performance.</p>
+<p>Most function names are the same as in STL containers.</p>
+<p>Easy to install and use, like the rest of the angelscript addons.</p>
+\par You can customize much in the config file (aatc_config.hpp):
+- The names of containers and functions in script
+- Exception messages and their formatting
+- Actual c++ implementation types (maybe you want to use boost containers?)
+- Disable runtime error checking for 1% more performance and embrace the crashes!
+
+\n
+\n
+\n
+
+<p>Check out this manual for:</p>
+- \subpage page_manual_requirements
+- \subpage page_manual_installation
+- \subpage page_manual_usage
+<p>The actual doxygen class list on the left probably isn't very useful because it only tells you about the c++ implementation, which is an abomination made up of templates of templates of stl templates. If you are looking for the script interface, you can find it here \ref page_manual_usage_script_interface</p>
+
+*/

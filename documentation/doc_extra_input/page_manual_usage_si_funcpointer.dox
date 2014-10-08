@@ -1,0 +1,106 @@
+/*! \page page_manual_usage_si_funcpointer aatc_funcpointer
+<p>aatc_funcpointer is used to pass a function name from script to host. It is a ref object. Right now its only used by vector::sort and list::sort, but you can use it for whatever you like. Right now container template specializations cant be sorted with a function pointer.</p>
+
+<p>aatc_funcpointer script interface:</p>
+\code{.cpp}
+	class aatc_funcpointer{
+		//default constructor
+		aatc_funcpointer();
+		
+		bool ready;
+		bool is_thiscall;
+		string funcname;
+		
+		//set to global function
+		bool Set(string funcname);
+		//set to method of an object, object must be passed in a handle, not a value
+		bool Set(string funcname, ?&in any_object);
+		
+		//used to call the function from script, you cant set any parameters from script side yet.
+		void Call();
+	};
+\endcode
+\n
+\par Examples
+<p>Example of sorting a vector with a global function:</p>
+\code{.cpp}
+
+class Material{
+	string name;
+	Material(string _name){
+		name = _name;
+	}
+};
+
+int global_comp(Material &in lhs,Material &in rhs){
+	if(lhs.name < rhs.name){return -1;}
+	if(lhs.name > rhs.name){return 1;}
+	return 0;
+}
+
+void main(){
+	vector<Material> cont;
+	cont.push_back(Material("stone"));
+	cont.push_back(Material("wood"));
+	cont.push_back(Material("aluminium"));
+		
+	aatc_funcpointer func;
+	func.Set("global_comp");
+	
+	cont.sort(func);
+	
+	for(vector_iterator<Material> it(@cont);it++;){
+		Print("content = "+it.current().name);
+	}
+}
+\endcode
+<p>Prints:</p>
+\code{.cpp}
+content = aluminium
+content = stone
+content = wood
+\endcode
+\n
+<p>Example of sorting a list with a method:</p>
+\code{.cpp}
+
+class Material{
+	string name;
+	Material(string _name){
+		name = _name;
+	}
+};
+
+class Comparizorr{
+	int method_comp(Material &in lhs,Material &in rhs){
+		if(lhs.name < rhs.name){return -1;}
+		if(lhs.name > rhs.name){return 1;}
+		return 0;
+	}
+}
+
+void main(){
+	list<Material> cont;
+	cont.push_back(Material("hard rock"));
+	cont.push_back(Material("heavy metal"));
+	cont.push_back(Material("black metal"));
+		
+	Comparizorr compa;
+	
+	aatc_funcpointer func;
+	func.Set("method_comp",@compa);//remember that @@@
+	
+	cont.sort(func);
+	
+	for(list_iterator<Material> it(@cont);it++;){
+		Print("content = "+it.current().name);
+	}
+}
+\endcode
+<p>Prints:</p>
+\code{.cpp}
+content = black metal
+content = hard rock
+content = heavy metal
+\endcode
+*/
