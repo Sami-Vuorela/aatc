@@ -93,18 +93,40 @@ namespace as = AngelScript;
 //this number was used by boost, so it must be legit
 #define aatc_CONFIG_DEFAULT_CONTAINER_UNORDERED_SET_DEFAULTBUCKETCOUNT 11
 #define aatc_CONFIG_DEFAULT_CONTAINER_UNORDERED_MAP_DEFAULTBUCKETCOUNT 11
-
-
-
-
-
 #define aatc_engine_userdata_id 8899
+
+
+
 #define aatc_name_script_container_vector "vector"
 #define aatc_name_script_container_list "list"
 #define aatc_name_script_container_set "set"
 #define aatc_name_script_container_unordered_set "unordered_set"
 #define aatc_name_script_container_map "map"
 #define aatc_name_script_container_unordered_map "unordered_map"
+
+#define aatc_name_script_container_method_set_directcomp "SetDirectcomp"
+#define aatc_name_script_container_method_clear "clear"
+#define aatc_name_script_container_method_size "size"
+#define aatc_name_script_container_method_count "count"
+#define aatc_name_script_container_method_empty "empty"
+#define aatc_name_script_container_method_swap "swap"
+#define aatc_name_script_container_method_front "front"
+#define aatc_name_script_container_method_back "back"
+#define aatc_name_script_container_method_push_front "push_front"
+#define aatc_name_script_container_method_push_back "push_back"
+#define aatc_name_script_container_method_pop_front "pop_front"
+#define aatc_name_script_container_method_pop_back "pop_back"
+#define aatc_name_script_container_method_reserve "reserve"
+#define aatc_name_script_container_method_insert "insert"
+#define aatc_name_script_container_method_erase "erase"
+#define aatc_name_script_container_method_sort "sort"
+#define aatc_name_script_container_method_contains "contains"
+#define aatc_name_script_container_method_find "find"
+#define aatc_name_script_container_method_erase_index "erase_index"
+#define aatc_name_script_container_method_erase_value "erase_value"
+#define aatc_name_script_container_method_insert_index_before "insert_index_before"
+#define aatc_name_script_container_method_insert_index_after "insert_index_after"
+
 #define aatc_name_script_iterator "_iterator"
 #define aatc_name_script_funcpointer "aatc_funcpointer"
 #define aatc_name_script_requiredmethod_hash "hash"
@@ -223,21 +245,6 @@ enum aatc_CONTAINERTYPE{
 	DEQUEUE,
 	STACK,
 	aatc_CONTAINERTYPE_COUNT
-};
-
-/*
-	Enum listing the different container operations
-	that require script functions to be called.
-	Used mostly for error checking.
-*/
-enum aatc_CONTAINER_OPERATION{
-	COUNT,
-	ERASE_VALUE,
-	INSERT,
-	SORT,
-	CONTAINS_NATIVE,
-	REMOVE,
-	FIND
 };
 
 

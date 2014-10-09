@@ -49,6 +49,9 @@ BEGIN_AS_NAMESPACE
 #define aatc_container_vector_needfunc_SORT_NATIVE 0
 #define aatc_container_vector_needfunc_SORT_GENERIC 1
 #define aatc_container_vector_needfunc_CONTAINS_NATIVE 0
+#define aatc_container_vector_needfunc_ERASE_GENERIC_INDEX aatc_Y
+#define aatc_container_vector_needfunc_ERASE_GENERIC_VALUE 1
+#define aatc_container_vector_needfunc_INSERT_GENERIC_INDEX aatc_Y
 
 /*!\brief Actual class used for template specializations defined in c++.*/
 template<class T> class aatc_container_vector_tempspec : public aatc_container_shared_1tp_tempspec<aatc_acit_vector<T>, T>{
@@ -99,13 +102,19 @@ template<
 		aatc_container_vector_needfunc_INSERT,
 		aatc_container_vector_needfunc_SORT_NATIVE,
 		aatc_container_vector_needfunc_SORT_GENERIC,
-		aatc_container_vector_needfunc_CONTAINS_NATIVE>
-	(engine, aatc_name_script_container_vector, n_content);
+		aatc_container_vector_needfunc_CONTAINS_NATIVE,
+		aatc_container_vector_needfunc_ERASE_GENERIC_INDEX,
+		aatc_container_vector_needfunc_ERASE_GENERIC_VALUE,
+		aatc_container_vector_needfunc_INSERT_GENERIC_INDEX
+	>(engine, aatc_name_script_container_vector, n_content);
 
 	aect_iterator_shared_tempspec<dt_container, dt_content>::Register<aatc_Y, aatc_N>(engine, n_iterator, n_content, n_containerTcontentT);
 
 	sprintf_s(textbuf, 1000, "%s begin()", n_iterator);
 	r = engine->RegisterObjectMethod(n_containerTcontentT, textbuf, asFunctionPtr(aatc_reghelp_construct_hosted<aect_iterator_shared_tempspec<dt_container, dt_content>, dt_container*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+
+	//sprintf_s(textbuf, 1000, "void erase(%s)", aatc_name_script_sizetype);
+	//r = engine->RegisterObjectMethod(n_containerTcontentT, textbuf, asMETHOD(dt_container, Erase_generic_index<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 }
 
 END_AS_NAMESPACE

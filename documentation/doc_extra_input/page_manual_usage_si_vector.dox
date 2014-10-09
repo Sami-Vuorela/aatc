@@ -23,7 +23,11 @@ template<typename T> class vector{
 	T& back();
 	T& front();
 	
-	void erase(int index);
+	void insert_index_before(int index,const T &in value);
+	
+	void erase_index(int index);
+	void erase_index(int index_range_begin,int index_range_end);
+	void erase_value(const T &in value,bool all = false);
 	
 	T& opIndex(int index);//operator[]
 	

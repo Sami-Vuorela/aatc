@@ -184,8 +184,11 @@ template<> void aatc_register_container<aatc_CONTAINERTYPE::LIST>(asIScriptEngin
 		aatc_container_list_needfunc_INSERT,
 		aatc_container_list_needfunc_SORT_NATIVE,
 		aatc_container_list_needfunc_SORT_GENERIC,
-		aatc_container_list_needfunc_CONTAINS_NATIVE>
-	(engine, aatc_name_script_container_list);
+		aatc_container_list_needfunc_CONTAINS_NATIVE,
+		aatc_container_list_needfunc_ERASE_GENERIC_INDEX,
+		aatc_container_list_needfunc_ERASE_GENERIC_VALUE,
+		aatc_container_list_needfunc_INSERT_GENERIC_INDEX
+	>(engine, aatc_name_script_container_list);
 
 	aect_iterator_shared_template<aatc_container_list_template>::Register(engine, n_iterator, n_container_T);
 

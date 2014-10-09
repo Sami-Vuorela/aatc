@@ -239,3 +239,6 @@ doxygen_output/
 
 #angelscript runtime things
 AS_DEBUG/
+
+#whatever this is
+*.exp

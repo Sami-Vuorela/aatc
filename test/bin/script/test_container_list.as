@@ -6,7 +6,7 @@ void TestContainer_list(){
 		for(int i=0; i<5;i++){
 			cont.push_back(i*10);
 		}
-		cont.remove(30);
+		cont.erase_value(30);
 		cont.sort(false);
 		cont.pop_front();
 		cont.pop_back();
@@ -39,7 +39,7 @@ void TestContainer_list(){
 		for(int i=0; i<5;i++){
 			cont.push_back("Xx"+i*10+"xX");
 		}
-		cont.remove("Xx30xX");
+		cont.erase_value("Xx30xX");
 		cont.sort(false);
 		cont.pop_front();
 		cont.pop_back();
@@ -72,7 +72,7 @@ void TestContainer_list(){
 		for(int i=0; i<5;i++){
 			cont.push_back(Material("Xx"+i*10+"xX",i));
 		}
-		cont.remove(Material("Xx30xX",0));
+		cont.erase_value(Material("Xx30xX",0));
 		cont.sort(false);
 		cont.pop_front();
 		cont.pop_back();
@@ -129,10 +129,10 @@ void TestContainer_list(){
 			cont.push_back(m4);
 			
 			if(first){
-				cont.remove(Material("Xx30xX",0));
+				cont.erase_value(Material("Xx30xX",0));
 				cont.sort(false);
 			}else{
-				cont.remove(m3);
+				cont.erase_value(m3);
 			}
 			cont.pop_front();
 			cont.pop_back();

@@ -50,6 +50,9 @@ BEGIN_AS_NAMESPACE
 #define aatc_container_list_needfunc_SORT_NATIVE 1
 #define aatc_container_list_needfunc_SORT_GENERIC 0
 #define aatc_container_list_needfunc_CONTAINS_NATIVE 0
+#define aatc_container_list_needfunc_ERASE_GENERIC_INDEX aatc_N
+#define aatc_container_list_needfunc_ERASE_GENERIC_VALUE 1
+#define aatc_container_list_needfunc_INSERT_GENERIC_INDEX aatc_N
 
 /*!\brief Actual class used for template specializations defined in c++.*/
 template<class T> class aatc_container_list_tempspec : public aatc_container_shared_1tp_tempspec<aatc_acit_list<T>,T>{
@@ -98,8 +101,11 @@ template<class dt_content, bool GOTFUNC_EQUALS = 1, bool GOTFUNC_LESS = 1, bool 
 		aatc_container_list_needfunc_INSERT,
 		aatc_container_list_needfunc_SORT_NATIVE,
 		aatc_container_list_needfunc_SORT_GENERIC,
-		aatc_container_list_needfunc_CONTAINS_NATIVE>
-	(engine, aatc_name_script_container_list, n_content);
+		aatc_container_list_needfunc_CONTAINS_NATIVE,
+		aatc_container_list_needfunc_ERASE_GENERIC_INDEX,
+		aatc_container_list_needfunc_ERASE_GENERIC_VALUE,
+		aatc_container_list_needfunc_INSERT_GENERIC_INDEX
+	>(engine, aatc_name_script_container_list, n_content);
 
 	{//container type specific functions
 		sprintf_s(textbuf,1000, "void remove(const %s &in)", n_content);

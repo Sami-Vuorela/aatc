@@ -87,13 +87,19 @@ template<> void aatc_register_container<aatc_CONTAINERTYPE::VECTOR>(asIScriptEng
 		aatc_container_vector_needfunc_INSERT,
 		aatc_container_vector_needfunc_SORT_NATIVE,
 		aatc_container_vector_needfunc_SORT_GENERIC,
-		aatc_container_vector_needfunc_CONTAINS_NATIVE>
-	(engine, aatc_name_script_container_vector);
+		aatc_container_vector_needfunc_CONTAINS_NATIVE,
+		aatc_container_vector_needfunc_ERASE_GENERIC_INDEX,
+		aatc_container_vector_needfunc_ERASE_GENERIC_VALUE,
+		aatc_container_vector_needfunc_INSERT_GENERIC_INDEX
+	>(engine, aatc_name_script_container_vector);
 
 	aect_iterator_shared_template<aatc_container_vector_template>::Register(engine, n_iterator, n_container_T);
 
 	sprintf_s(textbuf, 1000, "%s begin()", n_iterator_TT);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asFunctionPtr(aatc_reghelp_construct_hosted_iterator_template<aect_iterator_shared_template<aatc_container_vector_template>, aatc_container_vector_template*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+
+	//sprintf_s(textbuf, 1000, "void erase(%s)", aatc_name_script_sizetype);
+	//r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_vector_template, Erase_generic_index<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 }
 
 template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::VECTOR>(aatc_template_specific_storage* tss){

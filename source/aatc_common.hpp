@@ -136,6 +136,22 @@ BEGIN_AS_NAMESPACE
 	#endif
 
 
+/*
+	Enum listing the different container operations
+	that require script functions to be called.
+	Used mostly for error checking.
+*/
+enum aatc_CONTAINER_OPERATION{
+	COUNT,
+	ERASE_VALUE,
+	INSERT,
+	SORT,
+	CONTAINS_NATIVE,
+	REMOVE,
+	FIND,
+	ERASE_GENERIC_VALUE
+};
+
 typedef aatc_type_uint32 aatc_container_operations_bitmask_type;
 
 class aatc_template_specific_storage;
@@ -338,6 +354,8 @@ public:
 class aatc_Y{};
 /*!\brief Dummy class. Only the name is used for template black majicks*/
 class aatc_N{};
+/*!\brief Dummy class. Only the name is used for template black majicks*/
+class aatc_NULLCLASS{};
 
 
 

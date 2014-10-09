@@ -100,6 +100,8 @@ template<class T_container, int T_CONTAINERTYPEID, class bcw = aatc_bcw_basic<T_
 																																		public aatc_containerfunctor_Settings
 {
 public:
+	typename typedef T_container::iterator iteratortype;
+
 	//typename typedef std::conditional<NEED_COMPHELPER, aatc_bcw_comphelper<T_container>, aatc_bcw_basic<T_container>>::type bct;
 	//typename typedef bcw bct;
 
@@ -247,6 +249,13 @@ public:
 			engine->AddRefScriptObject(*target, objtype_content);
 		}
 	}
+	void* StoreHandle2(void* ptr_to_handle){
+		void* result = *(void**)ptr_to_handle;
+		if(handlemode_needref){
+			engine->AddRefScriptObject(result, objtype_content);
+		}
+		return result;
+	}
 	void ReleaseHandle(void* handle){
 		if (handlemode_needref){
 			engine->ReleaseScriptObject(handle, objtype_content);
@@ -284,7 +293,7 @@ public:
 					cc->SetObject(value);
 					cc->SetArgObject(0, *it);
 					cc->Execute();
-					count += (cc->GetReturnByte() == 0);
+					count += (cc->GetReturnDWord() == 0);
 				}
 			}
 			els->contextcache_Return(cc);
@@ -349,23 +358,25 @@ public:
 	}
 	template<class T_cond> static void Register_func_back_write(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
 	template<> static void Register_func_back_write<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
-		r = engine->RegisterObjectMethod(n_container_T, "void push_back(const T&in)", asMETHOD(aatc_container_shared_1tp_template, Push_Back<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
-		r = engine->RegisterObjectMethod(n_container_T, "void pop_back()", asMETHOD(aatc_container_shared_1tp_template, Pop_Back<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "void %s(const T&in)", aatc_name_script_container_method_push_back);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Push_Back<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "void %s()", aatc_name_script_container_method_pop_back);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Pop_Back<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 	}
 
 	template<class T> void* Back(){}
 	template<> void* Back<aatc_Y>(){
-		aatc_errorcheck_container_access_empty_retnull(objtype_container->GetName(), objtype_content->GetName(), "back")
+		aatc_errorcheck_container_access_empty_retnull(objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_back)
 		if (handlemode){
 			return &(back());//return pointer to handle
-		}
-		else{
+		}else{
 			return back();//return copy of pointer to object
 		}
 	}
 	template<class T_cond> static void Register_func_back_read(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
 	template<> static void Register_func_back_read<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
-		r = engine->RegisterObjectMethod(n_container_T, "T& back()", asMETHOD(aatc_container_shared_1tp_template, Back<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "T& %s()", aatc_name_script_container_method_back);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Back<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 	}
 
 	template<class T> void Push_Front(void* value){}
@@ -374,29 +385,29 @@ public:
 		if (handlemode){
 			push_front(NULL);
 			StoreHandle(&front(), value);
-		}
-		else{
+		}else{
 			push_front(engine->CreateScriptObjectCopy(value, objtype_content));
 		}
 	}
 	template<> void Pop_Front<aatc_Y>(){
 		if (handlemode){
 			ReleaseHandle(front());
-		}
-		else{
+		}else{
 			engine->ReleaseScriptObject(front(), objtype_content);
 		}
 		pop_front();
 	}
 	template<class T_cond> static void Register_func_front_write(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
 	template<> static void Register_func_front_write<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
-		r = engine->RegisterObjectMethod(n_container_T, "void push_front(const T&in)", asMETHOD(aatc_container_shared_1tp_template, Push_Front<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
-		r = engine->RegisterObjectMethod(n_container_T, "void pop_front()", asMETHOD(aatc_container_shared_1tp_template, Pop_Front<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "void %s(const T&in)", aatc_name_script_container_method_push_front);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Push_Front<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "void %s()", aatc_name_script_container_method_pop_front);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Pop_Front<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 	}
 
 	template<class T> void* Front(){}
 	template<> void* Front<aatc_Y>(){
-		aatc_errorcheck_container_access_empty_retnull(objtype_container->GetName(), objtype_content->GetName(), "front")
+		aatc_errorcheck_container_access_empty_retnull(objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_front)
 		if (handlemode){
 			return &(front());//return pointer to handle
 		}else{
@@ -405,36 +416,37 @@ public:
 	}
 	template<class T_cond> static void Register_func_front_read(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
 	template<> static void Register_func_front_read<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
-		r = engine->RegisterObjectMethod(n_container_T, "T& front()", asMETHOD(aatc_container_shared_1tp_template, Front<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "T& %s()", aatc_name_script_container_method_front);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Front<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 	}
 
-	template<class T> void Erase_position(int position){}
-	template<> void Erase_position<aatc_Y>(int position){
-		aatc_errorcheck_container_access_empty_retvoid(objtype_container->GetName(), objtype_content->GetName(), "erase_position")
-		if ((position > -1) && (position < T_container::size())){
-			T_container::iterator ii = T_container::begin() + position;
+	//template<class T> void Erase_position(int position){}
+	//template<> void Erase_position<aatc_Y>(int position){
+	//	aatc_errorcheck_container_access_empty_retvoid(objtype_container->GetName(), objtype_content->GetName(), "erase_position")
+	//	if ((position > -1) && (position < T_container::size())){
+	//		T_container::iterator ii = T_container::begin() + position;
 
-			if (handlemode){
-				ReleaseHandle(*ii);
-			}
-			else{
-				engine->ReleaseScriptObject(*ii, objtype_content);
-			}
+	//		if (handlemode){
+	//			ReleaseHandle(*ii);
+	//		}
+	//		else{
+	//			engine->ReleaseScriptObject(*ii, objtype_content);
+	//		}
 
-			T_container::erase(ii);
-		}
-	}
-	template<class T_cond> static void Register_func_erase_position(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
-	template<> static void Register_func_erase_position<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
-		sprintf_s(textbuf,1000, "void erase(%s)", aatc_name_script_sizetype);
-		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Erase_position<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
-	}
+	//		T_container::erase(ii);
+	//	}
+	//}
+	//template<class T_cond> static void Register_func_erase_position(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
+	//template<> static void Register_func_erase_position<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
+	//	sprintf_s(textbuf,1000, "void erase(%s)", aatc_name_script_sizetype);
+	//	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Erase_position<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+	//}
 
 	template<class T> void Erase_value(void* value){}
 	template<> void Erase_value<aatc_Y>(void* value){
 		if (handlemode){
 			if(!handlemode_directcomp){
-				aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::ERASE_VALUE, objtype_container->GetName(), objtype_content->GetName(), "erase")
+				aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::ERASE_VALUE, objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_erase)
 			}
 			T_container::iterator it = T_container::find(*(void**)value);
 			if (it != T_container::end()){
@@ -442,7 +454,7 @@ public:
 				T_container::erase(it);
 			}
 		} else{
-			aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::ERASE_VALUE, objtype_container->GetName(), objtype_content->GetName(), "erase")
+			aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::ERASE_VALUE, objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_erase)
 
 			T_container::iterator it = T_container::find(value);
 			if (it != T_container::end()){
@@ -454,7 +466,8 @@ public:
 	}
 	template<class T_cond> static void Register_func_erase_value(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
 	template<> static void Register_func_erase_value<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
-		r = engine->RegisterObjectMethod(n_container_T, "void erase(const T&in)", asMETHOD(aatc_container_shared_1tp_template, Erase_value<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "void %s(const T&in)", aatc_name_script_container_method_erase);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Erase_value<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 	}
 
 	template<class T> void* op_index(int index){}
@@ -478,7 +491,7 @@ public:
 	}
 	template<class T_cond> static void Register_func_reserve(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
 	template<> static void Register_func_reserve<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
-		sprintf_s(textbuf, 1000, "void reserve(%s)", aatc_name_script_sizetype);
+		sprintf_s(textbuf, 1000, "void %s(%s)", aatc_name_script_container_method_reserve, aatc_name_script_sizetype);
 		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Reserve<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 	}
 
@@ -486,14 +499,14 @@ public:
 	template<> void Insert<aatc_Y>(void* value){
 		if (handlemode){
 			if(!handlemode_directcomp){
-				aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::INSERT, objtype_container->GetName(), objtype_content->GetName(), "insert")
+				aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::INSERT, objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_insert)
 			}
 			std::pair<T_container::iterator, bool> rr = T_container::insert(*(void**)value);
 			if (rr.second){
 				StoreHandle((void**)&(*rr.first), value);
 			}
 		}else{
-			aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::INSERT, objtype_container->GetName(), objtype_content->GetName(), "insert")
+			aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::INSERT, objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_insert)
 
 			T_container::iterator it = T_container::find(value);
 			if (it == T_container::end()){
@@ -503,7 +516,8 @@ public:
 	}
 	template<class T_cond> static void Register_func_insert(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
 	template<> static void Register_func_insert<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
-		r = engine->RegisterObjectMethod(n_container_T, "void insert(const T&in)", asMETHOD(aatc_container_shared_1tp_template, Insert<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "void %s(const T&in)", aatc_name_script_container_method_insert);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Insert<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 	}
 
 
@@ -586,7 +600,7 @@ public:
 			return;
 		}
 
-		aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::SORT, objtype_container->GetName(), objtype_content->GetName(), "sort")
+		aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::SORT, objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_sort)
 
 		//_Sort_shared<T_is_native>(ascending);
 
@@ -613,7 +627,7 @@ public:
 			return;
 		}
 
-		aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::SORT, objtype_container->GetName(), objtype_content->GetName(), "sort")
+		aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::SORT, objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_sort)
 
 		//_Sort_shared<T_is_native>(ascending);
 
@@ -633,22 +647,24 @@ public:
 
 	template<class T_cond> static void Register_func_sort_native(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
 	template<> static void Register_func_sort_native<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
-		r = engine->RegisterObjectMethod(n_container_T, "void sort(bool ascending = true)", asMETHOD(aatc_container_shared_1tp_template, Sort<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
-		sprintf_s(textbuf, 1000, "void sort(%s@,bool ascending = true)", aatc_name_script_funcpointer);
+		sprintf_s(textbuf, 1000, "void %s(bool ascending = true)", aatc_name_script_container_method_sort);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Sort<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "void %s(%s@,bool ascending = true)", aatc_name_script_container_method_sort, aatc_name_script_funcpointer);
 		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Sort_custom<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 	}
 
 	template<class T_cond> static void Register_func_sort_generic(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
 	template<> static void Register_func_sort_generic<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
-		r = engine->RegisterObjectMethod(n_container_T, "void sort(bool ascending = true)", asMETHOD(aatc_container_shared_1tp_template, Sort<aatc_N>), asCALL_THISCALL); assert(r >= 0);
-		sprintf_s(textbuf, 1000, "void sort(%s@,bool ascending = true)", aatc_name_script_funcpointer);
+		sprintf_s(textbuf, 1000, "void %s(bool ascending = true)", aatc_name_script_container_method_sort);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Sort<aatc_N>), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "void %s(%s@,bool ascending = true)", aatc_name_script_container_method_sort, aatc_name_script_funcpointer);
 		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Sort_custom<aatc_N>), asCALL_THISCALL); assert(r >= 0);
 	}
 
 	template<class T> bool Contains_native(void* value){}
 	template<> bool Contains_native<aatc_Y>(void* value){
 		if(!handlemode_directcomp){
-			aatc_errorcheck_container_missingfunctions_operation_retnull(aatc_CONTAINER_OPERATION::CONTAINS_NATIVE, objtype_container->GetName(), objtype_content->GetName(), "contains")
+			aatc_errorcheck_container_missingfunctions_operation_retnull(aatc_CONTAINER_OPERATION::CONTAINS_NATIVE, objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_contains)
 		}
 		if(handlemode){ value = *(void**)value; }
 
@@ -656,10 +672,186 @@ public:
 		return it != T_container::end();
 	}
 	template<class T_cond> static void Register_func_contains_native(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
-		r = engine->RegisterObjectMethod(n_container_T, "bool contains(const T&in)", asMETHOD(aatc_container_shared_1tp_template, Contains_generic), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "bool %s(const T&in)", aatc_name_script_container_method_contains);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Contains_generic), asCALL_THISCALL); assert(r >= 0);
 	}
 	template<> static void Register_func_contains_native<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
-		r = engine->RegisterObjectMethod(n_container_T, "bool contains(const T&in)", asMETHOD(aatc_container_shared_1tp_template, Contains_native<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "bool %s(const T&in)", aatc_name_script_container_method_contains);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Contains_native<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+	}
+
+
+
+
+
+	//doxygen skip
+	#ifndef DOXYGEN_SHOULD_SKIP_THIS
+	private:
+		template<typename T_is_native> class _functor_iterator_setindex{};
+		//native (vector)
+		template<> class _functor_iterator_setindex<aatc_Y>{
+		public:
+			void operator()(iteratortype& ii, std::size_t index){
+				ii += index;
+			}
+		};
+		//generic (list)
+		template<> class _functor_iterator_setindex<aatc_N>{
+		public:
+			void operator()(iteratortype& ii, std::size_t index){
+				for(int i = 0; i < index; i++){
+					ii++;
+				}
+			}
+		};
+	public:
+	#endif
+	//doxygen skip
+
+	template<class T_is_native> void Insert_generic_index_before(int index, void* value){
+		if((index > -1) && (index <= T_container::size())){
+			T_container::iterator ii = T_container::begin();
+			{_functor_iterator_setindex<T_is_native> ff; ff(ii, index); }
+
+			if(handlemode){
+				insert(ii, StoreHandle2(value));
+			} else{
+				insert(ii,engine->CreateScriptObjectCopy(value, objtype_content));
+			}
+		}
+	}
+
+	template<class T_is_native> static void Register_func_insert_generic_index(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
+		sprintf_s(textbuf, 1000, "void %s(%s,const T &in)", aatc_name_script_container_method_insert_index_before, aatc_name_script_sizetype);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Insert_generic_index_before<T_is_native>), asCALL_THISCALL); assert(r >= 0);
+	}
+	template<> static void Register_func_insert_generic_index<aatc_NULLCLASS>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
+
+
+	template<class T_is_native> void Erase_generic_index(int position){
+		if((position > -1) && (position < T_container::size())){
+			T_container::iterator ii = T_container::begin();
+
+			{_functor_iterator_setindex<T_is_native> ff; ff(ii, position); }
+
+			if(handlemode){
+				ReleaseHandle(*ii);
+			} else{
+				engine->ReleaseScriptObject(*ii, objtype_content);
+			}
+
+			T_container::erase(ii);
+		}
+	}
+
+	template<class T_is_native> void Erase_generic_index_range(int range_index_begin, int range_index_end){
+		if((range_index_begin > -1) && (range_index_begin < T_container::size())){
+			if((range_index_end > -1) && (range_index_end < T_container::size())){
+				T_container::iterator ii_range_begin = T_container::begin();
+				T_container::iterator ii_range_end = T_container::begin();
+
+				{_functor_iterator_setindex<T_is_native> ff; ff(ii_range_begin, range_index_begin); }
+				{_functor_iterator_setindex<T_is_native> ff; ff(ii_range_end, range_index_end); }
+
+				{
+					T_container::iterator iii = ii_range_begin;
+
+					for(; iii != ii_range_end; iii++){
+						engine->ReleaseScriptObject(*iii, objtype_content);
+					}
+				}
+				
+				T_container::erase(ii_range_begin, ii_range_end);
+			}
+		}
+	}
+
+	template<class T_is_native> static void Register_func_erase_generic_index(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
+		sprintf_s(textbuf, 1000, "void %s(%s)", aatc_name_script_container_method_erase_index, aatc_name_script_sizetype);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Erase_generic_index<T_is_native>), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "void %s(%s,%s)", aatc_name_script_container_method_erase_index, aatc_name_script_sizetype, aatc_name_script_sizetype);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Erase_generic_index_range<T_is_native>), asCALL_THISCALL); assert(r >= 0);
+	}
+	template<> static void Register_func_erase_generic_index<aatc_NULLCLASS>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
+
+
+
+	template<class T_existence> void Erase_generic_value(void* value, bool all){
+		if(handlemode){ value = *(void**)value; }
+
+		if(handlemode_directcomp){
+			bool continuu = 1;
+			while(continuu){
+				continuu = 0;
+				bool found = 0;
+
+				T_container::iterator it = T_container::begin();
+				T_container::iterator itend = T_container::end();
+
+				for(; it != itend; it++){
+					if(*it == value){
+						found = 1;
+						engine->ReleaseScriptObject(*it, objtype_content);
+						T_container::erase(it);
+						break;
+					}
+				}
+				if(empty()){ break; }
+
+				if(found && all){ continuu = 1; }
+			}
+		} else{
+			aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::ERASE_GENERIC_VALUE, objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_erase_value)
+
+			asIScriptContext* cc = els->contextcache_Get();
+
+			asIScriptFunction* func = func_cmp;
+			if(func_equals){ func = func_equals; }
+
+			bool continuu = 1;
+			while(continuu){
+				continuu = 0;
+				bool found = 0;
+
+				T_container::iterator it = T_container::begin();
+				T_container::iterator itend = T_container::end();
+
+				for(; it != itend; it++){
+					cc->Prepare(func);
+					cc->SetObject(value);
+					cc->SetArgObject(0, *it);
+					cc->Execute();
+
+					if(func_equals){
+						if(cc->GetReturnByte()){found = 1;}
+					} else{
+						if(cc->GetReturnDWord() == 0){ found = 1; }
+					}
+					if(found){
+						found = 1;
+						engine->ReleaseScriptObject(*it, objtype_content);
+						T_container::erase(it);
+						break;
+					}
+				}
+				if(empty()){ break; }
+
+				if(found && all){ continuu = 1; }
+			}
+
+			els->contextcache_Return(cc);
+		}
+	}
+	template<class T_existence> void Erase_generic_value(void* value){Erase_generic_value<T_existence>(value, 0);}
+
+	template<class T_existence> static void Register_func_erase_generic_value(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
+	template<> static void Register_func_erase_generic_value<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
+		//sprintf_s(textbuf, 1000, "void %s(const T &in value,bool all = false)", aatc_name_script_container_method_erase_value, aatc_name_script_sizetype);
+		//r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Erase_generic_value<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "void %s(const T &in value,bool all)", aatc_name_script_container_method_erase_value, aatc_name_script_sizetype);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHODPR(aatc_container_shared_1tp_template, Erase_generic_value<aatc_Y>, (void*, bool), void), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "void %s(const T &in value)", aatc_name_script_container_method_erase_value, aatc_name_script_sizetype);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHODPR(aatc_container_shared_1tp_template, Erase_generic_value<aatc_Y>, (void*), void), asCALL_THISCALL); assert(r >= 0);
 	}
 };
 
@@ -676,7 +868,11 @@ template<class T_container,
 	bool cond_NEEDFUNC_INSERT = 0,
 	bool cond_NEEDFUNC_SORT_NATIVE = 0,
 	bool cond_NEEDFUNC_SORT_GENERIC = 0,
-	bool cond_NEEDFUNC_CONTAINS_NATIVE = 0>
+	bool cond_NEEDFUNC_CONTAINS_NATIVE = 0,
+	typename cond_NEEDFUNC_ERASE_GENERIC_INDEX = aatc_NULLCLASS,
+	bool cond_NEEDFUNC_ERASE_GENERIC_VALUE = 0,
+	typename cond_NEEDFUNC_INSERT_GENERIC_INDEX = aatc_NULLCLASS
+>
 void aatc_container_shared_1tp_template_Register(asIScriptEngine* engine, const char* n_container){
 	int r = 0;
 
@@ -697,7 +893,7 @@ void aatc_container_shared_1tp_template_Register(asIScriptEngine* engine, const 
 	sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_container_T, n_container_T);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, operator=), asCALL_THISCALL); assert(r >= 0);
 
-	sprintf_s(textbuf, 1000, "%s& swap(%s &in)", n_container_T, n_container_T);
+	sprintf_s(textbuf, 1000, "%s& %s(%s &in)", n_container_T, aatc_name_script_container_method_swap, n_container_T);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Swap), asCALL_THISCALL); assert(r >= 0);
 
 	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_ADDREF, "void f()", asMETHOD(T_container, refcount_Add), asCALL_THISCALL); assert(r >= 0);
@@ -710,23 +906,26 @@ void aatc_container_shared_1tp_template_Register(asIScriptEngine* engine, const 
 
 	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_TEMPLATE_CALLBACK, "bool f(int&in, bool&out)", asFUNCTION(aatc_templatecallback_container), asCALL_CDECL); assert(r >= 0);
 
-	r = engine->RegisterObjectMethod(n_container_T, "void SetDirectcomp(bool)", asMETHOD(T_container, SetDirectcomp), asCALL_THISCALL); assert(r >= 0);
+	sprintf_s(textbuf, 1000, "void %s(bool)", aatc_name_script_container_method_set_directcomp);
+	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, SetDirectcomp), asCALL_THISCALL); assert(r >= 0);
 	
 
-	sprintf_s(textbuf, 1000, "%s count(const T &in)", aatc_name_script_sizetype);
+	sprintf_s(textbuf, 1000, "%s %s(const T &in)", aatc_name_script_sizetype, aatc_name_script_container_method_count);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Count), asCALL_THISCALL); assert(r >= 0);
 	//r = engine->RegisterObjectMethod(n_container_T, "bool contains(const T &in)", asMETHOD(T_container, Contains), asCALL_THISCALL); assert(r >= 0);
 
-	r = engine->RegisterObjectMethod(n_container_T, "void clear()", asMETHOD(T_container, Clear), asCALL_THISCALL); assert(r >= 0);
-	r = engine->RegisterObjectMethod(n_container_T, "bool empty()", asMETHOD(T_container, Empty), asCALL_THISCALL); assert(r >= 0);
-	sprintf_s(textbuf, 1000, "%s size()", aatc_name_script_sizetype);
+	sprintf_s(textbuf, 1000, "void %s()", aatc_name_script_container_method_clear);
+	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Clear), asCALL_THISCALL); assert(r >= 0);
+	sprintf_s(textbuf, 1000, "bool %s()", aatc_name_script_container_method_empty);
+	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Empty), asCALL_THISCALL); assert(r >= 0);
+	sprintf_s(textbuf, 1000, "%s %s()", aatc_name_script_sizetype, aatc_name_script_container_method_size);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Size), asCALL_THISCALL); assert(r >= 0);
 
 	T_container::Register_func_back_write<std::conditional<cond_NEEDFUNC_BACK_WRITE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
 	T_container::Register_func_back_read<std::conditional<cond_NEEDFUNC_BACK_READ, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
 	T_container::Register_func_front_write<std::conditional<cond_NEEDFUNC_FRONT_WRITE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
 	T_container::Register_func_front_read<std::conditional<cond_NEEDFUNC_FRONT_READ, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_erase_position<std::conditional<cond_NEEDFUNC_ERASE_POSITION, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
+	//T_container::Register_func_erase_position<std::conditional<cond_NEEDFUNC_ERASE_POSITION, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
 	T_container::Register_func_erase_value<std::conditional<cond_NEEDFUNC_ERASE_VALUE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
 	T_container::Register_func_op_index<std::conditional<cond_NEEDFUNC_OP_INDEX, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
 	T_container::Register_func_reserve<std::conditional<cond_NEEDFUNC_RESERVE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
@@ -736,6 +935,11 @@ void aatc_container_shared_1tp_template_Register(asIScriptEngine* engine, const 
 	T_container::Register_func_sort_generic<std::conditional<cond_NEEDFUNC_SORT_GENERIC, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
 
 	T_container::Register_func_contains_native<std::conditional<cond_NEEDFUNC_CONTAINS_NATIVE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
+
+	T_container::Register_func_erase_generic_index<cond_NEEDFUNC_ERASE_GENERIC_INDEX>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_erase_generic_value<std::conditional<cond_NEEDFUNC_ERASE_GENERIC_VALUE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
+
+	T_container::Register_func_insert_generic_index<cond_NEEDFUNC_INSERT_GENERIC_INDEX>(engine, r, textbuf, n_container, n_container_T);
 }
 
 template<typename T_out, typename T_host> T_out aatc_reghelp_construct_hosted_iterator_template(T_host cont){

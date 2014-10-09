@@ -7,7 +7,7 @@ void TestContainer_vector(){
 		for(int i=0; i<5;i++){
 			cont.push_back(i*10);
 		}
-		cont.erase(3);
+		cont.erase_index(3);
 		
 		cont.sort(false);
 		
@@ -46,7 +46,7 @@ void TestContainer_vector(){
 		for(int i=0; i<5;i++){
 			cont.push_back(""+(i*10));
 		}
-		cont.erase(3);
+		cont.erase_index(3);
 		
 		for(vector_iterator<string> it(@cont);it++;){
 			it.current() = "Xx"+it.current()+"xX";
@@ -93,7 +93,7 @@ void TestContainer_vector(){
 			Material a("Xx"+(i*10)+"xX",i);
 			cont.push_back(a);
 		}
-		cont.erase(3);
+		cont.erase_index(3);
 		
 		cont.sort(false);
 		
@@ -142,7 +142,7 @@ void TestContainer_vector(){
 			Material@ a = Material("Xx"+(i*10)+"xX",i);
 			cont.push_back(a);
 		}
-		cont.erase(3);
+		cont.erase_index(3);
 		
 		cont.sort(false);
 		

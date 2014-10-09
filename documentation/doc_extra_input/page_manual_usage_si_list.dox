@@ -23,7 +23,11 @@ template<typename T> class list{
 	T& back();
 	T& front();
 	
-	void remove(T &in value);
+	void insert_index_before(int index,const T &in value);
+	
+	void erase_index(int index);
+	void erase_index(int index_range_begin,int index_range_end);
+	void erase_value(T &in value,bool all = false);
 	
 	//sort with opCmp
 	void sort(bool ascending = true);
