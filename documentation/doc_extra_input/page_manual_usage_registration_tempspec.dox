@@ -9,11 +9,10 @@
 \n
 <p>Some of the containers might require your class to have these operators implemented:</p>
 - operator equals is required for
-	- vector::count and list::count
-	- list::remove
+	- vector and list :: count and erase_value
 	- the unordered_set container to work
 - operator less is required for
-	- vector::sort and list::sort
+	- vector and list :: sort
 	- the set container to work
 - hash is required for
 	- the unordered_set container to work
