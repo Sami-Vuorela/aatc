@@ -10,8 +10,6 @@ Currently these container types are supported:
  * map
  * unordered_map
 
-
-
 License
 ----------
 
@@ -27,6 +25,6 @@ or in the source files.
 Manual
 ----------
 
-There is a manual available over at  
+There is a doxygen manual available over at  
 http://sami-vuorela.github.io/aatc  
 go read that instead of this readme.
