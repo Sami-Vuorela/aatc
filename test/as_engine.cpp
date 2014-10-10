@@ -1,10 +1,5 @@
 #include "as_engine.hpp"
 
-//#include "C:/Dev/VC2013/angelscript_2.29.1/add_on/scriptarray/scriptarray.h"
-//#include "C:/Dev/VC2013/angelscript_2.29.1/add_on/scripthandle/scripthandle.h"
-//#include "C:/Dev/VC2013/angelscript_2.29.1/add_on/scriptstdstring/scriptstdstring.h"
-
-//#include "scripthandle/scripthandle.h"
 #include "scriptstdstring/scriptstdstring.h"
 
 #include "../source/aatc.hpp"
@@ -12,6 +7,10 @@
 
 
 
+
+void aet_Print(const std::string& a){
+	std::cout << a << "\n";
+}
 
 
 
@@ -30,9 +29,9 @@ void aet_RuntimeExceptionCallback(asIScriptContext* ctx, void* obj){
 
 
 asIScriptContext* aet_engine_contextcallback_request(asIScriptEngine* engine, void* userdata){
-	as::asIScriptContext* cc = engine->CreateContext();
+	asIScriptContext* cc = engine->CreateContext();
 
-	cc->SetExceptionCallback(as::asFUNCTION(as::aet_RuntimeExceptionCallback), NULL, as::asCALL_CDECL);
+	cc->SetExceptionCallback(asFUNCTION(aet_RuntimeExceptionCallback), NULL, asCALL_CDECL);
 
 	return cc;
 }
@@ -53,7 +52,6 @@ asIScriptEngine* aet_CreateEngine(){
 
 	//RegisterScriptArray(engine, 0);
 	//RegisterScriptHandle(engine);
-
 	RegisterStdString(engine);
 	//RegisterStdStringUtils(engine);
 

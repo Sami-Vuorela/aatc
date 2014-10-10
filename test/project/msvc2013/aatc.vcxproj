@@ -137,7 +137,6 @@
     <ClCompile Include="..\..\..\source\aatc_unordered_set_template.cpp" />
     <ClCompile Include="..\..\..\source\aatc_vector_template.cpp" />
     <ClCompile Include="..\..\as_engine.cpp" />
-    <ClCompile Include="..\..\basics.cpp" />
     <ClCompile Include="..\..\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -152,7 +151,6 @@
     <ClInclude Include="..\..\..\source\aatc_unordered_set.hpp" />
     <ClInclude Include="..\..\..\source\aatc_vector.hpp" />
     <ClInclude Include="..\..\as_engine.hpp" />
-    <ClInclude Include="..\..\basics.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

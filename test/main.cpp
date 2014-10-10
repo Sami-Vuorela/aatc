@@ -1,48 +1,47 @@
 #include "as_engine.hpp"
+#include "scriptbuilder\scriptbuilder.h"
 
 
 
 
 
+BEGIN_AS_NAMESPACE
 
-void main(){
+void main_contents(){
 	//AngelScript::asPrepareMultithread();
 
-	as::asIScriptEngine* engine = as::aet_CreateEngine();
+	asIScriptEngine* engine = aet_CreateEngine();
 
 	{
-		as::CScriptBuilder builder;
+		CScriptBuilder builder;
 		builder.StartNewModule(engine, "testmodule");
 		builder.AddSectionFromFile("script/main.as");
 		builder.BuildModule();
 	}
 
-	as::asIScriptModule* module = engine->GetModule("testmodule");
+	asIScriptModule* module = engine->GetModule("testmodule");
 
-	as::asIScriptFunction* func_scriptmain = module->GetFunctionByName("scriptmain");
+	asIScriptFunction* func_scriptmain = module->GetFunctionByName("scriptmain");
 
-	//as::asIScriptContext* cc = engine->CreateContext();
-	//cc->SetExceptionCallback(as::asFUNCTION(as::aet_RuntimeExceptionCallback), NULL, as::asCALL_CDECL);
-
-	as::asIScriptContext* cc = engine->RequestContext();
-
-	for(int i = 0; i < 1; i++){
+	asIScriptContext* cc = engine->RequestContext();
 		cc->Prepare(func_scriptmain);
 		cc->Execute();
-
-		engine->GarbageCollect(as::asGC_FULL_CYCLE);
-		engine->GarbageCollect(as::asGC_FULL_CYCLE | as::asGC_DESTROY_GARBAGE);
-	}
-
-	//cc->Release();
 	engine->ReturnContext(cc);
-
-	engine->GarbageCollect(as::asGC_FULL_CYCLE);
-	engine->GarbageCollect(as::asGC_FULL_CYCLE | as::asGC_DESTROY_GARBAGE);
 
 	engine->Release();
 
-
 	std::cout << "\nTesting finished, press enter to close console.";
 	std::cin.get();
+}
+
+END_AS_NAMESPACE
+
+
+
+void main(){
+	#if AS_USE_NAMESPACE
+		AngelScript::main_contents();
+	#else
+		main_contents();
+	#endif
 }

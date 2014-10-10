@@ -1,0 +1,15 @@
+If there is no project file available for your platform, you can follow these steps to make a project that builds the test:
+
+1. Link with the angelscript library (required version = 2.29.1)
+2. add these include directories:
+     <your_angelscript_install_dir>/angelscript/include
+     <your_angelscript_install_dir>/add_on
+
+3. add all the code files in aatc/test to your project
+4. add all the code files in aatc/source to your project
+5. add all the code files of angelscript addons needed, found in <your_angelscript_install_dir>/add_on/<addonname>
+     scriptbuilder.cpp
+     scriptstdstring.cpp
+
+6. set the binary output / debugging directory to aatc/test/bin
+     because the test must find the scripts and they are in aatc/test/bin/script

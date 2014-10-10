@@ -1,18 +1,15 @@
 #ifndef __definedh_asexttest_as_basics_engine
 #define __definedh_asexttest_as_basics_engine
 
-#include "basics.hpp"
+#include <stdio.h>
+#include <iostream>
+#include <string>
 #include "angelscript.h"
-#include "C:\Dev\VC2013\angelscript_2.29.1\add_on\scriptbuilder\scriptbuilder.h"
-
-#if defined BEGIN_AS_NAMESPACE
-namespace as = AngelScript;
-#else
-#define as
-#endif
 
 
-typedef std::string asString;
+
+void aet_Print(const std::string& a);
+
 
 
 BEGIN_AS_NAMESPACE
@@ -20,7 +17,6 @@ BEGIN_AS_NAMESPACE
 asIScriptEngine* aet_CreateEngine();
 
 void aet_RuntimeExceptionCallback(asIScriptContext* ctx, void* obj);
-
 
 END_AS_NAMESPACE
 
