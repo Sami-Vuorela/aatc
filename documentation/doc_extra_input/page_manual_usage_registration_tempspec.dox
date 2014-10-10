@@ -21,9 +21,9 @@
 \n
 <p>The tempspec registration functions work like this:</p>
 \code{.cpp}
+#include "aatc_vector.hpp"
+
 /*
-	#include "aatc_vector.hpp"
-	
 	Syntax:
 	
 	template parameters
