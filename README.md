@@ -28,5 +28,5 @@ Manual
 ----------
 
 There is a manual available over at
-
+sami-vuorela.github.io/aatc
 go read that instead of this readme.
