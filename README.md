@@ -22,6 +22,14 @@ or in the source files.
 
 
 
+Forum post
+----------
+
+Tell others about possible problems and your stories of victory at the angelscript forum  
+[Release post](http://www.gamedev.net/topic/661910-template-containers-angelscript-addon-library-release/)  
+
+
+
 Manual
 ----------
 
