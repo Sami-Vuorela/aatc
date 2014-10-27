@@ -102,7 +102,7 @@ $(document).ready(function(){initNavTree('page_manual_usage_si_basics.html','');
 <div class="contents">
 <div class="textblock"><p>All of the containers are ref and GC types.</p>
 <p>All of the iterators are value types.</p>
-<dl class="section user"><dt>Directcomp mode for containers containing handles:</dt><dd>All containers have a method called "void SetDirectcomp(bool yesno)". This will cause all internal comparisons between handles to compare the c++ pointers directly, instead of calling as functions to compare the as objects the handles point to. This can provide a nice speed boost if you dont care about the state of the objects themselves, but just want to store some handles in a set. Ofcourse with this mode on, you cant sort the container alphabetically or anything. This mode can be set on or off any time. Using this mode, you can store handles of an object type in a container without writing any comparison or hashing methods. <br />
+<dl class="section user"><dt>Directcomp mode for containers containing handles:</dt><dd>All containers have a method called "void SetDirectcomp(bool yesno)". This will cause all internal comparisons between handles to compare the c++ pointers directly, instead of calling as functions to compare the as objects the handles point to. This can provide a nice speed boost if you dont care about the state of the objects themselves, but just want to store some handles in a set. Ofcourse with this mode on, you cant sort the container alphabetically or anything. This mode can be set on or off after container construction, but before filling the container. Using this mode, you can store handles of an object type in a container without writing any comparison or hashing methods. <br />
 The containers "map" and "unordered_map" also have a directcomp mode and it only affects handles of the key type, because the value type objects are only stored, never compared. </dd></dl>
 </div></div><!-- contents -->
 </div><!-- doc-content -->
@@ -110,7 +110,7 @@ The containers "map" and "unordered_map" also have a directcomp mode and it only
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="index.html">Manual</a></li><li class="navelem"><a class="el" href="page_manual_usage.html">Usage</a></li><li class="navelem"><a class="el" href="page_manual_usage_script_interface.html">Script Interface</a></li>
-    <li class="footer">Generated on Fri Oct 10 2014 17:25:07 for Angelscript addon Template Containers by
+    <li class="footer">Generated on Mon Oct 27 2014 20:16:49 for Angelscript addon Template Containers by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>
