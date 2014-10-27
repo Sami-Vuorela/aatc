@@ -3,7 +3,7 @@
 <p>All of the iterators are value types.</p>
 
 \par Directcomp mode for containers containing handles:
-All containers have a method called "void SetDirectcomp(bool yesno)". This will cause all internal comparisons between handles to compare the c++ pointers directly, instead of calling as functions to compare the as objects the handles point to. This can provide a nice speed boost if you dont care about the state of the objects themselves, but just want to store some handles in a set. Ofcourse with this mode on, you cant sort the container alphabetically or anything. This mode can be set on or off any time. Using this mode, you can store handles of an object type in a container without writing any comparison or hashing methods.
+All containers have a method called "void SetDirectcomp(bool yesno)". This will cause all internal comparisons between handles to compare the c++ pointers directly, instead of calling as functions to compare the as objects the handles point to. This can provide a nice speed boost if you dont care about the state of the objects themselves, but just want to store some handles in a set. Ofcourse with this mode on, you cant sort the container alphabetically or anything. This mode can be set on or off after container construction, but before filling the container. Using this mode, you can store handles of an object type in a container without writing any comparison or hashing methods.
 \n
 The containers "map" and "unordered_map" also have a directcomp mode and it only affects handles of the key type, because the value type objects are only stored, never compared.
 */
