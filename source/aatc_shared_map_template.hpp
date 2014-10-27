@@ -126,22 +126,25 @@ public:
 		datahandlingid_key = aatc_Determine_Datahandlingtype(astypeid_key);
 		datahandlingid_value = aatc_Determine_Datahandlingtype(astypeid_value);
 
+		handlemode_directcomp = 0;
+
 		switch(datahandlingid_key){
 			case aatc_DATAHANDLINGTYPE::PRIMITIVE:{
 				primitiveid_key = aatc_Determine_Primitivetype(astypeid_key);
 				need_errorcheck_missing_functions = 0;
 				objectmode_key = 0;
-				handlemode_directcomp = 0;
 			break; }
 			case aatc_DATAHANDLINGTYPE::STRING:{
 				need_errorcheck_missing_functions = 0;
 				objectmode_key = 0;
-				handlemode_directcomp = 0;
 				objtype_key = engine->GetObjectTypeById(engine->GetStringFactoryReturnTypeId());
 			break; }
 			default:{
-						objectmode_key = 1;
-				handlemode_directcomp = aatc_CONFIG_DEFAULT_HANDLEMODE_DIRECTCOMP;
+				objectmode_key = 1;
+
+				if(datahandlingid_key == aatc_DATAHANDLINGTYPE::HANDLE){
+					handlemode_directcomp = aatc_CONFIG_DEFAULT_HANDLEMODE_DIRECTCOMP;
+				}
 
 				objtype_key = objtype_container->GetSubType(0);
 				objtype_key->AddRef();
