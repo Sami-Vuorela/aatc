@@ -146,6 +146,10 @@ public:
 					handlemode_directcomp = aatc_CONFIG_DEFAULT_HANDLEMODE_DIRECTCOMP;
 				}
 
+				if(handlemode_directcomp){
+					need_errorcheck_missing_functions = 0;
+				}
+
 				objtype_key = objtype_container->GetSubType(0);
 				objtype_key->AddRef();
 				if(astypeid_key & asOBJ_NOCOUNT){ needref_key = 0; }
@@ -369,6 +373,12 @@ public:
 		if(directcomp_forced){ return; }
 		if(datahandlingid_key == aatc_DATAHANDLINGTYPE::HANDLE){
 			handlemode_directcomp = ss;
+
+			if(handlemode_directcomp){
+				need_errorcheck_missing_functions = 0;
+			} else{
+				need_errorcheck_missing_functions = 1;
+			}
 		}
 	}
 
