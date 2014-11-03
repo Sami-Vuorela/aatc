@@ -166,7 +166,7 @@ public:
 												   break; }
 			default:{
 						objectmode_value = 1;
-						objtype_value = objtype_container->GetSubType(0);
+						objtype_value = objtype_container->GetSubType(1);
 						objtype_value->AddRef();
 						if(astypeid_value & asOBJ_NOCOUNT){ needref_value = 0; }
 						break; }
