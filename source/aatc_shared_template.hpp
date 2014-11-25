@@ -943,7 +943,8 @@ void aatc_container_shared_1tp_template_Register(asIScriptEngine* engine, const 
 }
 
 template<typename T_out, typename T_host> T_out aatc_reghelp_construct_hosted_iterator_template(T_host cont){
-	return T_out(&cont,0,nullptr);
+	//return T_out(&cont, 0, nullptr);
+	return T_out(&cont, 0);
 }
 
 
@@ -970,7 +971,7 @@ public:
 	bool handlemode;
 
 	aect_iterator_shared_template(){}
-	aect_iterator_shared_template(void *ref, int typeId_target_container, asIObjectType* objtype):
+	aect_iterator_shared_template(void *ref, int typeId_target_container):
 		firstt(1)
 	{
 		host = (T_container*)(*(void**)ref);
@@ -984,6 +985,17 @@ public:
 		cont(other.cont),
 		handlemode(other.handlemode)
 	{}
+
+	aect_iterator_shared_template& operator=(const aect_iterator_shared_template& other){
+		host = other.host;
+		it = other.it;
+		it_end = other.it_end;
+		firstt = other.firstt;
+		cont = other.cont;
+		handlemode = other.handlemode;
+
+		return *this;
+	}
 
 	void Init(){
 		if (host->empty()){
@@ -1045,8 +1057,14 @@ public:
 	}
 
 
+	static void static_constructor_default(asIObjectType* objtype, void *memory){
+		new(memory)aect_iterator_shared_template();
+	}
 	static void static_constructor(asIObjectType* objtype, void *ref, int typeId, void *memory){
-		new(memory)aect_iterator_shared_template(ref, typeId, objtype);
+		new(memory)aect_iterator_shared_template(ref, typeId);
+	}
+	static void static_constructor_copy(asIObjectType* objtype, const aect_iterator_shared_template& other, void *memory){
+		new(memory)aect_iterator_shared_template(other);
 	}
 
 	template<class cond_EDITABLE = aatc_Y, class cond_CONST = aatc_N> static void Register(asIScriptEngine* engine, const char* n_iterator, const char* n_container_T){
@@ -1062,8 +1080,11 @@ public:
 		r = engine->RegisterObjectType(n_iterator_class_T, sizeof(aect_iterator_shared_template), asOBJ_VALUE | asOBJ_TEMPLATE | asGetTypeTraits<aect_iterator_shared_template>()); assert(r >= 0);
 
 		//the default constructor must be registered, but you should never use it in script
-		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in)", asFunctionPtr(aatc_reghelp_constructor_template_default<aect_iterator_shared_template>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+		//r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in)", asFunctionPtr(aatc_reghelp_constructor_template_default<aect_iterator_shared_template>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in)", asFunctionPtr(static_constructor_default), asCALL_CDECL_OBJLAST); assert(r >= 0);
 		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in,?&in)", asFunctionPtr(static_constructor), asCALL_CDECL_OBJLAST); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "void f(int&in,const %s &in)", n_iterator_T);
+		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(static_constructor_copy), asCALL_CDECL_OBJLAST); assert(r >= 0);
 		//sprintf(textbuf, "void f(int&in,%s@)", n_container_T);
 		//r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(static_constructor), asCALL_CDECL_OBJLAST); assert(r >= 0);
 		sprintf_s(textbuf, 1000, "void f(const %s &in)", n_iterator_T);
@@ -1076,6 +1097,9 @@ public:
 
 		r = engine->RegisterObjectMethod(n_iterator_T, "bool next()", asMETHOD(aect_iterator_shared_template, Next), asCALL_THISCALL); assert(r >= 0);
 		r = engine->RegisterObjectMethod(n_iterator_T, "bool opPostInc()", asMETHOD(aect_iterator_shared_template, Next), asCALL_THISCALL); assert(r >= 0);
+
+		sprintf_s(textbuf, 1000, "%s opAssign(const %s &in)", n_iterator_T, n_iterator_T);
+		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_template, operator=), asCALL_THISCALL); assert(r >= 0);
 	}
 };
 
