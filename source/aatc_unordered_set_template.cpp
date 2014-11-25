@@ -98,7 +98,7 @@ template<> void aatc_register_container<aatc_CONTAINERTYPE::UNORDERED_SET>(asISc
 
 	aect_iterator_shared_template<aatc_container_unordered_set_template>::Register<aatc_N, aatc_Y>(engine, n_iterator, n_container_T);
 
-	sprintf_s(textbuf, 1000, "%s begin()", n_iterator_TT);
+	sprintf_s(textbuf, 1000, "%s %s()", n_iterator_TT, aatc_name_script_container_method_begin);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asFunctionPtr(aatc_reghelp_construct_hosted_iterator_template<aect_iterator_shared_template<aatc_container_unordered_set_template>, aatc_container_unordered_set_template*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 }
 

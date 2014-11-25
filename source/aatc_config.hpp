@@ -126,6 +126,7 @@ namespace as = AngelScript;
 #define aatc_name_script_container_method_erase_value "erase_value"
 #define aatc_name_script_container_method_insert_index_before "insert_index_before"
 #define aatc_name_script_container_method_insert_index_after "insert_index_after"
+#define aatc_name_script_container_method_begin "begin"
 
 #define aatc_name_script_iterator "_iterator"
 #define aatc_name_script_funcpointer "aatc_funcpointer"

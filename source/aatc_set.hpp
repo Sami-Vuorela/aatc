@@ -98,7 +98,7 @@ template<class dt_content, bool GOTFUNC_EQUALS = 1, bool GOTFUNC_LESS = 1, bool 
 
 	aect_iterator_shared_tempspec<dt_container, dt_content>::Register<aatc_N, aatc_Y>(engine, n_iterator, n_content, n_containerTcontentT);
 
-	sprintf_s(textbuf, 1000, "%s begin()", n_iterator, n_content);
+	sprintf_s(textbuf, 1000, "%s %s()", n_iterator, aatc_name_script_container_method_begin);
 	r = engine->RegisterObjectMethod(n_containerTcontentT, textbuf, asFunctionPtr(aatc_reghelp_construct_hosted<aect_iterator_shared_tempspec<dt_container, dt_content>, dt_container*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 }
 
