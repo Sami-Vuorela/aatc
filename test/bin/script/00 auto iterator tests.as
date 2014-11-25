@@ -70,6 +70,18 @@ void test_auto_iterators(){
 		}
 		Print(" ");
 	}
+	{
+		Print("auto iterator test for unordered_map<Material,Material@>");
+		unordered_map<Material,Material@> testmap;
+			testmap.insert(Material("1s",1),Material("10s",10));
+			testmap.insert(Material("2s",2),Material("20s",20));
+			testmap.insert(Material("3s",3),Material("30s",30));
+			
+		for(auto it = testmap.begin(); it++;){
+			Print("val = "+it.current_key().name + " , "+it.current_value().id);
+		}
+		Print(" ");
+	}
 	//{
 	//	vector<Material> testvec;
 	//		testvec.push_back(Material("1",1));
