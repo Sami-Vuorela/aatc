@@ -446,6 +446,15 @@ public:
 		firstt(other.firstt),
 		cont(other.cont)
 	{}
+	aect_iterator_shared_tempspec& operator=(const aect_iterator_shared_tempspec& other){
+		host = other.host;
+		it = other.it;
+		it_end = other.it_end;
+		firstt = other.firstt;
+		cont = other.cont;
+
+		return *this;
+	}
 
 	//combine end check and continuation into one monster
 	bool Next(){
@@ -504,6 +513,10 @@ public:
 
 		r = engine->RegisterObjectMethod(n_iterator, "bool next()", asMETHOD(aect_iterator_shared_tempspec, Next), asCALL_THISCALL); assert(r >= 0);
 		r = engine->RegisterObjectMethod(n_iterator, "bool opPostInc()", asMETHOD(aect_iterator_shared_tempspec, Next), asCALL_THISCALL); assert(r >= 0);
+
+		//explodes for some reason
+		//sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_iterator, n_iterator);
+		//r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHODPR(aect_iterator_shared_tempspec, operator=, (const aect_iterator_shared_tempspec&), aect_iterator_shared_tempspec&), asCALL_THISCALL); assert(r >= 0);
 	}
 };
 

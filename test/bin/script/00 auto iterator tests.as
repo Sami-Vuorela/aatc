@@ -35,31 +35,41 @@ void test_auto_iterators(){
 			testvec.push_back(Material("1s",1));
 			testvec.push_back(Material("2s",2));
 			testvec.push_back(Material("3s",3));
-			testvec.push_back(Material("4s",4));
 			testvec.push_back(Material("5s",5));
+			testvec.push_back(Material("4s",4));
+			
+		testvec.sort();
 		
-		//error = "Can't implicitly convert from 'vector_iterator<T>' to 'vector_iterator<Material>'."
-		//vector_iterator<Material> it = testvec.begin();
-		
-		auto it = testvec.begin();
-		//it = testvec.begin();
-		
-		//for(auto it = testvec.begin(); it++;){
-		for(; it++;){
+		for(auto it = testvec.begin(); it++;){
 			Print("val="+it.current().name);
 		}
 		Print(" ");
 	}
 	
-	//{
-	//	map<int,int> testmap;
-	//		testmap.insert(1,15);
-	//		testmap.insert(2,25);
+	{
+		Print("auto iterator test for map<int,int>");
+		map<int,int> testmap;
+			testmap.insert(1,15);
+			testmap.insert(5,55);
+			testmap.insert(2,25);
 			
-	//	for(auto it = testmap.begin(); it++;){
-	//		Print("val = "+it.current_key() + " , "+it.current_value());
-	//	}
-	//}
+		for(auto it = testmap.begin(); it++;){
+			Print("val = "+it.current_key() + " , "+it.current_value());
+		}
+		Print(" ");
+	}
+	{
+		Print("auto iterator test for map<Material,Material>");
+		map<Material,Material> testmap;
+			testmap.insert(Material("1s",1),Material("10s",10));
+			testmap.insert(Material("2s",2),Material("20s",20));
+			testmap.insert(Material("3s",3),Material("30s",30));
+			
+		for(auto it = testmap.begin(); it++;){
+			Print("val = "+it.current_key().name + " , "+it.current_value().id);
+		}
+		Print(" ");
+	}
 	//{
 	//	vector<Material> testvec;
 	//		testvec.push_back(Material("1",1));

@@ -50,10 +50,10 @@
     <ClCompile Include="..\..\..\source\aatc_vector_template.cpp">
       <Filter>as addons\aatc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\dfclone2014\dependencies\angelscript\angelscript_2.29.2_svn\add_on\scriptstdstring\scriptstdstring.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\Dev\angelscript_svn\sdk\add_on\scriptbuilder\scriptbuilder.cpp">
       <Filter>as addons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\..\dfclone2014\dependencies\angelscript\angelscript_2.29.2_svn\add_on\scriptbuilder\scriptbuilder.cpp">
+    <ClCompile Include="..\..\..\..\..\..\..\..\Dev\angelscript_svn\sdk\add_on\scriptstdstring\scriptstdstring.cpp">
       <Filter>as addons</Filter>
     </ClCompile>
   </ItemGroup>

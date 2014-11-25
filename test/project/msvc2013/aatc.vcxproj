@@ -135,8 +135,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\dfclone2014\dependencies\angelscript\angelscript_2.29.2_svn\add_on\scriptbuilder\scriptbuilder.cpp" />
-    <ClCompile Include="..\..\..\..\dfclone2014\dependencies\angelscript\angelscript_2.29.2_svn\add_on\scriptstdstring\scriptstdstring.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\Dev\angelscript_svn\sdk\add_on\scriptbuilder\scriptbuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\Dev\angelscript_svn\sdk\add_on\scriptstdstring\scriptstdstring.cpp" />
     <ClCompile Include="..\..\..\source\aatc.cpp" />
     <ClCompile Include="..\..\..\source\aatc_common.cpp" />
     <ClCompile Include="..\..\..\source\aatc_list_template.cpp" />

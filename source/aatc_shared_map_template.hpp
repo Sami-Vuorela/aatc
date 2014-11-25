@@ -821,6 +821,20 @@ public:
 		primitiveid_key(other.primitiveid_key),
 		primitiveid_value(other.primitiveid_value)
 	{}
+	aect_iterator_shared_map_template& operator=(const aect_iterator_shared_map_template& other){
+		host = other.host;
+		it = other.it;
+		it_end = other.it_end;
+		firstt = other.firstt;
+		cont = other.cont;
+		datahandlingid_key = other.datahandlingid_key;
+		datahandlingid_value = other.datahandlingid_value;
+		primitiveid_key = other.primitiveid_key;
+		primitiveid_key = other.primitiveid_key;
+
+		return *this;
+	}
+
 	static void static_constructor(asIObjectType* objtype_container, void *ref, int typeId, void *memory){
 		new(memory)aect_iterator_shared_map_template(ref, typeId);
 	}
@@ -926,8 +940,9 @@ public:
 		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in,?&in)", asFunctionPtr(static_constructor), asCALL_CDECL_OBJLAST); assert(r >= 0);
 		//sprintf(textbuf, "void f(int&in,%s@)", n_container_T);
 		//r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(static_constructor), asCALL_CDECL_OBJLAST); assert(r >= 0);
-		sprintf_s(textbuf, 1000, "void f(const %s &in)", n_iterator_T);
-		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor_copy<aect_iterator_shared_map_template, aect_iterator_shared_map_template>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+
+		//sprintf_s(textbuf, 1000, "void f(const %s &in)", n_iterator_T);
+		//r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor_copy<aect_iterator_shared_map_template, aect_iterator_shared_map_template>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
 		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_DESTRUCT, "void f()", asFUNCTION(aatc_reghelp_generic_destructor<aect_iterator_shared_map_template>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
@@ -936,6 +951,9 @@ public:
 
 		r = engine->RegisterObjectMethod(n_iterator_T, "bool next()", asMETHOD(aect_iterator_shared_map_template, Next), asCALL_THISCALL); assert(r >= 0);
 		r = engine->RegisterObjectMethod(n_iterator_T, "bool opPostInc()", asMETHOD(aect_iterator_shared_map_template, Next), asCALL_THISCALL); assert(r >= 0);
+
+		sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_iterator_T, n_iterator_T);
+		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_map_template, operator=), asCALL_THISCALL); assert(r >= 0);
 	}
 };
 

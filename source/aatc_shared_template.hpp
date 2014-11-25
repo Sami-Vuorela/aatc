@@ -953,6 +953,8 @@ template<typename T_out, typename T_host> T_out aatc_reghelp_construct_hosted_it
 */
 template<class T_container> class aect_iterator_shared_template{
 public:
+	uint8_t testbytess[100];
+
 	T_container* host;
 
 	//#if aatc_container_shared_1tp_USEFUNCS_CONST_ITERATOR_ONLY
@@ -970,10 +972,26 @@ public:
 	bool firstt;
 	bool handlemode;
 
-	aect_iterator_shared_template(){}
-	aect_iterator_shared_template(void *ref, int typeId_target_container):
-		firstt(1)
+	int tester;
+
+	aect_iterator_shared_template() :
+		it(),
+		it_end(),
+		tester(88)
 	{
+		for(int i = 0; i < 100; i++){
+			testbytess[i] = i;
+		}
+	}
+	aect_iterator_shared_template(void *ref, int typeId_target_container):
+		firstt(1),
+		it(),
+		it_end(),
+		tester(22)
+	{
+		for(int i = 0; i < 100; i++){
+			testbytess[i] = i;
+		}
 		host = (T_container*)(*(void**)ref);
 		Init();
 	}
@@ -1083,12 +1101,15 @@ public:
 		//r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in)", asFunctionPtr(aatc_reghelp_constructor_template_default<aect_iterator_shared_template>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in)", asFunctionPtr(static_constructor_default), asCALL_CDECL_OBJLAST); assert(r >= 0);
 		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in,?&in)", asFunctionPtr(static_constructor), asCALL_CDECL_OBJLAST); assert(r >= 0);
-		sprintf_s(textbuf, 1000, "void f(int&in,const %s &in)", n_iterator_T);
-		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(static_constructor_copy), asCALL_CDECL_OBJLAST); assert(r >= 0);
+
+		//sprintf_s(textbuf, 1000, "void f(int&in,const %s &in)", n_iterator_T);
+		//r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(static_constructor_copy), asCALL_CDECL_OBJLAST); assert(r >= 0);
+
 		//sprintf(textbuf, "void f(int&in,%s@)", n_container_T);
 		//r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(static_constructor), asCALL_CDECL_OBJLAST); assert(r >= 0);
-		sprintf_s(textbuf, 1000, "void f(const %s &in)", n_iterator_T);
-		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor_copy<aect_iterator_shared_template, aect_iterator_shared_template>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+		
+		//sprintf_s(textbuf, 1000, "void f(const %s &in)", n_iterator_T);
+		//r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor_copy<aect_iterator_shared_template, aect_iterator_shared_template>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
 		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_DESTRUCT, "void f()", asFUNCTION(aatc_reghelp_generic_destructor<aect_iterator_shared_template>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
@@ -1098,7 +1119,11 @@ public:
 		r = engine->RegisterObjectMethod(n_iterator_T, "bool next()", asMETHOD(aect_iterator_shared_template, Next), asCALL_THISCALL); assert(r >= 0);
 		r = engine->RegisterObjectMethod(n_iterator_T, "bool opPostInc()", asMETHOD(aect_iterator_shared_template, Next), asCALL_THISCALL); assert(r >= 0);
 
-		sprintf_s(textbuf, 1000, "%s opAssign(const %s &in)", n_iterator_T, n_iterator_T);
+		//sprintf_s(textbuf, 1000, "void not_opAssign(const %s &in)", n_iterator_T, n_iterator_T);
+		//sprintf_s(textbuf, 1000, "void opAssign(const %s &in)", n_iterator_T, n_iterator_T);
+		//r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_template, not_op_assign), asCALL_THISCALL); assert(r >= 0);
+
+		sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_iterator_T, n_iterator_T);
 		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_template, operator=), asCALL_THISCALL); assert(r >= 0);
 	}
 };

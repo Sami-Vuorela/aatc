@@ -224,7 +224,7 @@ public:
 	void Clean();
 };
 
-//convenience, uses engine level storage, aetc must be initialized
+//convenience, uses engine level storage, aatc must be initialized
 asIScriptContext* aatc_contextcache_Get();
 void aatc_contextcache_Return(asIScriptContext* c);
 
