@@ -5,12 +5,12 @@
   <PropertyGroup />
   <ItemDefinitionGroup>
     <ClCompile>
-      <AdditionalIncludeDirectories>C:\TOP SECRET\Programming\cpp\projects 2014\dfclone2014\dependencies\angelscript\angelscript_2.29.2_svn\angelscript\include;C:\TOP SECRET\Programming\cpp\projects 2014\dfclone2014\dependencies\angelscript\angelscript_2.29.2_svn\add_on;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>C:\Dev\angelscript_svn\sdk\angelscript\include;C:\Dev\angelscript_svn\sdk\add_on;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <PreprocessorDefinitions>AS_USE_NAMESPACE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <AdditionalDependencies>angelscript.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>C:\TOP SECRET\Programming\cpp\projects 2014\dfclone2014\dependencies\angelscript\angelscript_2.29.2_svn\angelscript\lib\msvc2013\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>C:\Dev\angelscript_svn\sdk\angelscript\lib\msvc2013\$(Platform)\$(Configuration);%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup />
