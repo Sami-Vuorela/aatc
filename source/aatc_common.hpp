@@ -365,11 +365,11 @@ public:
 	asIScriptEngine* engine;
 	//asIScriptContext* ctx;
 
-	as::asIScriptFunction* func;
+	asIScriptFunction* func;
 	aatc_type_string funcname;
 
 	bool is_thiscall;
-	as::asIScriptObject* so;
+	asIScriptObject* so;
 
 	bool ready;
 

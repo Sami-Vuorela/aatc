@@ -447,7 +447,7 @@ std::size_t aatc_containerfunctor_hash::operator()(const void* ptr) const{
 	asIScriptContext* cc = els->contextcache_Get();
 		cc->Prepare(func_hash);
 			cc->SetObject(const_cast<void*>(ptr));
-		if(cc->Execute() == as::asEXECUTION_EXCEPTION){
+		if(cc->Execute() == asEXECUTION_EXCEPTION){
 			result = 0;
 		}else{
 			result = cc->GetReturnQWord();
@@ -609,7 +609,7 @@ std::size_t aatc_containerfunctor_map_hash::operator()(const aatc_primunion& pu)
 	asIScriptContext* cc = els->contextcache_Get();
 	cc->Prepare(func_hash);
 	cc->SetObject(const_cast<void*>(pu.ptr));
-	if(cc->Execute() == as::asEXECUTION_EXCEPTION){
+	if(cc->Execute() == asEXECUTION_EXCEPTION){
 		result = 0;
 	} else{
 		result = cc->GetReturnQWord();
@@ -676,7 +676,7 @@ bool aatc_script_Funcpointer::Set(aatc_type_string _funcname, void* ref, int tid
 
 	if (ref){
 		if ((tid & asTYPEID_MASK_OBJECT) && (tid & asTYPEID_OBJHANDLE)){//must be not primitive and a handle
-			so = static_cast<as::asIScriptObject*>(*((void**)ref));
+			so = static_cast<asIScriptObject*>(*((void**)ref));
 
 			func = so->GetObjectType()->GetMethodByName(funcname_c);
 			if (func){

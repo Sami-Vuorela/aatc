@@ -37,7 +37,6 @@
 #include <stdio.h>
 #include <stdint.h>
 #include "angelscript.h"
-namespace as = AngelScript;
 
 
 
