@@ -144,7 +144,7 @@ BEGIN_AS_NAMESPACE
 	template<typename T_your_cpp_type> void aatc_Register_aatc_func_hash_value(asIScriptEngine* engine, const char* name_your_type_in_script){
 		char textbuf[1000];
 		sprintf_s(textbuf, 1000, "%s %s()", aatc_hash_type_scriptname_actual, aatc_name_script_requiredmethod_hash);
-		int error = engine->RegisterObjectMethod(name_t, textbuf, asFUNCTION(aatc_func_hash_value<T>), asCALL_CDECL_OBJLAST); assert(error >= 0);
+		int error = engine->RegisterObjectMethod(name_your_type_in_script, textbuf, asFUNCTION(aatc_func_hash_value<T_your_cpp_type>), asCALL_CDECL_OBJLAST); assert(error >= 0);
 	}
 
 
