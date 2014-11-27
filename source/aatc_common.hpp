@@ -135,6 +135,14 @@ BEGIN_AS_NAMESPACE
 		};
 	#endif
 
+	/*
+		Use these to register your c++ classes for hashing in containers that don't have a tempspec available.
+		RegisterObjectMethod("myVec3", "uint64 hash()", asFUNCTION(aatc_func_hash_value<myVec3>)asCALL_CDECL_OBJLAST)
+		Because you can't register functors with RegisterObjectMethod.
+	*/
+	template<typename T> std::size_t aatc_func_hash_value(const T& me){ aatc_functor_hash<T> functor; return functor(me); }
+	template<typename T> std::size_t aatc_func_hash_object(T* me){ aatc_functor_hash<T> functor; return functor(*me); }
+
 
 /*
 	Enum listing the different container operations
