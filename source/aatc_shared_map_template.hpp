@@ -946,8 +946,13 @@ public:
 
 		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_DESTRUCT, "void f()", asFUNCTION(aatc_reghelp_generic_destructor<aect_iterator_shared_map_template>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
-		r = engine->RegisterObjectMethod(n_iterator_T, "const T_key& current_key()", asMETHOD(aect_iterator_shared_map_template, Current_key_const), asCALL_THISCALL); assert(r >= 0);
-		r = engine->RegisterObjectMethod(n_iterator_T, "T_value& current_value()", asMETHOD(aect_iterator_shared_map_template, Current_value), asCALL_THISCALL); assert(r >= 0);
+		//r = engine->RegisterObjectMethod(n_iterator_T, "const T_key& current_key()", asMETHOD(aect_iterator_shared_map_template, Current_key_const), asCALL_THISCALL); assert(r >= 0);
+		//r = engine->RegisterObjectMethod(n_iterator_T, "T_value& current_value()", asMETHOD(aect_iterator_shared_map_template, Current_value), asCALL_THISCALL); assert(r >= 0);
+
+		sprintf_s(textbuf, 1000, "const T_key& %s()", aatc_name_script_iterator_method_current_key);
+		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_map_template, Current_key_const), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "T_value& %s()", aatc_name_script_iterator_method_current_value);
+		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_map_template, Current_value), asCALL_THISCALL); assert(r >= 0);
 
 		r = engine->RegisterObjectMethod(n_iterator_T, "bool next()", asMETHOD(aect_iterator_shared_map_template, Next), asCALL_THISCALL); assert(r >= 0);
 		r = engine->RegisterObjectMethod(n_iterator_T, "bool opPostInc()", asMETHOD(aect_iterator_shared_map_template, Next), asCALL_THISCALL); assert(r >= 0);

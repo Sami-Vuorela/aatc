@@ -62,5 +62,5 @@ class Material{
 		if(name == other.name){return 0;}
 		if(name < other.name){return -1;}else{return 1;}
 	}
-	uint64 hash(){return aatc_Hashfunc_djb2(name);}
+	aatc_hash_t hash(){return aatc_Hashfunc_djb2(name);}
 };

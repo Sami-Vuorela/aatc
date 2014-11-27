@@ -54,6 +54,7 @@ void test_auto_iterators(){
 			testmap.insert(2,25);
 			
 		for(auto it = testmap.begin(); it++;){
+		// for(map_iterator<int,int> it(@testmap); it++;){
 			Print("val = "+it.current_key() + " , "+it.current_value());
 		}
 		Print(" ");

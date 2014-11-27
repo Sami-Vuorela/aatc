@@ -127,6 +127,10 @@
 #define aatc_name_script_container_method_insert_index_after "insert_index_after"
 #define aatc_name_script_container_method_begin "begin"
 
+#define aatc_name_script_iterator_method_current "current"
+#define aatc_name_script_iterator_method_current_key "current_key"
+#define aatc_name_script_iterator_method_current_value "current_value"
+
 #define aatc_name_script_iterator "_iterator"
 #define aatc_name_script_funcpointer "aatc_funcpointer"
 #define aatc_name_script_requiredmethod_hash "hash"
@@ -148,6 +152,30 @@ typedef std::string			aatc_type_string;//use whatever you use in script (users o
 
 typedef aatc_type_int32 aatc_type_sizetype;
 #define aatc_name_script_sizetype "int"
+
+
+
+#if defined AS_64BIT_PTR
+	#define aatc_ENABLE_HASHTYPE_BITS 64
+#else
+	#define aatc_ENABLE_HASHTYPE_BITS 32
+#endif
+
+#if aatc_ENABLE_HASHTYPE_BITS == 32
+	typedef aatc_type_uint32 aatc_hash_type;
+	#define aatc_hash_type_scriptname_actual "uint"
+#endif
+#if aatc_ENABLE_HASHTYPE_BITS == 64
+	typedef aatc_type_uint64 aatc_hash_type;
+	#define aatc_hash_type_scriptname_actual "uint64"
+#endif
+
+//use script typedef for convenience in script?
+#define aatc_ENABLE_REGISTER_TYPEDEF_HASH_TYPE 1
+//this will appear in script if typedef is enabled
+#define aatc_hash_type_scriptname "aatc_hash_t"
+
+
 
 /*
 	edit: this doesnt apply to map and uo map, they always support primitives

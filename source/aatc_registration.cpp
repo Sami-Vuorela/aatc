@@ -50,7 +50,7 @@ template<class T, bool GOTFUNC_EQUALS, bool GOTFUNC_LESS, bool GOTFUNC_HASH> voi
 	}
 }
 
-aatc_type_uint64 aatc_hashfunc_djb2_aswrapper(const aatc_type_string& a){return aatc_hashfunc_djb2(a);}
+//aatc_type_uint64 aatc_hashfunc_djb2_aswrapper(const aatc_type_string& a){return aatc_hashfunc_djb2(a);}
 
 
 
@@ -61,6 +61,10 @@ void aatc_Initializer::Go(){
 
 	engine->SetUserData(new aatc_engine_level_storage(engine), aatc_engine_userdata_id);
 	engine->SetEngineUserDataCleanupCallback(aatc_engine_cleanup, aatc_engine_userdata_id);
+
+	#if aatc_ENABLE_REGISTER_TYPEDEF_HASH_TYPE
+		engine->RegisterTypedef(aatc_hash_type_scriptname, aatc_hash_type_scriptname_actual);
+	#endif
 
 	{
 		int r = 0;
@@ -85,7 +89,10 @@ void aatc_Initializer::Go(){
 			r = engine->RegisterObjectMethod(n_funcpointer, "void Call()", asMETHOD(aatc_script_Funcpointer, scriptsidecall_CallVoid), asCALL_THISCALL); assert(r >= 0);
 		}
 		{//register hash functions
-			r = engine->RegisterGlobalFunction("uint64 aatc_Hashfunc_djb2(string &in)", asFUNCTION(aatc_hashfunc_djb2_aswrapper), asCALL_CDECL); assert(r >= 0);
+
+			sprintf_s(textbuf, 1000, "%s aatc_Hashfunc_djb2(string &in)", aatc_hash_type_scriptname_actual);
+			r = engine->RegisterGlobalFunction(textbuf, asFUNCTION(aatc_hashfunc_djb2), asCALL_CDECL); assert(r >= 0);
+			//r = engine->RegisterGlobalFunction("uint64 aatc_Hashfunc_djb2(string &in)", asFUNCTION(aatc_hashfunc_djb2_aswrapper), asCALL_CDECL); assert(r >= 0);
 		}
 	}
 

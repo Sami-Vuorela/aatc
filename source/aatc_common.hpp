@@ -112,36 +112,40 @@ BEGIN_AS_NAMESPACE
 	*/
 	template<class T> class aatc_functor_hash{
 	public:
-		std::size_t operator()(const T& a) const{
-			return (std::size_t)a;
+		aatc_hash_type operator()(const T& a) const{
+			return (aatc_hash_type)a;
 		}
 	};
 	template<> class aatc_functor_hash<aatc_type_float32>{
 	public:
-		std::size_t operator()(const aatc_type_float32& a) const;
+		aatc_hash_type operator()(const aatc_type_float32& a) const;
 	};
 	template<> class aatc_functor_hash<aatc_type_float64>{
 	public:
-		std::size_t operator()(const aatc_type_float64& a) const;
+		aatc_hash_type operator()(const aatc_type_float64& a) const;
 	};
 	template<> class aatc_functor_hash<aatc_type_string>{
 	public:
-		std::size_t operator()(const aatc_type_string& a) const;
+		aatc_hash_type operator()(const aatc_type_string& a) const;
 	};
 	#if aatc_CONFIG_USE_ASADDON_REF
 		template<> class aatc_functor_hash<aatc_ait_ref>{
 		public:
-			std::size_t operator()(const aatc_ait_ref& a) const;
+			aatc_hash_type operator()(const aatc_ait_ref& a) const;
 		};
 	#endif
 
 	/*
 		Use these to register your c++ classes for hashing in containers that don't have a tempspec available.
-		RegisterObjectMethod("myVec3", "uint64 hash()", asFUNCTION(aatc_func_hash_value<myVec3>)asCALL_CDECL_OBJLAST)
 		Because you can't register functors with RegisterObjectMethod.
 	*/
-	template<typename T> std::size_t aatc_func_hash_value(const T& me){ aatc_functor_hash<T> functor; return functor(me); }
-	template<typename T> std::size_t aatc_func_hash_object(T* me){ aatc_functor_hash<T> functor; return functor(*me); }
+	template<typename T> aatc_hash_type aatc_func_hash_value(const T& me){ aatc_functor_hash<T> functor; return functor(me); }
+
+	template<typename T_your_cpp_type> void aatc_Register_aatc_func_hash_value(asIScriptEngine* engine, const char* name_your_type_in_script){
+		char textbuf[1000];
+		sprintf_s(textbuf, 1000, "%s %s()", aatc_hash_type_scriptname_actual, aatc_name_script_requiredmethod_hash);
+		int error = engine->RegisterObjectMethod(name_t, textbuf, asFUNCTION(aatc_func_hash_value<T>), asCALL_CDECL_OBJLAST); assert(error >= 0);
+	}
 
 
 /*
@@ -353,7 +357,7 @@ public:
 	bool need_init;
 	aatc_containerfunctor_hash(asIScriptEngine* engine, aatc_containerfunctor_Settings* settings);
 
-	std::size_t operator()(const void* ptr) const;
+	aatc_hash_type operator()(const void* ptr) const;
 };
 
 
@@ -486,11 +490,11 @@ public:
 	bool need_init;
 	aatc_containerfunctor_map_hash(asIScriptEngine* engine, aatc_containerfunctor_map_Settings* settings);
 
-	std::size_t operator()(const aatc_primunion& a) const;
+	aatc_hash_type operator()(const aatc_primunion& a) const;
 };
 
 /*!\brief Hash function for string. Apparently its fast and good.*/
-std::size_t aatc_hashfunc_djb2(const aatc_type_string& a);
+aatc_hash_type aatc_hashfunc_djb2(const aatc_type_string& a);
 
 /*
 	errorchecking macros
