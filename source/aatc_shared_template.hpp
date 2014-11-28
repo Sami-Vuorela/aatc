@@ -1153,6 +1153,7 @@ public:
 		aect_iterator_shared_template::Register_func_current_const<cond_CONST>(engine, r, n_iterator_T);
 
 		r = engine->RegisterObjectMethod(n_iterator_T, "bool next()", asMETHOD(aect_iterator_shared_template, Next), asCALL_THISCALL); assert(r >= 0);
+		r = engine->RegisterObjectMethod(n_iterator_T, "bool opPreInc()", asMETHOD(aect_iterator_shared_template, Next), asCALL_THISCALL); assert(r >= 0);
 		r = engine->RegisterObjectMethod(n_iterator_T, "bool opPostInc()", asMETHOD(aect_iterator_shared_template, Next), asCALL_THISCALL); assert(r >= 0);
 
 		//sprintf_s(textbuf, 1000, "void not_opAssign(const %s &in)", n_iterator_T, n_iterator_T);

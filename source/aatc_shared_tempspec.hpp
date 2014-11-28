@@ -524,6 +524,7 @@ public:
 		aect_iterator_shared_tempspec::Register_func_current_const<cond_CONST>(engine, r, textbuf, n_iterator, n_content);
 
 		r = engine->RegisterObjectMethod(n_iterator, "bool next()", asMETHOD(aect_iterator_shared_tempspec, Next), asCALL_THISCALL); assert(r >= 0);
+		r = engine->RegisterObjectMethod(n_iterator, "bool opPreInc()", asMETHOD(aect_iterator_shared_tempspec, Next), asCALL_THISCALL); assert(r >= 0);
 		r = engine->RegisterObjectMethod(n_iterator, "bool opPostInc()", asMETHOD(aect_iterator_shared_tempspec, Next), asCALL_THISCALL); assert(r >= 0);
 
 		//explodes for some reason

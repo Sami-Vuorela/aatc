@@ -1046,7 +1046,7 @@ public:
 		sprintf_s(textbuf, 1000, "T_value& %s()", aatc_name_script_iterator_access_function_value);
 		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_map_template, Current_value), asCALL_THISCALL); assert(r >= 0);
 
-		sprintf_s(textbuf, 1000, "T_key& get_%s()", aatc_name_script_iterator_access_property_key);
+		sprintf_s(textbuf, 1000, "const T_key& get_%s()", aatc_name_script_iterator_access_property_key);
 		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_map_template, Current_key_get), asCALL_THISCALL); assert(r >= 0);
 
 		sprintf_s(textbuf, 1000, "T_value& get_%s()", aatc_name_script_iterator_access_property_value);
@@ -1055,6 +1055,7 @@ public:
 		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_map_template, Current_value_set), asCALL_THISCALL); assert(r >= 0);
 
 		r = engine->RegisterObjectMethod(n_iterator_T, "bool next()", asMETHOD(aect_iterator_shared_map_template, Next), asCALL_THISCALL); assert(r >= 0);
+		r = engine->RegisterObjectMethod(n_iterator_T, "bool opPreInc()", asMETHOD(aect_iterator_shared_map_template, Next), asCALL_THISCALL); assert(r >= 0);
 		r = engine->RegisterObjectMethod(n_iterator_T, "bool opPostInc()", asMETHOD(aect_iterator_shared_map_template, Next), asCALL_THISCALL); assert(r >= 0);
 
 		sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_iterator_T, n_iterator_T);
