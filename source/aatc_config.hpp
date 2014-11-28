@@ -127,9 +127,14 @@
 #define aatc_name_script_container_method_insert_index_after "insert_index_after"
 #define aatc_name_script_container_method_begin "begin"
 
-#define aatc_name_script_iterator_method_current "current"
-#define aatc_name_script_iterator_method_current_key "current_key"
-#define aatc_name_script_iterator_method_current_value "current_value"
+
+#define aatc_name_script_iterator_access_property "value"
+#define aatc_name_script_iterator_access_property_key "key"
+#define aatc_name_script_iterator_access_property_value "value"
+//a function which returns a reference is also provided, because property accessors can't use compound operators ( +=, *= etc)
+#define aatc_name_script_iterator_access_function "current"
+#define aatc_name_script_iterator_access_function_key "current_key"
+#define aatc_name_script_iterator_access_function_value "current_value"
 
 #define aatc_name_script_iterator "_iterator"
 #define aatc_name_script_funcpointer "aatc_funcpointer"

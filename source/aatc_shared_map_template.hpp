@@ -395,6 +395,11 @@ public:
 		//engine->AddRefScriptObject(ptr_to_handle, objtype);
 		//}
 	}
+	void* StoreHandle2(void* ptr_to_handle, asIObjectType* objtype){
+		void* result = *(void**)ptr_to_handle;
+		engine->AddRefScriptObject(result, objtype);
+		return result;
+	}
 	//void ReleaseHandle(void* handle){
 	//	//if (handlemode_needref){
 	//		engine->ReleaseScriptObject(handle, objtype_content);
@@ -877,6 +882,93 @@ public:
 		}
 	}
 
+	const void* Current_key_get(){
+		switch(datahandlingid_key){
+		case aatc_DATAHANDLINGTYPE::HANDLE:{return &((*it).first.ptr); }//return pointer to handle
+		case aatc_DATAHANDLINGTYPE::OBJECT:{return (*it).first.ptr; }//return copy of pointer to object
+		case aatc_DATAHANDLINGTYPE::STRING:{return (*it).first.ptr; }//return copy of pointer to object
+		case aatc_DATAHANDLINGTYPE::PRIMITIVE:{
+												  switch(primitiveid_key){
+												  case aatc_PRIMITIVE_TYPE::INT8:{return &((*it).first.i8); }
+												  case aatc_PRIMITIVE_TYPE::INT16:{return &((*it).first.i16); }
+												  case aatc_PRIMITIVE_TYPE::INT32:{return &((*it).first.i32); }
+												  case aatc_PRIMITIVE_TYPE::INT64:{return &((*it).first.i64); }
+												  case aatc_PRIMITIVE_TYPE::UINT8:{return &((*it).first.ui8); }
+												  case aatc_PRIMITIVE_TYPE::UINT16:{return &((*it).first.ui16); }
+												  case aatc_PRIMITIVE_TYPE::UINT32:{return &((*it).first.ui32); }
+												  case aatc_PRIMITIVE_TYPE::UINT64:{return &((*it).first.ui64); }
+												  case aatc_PRIMITIVE_TYPE::FLOAT32:{return &((*it).first.f32); }
+												  case aatc_PRIMITIVE_TYPE::FLOAT64:{return &((*it).first.f64); }
+												  };
+		}
+		};
+		return nullptr;//should never happen, stops compiler warning
+	}
+
+	const void* Current_value_get(){
+		switch(datahandlingid_value){
+		case aatc_DATAHANDLINGTYPE::HANDLE:{return &((*it).second.ptr); }//return pointer to handle
+		case aatc_DATAHANDLINGTYPE::OBJECT:{return (*it).second.ptr; }//return copy of pointer to object
+		case aatc_DATAHANDLINGTYPE::STRING:{return (*it).second.ptr; }//return copy of pointer to object
+		case aatc_DATAHANDLINGTYPE::PRIMITIVE:{
+												  switch(primitiveid_key){
+												  case aatc_PRIMITIVE_TYPE::INT8:{return &((*it).second.i8); }
+												  case aatc_PRIMITIVE_TYPE::INT16:{return &((*it).second.i16); }
+												  case aatc_PRIMITIVE_TYPE::INT32:{return &((*it).second.i32); }
+												  case aatc_PRIMITIVE_TYPE::INT64:{return &((*it).second.i64); }
+												  case aatc_PRIMITIVE_TYPE::UINT8:{return &((*it).second.ui8); }
+												  case aatc_PRIMITIVE_TYPE::UINT16:{return &((*it).second.ui16); }
+												  case aatc_PRIMITIVE_TYPE::UINT32:{return &((*it).second.ui32); }
+												  case aatc_PRIMITIVE_TYPE::UINT64:{return &((*it).second.ui64); }
+												  case aatc_PRIMITIVE_TYPE::FLOAT32:{return &((*it).second.f32); }
+												  case aatc_PRIMITIVE_TYPE::FLOAT64:{return &((*it).second.f64); }
+												  };
+		}
+		};
+		return nullptr;//should never happen, stops compiler warning
+	}
+	void Current_value_set(void* value){
+		switch(datahandlingid_value){
+		case aatc_DATAHANDLINGTYPE::HANDLE:{
+			void** it_inner = &((*it).second.ptr);//convenience
+
+			if(*it_inner){
+				host->engine->ReleaseScriptObject(*it_inner, host->objtype_value);
+			}
+			if(value){
+				*it_inner = host->StoreHandle2(value, host->objtype_value);
+			} else{
+				*it_inner = nullptr;
+			}
+		break; }
+		case aatc_DATAHANDLINGTYPE::OBJECT:
+		case aatc_DATAHANDLINGTYPE::STRING:{
+			//auto& it_inner = (*it).second.ptr;//convenience
+			//void** it_inner = (void**)(*it).second.ptr;//convenience
+			void** it_inner = &((*it).second.ptr);//convenience
+			host->engine->ReleaseScriptObject(*it_inner, host->objtype_value);
+			*it_inner = host->engine->CreateScriptObjectCopy(value, host->objtype_value);
+		break; }
+		case aatc_DATAHANDLINGTYPE::PRIMITIVE:{
+			switch(primitiveid_value){
+				case aatc_PRIMITIVE_TYPE::INT8:{((*it).second.i8) = *((aatc_type_int8*)value); break; }
+				case aatc_PRIMITIVE_TYPE::INT16:{((*it).second.i16) = *((aatc_type_int16*)value); break; }
+				case aatc_PRIMITIVE_TYPE::INT32:{((*it).second.i32) = *((aatc_type_int32*)value); break; }
+				case aatc_PRIMITIVE_TYPE::INT64:{((*it).second.i64) = *((aatc_type_int64*)value); break; }
+
+				case aatc_PRIMITIVE_TYPE::UINT8:{((*it).second.ui8) = *((aatc_type_uint8*)value); break; }
+				case aatc_PRIMITIVE_TYPE::UINT16:{((*it).second.ui16) = *((aatc_type_uint16*)value); break; }
+				case aatc_PRIMITIVE_TYPE::UINT32:{((*it).second.ui32) = *((aatc_type_uint32*)value); break; }
+				case aatc_PRIMITIVE_TYPE::UINT64:{((*it).second.ui64) = *((aatc_type_uint64*)value); break; }
+
+				case aatc_PRIMITIVE_TYPE::FLOAT32:{((*it).second.f32) = *((aatc_type_float32*)value); break; }
+				case aatc_PRIMITIVE_TYPE::FLOAT64:{((*it).second.f64) = *((aatc_type_float64*)value); break; }
+			};
+		break; }
+		};
+	}
+
+
 	const void* Current_key_const(){
 		switch(datahandlingid_key){
 			case aatc_DATAHANDLINGTYPE::HANDLE:{return &((*it).first.ptr); }//return pointer to handle
@@ -949,10 +1041,18 @@ public:
 		//r = engine->RegisterObjectMethod(n_iterator_T, "const T_key& current_key()", asMETHOD(aect_iterator_shared_map_template, Current_key_const), asCALL_THISCALL); assert(r >= 0);
 		//r = engine->RegisterObjectMethod(n_iterator_T, "T_value& current_value()", asMETHOD(aect_iterator_shared_map_template, Current_value), asCALL_THISCALL); assert(r >= 0);
 
-		sprintf_s(textbuf, 1000, "const T_key& %s()", aatc_name_script_iterator_method_current_key);
+		sprintf_s(textbuf, 1000, "const T_key& %s()", aatc_name_script_iterator_access_function_key);
 		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_map_template, Current_key_const), asCALL_THISCALL); assert(r >= 0);
-		sprintf_s(textbuf, 1000, "T_value& %s()", aatc_name_script_iterator_method_current_value);
+		sprintf_s(textbuf, 1000, "T_value& %s()", aatc_name_script_iterator_access_function_value);
 		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_map_template, Current_value), asCALL_THISCALL); assert(r >= 0);
+
+		sprintf_s(textbuf, 1000, "T_key& get_%s()", aatc_name_script_iterator_access_property_key);
+		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_map_template, Current_key_get), asCALL_THISCALL); assert(r >= 0);
+
+		sprintf_s(textbuf, 1000, "T_value& get_%s()", aatc_name_script_iterator_access_property_value);
+		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_map_template, Current_value_get), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "void set_%s(const T_value &in)", aatc_name_script_iterator_access_property_value);
+		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_map_template, Current_value_set), asCALL_THISCALL); assert(r >= 0);
 
 		r = engine->RegisterObjectMethod(n_iterator_T, "bool next()", asMETHOD(aect_iterator_shared_map_template, Next), asCALL_THISCALL); assert(r >= 0);
 		r = engine->RegisterObjectMethod(n_iterator_T, "bool opPostInc()", asMETHOD(aect_iterator_shared_map_template, Next), asCALL_THISCALL); assert(r >= 0);

@@ -1047,6 +1047,30 @@ public:
 		}
 	}
 
+	template<class T> const void* Current_get(){}
+	template<class T> void Current_set(void* newval){}
+	template<> const void* Current_get<aatc_Y>(){
+		if(handlemode){
+			return &(*it);//return pointer to handle
+		} else{
+			return *it;//return copy of pointer to object
+		}
+	}
+	template<> void Current_set<aatc_Y>(void* value){
+		if(handlemode){
+			if(*it){
+				host->engine->ReleaseScriptObject(*it, host->objtype_content);
+			}
+			if(value){
+				*it = host->StoreHandle2(value);
+			} else{
+				*it = nullptr;
+			}
+		} else{
+			host->engine->ReleaseScriptObject(*it, host->objtype_content);
+			*it = host->engine->CreateScriptObjectCopy(value, host->objtype_content);
+		}
+	}
 
 	template<class T> void* Current(){}
 	template<> void* Current<aatc_Y>(){
@@ -1059,8 +1083,13 @@ public:
 	template<class T_cond> static void Register_func_current(asIScriptEngine* engine, int& r, const char* n_iterator_T){}
 	template<> static void Register_func_current<aatc_Y>(asIScriptEngine* engine, int& r, const char* n_iterator_T){
 		char textbuf[1000];
-		sprintf_s(textbuf, 1000, "T& %s()", aatc_name_script_iterator_method_current);
+		sprintf_s(textbuf, 1000, "T& %s()", aatc_name_script_iterator_access_function);
 		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_template, Current<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+
+		sprintf_s(textbuf, 1000, "T& get_%s()", aatc_name_script_iterator_access_property);
+		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_template, Current_get<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		sprintf_s(textbuf, 1000, "void set_%s(const T &in)", aatc_name_script_iterator_access_property);
+		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_template, Current_set<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 	}
 
 	template<class T> const void* Current_const(){}
@@ -1074,8 +1103,11 @@ public:
 	template<class T_cond> static void Register_func_current_const(asIScriptEngine* engine, int& r, const char* n_iterator_T){}
 	template<> static void Register_func_current_const<aatc_Y>(asIScriptEngine* engine, int& r, const char* n_iterator_T){
 		char textbuf[1000];
-		sprintf_s(textbuf, 1000, "const T& %s()", aatc_name_script_iterator_method_current);
+		sprintf_s(textbuf, 1000, "const T& %s()", aatc_name_script_iterator_access_function);
 		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_template, Current_const<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+
+		sprintf_s(textbuf, 1000, "const T& get_%s()", aatc_name_script_iterator_access_property);
+		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_template, Current_get<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 	}
 
 
