@@ -45,7 +45,9 @@ BEGIN_AS_NAMESPACE
 /*!\brief Internal template monster
 
 */
-template<class T_container,class T_content> class aatc_container_shared_1tp_tempspec : public T_container, public aatc_refcounted{
+template<class T_container, class T_content> class aatc_container_shared_1tp_tempspec : public aatc_container_base,
+																						public T_container,
+																						public aatc_refcounted{
 public:
 	typename typedef T_container::iterator iteratortype;
 
@@ -56,10 +58,14 @@ public:
 	static std::string staticname_container;
 	static std::string staticname_content;
 
-	aatc_container_shared_1tp_tempspec(){}
+	aatc_container_shared_1tp_tempspec(){
+		engine = asGetActiveContext()->GetEngine();
+	}
 	aatc_container_shared_1tp_tempspec(const aatc_container_shared_1tp_tempspec& other) :
 		T_container(other)
-	{}
+	{
+		engine = other.engine;
+	}
 	virtual ~aatc_container_shared_1tp_tempspec(){}
 
 	void operator=(const aatc_container_shared_1tp_tempspec& other){

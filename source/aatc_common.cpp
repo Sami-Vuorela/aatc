@@ -261,7 +261,7 @@ void aatc_refcounted::refcount_Release(){
 aatc_refcounted_GC::aatc_refcounted_GC(asIScriptEngine *engine){
 	refCount = 1;
 	gcFlag = false;
-	this->engine = engine;
+	this->gc_engine = engine;
 }
 aatc_refcounted_GC::~aatc_refcounted_GC(){}
 
@@ -721,12 +721,15 @@ void aatc_script_Funcpointer::scriptsidecall_CallVoid(){
 //	ref.Set(NULL, NULL);
 //}
 
+aatc_engine_level_storage* aatc_Get_ELS(asIScriptEngine* engine){
+	return (aatc_engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
+}
 asIScriptContext* aatc_contextcache_Get(){
-	aatc_engine_level_storage* els = (aatc_engine_level_storage*)asGetActiveContext()->GetEngine()->GetUserData(aatc_engine_userdata_id);
+	aatc_engine_level_storage* els = aatc_Get_ELS(asGetActiveContext()->GetEngine());
 	return els->contextcache_Get();
 }
 void aatc_contextcache_Return(asIScriptContext* c){
-	aatc_engine_level_storage* els = (aatc_engine_level_storage*)asGetActiveContext()->GetEngine()->GetUserData(aatc_engine_userdata_id);
+	aatc_engine_level_storage* els = aatc_Get_ELS(asGetActiveContext()->GetEngine());
 	els->contextcache_Return(c);
 }
 
@@ -810,6 +813,18 @@ aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_fu
 
 
 
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<bool>(bool* input){ return asTYPEID_BOOL; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int8>(aatc_type_int8* input){ return asTYPEID_INT8; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int16>(aatc_type_int16* input){ return asTYPEID_INT16; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int32>(aatc_type_int32* input){ return asTYPEID_INT32; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int64>(aatc_type_int64* input){ return asTYPEID_INT64; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint8>(aatc_type_uint8* input){ return asTYPEID_UINT8; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint16>(aatc_type_uint16* input){ return asTYPEID_UINT16; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint32>(aatc_type_uint32* input){ return asTYPEID_UINT32; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint64>(aatc_type_uint64* input){ return asTYPEID_UINT64; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float32>(aatc_type_float32* input){ return asTYPEID_FLOAT; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float64>(aatc_type_float64* input){ return asTYPEID_DOUBLE; }
 
+aatc_container_base::~aatc_container_base(){}
 
 END_AS_NAMESPACE

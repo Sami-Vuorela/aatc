@@ -1,6 +1,9 @@
 #include "as_engine.hpp"
 #include "scriptbuilder\scriptbuilder.h"
 
+#include "serializer\serializer.h"
+
+#include "../source/aatc_common.hpp"
 
 
 
@@ -24,8 +27,26 @@ void main_contents(){
 	asIScriptFunction* func_scriptmain = module->GetFunctionByName("scriptmain");
 
 	asIScriptContext* cc = engine->RequestContext();
+
 		cc->Prepare(func_scriptmain);
 		cc->Execute();
+
+		{
+			cc->Prepare(module->GetFunctionByName("serializer_test_1")); cc->Execute();
+
+
+			CSerializer backup;
+			aatc_register_for_serializer(engine, &backup);
+			backup.Store(module);
+
+			cc->Prepare(module->GetFunctionByName("serializer_test_2")); cc->Execute();
+
+			backup.Restore(module);
+
+			cc->Prepare(module->GetFunctionByName("serializer_test_3")); cc->Execute();
+		}
+
+
 	engine->ReturnContext(cc);
 
 	engine->Release();

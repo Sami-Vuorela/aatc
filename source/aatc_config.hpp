@@ -47,6 +47,9 @@
 */
 #define aatc_CONFIG_USE_BOOST 0
 
+//enable this if you're using the official as addon: serializer
+#define aatc_CONFIG_USE_ASADDON_SERIALIZER 1
+#define aatc_serializer_addonpath "serializer/serializer.h"
 
 /*
 	Enable this if you want the containers to have a
@@ -157,6 +160,15 @@ typedef std::string			aatc_type_string;//use whatever you use in script (users o
 
 typedef aatc_type_int32 aatc_type_sizetype;
 #define aatc_name_script_sizetype "int"
+
+typedef aatc_type_int32 aatc_type_astypeid;
+#define aatc_type_astypeid_typeid asTYPEID_INT32
+
+#if defined AS_64BIT_PTR
+	#define aatc_astypeid_of_pointer asTYPEID_UINT64
+#else
+	#define aatc_astypeid_of_pointer asTYPEID_UINT32
+#endif
 
 
 

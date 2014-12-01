@@ -29,7 +29,6 @@ samivuorela@gmail.com
 
 
 
-#include "aatc_shared_template.hpp"
 #include "aatc_vector.hpp"
 
 
@@ -38,29 +37,22 @@ BEGIN_AS_NAMESPACE
 
 
 
-/*!\brief Actual class used for templates defined in script.*/
-class aatc_container_vector_template : public aatc_container_shared_1tp_template<aatc_acit_vector<void*>, aatc_CONTAINERTYPE::VECTOR>{
-public:
-	//typedef aatc_container_shared_1tp_template<aatc_acit_vector<void*>, aatc_CONTAINERTYPE::VECTOR> bcs;
-	//typedef aatc_acit_vector<void*> bt;
+aatc_container_vector_template::aatc_container_vector_template(asIScriptEngine* _engine, asIObjectType* _objtype) :
+	aatc_container_shared_1tp_template(_engine,_objtype)
+{}
+aatc_container_vector_template::aatc_container_vector_template(const aatc_container_vector_template& other) :
+	aatc_container_shared_1tp_template(other.engine, other.objtype_container)
+{(*this) = other;}
+aatc_container_vector_template::~aatc_container_vector_template(){}
 
-	aatc_container_vector_template(asIScriptEngine* _engine, asIObjectType* _objtype) :
-		aatc_container_shared_1tp_template(_engine,_objtype)
-	{}
-	aatc_container_vector_template(const aatc_container_vector_template& other) :
-		aatc_container_shared_1tp_template(other.engine, other.objtype_container)
-	{(*this) = other;}
-	~aatc_container_vector_template(){}
-
-	static aatc_container_vector_template* Factory(asIObjectType* _objtype){
-		return new aatc_container_vector_template(asGetActiveContext()->GetEngine(), _objtype);
-	}
-	static aatc_container_vector_template* Factory_copy(asIObjectType* _objtype, const aatc_container_vector_template& other){
-		return new aatc_container_vector_template(other);
-	}
-	aatc_container_vector_template& operator=(const aatc_container_vector_template& other){ aatc_container_shared_1tp_template::operator=(other); return *this; }
-	aatc_container_vector_template& Swap(aatc_container_vector_template& other){ aatc_container_shared_1tp_template::swap(other); return *this; }
-};
+aatc_container_vector_template* aatc_container_vector_template::Factory(asIObjectType* _objtype){
+	return new aatc_container_vector_template(asGetActiveContext()->GetEngine(), _objtype);
+}
+aatc_container_vector_template* aatc_container_vector_template::Factory_copy(asIObjectType* _objtype, const aatc_container_vector_template& other){
+	return new aatc_container_vector_template(other);
+}
+aatc_container_vector_template& aatc_container_vector_template::operator=(const aatc_container_vector_template& other){ aatc_container_shared_1tp_template::operator=(other); return *this; }
+aatc_container_vector_template& aatc_container_vector_template::Swap(aatc_container_vector_template& other){ aatc_container_shared_1tp_template::swap(other); return *this; }
 
 
 

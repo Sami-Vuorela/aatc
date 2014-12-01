@@ -148,6 +148,18 @@ BEGIN_AS_NAMESPACE
 	}
 
 
+//just to make all containers derive from the same thing
+class aatc_container_base{
+public:
+	asIScriptEngine* engine;
+	virtual ~aatc_container_base();
+};
+#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+	class CSerializedValue;
+	typedef bool(*aatc_funcptr_serializer_containerbase_is_thistype)(aatc_container_base* base);
+	typedef void(*aatc_funcptr_serializer_containerbase_process)(aatc_container_base* base, CSerializedValue* val);
+#endif
+
 /*
 	Enum listing the different container operations
 	that require script functions to be called.
@@ -212,6 +224,17 @@ public:
 /*!\brief Stores dataz about aatc containers. One for each engine.*/
 class aatc_engine_level_storage{
 public:
+	#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+		class serializer_helper{
+		public:
+			aatc_funcptr_serializer_containerbase_is_thistype funcptr_is_thistype;
+			std::string container_content_name;
+			aatc_funcptr_serializer_containerbase_process funcptr_process_store;
+			aatc_funcptr_serializer_containerbase_process funcptr_process_restore;
+			aatc_funcptr_serializer_containerbase_process funcptr_process_cleanup;
+		};
+	#endif
+
 	asIScriptEngine* engine;
 
 	typedef aatc_ait_storage_map<aatc_type_uint32, aatc_containertype_specific_storage*> tmap_ctss;
@@ -222,8 +245,12 @@ public:
 	std::vector<asIScriptContext*> context_cache;
 	aatc_ait_fastlock context_cache_lock;
 	
-
 	asIObjectType* objtype_tempcont_list;
+
+#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+	std::vector<serializer_helper> serializer_tempspec_helpers[aatc_CONTAINERTYPE_COUNT];
+#endif
+
 
 	aatc_engine_level_storage(asIScriptEngine* engine);
 	~aatc_engine_level_storage();
@@ -239,6 +266,7 @@ public:
 //convenience, uses engine level storage, aatc must be initialized
 asIScriptContext* aatc_contextcache_Get();
 void aatc_contextcache_Return(asIScriptContext* c);
+aatc_engine_level_storage* aatc_Get_ELS(asIScriptEngine* engine);
 
 
 
@@ -280,7 +308,7 @@ public:
 /*!\brief Basetype for script refcounted and GCd c++ objects to derive from.*/
 class aatc_refcounted_GC{
 public:
-	asIScriptEngine* engine;
+	asIScriptEngine* gc_engine;
 	mutable int refCount;
 	mutable bool gcFlag;
 
@@ -575,6 +603,26 @@ template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type
 template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::MAP>(aatc_template_specific_storage* tss);
 template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::UNORDERED_MAP>(aatc_template_specific_storage* tss);
 
+
+
+//template<typename T> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype(T* input){ return asTYPEID_INT32; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<bool>(bool* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int8>(aatc_type_int8* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int16>(aatc_type_int16* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int32>(aatc_type_int32* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int64>(aatc_type_int64* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint8>(aatc_type_uint8* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint16>(aatc_type_uint16* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint32>(aatc_type_uint32* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint64>(aatc_type_uint64* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float32>(aatc_type_float32* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float64>(aatc_type_float64* input);
+
+
+//#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+//template<typename T> void register_tempspec_helper(aatc_engine_level_storage* els, std::string container_content_name){}
+//template<typename T> void register_tempspec_helper(aatc_engine_level_storage* els, std::string container_content_name){}
+//#endif
 
 
 END_AS_NAMESPACE

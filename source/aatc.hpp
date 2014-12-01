@@ -61,6 +61,10 @@ Just call this if you want to have every container available and dont care about
 */
 void aatc_RegisterAllContainers(asIScriptEngine* engine);
 
+#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+class CSerializer;
+void aatc_register_for_serializer(asIScriptEngine* engine, CSerializer* serializer);
+#endif
 
 
 END_AS_NAMESPACE

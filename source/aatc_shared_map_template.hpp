@@ -83,12 +83,12 @@ template<
 	int T_CONTAINERTYPEID,
 	class bcw = aatc_bcw_shared_map_basic<T_container>
 >
-class aatc_container_shared_map_template : public bcw,
-	public aatc_refcounted_GC,
-	public aatc_containerfunctor_map_Settings
+class aatc_container_shared_map_template :	public aatc_container_base,
+											public bcw,
+											public aatc_refcounted_GC,
+											public aatc_containerfunctor_map_Settings
 {
 public:
-	asIScriptEngine* engine;
 	aatc_engine_level_storage* els;
 
 	aatc_DATAHANDLINGTYPE datahandlingid_value;
@@ -111,17 +111,18 @@ public:
 	aatc_container_shared_map_template(asIScriptEngine* _engine, asIObjectType* _objtype) :
 		bcw(_engine, this),
 		aatc_refcounted_GC(_engine),
-		engine(_engine),
 		objtype_container(_objtype),
 		needref_key(1),
 		needref_value(1),
 		directcomp_forced(0),
 		need_errorcheck_missing_functions(1)
 	{
+		engine = _engine;
+
 		objtype_container->AddRef();
 
-		int astypeid_key = objtype_container->GetSubTypeId(0);
-		int astypeid_value = objtype_container->GetSubTypeId(1);
+		aatc_type_astypeid astypeid_key = objtype_container->GetSubTypeId(0);
+		aatc_type_astypeid astypeid_value = objtype_container->GetSubTypeId(1);
 
 		datahandlingid_key = aatc_Determine_Datahandlingtype(astypeid_key);
 		datahandlingid_value = aatc_Determine_Datahandlingtype(astypeid_value);
@@ -809,7 +810,7 @@ public:
 	aatc_PRIMITIVE_TYPE primitiveid_value;
 
 	aect_iterator_shared_map_template(){}
-	aect_iterator_shared_map_template(void *ref, int typeId_target_container) :
+	aect_iterator_shared_map_template(void *ref, aatc_type_astypeid typeId_target_container) :
 		firstt(1)
 	{
 		host = (T_container*)(*(void**)ref);
@@ -840,7 +841,7 @@ public:
 		return *this;
 	}
 
-	static void static_constructor(asIObjectType* objtype_container, void *ref, int typeId, void *memory){
+	static void static_constructor(asIObjectType* objtype_container, void *ref, aatc_type_astypeid typeId, void *memory){
 		new(memory)aect_iterator_shared_map_template(ref, typeId);
 	}
 

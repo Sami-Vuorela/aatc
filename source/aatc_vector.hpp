@@ -31,8 +31,12 @@
 #ifndef _includedh_aatc_container_vector
 #define _includedh_aatc_container_vector
 
+#include "aatc_shared_template.hpp"
 #include "aatc_shared_tempspec.hpp"
 
+#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+#include "aatc_serializer.hpp"
+#endif
 
 
 BEGIN_AS_NAMESPACE
@@ -56,16 +60,34 @@ BEGIN_AS_NAMESPACE
 /*!\brief Actual class used for template specializations defined in c++.*/
 template<class T> class aatc_container_vector_tempspec : public aatc_container_shared_1tp_tempspec<aatc_acit_vector<T>, T>{
 public:
-	aatc_container_vector_tempspec(){}
+	aatc_container_vector_tempspec(){
+		engine = asGetActiveContext()->GetEngine();
+	}
 	aatc_container_vector_tempspec(const aatc_container_vector_tempspec& other) :
 		aatc_container_shared_1tp_tempspec(other)
-	{}
+	{
+		engine = other.engine;
+	}
 	~aatc_container_vector_tempspec(){}
 
 	static aatc_container_vector_tempspec* Factory(){return new aatc_container_vector_tempspec();}
 	static aatc_container_vector_tempspec* Factory_copy(const aatc_container_vector_tempspec& other){return new aatc_container_vector_tempspec(other);}
 	aatc_container_vector_tempspec& operator=(const aatc_container_vector_tempspec& other){ aatc_container_shared_1tp_tempspec::operator=(other); return *this; }
 	aatc_container_vector_tempspec& Swap(aatc_container_vector_tempspec& other){ aatc_container_shared_1tp_tempspec::swap(other); return *this; }
+};
+
+
+/*!\brief Actual class used for templates defined in script.*/
+class aatc_container_vector_template : public aatc_container_shared_1tp_template<aatc_acit_vector<void*>, aatc_CONTAINERTYPE::VECTOR>{
+public:
+	aatc_container_vector_template(asIScriptEngine* _engine, asIObjectType* _objtype);
+	aatc_container_vector_template(const aatc_container_vector_template& other);
+	~aatc_container_vector_template();
+
+	static aatc_container_vector_template* Factory(asIObjectType* _objtype);
+	static aatc_container_vector_template* Factory_copy(asIObjectType* _objtype, const aatc_container_vector_template& other);
+	aatc_container_vector_template& operator=(const aatc_container_vector_template& other);
+	aatc_container_vector_template& Swap(aatc_container_vector_template& other);
 };
 
 
@@ -78,6 +100,10 @@ template<
 > void aatc_register_container_tempspec_vector(asIScriptEngine* engine, const char* n_content){
 	typedef aatc_container_vector_tempspec<dt_content> dt_container;
 
+
+#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+	aatc_serializer_register_container_shared_1tp_tempspec_helpers<dt_container, aatc_CONTAINERTYPE::VECTOR>(aatc_Get_ELS(engine), n_content);
+#endif
 
 	int r = 0;
 	char textbuf[1000];

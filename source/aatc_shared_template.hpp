@@ -95,7 +95,8 @@ public:
 /*!\brief Internal template monster
 
 */
-template<class T_container, int T_CONTAINERTYPEID, class bcw = aatc_bcw_basic<T_container>> class aatc_container_shared_1tp_template :	public bcw,
+template<class T_container, int T_CONTAINERTYPEID, class bcw = aatc_bcw_basic<T_container>> class aatc_container_shared_1tp_template :	public aatc_container_base,
+																																		public bcw,
 																																		public aatc_refcounted_GC,
 																																		public aatc_containerfunctor_Settings
 {
@@ -105,11 +106,10 @@ public:
 	//typename typedef std::conditional<NEED_COMPHELPER, aatc_bcw_comphelper<T_container>, aatc_bcw_basic<T_container>>::type bct;
 	//typename typedef bcw bct;
 
-	asIScriptEngine* engine;
 	asIObjectType* objtype_container;
 	asIObjectType* objtype_content;
-	int astypeid_container;
-	int astypeid_content;
+	aatc_type_astypeid astypeid_container;
+	aatc_type_astypeid astypeid_content;
 	asDWORD typeflags_container;
 	asDWORD typeflags_content;
 
@@ -124,10 +124,11 @@ public:
 	aatc_container_shared_1tp_template(asIScriptEngine* _engine, asIObjectType* _objtype) :
 		bcw(_engine, this),
 		aatc_refcounted_GC(_engine),
-		engine(_engine),
 		objtype_container(_objtype),
 		directcomp_forced(0)
 	{
+		engine = _engine;
+
 		handlemode_directcomp = aatc_CONFIG_DEFAULT_HANDLEMODE_DIRECTCOMP;
 
 		objtype_content = objtype_container->GetSubType();
@@ -953,8 +954,6 @@ template<typename T_out, typename T_host> T_out aatc_reghelp_construct_hosted_it
 */
 template<class T_container> class aect_iterator_shared_template{
 public:
-	uint8_t testbytess[100];
-
 	T_container* host;
 
 	//#if aatc_container_shared_1tp_USEFUNCS_CONST_ITERATOR_ONLY
@@ -972,26 +971,16 @@ public:
 	bool firstt;
 	bool handlemode;
 
-	int tester;
-
 	aect_iterator_shared_template() :
 		it(),
-		it_end(),
-		tester(88)
+		it_end()
 	{
-		for(int i = 0; i < 100; i++){
-			testbytess[i] = i;
-		}
 	}
-	aect_iterator_shared_template(void *ref, int typeId_target_container):
+	aect_iterator_shared_template(void *ref, aatc_type_astypeid typeId_target_container) :
 		firstt(1),
 		it(),
-		it_end(),
-		tester(22)
+		it_end()
 	{
-		for(int i = 0; i < 100; i++){
-			testbytess[i] = i;
-		}
 		host = (T_container*)(*(void**)ref);
 		Init();
 	}
@@ -1114,7 +1103,7 @@ public:
 	static void static_constructor_default(asIObjectType* objtype, void *memory){
 		new(memory)aect_iterator_shared_template();
 	}
-	static void static_constructor(asIObjectType* objtype, void *ref, int typeId, void *memory){
+	static void static_constructor(asIObjectType* objtype, void *ref, aatc_type_astypeid typeId, void *memory){
 		new(memory)aect_iterator_shared_template(ref, typeId);
 	}
 	static void static_constructor_copy(asIObjectType* objtype, const aect_iterator_shared_template& other, void *memory){
