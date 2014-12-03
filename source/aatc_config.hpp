@@ -49,6 +49,7 @@
 
 //enable this if you're using the official as addon: serializer
 #define aatc_CONFIG_USE_ASADDON_SERIALIZER 1
+#define aatc_CONFIG_USE_ASADDON_SERIALIZER_also_register_string_usertype 1
 #define aatc_serializer_addonpath "serializer/serializer.h"
 
 /*

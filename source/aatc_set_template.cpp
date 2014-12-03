@@ -29,42 +29,35 @@ samivuorela@gmail.com
 
 
 
-#include "aatc_shared_template.hpp"
 #include "aatc_set.hpp"
 
 
 
 BEGIN_AS_NAMESPACE
 
-typedef aatc_acit_set<void*, aatc_containerfunctor_comp> aatc_acit_set_with_functors;
 
-//class aatc_container_set_template : public aatc_container_shared_1tp_template<aatc_acit_set_with_comphelper, aatc_CONTAINERTYPE::SET, aatc_bcw_comphelper<aatc_acit_set_with_comphelper>>{
 
-/*!\brief Actual class used for templates defined in script.*/
-class aatc_container_set_template : public aatc_container_shared_1tp_template<aatc_acit_set_with_functors, aatc_CONTAINERTYPE::SET, aatc_bcw_1_param<aatc_acit_set_with_functors, aatc_containerfunctor_comp>>{
-public:
-	typedef aatc_acit_set_with_functors bt;
+aatc_container_set_template::aatc_container_set_template(asIScriptEngine* _engine, asIObjectType* _objtype) :
+	aatc_container_shared_1tp_template(_engine,_objtype)
+{}
+aatc_container_set_template::aatc_container_set_template(const aatc_container_set_template& other) :
+	aatc_container_shared_1tp_template(other.engine, other.objtype_container)
+{
+	(*this) = other;
+}
+aatc_container_set_template::~aatc_container_set_template(){}
 
-	aatc_container_set_template(asIScriptEngine* _engine, asIObjectType* _objtype) :
-		aatc_container_shared_1tp_template(_engine,_objtype)
-	{}
-	aatc_container_set_template(const aatc_container_set_template& other) :
-		aatc_container_shared_1tp_template(other.engine, other.objtype_container)
-	{
-		(*this) = other;
-	}
-	~aatc_container_set_template(){}
+aatc_container_set_template* aatc_container_set_template::Factory(asIObjectType* _objtype){
+	asIScriptEngine* engine = asGetActiveContext()->GetEngine();
+	return new aatc_container_set_template(engine, _objtype);
+}
+aatc_container_set_template* aatc_container_set_template::Factory_copy(asIObjectType* _objtype, const aatc_container_set_template& other){
+	return new aatc_container_set_template(other);
+}
+aatc_container_set_template& aatc_container_set_template::operator=(const aatc_container_set_template& other){ aatc_container_shared_1tp_template::operator=(other); return *this; }
+aatc_container_set_template& aatc_container_set_template::Swap(aatc_container_set_template& other){ aatc_container_shared_1tp_template::swap(other); return *this; }
 
-	static aatc_container_set_template* Factory(asIObjectType* _objtype){
-		asIScriptEngine* engine = asGetActiveContext()->GetEngine();
-		return new aatc_container_set_template(engine, _objtype);
-	}
-	static aatc_container_set_template* Factory_copy(asIObjectType* _objtype, const aatc_container_set_template& other){
-		return new aatc_container_set_template(other);
-	}
-	aatc_container_set_template& operator=(const aatc_container_set_template& other){ aatc_container_shared_1tp_template::operator=(other); return *this; }
-	aatc_container_set_template& Swap(aatc_container_set_template& other){ aatc_container_shared_1tp_template::swap(other); return *this; }
-};
+
 
 
 

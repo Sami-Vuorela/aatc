@@ -4,18 +4,39 @@
 #include "aatc_serializer.hpp"
 
 #include "aatc_vector.hpp"
+#include "aatc_list.hpp"
+#include "aatc_set.hpp"
+#include "aatc_unordered_set.hpp"
 
 BEGIN_AS_NAMESPACE
 
 
-template<int containertype_id> struct aatc_serializer_usertype_container_shared_1tp : public CUserType{
+
+template<typename containertype_template, typename cond_is_associative, int containertype_id> struct aatc_serializer_usertype_container_shared_1tp : public CUserType{
+	//functor for adding to a container, different for associative
+	template<typename containertype, typename cond_is_associative> class functor_adder{};
+	template<typename containertype> class functor_adder<containertype, aatc_Y>{
+		public:
+			void operator()(containertype* container, void* item)const { container->insert(item); }
+	};
+	template<typename containertype> class functor_adder<containertype, aatc_N>{
+		public:
+			void operator()(containertype* container, void* item)const { container->push_back(item); }
+	};
+
 	void Store(CSerializedValue* val_root, void* ptr){
 		aatc_container_base* container_base = (aatc_container_base*)ptr;
 
-		aatc_container_vector_template* container_template = dynamic_cast<aatc_container_vector_template*>(container_base);
+		containertype_template* container_template = dynamic_cast<containertype_template*>(container_base);
 
 		if(container_template){
-			container_base = nullptr;
+			if(container_template->handlemode){
+
+			} else{
+				for(auto it = container_template->begin(); it != container_template->end(); it++){
+					val_root->m_children.push_back(new CSerializedValue(val_root, "", "", const_cast<void*>(*it), container_template->astypeid_content));
+				}
+			}
 		} else{
 			aatc_engine_level_storage* els = aatc_Get_ELS(container_base->engine);
 
@@ -31,10 +52,23 @@ template<int containertype_id> struct aatc_serializer_usertype_container_shared_
 	void Restore(CSerializedValue* val_root, void* ptr){
 		aatc_container_base* container_base = (aatc_container_base*)ptr;
 
-		aatc_container_vector_template* container_template = dynamic_cast<aatc_container_vector_template*>(container_base);
+		containertype_template* container_template = dynamic_cast<containertype_template*>(container_base);
 
 		if(container_template){
-			container_base = nullptr;
+			container_template->Clear();
+
+			if(container_template->handlemode){
+
+			} else{
+				const int size = val_root->m_children.size();
+				for(int i = 0; i < size; i++){
+					void* serialized_object = nullptr;
+					serialized_object = container_base->engine->CreateScriptObject(container_template->objtype_content);
+					val_root->m_children[i]->Restore(serialized_object, container_template->astypeid_content);
+					//container_template->push_back(serialized_object);
+					functor_adder<containertype_template, cond_is_associative> adder; adder(container_template, serialized_object);
+				}
+			}
 		} else{
 			aatc_engine_level_storage* els = aatc_Get_ELS(container_base->engine);
 
@@ -148,19 +182,21 @@ struct aatc_serializer_usertype_container_vector_template : public CUserType{
 };
 */
 
-struct CStringType : public CUserType{
-	void Store(CSerializedValue *val, void *ptr){
-		val->SetUserData(new std::string(*(std::string*)ptr));
-	}
-	void Restore(CSerializedValue *val, void *ptr){
-		std::string *buffer = (std::string*)val->GetUserData();
-		*(std::string*)ptr = *buffer;
-	}
-	void CleanupUserData(CSerializedValue *val){
-		std::string *buffer = (std::string*)val->GetUserData();
-		delete buffer;
-	}
-};
+#if aatc_CONFIG_USE_ASADDON_SERIALIZER_also_register_string_usertype
+	struct aatc_serializer_usertype_string : public CUserType{
+		void Store(CSerializedValue *val, void *ptr){
+			val->SetUserData(new aatc_type_string(*(aatc_type_string*)ptr));
+		}
+		void Restore(CSerializedValue *val, void *ptr){
+			aatc_type_string *buffer = (aatc_type_string*)val->GetUserData();
+			*(aatc_type_string*)ptr = *buffer;
+		}
+		void CleanupUserData(CSerializedValue *val){
+			aatc_type_string *buffer = (aatc_type_string*)val->GetUserData();
+			delete buffer;
+		}
+	};
+#endif
 
 
 
@@ -169,8 +205,15 @@ struct CStringType : public CUserType{
 void aatc_register_for_serializer(asIScriptEngine* engine, CSerializer* serializer){
 	char textbuf[1000];
 
-	serializer->AddUserType(new CStringType(), "string");
-	serializer->AddUserType(new aatc_serializer_usertype_container_shared_1tp<aatc_CONTAINERTYPE::VECTOR>(), aatc_name_script_container_vector);
+	#if aatc_CONFIG_USE_ASADDON_SERIALIZER_also_register_string_usertype
+		serializer->AddUserType(new aatc_serializer_usertype_string(), "string");
+	#endif
+
+	serializer->AddUserType(new aatc_serializer_usertype_container_shared_1tp<aatc_container_vector_template,aatc_N, aatc_CONTAINERTYPE::VECTOR>(), aatc_name_script_container_vector);
+	//serializer->AddUserType(new aatc_serializer_usertype_container_shared_1tp<aatc_container_list_template, aatc_CONTAINERTYPE::LIST>(), aatc_name_script_container_list);
+	//serializer->AddUserType(new aatc_serializer_usertype_container_shared_1tp<aatc_container_set_template, aatc_CONTAINERTYPE::SET>(), aatc_name_script_container_set);
+	//serializer->AddUserType(new aatc_serializer_usertype_container_shared_1tp<aatc_container_unordered_set_template, aatc_CONTAINERTYPE::UNORDERED_SET>(), aatc_name_script_container_unordered_set);
+
 	//serializer->AddUserType(new aatc_serializer_usertype_container_vector_template(), aatc_name_script_container_vector);
 	
 	//sprintf_s(textbuf, 1000, "%s<string>", aatc_name_script_container_vector);

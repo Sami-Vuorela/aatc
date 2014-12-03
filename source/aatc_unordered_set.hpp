@@ -31,6 +31,7 @@
 #ifndef _includedh_aatc_container_unordered_set
 #define _includedh_aatc_container_unordered_set
 
+#include "aatc_shared_template.hpp"
 #include "aatc_shared_tempspec.hpp"
 
 
@@ -63,6 +64,26 @@ public:
 	static aatc_container_unordered_set_tempspec* Factory_copy(const aatc_container_unordered_set_tempspec& other){return new aatc_container_unordered_set_tempspec(other);}
 	aatc_container_unordered_set_tempspec& operator=(const aatc_container_unordered_set_tempspec& other){ aatc_container_shared_1tp_tempspec::operator=(other); return *this; }
 	aatc_container_unordered_set_tempspec& Swap(aatc_container_unordered_set_tempspec& other){ aatc_container_shared_1tp_tempspec::swap(other); return *this; }
+};
+
+
+
+
+typedef aatc_acit_unordered_set<void*, aatc_containerfunctor_hash, aatc_containerfunctor_equals> aatc_acit_unordered_set_with_functors;
+
+/*!\brief Actual class used for templates defined in script.*/
+class aatc_container_unordered_set_template : public aatc_container_shared_1tp_template<aatc_acit_unordered_set_with_functors, aatc_CONTAINERTYPE::UNORDERED_SET, aatc_bcw_hashmap<aatc_acit_unordered_set_with_functors, aatc_containerfunctor_hash, aatc_containerfunctor_equals, aatc_CONFIG_DEFAULT_CONTAINER_UNORDERED_SET_DEFAULTBUCKETCOUNT>>{
+public:
+	typedef aatc_acit_unordered_set_with_functors bt;
+
+	aatc_container_unordered_set_template(asIScriptEngine* _engine, asIObjectType* _objtype);
+	aatc_container_unordered_set_template(const aatc_container_unordered_set_template& other);
+	~aatc_container_unordered_set_template();
+
+	static aatc_container_unordered_set_template* Factory(asIObjectType* _objtype);
+	static aatc_container_unordered_set_template* Factory_copy(asIObjectType* _objtype, const aatc_container_unordered_set_template& other);
+	aatc_container_unordered_set_template& operator=(const aatc_container_unordered_set_template& other);
+	aatc_container_unordered_set_template& Swap(aatc_container_unordered_set_template& other);
 };
 
 
