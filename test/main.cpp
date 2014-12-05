@@ -36,12 +36,13 @@ void main_contents(){
 
 
 			CSerializer backup;
-			aatc_register_for_serializer(engine, &backup);
+			aatc_serializer_register(engine, &backup);
 			backup.Store(module);
 
 			cc->Prepare(module->GetFunctionByName("serializer_test_2")); cc->Execute();
 
 			backup.Restore(module);
+			aatc_serializer_cleanup(engine, &backup);
 
 			cc->Prepare(module->GetFunctionByName("serializer_test_3")); cc->Execute();
 		}

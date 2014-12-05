@@ -6,6 +6,8 @@ vector<string> sertest_vec_string;
 vector<int> sertest_vec_int;
 vector<Material@> sertest_vec_obj;
 
+set<Material@> sertest_set_obj;
+
 
 void serializer_test_1(){
 	Print("serializer test 1");
@@ -26,6 +28,11 @@ void serializer_test_1(){
 	sertest_vec_obj.push_back(Material("2s",2));
 	sertest_vec_obj.push_back(Material("3s",3));
 	sertest_vec_obj.push_back(Material("4s",4));
+	
+	sertest_set_obj.insert(Material("1s",1));
+	sertest_set_obj.insert(Material("2s",2));
+	sertest_set_obj.insert(Material("3s",3));
+	sertest_set_obj.insert(Material("4s",4));
 }
 void serializer_test_2(){
 	Print("serializer test 2");
@@ -34,6 +41,7 @@ void serializer_test_2(){
 	sertest_vec_string.clear();
 	sertest_vec_int.clear();
 	sertest_vec_obj.clear();
+	sertest_set_obj.clear();
 }
 void serializer_test_3(){
 	Print("serializer test 3");
@@ -51,6 +59,10 @@ void serializer_test_3(){
 	}
 	Print("------");
 	for(auto it = sertest_vec_obj.begin(); it++;){
+		Print("val = " + it.value.name);
+	}
+	Print("------");
+	for(auto it = sertest_set_obj.begin(); it++;){
 		Print("val = " + it.value.name);
 	}
 }

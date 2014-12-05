@@ -63,7 +63,8 @@ void aatc_RegisterAllContainers(asIScriptEngine* engine);
 
 #if aatc_CONFIG_USE_ASADDON_SERIALIZER
 class CSerializer;
-void aatc_register_for_serializer(asIScriptEngine* engine, CSerializer* serializer);
+void aatc_serializer_register(asIScriptEngine* engine, CSerializer* serializer);
+void aatc_serializer_cleanup(asIScriptEngine* engine, CSerializer* serializer);
 #endif
 
 

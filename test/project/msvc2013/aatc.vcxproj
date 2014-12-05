@@ -157,12 +157,14 @@
     <ClInclude Include="..\..\..\source\aatc_config.hpp" />
     <ClInclude Include="..\..\..\source\aatc_internal_lists.hpp" />
     <ClInclude Include="..\..\..\source\aatc_list.hpp" />
+    <ClInclude Include="..\..\..\source\aatc_map.hpp" />
     <ClInclude Include="..\..\..\source\aatc_templatemagic.hpp" />
     <ClInclude Include="..\..\..\source\aatc_serializer.hpp" />
     <ClInclude Include="..\..\..\source\aatc_set.hpp" />
     <ClInclude Include="..\..\..\source\aatc_shared_map_template.hpp" />
     <ClInclude Include="..\..\..\source\aatc_shared_template.hpp" />
     <ClInclude Include="..\..\..\source\aatc_shared_tempspec.hpp" />
+    <ClInclude Include="..\..\..\source\aatc_unordered_map.hpp" />
     <ClInclude Include="..\..\..\source\aatc_unordered_set.hpp" />
     <ClInclude Include="..\..\..\source\aatc_vector.hpp" />
     <ClInclude Include="..\..\as_engine.hpp" />

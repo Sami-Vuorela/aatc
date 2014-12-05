@@ -106,5 +106,11 @@
     <ClInclude Include="..\..\..\source\aatc_internal_lists.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_map.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_unordered_map.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

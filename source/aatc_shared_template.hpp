@@ -246,21 +246,21 @@ public:
 
 	void StoreHandle(void** target, void* ptr_to_handle){
 		*target = *(void**)ptr_to_handle;
-		if (handlemode_needref){
+		//if (handlemode_needref){
 			engine->AddRefScriptObject(*target, objtype_content);
-		}
+		//}
 	}
 	void* StoreHandle2(void* ptr_to_handle){
 		void* result = *(void**)ptr_to_handle;
-		if(handlemode_needref){
+		//if(handlemode_needref){
 			engine->AddRefScriptObject(result, objtype_content);
-		}
+		//}
 		return result;
 	}
 	void ReleaseHandle(void* handle){
-		if (handlemode_needref){
+		//if (handlemode_needref){
 			engine->ReleaseScriptObject(handle, objtype_content);
-		}
+		//}
 	}
 
 	aatc_type_sizetype Count(void* value){

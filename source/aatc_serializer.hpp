@@ -1,6 +1,37 @@
+/*
+The zlib/libpng License
+http://opensource.org/licenses/zlib-license.php
+
+
+Angelscript addon Template Containers
+Copyright (c) 2014 Sami Vuorela
+
+This software is provided 'as-is', without any express or implied warranty.
+In no event will the authors be held liable for any damages arising from the use of this software.
+
+Permission is granted to anyone to use this software for any purpose,
+including commercial applications, and to alter it and redistribute it freely,
+subject to the following restrictions:
+
+1.	The origin of this software must not be misrepresented;
+You must not claim that you wrote the original software.
+If you use this software in a product, an acknowledgment in the product documentation would be appreciated but is not required.
+
+2.	Altered source versions must be plainly marked as such,
+and must not be misrepresented as being the original software.
+
+3.	This notice may not be removed or altered from any source distribution.
+
+
+Sami Vuorela
+samivuorela@gmail.com
+*/
+
+
 #ifndef _includedh_aatc_serializer
 #define _includedh_aatc_serializer
 
+#include <functional>
 #include "aatc_config.hpp"
 #if aatc_CONFIG_USE_ASADDON_SERIALIZER
 
@@ -43,6 +74,36 @@ template<typename dt_container, int containertype_id> void aatc_serializer_regis
 	els->serializer_tempspec_helpers[containertype_id].back().funcptr_process_restore = aatc_serializer_usertype_container_shared_1tp_tempspec_restore<dt_container>;
 	els->serializer_tempspec_helpers[containertype_id].back().funcptr_process_cleanup = aatc_serializer_usertype_container_shared_1tp_tempspec_cleanup<dt_container>;
 }
+
+
+class aatc_serializer_handle_storage{
+public:
+	class Container{
+	public:
+		aatc_container_base* container;
+		int containertype_id;
+		std::vector<void*> objects;
+
+		Container();
+		~Container();
+	};
+
+	//typedef void(*store_handle_in_container)(aatc_container_base* base, void* handle);
+	typedef std::function<void(aatc_container_base*, void*)> store_handle_in_container;
+
+	std::list<Container> containers;
+
+	store_handle_in_container funcs_store_handle[aatc_CONTAINERTYPE_COUNT];
+
+
+	aatc_serializer_handle_storage(asIScriptEngine* engine, CSerializer* serializer);
+	~aatc_serializer_handle_storage();
+};
+//global for now, while as addon serializer does not have serializer-object-specific userdata
+extern aatc_serializer_handle_storage* aatc_serializer_handle_storage_global;
+
+//void aatc_serializer_store_handle_in_any_container(aatc_serializer_handle_storage* storage, aatc_container_base* container,int containertype_id, void* handle);
+
 
 
 END_AS_NAMESPACE
