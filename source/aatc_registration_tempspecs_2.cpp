@@ -47,25 +47,27 @@ BEGIN_AS_NAMESPACE
 
 
 
-void aatc_Initializer::RegisterTempspecs(){
-	#if aatc_include_primitive_native_tempspec_INT8
-		aatc_reghelp_tempspec_all<aatc_type_int8,1,1,1>(engine, "int8");
+void aatc_Initializer::RegisterTempspecs2(){
+	#if aatc_include_primitive_native_tempspec_UINT32
+		aatc_reghelp_tempspec_all<aatc_type_uint32, 1, 1, 1>(engine, "uint");
 	#endif
-	#if aatc_include_primitive_native_tempspec_INT16
-		aatc_reghelp_tempspec_all<aatc_type_int16, 1, 1, 1>(engine, "int16");
-	#endif
-	#if aatc_include_primitive_native_tempspec_INT32
-		aatc_reghelp_tempspec_all<aatc_type_int32, 1, 1, 1>(engine, "int");
-	#endif
-	#if aatc_include_primitive_native_tempspec_INT64
-		aatc_reghelp_tempspec_all<aatc_type_int64, 1, 1, 1>(engine, "int64");
+	#if aatc_include_primitive_native_tempspec_UINT64
+		aatc_reghelp_tempspec_all<aatc_type_uint64, 1, 1, 1>(engine, "uint64");
 	#endif
 
-	#if aatc_include_primitive_native_tempspec_UINT8
-		aatc_reghelp_tempspec_all<aatc_type_uint8, 1, 1, 1>(engine, "uint8");
+	#if aatc_include_primitive_native_tempspec_FLOAT32
+		aatc_reghelp_tempspec_all<aatc_type_float32, 1, 1, 1>(engine, "float");
 	#endif
-	#if aatc_include_primitive_native_tempspec_UINT16
-		aatc_reghelp_tempspec_all<aatc_type_uint16, 1, 1, 1>(engine, "uint16");
+	#if aatc_include_primitive_native_tempspec_FLOAT64
+		aatc_reghelp_tempspec_all<aatc_type_float64, 1, 1, 1>(engine, "double");
+	#endif
+
+	#if aatc_include_primitive_native_tempspec_STRING
+		aatc_reghelp_tempspec_all<aatc_type_string, 1, 1, 1>(engine, "string");
+	#endif
+
+	#if aatc_CONFIG_USE_ASADDON_REF
+		aatc_reghelp_tempspec_all<aatc_ait_ref, 1, 1, 0>(engine, "ref");
 	#endif
 }
 

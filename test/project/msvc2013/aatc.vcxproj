@@ -145,6 +145,7 @@
     <ClCompile Include="..\..\..\source\aatc_map_template.cpp" />
     <ClCompile Include="..\..\..\source\aatc_registration.cpp" />
     <ClCompile Include="..\..\..\source\aatc_registration_tempspecs.cpp" />
+    <ClCompile Include="..\..\..\source\aatc_registration_tempspecs_2.cpp" />
     <ClCompile Include="..\..\..\source\aatc_serializer.cpp" />
     <ClCompile Include="..\..\..\source\aatc_set_template.cpp" />
     <ClCompile Include="..\..\..\source\aatc_unordered_map_template.cpp" />

@@ -38,6 +38,8 @@ samivuorela@gmail.com
 
 BEGIN_AS_NAMESPACE
 
+
+
 template<int i, typename TT> class aatc_Initializer_tm_iterate_register_all_containers{
 public:
 	static const int id = std::tuple_element<i, aatc_infos_all_tuple>::type::container_id;
@@ -45,15 +47,6 @@ public:
 		if(std::get<0>(tup)->include_container[id]){ aatc_register_container<id>(std::get<1>(tup), std::get<0>(tup)); }
 	}
 };
-
-template<class T, bool GOTFUNC_EQUALS, bool GOTFUNC_LESS, bool GOTFUNC_HASH> void aatc_reghelp_tempspec_all(asIScriptEngine* engine, const char* n_content){
-	aatc_register_container_tempspec_vector<T, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH>(engine, n_content);
-	aatc_register_container_tempspec_list<T, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH>(engine, n_content);
-	aatc_register_container_tempspec_set<T, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH>(engine, n_content);
-	if(GOTFUNC_HASH){
-		aatc_register_container_tempspec_unordered_set<T, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH>(engine, n_content);
-	}
-}
 
 
 
@@ -101,6 +94,7 @@ void aatc_Initializer::Go(){
 
 
 	RegisterTempspecs();
+	RegisterTempspecs2();
 }
 
 

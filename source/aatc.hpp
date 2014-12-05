@@ -57,6 +57,7 @@ public:
 	void _Go2();
 
 	void RegisterTempspecs();
+	void RegisterTempspecs2();
 };
 
 /*!
