@@ -4,10 +4,11 @@ string sertest_stringzorr;
 
 vector<string> sertest_vec_string;
 vector<int> sertest_vec_int;
-vector<Material> sertest_vec_obj;
+vector<Material@> sertest_vec_obj;
 
 
 void serializer_test_1(){
+	Print("serializer test 1");
 	sertest_intzorr = 25;
 	sertest_stringzorr = "25ss";
 	
@@ -27,6 +28,7 @@ void serializer_test_1(){
 	sertest_vec_obj.push_back(Material("4s",4));
 }
 void serializer_test_2(){
+	Print("serializer test 2");
 	sertest_intzorr = 1125;
 	sertest_stringzorr = "1125ss";
 	sertest_vec_string.clear();
@@ -34,6 +36,8 @@ void serializer_test_2(){
 	sertest_vec_obj.clear();
 }
 void serializer_test_3(){
+	Print("serializer test 3");
+	
 	Print("sertest int = " + sertest_intzorr);
 	Print("sertest string = " + sertest_stringzorr);
 	

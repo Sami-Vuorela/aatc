@@ -155,7 +155,9 @@
     <ClInclude Include="..\..\..\source\aatc.hpp" />
     <ClInclude Include="..\..\..\source\aatc_common.hpp" />
     <ClInclude Include="..\..\..\source\aatc_config.hpp" />
+    <ClInclude Include="..\..\..\source\aatc_internal_lists.hpp" />
     <ClInclude Include="..\..\..\source\aatc_list.hpp" />
+    <ClInclude Include="..\..\..\source\aatc_templatemagic.hpp" />
     <ClInclude Include="..\..\..\source\aatc_serializer.hpp" />
     <ClInclude Include="..\..\..\source\aatc_set.hpp" />
     <ClInclude Include="..\..\..\source\aatc_shared_map_template.hpp" />

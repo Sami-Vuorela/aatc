@@ -36,6 +36,8 @@ samivuorela@gmail.com
 BEGIN_AS_NAMESPACE
 
 
+
+
 aatc_Initializer::aatc_Initializer(asIScriptEngine* _engine):
 	engine(_engine)
 {

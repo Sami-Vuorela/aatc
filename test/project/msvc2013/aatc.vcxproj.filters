@@ -100,5 +100,11 @@
     <ClInclude Include="..\..\..\source\aatc_serializer.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_templatemagic.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_internal_lists.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

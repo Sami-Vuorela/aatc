@@ -42,17 +42,17 @@ class Material{
 	int id;
 	Material(){
 		objectcount_material++;
-		//Print("object constructor   count="+objectcount_material);
+		// Print("object constructor   count="+objectcount_material);
 	}
 	Material(string _name,int _id){
 		name = _name;
 		id = _id;
 		objectcount_material++;
-		//Print("object constructor   count="+objectcount_material);
+		// Print("object constructor   count="+objectcount_material);
 	}
 	~Material(){
 		objectcount_material--;
-		//Print("object destructor   count="+objectcount_material);
+		// Print("object destructor   count="+objectcount_material);
 	}
 	
 	//methods required for some containers

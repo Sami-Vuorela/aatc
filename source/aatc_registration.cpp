@@ -36,10 +36,23 @@ samivuorela@gmail.com
 #include "aatc_unordered_set.hpp"
 //#include "aatc_map.hpp"
 
+#include "aatc_internal_lists.hpp"
+#include "aatc_templatemagic.hpp"
+#include <cstdarg>
+
+
+
 
 
 BEGIN_AS_NAMESPACE
 
+template<int i, typename TT> class aatc_Initializer_tm_iterate_register_all_containers{
+public:
+	static const int id = std::tuple_element<i, aatc_infos_all_tuple>::type::container_id;
+	void operator()(TT& tup){
+		if(std::get<0>(tup)->include_container[id]){ aatc_register_container<id>(std::get<1>(tup), std::get<0>(tup)); }
+	}
+};
 
 template<class T, bool GOTFUNC_EQUALS, bool GOTFUNC_LESS, bool GOTFUNC_HASH> void aatc_reghelp_tempspec_all(asIScriptEngine* engine, const char* n_content){
 	aatc_register_container_tempspec_vector<T, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH>(engine, n_content);
@@ -96,12 +109,14 @@ void aatc_Initializer::Go(){
 		}
 	}
 
-	if (include_container[aatc_CONTAINERTYPE::LIST]){ aatc_register_container<aatc_CONTAINERTYPE::LIST>(engine, this); }
-	if (include_container[aatc_CONTAINERTYPE::VECTOR]){ aatc_register_container<aatc_CONTAINERTYPE::VECTOR>(engine, this); }
-	if(include_container[aatc_CONTAINERTYPE::SET]){ aatc_register_container<aatc_CONTAINERTYPE::SET>(engine, this); }
-	if(include_container[aatc_CONTAINERTYPE::UNORDERED_SET]){ aatc_register_container<aatc_CONTAINERTYPE::UNORDERED_SET>(engine, this); }
-	if(include_container[aatc_CONTAINERTYPE::MAP]){ aatc_register_container<aatc_CONTAINERTYPE::MAP>(engine, this); }
-	if(include_container[aatc_CONTAINERTYPE::UNORDERED_MAP]){ aatc_register_container<aatc_CONTAINERTYPE::UNORDERED_MAP>(engine, this); }
+	aatc_tm_iterator_1arg_functor<0, aatc_infos_all_tuple_size - 1, aatc_Initializer_tm_iterate_register_all_containers, std::tuple< aatc_Initializer*, asIScriptEngine*>> f; f(std::make_tuple(this, engine));
+
+	//if (include_container[aatc_CONTAINERTYPE::LIST]){ aatc_register_container<aatc_CONTAINERTYPE::LIST>(engine, this); }
+	//if (include_container[aatc_CONTAINERTYPE::VECTOR]){ aatc_register_container<aatc_CONTAINERTYPE::VECTOR>(engine, this); }
+	//if(include_container[aatc_CONTAINERTYPE::SET]){ aatc_register_container<aatc_CONTAINERTYPE::SET>(engine, this); }
+	//if(include_container[aatc_CONTAINERTYPE::UNORDERED_SET]){ aatc_register_container<aatc_CONTAINERTYPE::UNORDERED_SET>(engine, this); }
+	//if(include_container[aatc_CONTAINERTYPE::MAP]){ aatc_register_container<aatc_CONTAINERTYPE::MAP>(engine, this); }
+	//if(include_container[aatc_CONTAINERTYPE::UNORDERED_MAP]){ aatc_register_container<aatc_CONTAINERTYPE::UNORDERED_MAP>(engine, this); }
 
 
 	#if aatc_include_primitive_native_tempspec_INT8

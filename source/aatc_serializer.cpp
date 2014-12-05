@@ -31,7 +31,19 @@ template<typename containertype_template, typename cond_is_associative, int cont
 
 		if(container_template){
 			if(container_template->handlemode){
+				for(auto it = container_template->begin(); it != container_template->end(); it++){
+					//const void* ptr_to_object = *it;
+					//const void* ptr_to_ptr_to_object = &(const void**)ptr_to_object;
+					//val_root->m_children.push_back(new CSerializedValue(val_root, "", "", const_cast<void*>(ptr_to_ptr_to_object), container_template->astypeid_content));
 
+					//container_base->engine->AddRefScriptObject(*it, container_template->objtype_content);
+
+					const void* ptr_to_object = *it;
+					const void** ptr_to_ptr_to_object = &ptr_to_object;
+					val_root->m_children.push_back(new CSerializedValue(val_root, "", "", const_cast<void*>((void*)ptr_to_ptr_to_object), container_template->astypeid_content));
+
+					//val_root->m_children.push_back(new CSerializedValue(val_root, "", "", const_cast<void*>(*it), container_template->astypeid_content));
+				}
 			} else{
 				for(auto it = container_template->begin(); it != container_template->end(); it++){
 					val_root->m_children.push_back(new CSerializedValue(val_root, "", "", const_cast<void*>(*it), container_template->astypeid_content));
@@ -58,7 +70,18 @@ template<typename containertype_template, typename cond_is_associative, int cont
 			container_template->Clear();
 
 			if(container_template->handlemode){
+				const int size = val_root->m_children.size();
+				for(int i = 0; i < size; i++){
+					void* serialized_object = nullptr;
+					void** ptr_to_ptr_to_object = &serialized_object;
 
+					val_root->m_children[i]->Restore((void*)ptr_to_ptr_to_object, container_template->astypeid_content);
+					functor_adder<containertype_template, cond_is_associative> adder; adder(container_template, serialized_object);
+
+					//void* serialized_object = nullptr;
+					//val_root->m_children[i]->Restore((void*)serialized_object, container_template->astypeid_content);
+					//functor_adder<containertype_template, cond_is_associative> adder; adder(container_template, *serialized_object);
+				}
 			} else{
 				const int size = val_root->m_children.size();
 				for(int i = 0; i < size; i++){
