@@ -38,10 +38,9 @@ samivuorela@gmail.com
 
 //#include "scriptarray/scriptarray.h"
 
-//#include "aatc_vector.hpp"
-//#include "aatc_list.hpp"
-//#include "aatc_set.hpp"
-//#include "aatc_unordered_set.hpp"
+
+
+
 
 BEGIN_AS_NAMESPACE
 
@@ -100,13 +99,7 @@ public:
 
 
 template<typename containertype_template, typename cond_is_associative, int containertype_id> struct aatc_serializer_usertype_container_shared_1tp : public CUserType{
-	//aatc_serializer_specific_storage* storage;
-
-	//aatc_serializer_usertype_container_shared_1tp(aatc_serializer_specific_storage* _storage):
-	//	storage(_storage)
-	//{}
-
-	//functor for adding to a container, different for associative
+	//functor for adding to a container, different for associative containers
 	template<typename containertype, typename cond_is_associative> class functor_add{};
 	template<typename containertype> class functor_add<containertype, aatc_Y>{
 		public:
@@ -125,17 +118,9 @@ template<typename containertype_template, typename cond_is_associative, int cont
 		if(container_template){
 			if(container_template->handlemode){
 				for(auto it = container_template->begin(); it != container_template->end(); it++){
-					//const void* ptr_to_object = *it;
-					//const void* ptr_to_ptr_to_object = &(const void**)ptr_to_object;
-					//val_root->m_children.push_back(new CSerializedValue(val_root, "", "", const_cast<void*>(ptr_to_ptr_to_object), container_template->astypeid_content));
-
-					//container_base->engine->AddRefScriptObject(*it, container_template->objtype_content);
-
 					const void* ptr_to_object = *it;
 					const void** ptr_to_ptr_to_object = &ptr_to_object;
 					val_root->m_children.push_back(new CSerializedValue(val_root, "", "", const_cast<void*>((void*)ptr_to_ptr_to_object), container_template->astypeid_content));
-
-					//val_root->m_children.push_back(new CSerializedValue(val_root, "", "", const_cast<void*>(*it), container_template->astypeid_content));
 				}
 			} else{
 				for(auto it = container_template->begin(); it != container_template->end(); it++){
@@ -175,42 +160,12 @@ template<typename containertype_template, typename cond_is_associative, int cont
 				for(std::size_t i = 0; i < size; i++){
 					val_root->m_children[i]->Restore(&(handle_storage->objects.data()[i]), container_template->astypeid_content);
 				}
-
-				//works, but only with vector
-				//container_template->assign(size, nullptr);
-				//for(std::size_t i = 0; i < size; i++){
-				//	val_root->m_children[i]->Restore(&(container_template->data()[i]), container_template->astypeid_content);
-				//}
-
-
-				//std::vector<void*> temp_handles(size,nullptr);
-
-				//for(std::size_t i = 0; i < size; i++){
-				//	void** ptr_to_ptr_to_object = &temp_handles[i];
-				//	val_root->m_children[i]->Restore((void*)ptr_to_ptr_to_object, container_template->astypeid_content);
-				//}
-
-				//for(std::size_t i = 0; i < size; i++){
-				//	//functor_add<containertype_template, cond_is_associative> add; add(container_template, temp_handles[i]);
-
-				//	void* serialized_object = nullptr;
-				//	void** ptr_to_ptr_to_object = &serialized_object;
-
-				//	val_root->m_children[i]->Restore((void*)ptr_to_ptr_to_object, container_template->astypeid_content);
-				//	functor_add<containertype_template, cond_is_associative> add; add(container_template, serialized_object);
-
-				//	//void* serialized_object = nullptr;
-				//	//val_root->m_children[i]->Restore((void*)serialized_object, container_template->astypeid_content);
-				//	//functor_adder<containertype_template, cond_is_associative> adder; adder(container_template, *serialized_object);
-				//}
 			} else{
 				const std::size_t size = val_root->m_children.size();
 				for(std::size_t i = 0; i < size; i++){
 					void* serialized_object = nullptr;
 					serialized_object = container_base->engine->CreateScriptObject(container_template->objtype_content);
-					//serialized_object = container_base->engine->CreateScriptObject(container_template->objtype_container->GetSubType());
 					val_root->m_children[i]->Restore(serialized_object, container_template->astypeid_content);
-					//container_template->push_back(serialized_object);
 					functor_add<containertype_template, cond_is_associative> add; add(container_template, serialized_object);
 				}
 			}
@@ -386,8 +341,6 @@ void aatc_serializer_register(asIScriptEngine* engine, CSerializer* serializer){
 
 	aatc_serializer_specific_storage* storage = aatc_serializer_specific_storage_global;
 
-	//aatc_serializer_specific_storage* storage = new aatc_serializer_specific_storage;
-
 	#if aatc_CONFIG_USE_ASADDON_SERIALIZER_also_register_string_usertype
 		serializer->AddUserType(new aatc_serializer_usertype_string(), "string");
 	#endif
@@ -402,20 +355,8 @@ void aatc_serializer_register(asIScriptEngine* engine, CSerializer* serializer){
 
 	//serializer->AddUserType(new CArrayType(), "array");
 
-
-
-	//serializer->AddUserType(new aatc_serializer_usertype_container_vector_template(), aatc_name_script_container_vector);
-
-	//sprintf_s(textbuf, 1000, "%s<string>", aatc_name_script_container_vector);
-	//serializer->AddUserType(new aatc_serializer_usertype_container_vector_tempspec_string(), textbuf);
-	//serializer->AddUserType(new aatc_serializer_usertype_container_vector_tempspec_string(), "vector<int>");
-
-	{
-		aatc_tm_iterator_1arg_functor<0, aatc_infos_1tp_tuple_size - 1, aatc_serializer_store_handle_in_container_1tp_tm_iterator_init, aatc_serializer_specific_storage*> f; f(storage);
-	}
-	{
-		aatc_tm_iterator_1arg_functor<0, aatc_infos_map_tuple_size - 1, aatc_serializer_store_handle_in_container_map_tm_iterator_init, aatc_serializer_specific_storage*> f; f(storage);
-	}
+	{ aatc_tm_iterator_1arg_functor<0, aatc_infos_1tp_tuple_size - 1, aatc_serializer_store_handle_in_container_1tp_tm_iterator_init, aatc_serializer_specific_storage*> f; f(storage); }
+	{aatc_tm_iterator_1arg_functor<0, aatc_infos_map_tuple_size - 1, aatc_serializer_store_handle_in_container_map_tm_iterator_init, aatc_serializer_specific_storage*> f; f(storage); }
 }
 void aatc_serializer_cleanup(asIScriptEngine* engine, CSerializer* serializer){
 	aatc_serializer_specific_storage* storage = aatc_serializer_specific_storage_global;
@@ -425,28 +366,16 @@ void aatc_serializer_cleanup(asIScriptEngine* engine, CSerializer* serializer){
 			aatc_serializer_specific_storage::Container_1tp& cont = *it;
 			for(auto it = cont.objects.begin(); it != cont.objects.end(); it++){
 				storage->funcs_store_handle_1tp[cont.containertype_id](cont.container, *it);
-				//aatc_serializer_store_handle_in_any_container(aatc_serializer_specific_storage_global, cont.container,cont.containertype_id, *it);
-				//aatc_serializer_store_handle_in_any_container(aatc_serializer_specific_storage_global, cont.container, *it);
 			}
-
-			//aatc_container_vector_template* container_testvec = static_cast<aatc_container_vector_template*>((*it).container);
-			//container_testvec->insert(container_testvec->begin(), (*it).objects.begin(), (*it).objects.end());
 		}
 		for(auto it = storage->containers_map.begin(); it != storage->containers_map.end(); it++){
 			aatc_serializer_specific_storage::Container_map& cont = *it;
 			for(auto it = cont.objects.begin(); it != cont.objects.end(); it++){
 				storage->funcs_store_handle_map[cont.containertype_id](cont.container, *it);
-				//aatc_serializer_store_handle_in_any_container(aatc_serializer_specific_storage_global, cont.container,cont.containertype_id, *it);
-				//aatc_serializer_store_handle_in_any_container(aatc_serializer_specific_storage_global, cont.container, *it);
 			}
-
-			//aatc_container_vector_template* container_testvec = static_cast<aatc_container_vector_template*>((*it).container);
-			//container_testvec->insert(container_testvec->begin(), (*it).objects.begin(), (*it).objects.end());
 		}
 
-
-
-		delete aatc_serializer_specific_storage_global;
+		delete storage;
 	}
 }
 
@@ -455,19 +384,9 @@ aatc_serializer_specific_storage::Container_1tp::~Container_1tp(){}
 aatc_serializer_specific_storage::Container_map::Container_map(){}
 aatc_serializer_specific_storage::Container_map::~Container_map(){}
 
-
-
-
-
-//template<int container_id> void aatc_serializer_store_handle_in_container(aatc_serializer_specific_storage* storage, aatc_container_base* container, void* handle){}
-
-
 aatc_serializer_specific_storage::aatc_serializer_specific_storage(asIScriptEngine* engine, CSerializer* serializer){}
 aatc_serializer_specific_storage::~aatc_serializer_specific_storage(){}
 
-//void aatc_serializer_store_handle_in_any_container(aatc_serializer_specific_storage* storage, aatc_container_base* container, int containertype_id, void* handle){
-//	storage->funcs_store_handle[containertype_id](container, handle);
-//}
 
 END_AS_NAMESPACE
 #endif

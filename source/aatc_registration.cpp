@@ -29,16 +29,8 @@ samivuorela@gmail.com
 
 
 
-#include "aatc_common.hpp"
-#include "aatc_vector.hpp"
-#include "aatc_list.hpp"
-#include "aatc_set.hpp"
-#include "aatc_unordered_set.hpp"
-//#include "aatc_map.hpp"
-
 #include "aatc_internal_lists.hpp"
 #include "aatc_templatemagic.hpp"
-#include <cstdarg>
 
 
 
@@ -62,9 +54,6 @@ template<class T, bool GOTFUNC_EQUALS, bool GOTFUNC_LESS, bool GOTFUNC_HASH> voi
 		aatc_register_container_tempspec_unordered_set<T, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH>(engine, n_content);
 	}
 }
-
-//aatc_type_uint64 aatc_hashfunc_djb2_aswrapper(const aatc_type_string& a){return aatc_hashfunc_djb2(a);}
-
 
 
 
@@ -102,21 +91,13 @@ void aatc_Initializer::Go(){
 			r = engine->RegisterObjectMethod(n_funcpointer, "void Call()", asMETHOD(aatc_script_Funcpointer, scriptsidecall_CallVoid), asCALL_THISCALL); assert(r >= 0);
 		}
 		{//register hash functions
-
 			sprintf_s(textbuf, 1000, "%s aatc_Hashfunc_djb2(string &in)", aatc_hash_type_scriptname_actual);
 			r = engine->RegisterGlobalFunction(textbuf, asFUNCTION(aatc_hashfunc_djb2), asCALL_CDECL); assert(r >= 0);
-			//r = engine->RegisterGlobalFunction("uint64 aatc_Hashfunc_djb2(string &in)", asFUNCTION(aatc_hashfunc_djb2_aswrapper), asCALL_CDECL); assert(r >= 0);
 		}
 	}
 
 	aatc_tm_iterator_1arg_functor<0, aatc_infos_all_tuple_size - 1, aatc_Initializer_tm_iterate_register_all_containers, std::tuple< aatc_Initializer*, asIScriptEngine*>> f; f(std::make_tuple(this, engine));
 
-	//if (include_container[aatc_CONTAINERTYPE::LIST]){ aatc_register_container<aatc_CONTAINERTYPE::LIST>(engine, this); }
-	//if (include_container[aatc_CONTAINERTYPE::VECTOR]){ aatc_register_container<aatc_CONTAINERTYPE::VECTOR>(engine, this); }
-	//if(include_container[aatc_CONTAINERTYPE::SET]){ aatc_register_container<aatc_CONTAINERTYPE::SET>(engine, this); }
-	//if(include_container[aatc_CONTAINERTYPE::UNORDERED_SET]){ aatc_register_container<aatc_CONTAINERTYPE::UNORDERED_SET>(engine, this); }
-	//if(include_container[aatc_CONTAINERTYPE::MAP]){ aatc_register_container<aatc_CONTAINERTYPE::MAP>(engine, this); }
-	//if(include_container[aatc_CONTAINERTYPE::UNORDERED_MAP]){ aatc_register_container<aatc_CONTAINERTYPE::UNORDERED_MAP>(engine, this); }
 
 
 	#if aatc_include_primitive_native_tempspec_INT8

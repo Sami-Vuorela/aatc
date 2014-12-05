@@ -39,6 +39,7 @@
 #endif
 
 
+
 BEGIN_AS_NAMESPACE
 
 #define aatc_container_vector_needfunc_BACK_WRITE 1
@@ -101,9 +102,9 @@ template<
 	typedef aatc_container_vector_tempspec<dt_content> dt_container;
 
 
-#if aatc_CONFIG_USE_ASADDON_SERIALIZER
-	aatc_serializer_register_container_shared_1tp_tempspec_helpers<dt_container, aatc_CONTAINERTYPE::VECTOR>(aatc_Get_ELS(engine), n_content);
-#endif
+	#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+		aatc_serializer_register_container_shared_1tp_tempspec_helpers<dt_container, aatc_CONTAINERTYPE::VECTOR>(aatc_Get_ELS(engine), n_content);
+	#endif
 
 	int r = 0;
 	char textbuf[1000];

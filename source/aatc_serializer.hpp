@@ -31,10 +31,10 @@ samivuorela@gmail.com
 #ifndef _includedh_aatc_serializer
 #define _includedh_aatc_serializer
 
-#include <functional>
 #include "aatc_config.hpp"
 #if aatc_CONFIG_USE_ASADDON_SERIALIZER
 
+#include <functional>
 #include "aatc.hpp"
 #include "aatc_common.hpp"
 #include aatc_serializer_addonpath
@@ -97,7 +97,6 @@ public:
 		~Container_map();
 	};
 
-	//typedef void(*store_handle_in_container)(aatc_container_base* base, void* handle);
 	typedef std::function<void(aatc_container_base*, void*)> store_handle_in_container_1tp;
 	typedef std::function<void(aatc_container_base*, aatc_primunion_pair&)> store_handle_in_container_map;
 
@@ -113,8 +112,6 @@ public:
 };
 //global for now, while as addon serializer does not have serializer-object-specific userdata
 extern aatc_serializer_specific_storage* aatc_serializer_specific_storage_global;
-
-//void aatc_serializer_store_handle_in_any_container(aatc_serializer_specific_storage* storage, aatc_container_base* container,int containertype_id, void* handle);
 
 
 

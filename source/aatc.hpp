@@ -54,6 +54,7 @@ public:
 		Call this after setting your settings.
 	*/
 	void Go();
+	void _Go2();
 };
 
 /*!

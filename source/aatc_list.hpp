@@ -35,6 +35,10 @@
 #include "aatc_shared_template.hpp"
 #include "aatc_shared_tempspec.hpp"
 
+#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+#include "aatc_serializer.hpp"
+#endif
+
 
 
 BEGIN_AS_NAMESPACE
@@ -133,6 +137,10 @@ Call this to register a template specialization for the list container.<\br>
 */
 template<class dt_content, bool GOTFUNC_EQUALS = 1, bool GOTFUNC_LESS = 1, bool GOTFUNC_HASH = 1> void aatc_register_container_tempspec_list(asIScriptEngine* engine, const char* n_content){
 	typedef aatc_container_list_tempspec<dt_content> dt_container;
+
+	#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+		aatc_serializer_register_container_shared_1tp_tempspec_helpers<dt_container, aatc_CONTAINERTYPE::LIST>(aatc_Get_ELS(engine), n_content);
+	#endif
 
 	int r = 0;
 	char textbuf[1000];

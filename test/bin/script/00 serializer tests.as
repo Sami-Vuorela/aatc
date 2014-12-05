@@ -24,8 +24,24 @@ class Circulator{
 
 vector<Circulator@> circulators;
 
+class Container_of_containers{
+	vector<int> my_vec_int;
+	map<int,int> my_map_int_int;
+	unordered_set<int> my_uoset_int;
+	Container_of_containers@ coc_friend;
+	
+	void clear(){
+		my_vec_int.clear();
+		my_map_int_int.clear();
+		my_uoset_int.clear();
+		@coc_friend = null;
+	}
+};
+Container_of_containers coc;
+vector<Container_of_containers@> cocs;
 
-void serializer_test_1(){
+
+void serializer_test_1(){//sets values to global variables
 	Print("serializer test 1");
 	sertest_intzorr = 25;
 	sertest_stringzorr = "25ss";
@@ -51,7 +67,7 @@ void serializer_test_1(){
 	sertest_set_obj.insert(Material("4s",4));
 	
 	circulators.push_back(Circulator());
-	circulators.back().name = "name xx";
+	circulators.back().name = "name is correct";
 	@circulators.back().mylist = @circulators;
 	
 	sertest_map_int_int.insert(2,20);
@@ -68,6 +84,32 @@ void serializer_test_1(){
 	sertest_map_mix.insert(Material("1s",1),40);
 	sertest_map_mix.insert(Material("4s",4),10);
 	sertest_map_mix.insert(Material("2s",2),30);
+	
+	{
+		coc.my_vec_int.push_back(1);
+		coc.my_vec_int.push_back(2);
+		coc.my_vec_int.push_back(11);
+		coc.my_vec_int.push_back(22);
+		
+		coc.my_map_int_int.insert(2,20);
+		coc.my_map_int_int.insert(3,30);
+		coc.my_map_int_int.insert(1,10);
+		coc.my_map_int_int.insert(4,40);
+		
+		coc.my_uoset_int.insert(5);
+		coc.my_uoset_int.insert(3);
+		coc.my_uoset_int.insert(1);
+		coc.my_uoset_int.insert(2);
+		
+		cocs.push_back(coc);
+		@cocs.back().coc_friend = @coc;
+		cocs.push_back(coc);
+		@cocs.back().coc_friend = @coc;
+	}
+	
+	
+	// circulators.back().mymap.insert(25,55);
+	// circulators.back().mymap.insert(45,75);
 	
 	// {
 		// vector<Material> vex;
@@ -95,7 +137,8 @@ void serializer_test_1(){
 		// sertest_multimax_array.insertLast(vex);
 	// }
 }
-void serializer_test_2(){
+//the serializer stores all globals between these tests
+void serializer_test_2(){//set global variables to empty / boring values
 	Print("serializer test 2");
 	sertest_intzorr = 1125;
 	sertest_stringzorr = "1125ss";
@@ -109,9 +152,18 @@ void serializer_test_2(){
 	// sertest_multimax_vec.clear();
 	// sertest_multimax_array.resize(0);
 	
-	circulators.back().name = "empty";
+	circulators.back().name = "incorrect name";
+	// circulators.back().mymap.clear();
+	
+	coc.clear();
+	
+	for(auto it = cocs.begin(); it++;){
+		it.value.clear();
+	}
+	cocs.clear();
 }
-void serializer_test_3(){
+//the serializer restores the state of global variables between these tests
+void serializer_test_3(){//print global variable values, check if they are correct / actually exist
 	Print("serializer test 3");
 	
 	Print("sertest int = " + sertest_intzorr);
@@ -160,8 +212,31 @@ void serializer_test_3(){
 		// }
 	// }
 	
-	Print("------");
+	Print("---test serializer circulator---");
 	Print("circulators count = " + circulators.size());
-	Print("circulators count 2 = " + circulators.back().mylist.size());
+	Print("circulators count circular = " + circulators.back().mylist.size());
 	Print("circulator name = " + circulators.back().mylist[0].name);
+	// Print("------");
+	// for(auto it = circulators.back().mymap.begin(); it++;){
+		// Print("val = " + it.key + " , "+ it.value);
+	// }
+	
+	
+	Print("---test serializer coc---");
+	for(auto it = coc.my_vec_int.begin(); it++;){
+		Print("val = " + it.value);
+	}
+	
+	Print("---test serializer cocs---");
+	for(auto it = cocs.begin(); it++;){
+		Print("------");
+		for(auto it2 = it.value.my_vec_int.begin(); it2++;){
+			Print("val = " + it2.value);
+		}
+		Print("------");
+		for(auto it2 = it.value.my_map_int_int.begin(); it2++;){
+			Print("val = " + it2.key + " , "+ it2.value);
+		}
+		Print("friend size = " + it.value.coc_friend.my_vec_int.size());
+	}
 }
