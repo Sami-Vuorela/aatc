@@ -62,6 +62,9 @@
     <ClCompile Include="..\..\..\source\aatc_serializer.cpp">
       <Filter>as addons\aatc</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\..\..\..\..\..\Dev\angelscript_svn\sdk\add_on\scriptarray\scriptarray.cpp">
+      <Filter>as addons</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\as_engine.hpp">

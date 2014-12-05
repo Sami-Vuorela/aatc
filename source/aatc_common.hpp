@@ -470,8 +470,11 @@ struct aatc_primunion{
 
 		void* ptr;
 	};
+	void* Get_Ptr_To_Primitive_Type(aatc_PRIMITIVE_TYPE primtype);
+	const void* Get_Ptr_To_Primitive_Type_const(aatc_PRIMITIVE_TYPE primtype)const;
 };
 extern aatc_primunion aatc_primunion_defaultvalue;
+typedef std::pair<aatc_primunion, aatc_primunion> aatc_primunion_pair;
 
 //for maps
 class aatc_containerfunctor_map_Settings{

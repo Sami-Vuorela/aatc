@@ -98,6 +98,9 @@ public:
 	asIObjectType* objtype_key;
 	asIObjectType* objtype_value;
 
+	aatc_type_astypeid astypeid_key;
+	aatc_type_astypeid astypeid_value;
+
 	bool objectmode_key;
 	bool objectmode_value;
 	bool needref_key;
@@ -121,8 +124,8 @@ public:
 
 		objtype_container->AddRef();
 
-		aatc_type_astypeid astypeid_key = objtype_container->GetSubTypeId(0);
-		aatc_type_astypeid astypeid_value = objtype_container->GetSubTypeId(1);
+		astypeid_key = objtype_container->GetSubTypeId(0);
+		astypeid_value = objtype_container->GetSubTypeId(1);
 
 		datahandlingid_key = aatc_Determine_Datahandlingtype(astypeid_key);
 		datahandlingid_value = aatc_Determine_Datahandlingtype(astypeid_value);
@@ -519,7 +522,7 @@ public:
 		T_container::iterator it = T_container::find(findkey);
 		if(it == T_container::end()){
 
-			std::pair<aatc_primunion, aatc_primunion> insertpair;
+			aatc_primunion_pair insertpair;
 
 			switch(datahandlingid_key){
 			case aatc_DATAHANDLINGTYPE::STRING:{

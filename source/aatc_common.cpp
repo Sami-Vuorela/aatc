@@ -827,4 +827,24 @@ aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_fu
 
 aatc_container_base::~aatc_container_base(){}
 
+void* aatc_primunion::Get_Ptr_To_Primitive_Type(aatc_PRIMITIVE_TYPE primtype){
+	switch(primtype){
+		case aatc_PRIMITIVE_TYPE::INT8:{return &i8; }
+		case aatc_PRIMITIVE_TYPE::INT16:{return &i16; }
+		case aatc_PRIMITIVE_TYPE::INT32:{return &i32; }
+		case aatc_PRIMITIVE_TYPE::INT64:{return &i64; }
+		case aatc_PRIMITIVE_TYPE::UINT8:{return &ui8; }
+		case aatc_PRIMITIVE_TYPE::UINT16:{return &ui16; }
+		case aatc_PRIMITIVE_TYPE::UINT32:{return &ui32; }
+		case aatc_PRIMITIVE_TYPE::UINT64:{return &ui64; }
+		case aatc_PRIMITIVE_TYPE::FLOAT32:{return &f32; }
+		case aatc_PRIMITIVE_TYPE::FLOAT64:{return &f64; }
+	};
+	return nullptr;
+}
+const void* aatc_primunion::Get_Ptr_To_Primitive_Type_const(aatc_PRIMITIVE_TYPE primtype)const{
+	return const_cast<aatc_primunion*>(this)->Get_Ptr_To_Primitive_Type(primtype);
+	//return const_cast<void*>(Get_Ptr_To_Primitive_Type(primtype));
+}
+
 END_AS_NAMESPACE

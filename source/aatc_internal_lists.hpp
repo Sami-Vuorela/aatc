@@ -108,6 +108,12 @@ typedef std::tuple<
 > aatc_infos_1tp_tuple;
 const int aatc_infos_1tp_tuple_size = std::tuple_size<aatc_infos_1tp_tuple>::value;
 
+typedef std::tuple<
+	aatc_info_container_map,
+	aatc_info_container_unordered_map
+> aatc_infos_map_tuple;
+const int aatc_infos_map_tuple_size = std::tuple_size<aatc_infos_map_tuple>::value;
+
 
 
 END_AS_NAMESPACE

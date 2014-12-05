@@ -76,33 +76,45 @@ template<typename dt_container, int containertype_id> void aatc_serializer_regis
 }
 
 
-class aatc_serializer_handle_storage{
+class aatc_serializer_specific_storage{
 public:
-	class Container{
+	class Container_1tp{
 	public:
 		aatc_container_base* container;
 		int containertype_id;
 		std::vector<void*> objects;
 
-		Container();
-		~Container();
+		Container_1tp();
+		~Container_1tp();
+	};
+	class Container_map{
+	public:
+		aatc_container_base* container;
+		int containertype_id;
+		std::vector<aatc_primunion_pair> objects;
+
+		Container_map();
+		~Container_map();
 	};
 
 	//typedef void(*store_handle_in_container)(aatc_container_base* base, void* handle);
-	typedef std::function<void(aatc_container_base*, void*)> store_handle_in_container;
+	typedef std::function<void(aatc_container_base*, void*)> store_handle_in_container_1tp;
+	typedef std::function<void(aatc_container_base*, aatc_primunion_pair&)> store_handle_in_container_map;
 
-	std::list<Container> containers;
+	std::list<Container_1tp> containers_1tp;
+	std::list<Container_map> containers_map;
 
-	store_handle_in_container funcs_store_handle[aatc_CONTAINERTYPE_COUNT];
+	store_handle_in_container_1tp funcs_store_handle_1tp[aatc_CONTAINERTYPE_COUNT];
+	store_handle_in_container_map funcs_store_handle_map[aatc_CONTAINERTYPE_COUNT];
 
 
-	aatc_serializer_handle_storage(asIScriptEngine* engine, CSerializer* serializer);
-	~aatc_serializer_handle_storage();
+	aatc_serializer_specific_storage(asIScriptEngine* engine, CSerializer* serializer);
+	~aatc_serializer_specific_storage();
 };
 //global for now, while as addon serializer does not have serializer-object-specific userdata
-extern aatc_serializer_handle_storage* aatc_serializer_handle_storage_global;
+extern aatc_serializer_specific_storage* aatc_serializer_specific_storage_global;
 
-//void aatc_serializer_store_handle_in_any_container(aatc_serializer_handle_storage* storage, aatc_container_base* container,int containertype_id, void* handle);
+//void aatc_serializer_store_handle_in_any_container(aatc_serializer_specific_storage* storage, aatc_container_base* container,int containertype_id, void* handle);
 
 
 
