@@ -65,6 +65,9 @@
     <ClCompile Include="..\..\..\..\..\..\..\..\Dev\angelscript_svn\sdk\add_on\scriptarray\scriptarray.cpp">
       <Filter>as addons</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_registration_tempspecs.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\as_engine.hpp">
@@ -113,6 +116,12 @@
       <Filter>as addons\aatc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\aatc_unordered_map.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_tempspecs.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_switches.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
   </ItemGroup>

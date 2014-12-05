@@ -55,6 +55,8 @@ public:
 	*/
 	void Go();
 	void _Go2();
+
+	void RegisterTempspecs();
 };
 
 /*!
