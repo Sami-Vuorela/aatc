@@ -110,6 +110,15 @@ template<typename containertype_template, typename cond_is_associative, int cont
 			void operator()(containertype* container, void* item)const { container->push_back(item); }
 	};
 
+
+
+	asIScriptEngine* engine;
+
+	//we need a pointer to the engine
+	aatc_serializer_usertype_container_shared_1tp(asIScriptEngine* _engine) :
+		engine(_engine)
+	{}
+
 	void Store(CSerializedValue* val_root, void* ptr){
 		aatc_container_base* container_base = (aatc_container_base*)ptr;
 
@@ -141,6 +150,10 @@ template<typename containertype_template, typename cond_is_associative, int cont
 	}
 	void Restore(CSerializedValue* val_root, void* ptr){
 		aatc_container_base* container_base = (aatc_container_base*)ptr;
+
+		if(!container_base->engine){
+			container_base->engine = engine;
+		}
 
 		containertype_template* container_template = dynamic_cast<containertype_template*>(container_base);
 
@@ -345,10 +358,10 @@ void aatc_serializer_register(asIScriptEngine* engine, CSerializer* serializer){
 		serializer->AddUserType(new aatc_serializer_usertype_string(), "string");
 	#endif
 
-	serializer->AddUserType(new aatc_serializer_usertype_container_shared_1tp<aatc_container_vector_template,aatc_N, aatc_CONTAINERTYPE::VECTOR>(), aatc_name_script_container_vector);
-	serializer->AddUserType(new aatc_serializer_usertype_container_shared_1tp<aatc_container_list_template, aatc_N, aatc_CONTAINERTYPE::LIST>(), aatc_name_script_container_list);
-	serializer->AddUserType(new aatc_serializer_usertype_container_shared_1tp<aatc_container_set_template, aatc_Y, aatc_CONTAINERTYPE::SET>(), aatc_name_script_container_set);
-	serializer->AddUserType(new aatc_serializer_usertype_container_shared_1tp<aatc_container_unordered_set_template, aatc_Y, aatc_CONTAINERTYPE::UNORDERED_SET>(), aatc_name_script_container_unordered_set);
+		serializer->AddUserType(new aatc_serializer_usertype_container_shared_1tp<aatc_container_vector_template, aatc_N, aatc_CONTAINERTYPE::VECTOR>(engine), aatc_name_script_container_vector);
+	serializer->AddUserType(new aatc_serializer_usertype_container_shared_1tp<aatc_container_list_template, aatc_N, aatc_CONTAINERTYPE::LIST>(engine), aatc_name_script_container_list);
+	serializer->AddUserType(new aatc_serializer_usertype_container_shared_1tp<aatc_container_set_template, aatc_Y, aatc_CONTAINERTYPE::SET>(engine), aatc_name_script_container_set);
+	serializer->AddUserType(new aatc_serializer_usertype_container_shared_1tp<aatc_container_unordered_set_template, aatc_Y, aatc_CONTAINERTYPE::UNORDERED_SET>(engine), aatc_name_script_container_unordered_set);
 
 	serializer->AddUserType(new aatc_serializer_usertype_container_shared_map<aatc_container_map_template, aatc_CONTAINERTYPE::MAP>(), aatc_name_script_container_map);
 	serializer->AddUserType(new aatc_serializer_usertype_container_shared_map<aatc_container_unordered_map_template, aatc_CONTAINERTYPE::UNORDERED_MAP>(), aatc_name_script_container_unordered_map);

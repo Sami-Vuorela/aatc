@@ -40,6 +40,7 @@ class Container_of_containers{
 Container_of_containers coc;
 vector<Container_of_containers@> cocs;
 
+//test simple game worlds containing objects
 class sertest_Host{
 	vector<sertest_World@> worlds;
 };
@@ -50,9 +51,10 @@ class sertest_World{
 	string name;
 };
 class sertest_WorldObject{
-	sertest_World@ world;
+	sertest_World@ world;//test circular reference
 	
 	string name;
+	set<int> values;
 };
 
 sertest_Host@ sertest_host;
@@ -137,13 +139,20 @@ void serializer_test_1(){//sets values to global variables
 		{
 			sertest_WorldObject@ wob = sertest_WorldObject();
 			world.objects.push_back(wob);
+			@wob.world = @world;
+			
 			wob.name = "wob 1";
+			wob.values.insert(3);
+			wob.values.insert(1);
 		}
 		{
 			sertest_WorldObject@ wob = sertest_WorldObject();
 			world.objects.push_back(wob);
-			@world.host = @sertest_host;
+			@wob.world = @world;
+			
 			wob.name = "wob 2";
+			wob.values.insert(77);
+			wob.values.insert(22);
 		}
 	}
 	{
@@ -156,12 +165,20 @@ void serializer_test_1(){//sets values to global variables
 		{
 			sertest_WorldObject@ wob = sertest_WorldObject();
 			world.objects.push_back(wob);
+			@wob.world = @world;
+			
 			wob.name = "wob 11";
+			wob.values.insert(35);
+			wob.values.insert(45);
 		}
 		{
 			sertest_WorldObject@ wob = sertest_WorldObject();
 			world.objects.push_back(wob);
+			@wob.world = @world;
+			
 			wob.name = "wob 22";
+			wob.values.insert(22);
+			wob.values.insert(11);
 		}
 	}
 	
@@ -312,9 +329,13 @@ void serializer_test_3(){//print global variable values, check if they are corre
 	Print("---test serializer world objects---");
 	if(@sertest_host != null){
 		for(auto it = sertest_host.worlds.begin(); it++;){
+			Print("");
 			Print("world name = " + it.value.name);
 			for(auto it2 = it.value.objects.begin(); it2++;){
 				Print("  wob name = "+it2.value.name);
+				for(auto it3 = it2.value.values.begin(); it3++;){
+					Print("    wob values = "+it3.value);
+				}
 			}
 			Print("world host worldcount = " + it.value.host.worlds.size());
 		}
