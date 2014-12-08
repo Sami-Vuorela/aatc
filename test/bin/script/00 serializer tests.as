@@ -40,6 +40,24 @@ class Container_of_containers{
 Container_of_containers coc;
 vector<Container_of_containers@> cocs;
 
+class sertest_Host{
+	vector<sertest_World@> worlds;
+};
+class sertest_World{
+	sertest_Host@ host;//test circular reference
+	vector<sertest_WorldObject@> objects;
+	
+	string name;
+};
+class sertest_WorldObject{
+	sertest_World@ world;
+	
+	string name;
+};
+
+sertest_Host@ sertest_host;
+
+
 
 void serializer_test_1(){//sets values to global variables
 	Print("serializer test 1");
@@ -108,6 +126,46 @@ void serializer_test_1(){//sets values to global variables
 	}
 	
 	
+	@sertest_host = sertest_Host();
+	{
+		sertest_World@ world = sertest_World();
+		sertest_host.worlds.push_back(world);
+		
+		@world.host = @sertest_host;
+		world.name = "real world";
+		
+		{
+			sertest_WorldObject@ wob = sertest_WorldObject();
+			world.objects.push_back(wob);
+			wob.name = "wob 1";
+		}
+		{
+			sertest_WorldObject@ wob = sertest_WorldObject();
+			world.objects.push_back(wob);
+			@world.host = @sertest_host;
+			wob.name = "wob 2";
+		}
+	}
+	{
+		sertest_World@ world = sertest_World();
+		sertest_host.worlds.push_back(world);
+		
+		@world.host = @sertest_host;
+		world.name = "fantasy world";
+		
+		{
+			sertest_WorldObject@ wob = sertest_WorldObject();
+			world.objects.push_back(wob);
+			wob.name = "wob 11";
+		}
+		{
+			sertest_WorldObject@ wob = sertest_WorldObject();
+			world.objects.push_back(wob);
+			wob.name = "wob 22";
+		}
+	}
+	
+	
 	// circulators.back().mymap.insert(25,55);
 	// circulators.back().mymap.insert(45,75);
 	
@@ -161,6 +219,17 @@ void serializer_test_2(){//set global variables to empty / boring values
 		it.value.clear();
 	}
 	cocs.clear();
+	
+	
+	for(auto it = sertest_host.worlds.begin(); it++;){
+		for(auto it2 = it.value.objects.begin(); it2++;){
+			it2.value.name = "nup";
+		}
+		it.value.objects.clear();
+		it.value.name = "nope";
+	}
+	sertest_host.worlds.clear();
+	@sertest_host = null;
 }
 //the serializer restores the state of global variables between these tests
 void serializer_test_3(){//print global variable values, check if they are correct / actually exist
@@ -238,5 +307,16 @@ void serializer_test_3(){//print global variable values, check if they are corre
 			Print("val = " + it2.key + " , "+ it2.value);
 		}
 		Print("friend size = " + it.value.coc_friend.my_vec_int.size());
+	}
+	
+	Print("---test serializer world objects---");
+	if(@sertest_host != null){
+		for(auto it = sertest_host.worlds.begin(); it++;){
+			Print("world name = " + it.value.name);
+			for(auto it2 = it.value.objects.begin(); it2++;){
+				Print("  wob name = "+it2.value.name);
+			}
+			Print("world host worldcount = " + it.value.host.worlds.size());
+		}
 	}
 }
