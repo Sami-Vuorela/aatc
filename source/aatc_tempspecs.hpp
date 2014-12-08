@@ -49,14 +49,10 @@ BEGIN_AS_NAMESPACE
 /*!\brief Actual class used for template specializations defined in c++.*/
 template<class T> class aatc_container_vector_tempspec : public aatc_container_shared_1tp_tempspec<aatc_acit_vector<T>, T>{
 public:
-	aatc_container_vector_tempspec(){
-		engine = asGetActiveContext()->GetEngine();
-	}
+	aatc_container_vector_tempspec(){}
 	aatc_container_vector_tempspec(const aatc_container_vector_tempspec& other) :
 		aatc_container_shared_1tp_tempspec(other)
-	{
-		engine = other.engine;
-	}
+	{}
 	~aatc_container_vector_tempspec(){}
 
 	static aatc_container_vector_tempspec* Factory(){ return new aatc_container_vector_tempspec(); }

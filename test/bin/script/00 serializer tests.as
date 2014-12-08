@@ -12,7 +12,8 @@ map<int,int> sertest_map_int_int;
 map<Material,Material> sertest_map_mat_mat;
 map<Material,int> sertest_map_mix;
 
-// vector<vector<Material>> sertest_multimax_vec;
+vector<vector<Material>> sertest_multimax_vec;
+vector<vector<int>> sertest_multimax_vec_tempspec;
 // array<array<Material>> sertest_multimax_array;
 
 
@@ -195,18 +196,31 @@ void serializer_test_1(){//sets values to global variables
 	// circulators.back().mymap.insert(25,55);
 	// circulators.back().mymap.insert(45,75);
 	
-	// {
-		// vector<Material> vex;
-		// vex.push_back(Material("1s",1));
-		// vex.push_back(Material("2s",2));
-		// sertest_multimax_vec.push_back(vex);
-	// }
-	// {
-		// vector<Material> vex;
-		// vex.push_back(Material("3s",3));
-		// vex.push_back(Material("4s",4));
-		// sertest_multimax_vec.push_back(vex);
-	// }
+	{
+		vector<Material> vex;
+		vex.push_back(Material("1s",1));
+		vex.push_back(Material("2s",2));
+		sertest_multimax_vec.push_back(vex);
+	}
+	{
+		vector<Material> vex;
+		vex.push_back(Material("3s",3));
+		vex.push_back(Material("4s",4));
+		sertest_multimax_vec.push_back(vex);
+	}
+	
+	{
+		vector<int> vex;
+		vex.push_back(1);
+		vex.push_back(2);
+		sertest_multimax_vec_tempspec.push_back(vex);
+	}
+	{
+		vector<int> vex;
+		vex.push_back(3);
+		vex.push_back(4);
+		sertest_multimax_vec_tempspec.push_back(vex);
+	}
 	
 	// {
 		// array<Material> vex;
@@ -233,7 +247,8 @@ void serializer_test_2(){//set global variables to empty / boring values
 	sertest_map_int_int.clear();
 	sertest_map_mat_mat.clear();
 	sertest_map_mix.clear();
-	// sertest_multimax_vec.clear();
+	sertest_multimax_vec.clear();
+	sertest_multimax_vec_tempspec.clear();
 	// sertest_multimax_array.resize(0);
 	
 	circulators.back().name = "incorrect name";
@@ -292,13 +307,20 @@ void serializer_test_3(){//print global variable values, check if they are corre
 	for(auto it = sertest_map_mix.begin(); it++;){
 		Print("val = " + it.key.name + " , "+ it.value);
 	}
-	// Print("------");
-	// for(auto it = sertest_multimax_vec.begin(); it++;){
-		// Print("  ------");
-		// for(auto it2 = it.value.begin(); it2++;){
-			// Print("    val = " + it2.value.name);
-		// }
-	// }
+	Print("------");
+	for(auto it = sertest_multimax_vec.begin(); it++;){
+		Print("  ------");
+		for(auto it2 = it.value.begin(); it2++;){
+			Print("    val = " + it2.value.name);
+		}
+	}
+	Print("------");
+	for(auto it = sertest_multimax_vec_tempspec.begin(); it++;){
+		Print("  ------");
+		for(auto it2 = it.value.begin(); it2++;){
+			Print("    val = " + it2.value);
+		}
+	}
 	// Print("------");
 	// for(int i=0; i<sertest_multimax_array.length; i++ ){
 		// Print("  ------");
