@@ -45,7 +45,7 @@ aatc_container_list_template::aatc_container_list_template(const aatc_container_
 aatc_container_list_template::~aatc_container_list_template(){}
 
 aatc_container_list_template* aatc_container_list_template::Factory(asIObjectType* _objtype){
-	return new aatc_container_list_template(asGetActiveContext()->GetEngine(), _objtype);
+	return new aatc_container_list_template(_objtype->GetEngine(), _objtype);
 }
 aatc_container_list_template* aatc_container_list_template::Factory_copy(asIObjectType* _objtype, const aatc_container_list_template& other){
 	return new aatc_container_list_template(other);

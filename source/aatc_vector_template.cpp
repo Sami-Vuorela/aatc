@@ -46,7 +46,7 @@ aatc_container_vector_template::aatc_container_vector_template(const aatc_contai
 aatc_container_vector_template::~aatc_container_vector_template(){}
 
 aatc_container_vector_template* aatc_container_vector_template::Factory(asIObjectType* _objtype){
-	return new aatc_container_vector_template(asGetActiveContext()->GetEngine(), _objtype);
+	return new aatc_container_vector_template(_objtype->GetEngine(), _objtype);
 }
 aatc_container_vector_template* aatc_container_vector_template::Factory_copy(asIObjectType* _objtype, const aatc_container_vector_template& other){
 	return new aatc_container_vector_template(other);

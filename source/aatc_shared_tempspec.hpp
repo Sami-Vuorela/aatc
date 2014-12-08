@@ -59,7 +59,8 @@ public:
 	static std::string staticname_content;
 
 	aatc_container_shared_1tp_tempspec(){
-		engine = asGetActiveContext()->GetEngine();
+		auto* ctx = asGetActiveContext();
+		if(ctx){ engine = ctx->GetEngine(); }
 	}
 	aatc_container_shared_1tp_tempspec(const aatc_container_shared_1tp_tempspec& other) :
 		T_container(other)

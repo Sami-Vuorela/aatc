@@ -48,7 +48,7 @@ aatc_container_set_template::aatc_container_set_template(const aatc_container_se
 aatc_container_set_template::~aatc_container_set_template(){}
 
 aatc_container_set_template* aatc_container_set_template::Factory(asIObjectType* _objtype){
-	asIScriptEngine* engine = asGetActiveContext()->GetEngine();
+	asIScriptEngine* engine = _objtype->GetEngine();
 	return new aatc_container_set_template(engine, _objtype);
 }
 aatc_container_set_template* aatc_container_set_template::Factory_copy(asIObjectType* _objtype, const aatc_container_set_template& other){

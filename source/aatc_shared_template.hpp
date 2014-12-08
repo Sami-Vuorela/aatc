@@ -145,7 +145,7 @@ public:
 		//problem_nofunc_eq_or_cmp = 0;
 		//problem_nofunc_cmp = 0;
 
-		els = (aatc_engine_level_storage*)asGetActiveContext()->GetEngine()->GetUserData(aatc_engine_userdata_id);
+		els = aatc_Get_ELS(engine);
 		aatc_containertype_specific_storage* ctss = els->GetContainerTypeSpecificStorage(T_CONTAINERTYPEID);
 
 		if (astypeid_content & asTYPEID_OBJHANDLE){

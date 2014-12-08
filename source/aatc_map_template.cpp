@@ -47,7 +47,7 @@ aatc_container_map_template::aatc_container_map_template(const aatc_container_ma
 aatc_container_map_template::~aatc_container_map_template(){}
 
 aatc_container_map_template* aatc_container_map_template::Factory(asIObjectType* _objtype_container){
-	return new aatc_container_map_template(asGetActiveContext()->GetEngine(), _objtype_container);
+	return new aatc_container_map_template(_objtype_container->GetEngine(), _objtype_container);
 }
 aatc_container_map_template* aatc_container_map_template::Factory_copy(asIObjectType* _objtype, const aatc_container_map_template& other){
 	return new aatc_container_map_template(other);

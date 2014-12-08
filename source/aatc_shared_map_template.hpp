@@ -176,7 +176,7 @@ public:
 						break; }
 		};
 
-		els = (aatc_engine_level_storage*)asGetActiveContext()->GetEngine()->GetUserData(aatc_engine_userdata_id);
+		els = aatc_Get_ELS(engine);
 		aatc_containertype_specific_storage* ctss = els->GetContainerTypeSpecificStorage(T_CONTAINERTYPEID);
 
 		aatc_template_specific_storage* tss = ctss->GetTemplateSpecificStorage(astypeid_key);

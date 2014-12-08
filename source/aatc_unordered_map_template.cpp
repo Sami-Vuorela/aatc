@@ -47,7 +47,7 @@ aatc_container_unordered_map_template::aatc_container_unordered_map_template(con
 aatc_container_unordered_map_template::~aatc_container_unordered_map_template(){}
 
 aatc_container_unordered_map_template* aatc_container_unordered_map_template::Factory(asIObjectType* _objtype_container){
-	asIScriptEngine* engine = asGetActiveContext()->GetEngine();
+	asIScriptEngine* engine = _objtype_container->GetEngine();
 	return new aatc_container_unordered_map_template(engine, _objtype_container);
 }
 aatc_container_unordered_map_template* aatc_container_unordered_map_template::Factory_copy(asIObjectType* _objtype, const aatc_container_unordered_map_template& other){
