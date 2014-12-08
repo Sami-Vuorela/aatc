@@ -54,7 +54,8 @@ class sertest_WorldObject{
 	sertest_World@ world;//test circular reference
 	
 	string name;
-	set<int> values;
+	unordered_set<int> values;
+	map<string,string> textvalues;
 };
 
 sertest_Host@ sertest_host;
@@ -144,6 +145,8 @@ void serializer_test_1(){//sets values to global variables
 			wob.name = "wob 1";
 			wob.values.insert(3);
 			wob.values.insert(1);
+			wob.textvalues.insert("size","100 pixels");
+			wob.textvalues.insert("weight","100 pixel kilos");
 		}
 		{
 			sertest_WorldObject@ wob = sertest_WorldObject();
@@ -153,6 +156,8 @@ void serializer_test_1(){//sets values to global variables
 			wob.name = "wob 2";
 			wob.values.insert(77);
 			wob.values.insert(22);
+			wob.textvalues.insert("weight","200 pixel kilos");
+			wob.textvalues.insert("size","200 pixels");
 		}
 	}
 	{
@@ -167,18 +172,22 @@ void serializer_test_1(){//sets values to global variables
 			world.objects.push_back(wob);
 			@wob.world = @world;
 			
-			wob.name = "wob 11";
+			wob.name = "dwarf";
 			wob.values.insert(35);
 			wob.values.insert(45);
+			wob.textvalues.insert("name_first","Urist");
+			wob.textvalues.insert("name_last","McDebug");
 		}
 		{
 			sertest_WorldObject@ wob = sertest_WorldObject();
 			world.objects.push_back(wob);
 			@wob.world = @world;
 			
-			wob.name = "wob 22";
+			wob.name = "fortress";
 			wob.values.insert(22);
 			wob.values.insert(11);
+			wob.textvalues.insert("age","3 years");
+			wob.textvalues.insert("wealth","2000000 dwarfbucks");
 		}
 	}
 	
@@ -335,6 +344,9 @@ void serializer_test_3(){//print global variable values, check if they are corre
 				Print("  wob name = "+it2.value.name);
 				for(auto it3 = it2.value.values.begin(); it3++;){
 					Print("    wob values = "+it3.value);
+				}
+				for(auto it3 = it2.value.textvalues.begin(); it3++;){
+					Print("    wob textvalues = "+it3.key+" , "+it3.value);
 				}
 			}
 			Print("world host worldcount = " + it.value.host.worlds.size());

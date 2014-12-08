@@ -449,7 +449,7 @@ enum class aatc_PRIMITIVE_TYPE : int_fast8_t{
 	FLOAT64
 };
 
-aatc_DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(aatc_type_uint32 astypeid);
+aatc_DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(asIScriptEngine* engine,aatc_type_uint32 astypeid);
 aatc_PRIMITIVE_TYPE aatc_Determine_Primitivetype(aatc_type_uint32 astypeid);
 
 /*!\brief This monstrosity is used to store any primitive or handle using the same allocation code.*/

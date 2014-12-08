@@ -768,8 +768,8 @@ void aatc_errorprint_container_access_bounds(aatc_type_sizetype index, aatc_type
 
 
 
-aatc_DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(aatc_type_uint32 astypeid){
-	if(astypeid == asGetActiveContext()->GetEngine()->GetStringFactoryReturnTypeId()){
+aatc_DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(asIScriptEngine* engine,aatc_type_uint32 astypeid){
+	if(astypeid == engine->GetStringFactoryReturnTypeId()){
 		return aatc_DATAHANDLINGTYPE::STRING;
 	}
 	if(astypeid & asTYPEID_MASK_OBJECT){

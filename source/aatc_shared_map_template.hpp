@@ -127,8 +127,8 @@ public:
 		astypeid_key = objtype_container->GetSubTypeId(0);
 		astypeid_value = objtype_container->GetSubTypeId(1);
 
-		datahandlingid_key = aatc_Determine_Datahandlingtype(astypeid_key);
-		datahandlingid_value = aatc_Determine_Datahandlingtype(astypeid_value);
+		datahandlingid_key = aatc_Determine_Datahandlingtype(engine,astypeid_key);
+		datahandlingid_value = aatc_Determine_Datahandlingtype(engine, astypeid_value);
 
 		handlemode_directcomp = 0;
 
