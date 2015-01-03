@@ -847,4 +847,11 @@ const void* aatc_primunion::Get_Ptr_To_Primitive_Type_const(aatc_PRIMITIVE_TYPE 
 	//return const_cast<void*>(Get_Ptr_To_Primitive_Type(primtype));
 }
 
+void aatc_primunion::Init(){
+	ui32 = 0;
+	ptr = nullptr;
+}
+
+
+
 END_AS_NAMESPACE

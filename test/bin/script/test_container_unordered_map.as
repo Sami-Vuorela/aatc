@@ -12,8 +12,12 @@ void TestContainer_unordered_map(){
 		cont.erase(3);
 		cont.erase(5);
 		
-		cont.insert(4,40);
-		cont.insert(5,50);
+		// cont.insert(4,40);
+		// cont.insert(5,50);
+		
+		//test inserting new things with opIndex
+		cont[4] = 40;
+		cont[5] = 50;
 		
 		{//test copying the whole container
 			unordered_map<int,int> cont2(cont);
@@ -107,8 +111,12 @@ void TestContainer_unordered_map(){
 		cont.erase(Material("3s",9999));
 		cont.erase(Material("5s",55));
 		
-		cont.insert(Material("4s",44),"4.567s");
-		cont.insert(Material("5s",55),"5.678s");
+		// cont.insert(Material("4s",44),"4.567s");
+		// cont.insert(Material("5s",55),"5.678s");
+		
+		//test inserting new things with opIndex
+		cont[Material("4s",44)] = "4.567s";
+		cont[Material("5s",55)] = "5.678s";
 		
 		{//test copying the whole container
 			unordered_map<Material,string> cont2(cont);

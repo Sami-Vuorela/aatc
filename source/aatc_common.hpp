@@ -472,6 +472,8 @@ struct aatc_primunion{
 	};
 	void* Get_Ptr_To_Primitive_Type(aatc_PRIMITIVE_TYPE primtype);
 	const void* Get_Ptr_To_Primitive_Type_const(aatc_PRIMITIVE_TYPE primtype)const;
+
+	void Init();
 };
 extern aatc_primunion aatc_primunion_defaultvalue;
 typedef std::pair<aatc_primunion, aatc_primunion> aatc_primunion_pair;
