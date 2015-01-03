@@ -785,6 +785,8 @@ template<class T_container> void aatc_container_shared_map_template_Register(asI
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHODPR(T_container, Find, (void*), const void*), asCALL_THISCALL); assert(r >= 0);
 	sprintf_s(textbuf, 1000, "T_value& %s(const T_key &in,bool &out)", aatc_name_script_container_method_find);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHODPR(T_container, Find, (void*, bool&), const void*), asCALL_THISCALL); assert(r >= 0);
+
+	r = engine->RegisterObjectMethod(n_container_T, "T_value& opIndex(const T_key &in)", asMETHODPR(T_container, Find, (void*), const void*), asCALL_THISCALL); assert(r >= 0);
 }
 
 template<typename T_out, typename T_host> T_out aatc_reghelp_construct_hosted_iterator_map_template(T_host cont){

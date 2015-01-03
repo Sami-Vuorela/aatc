@@ -8,6 +8,11 @@
 
 
 
+
+#define TEST_SERIALIZER 0
+
+
+
 BEGIN_AS_NAMESPACE
 
 void main_contents(){
@@ -31,21 +36,23 @@ void main_contents(){
 		cc->Prepare(func_scriptmain);
 		cc->Execute();
 
-		{
-			cc->Prepare(module->GetFunctionByName("serializer_test_1")); cc->Execute();
+		#if TEST_SERIALIZER
+				{
+					cc->Prepare(module->GetFunctionByName("serializer_test_1")); cc->Execute();
 
 
-			CSerializer backup;
-			aatc_serializer_register(engine, &backup);
-			backup.Store(module);
+					CSerializer backup;
+					aatc_serializer_register(engine, &backup);
+					backup.Store(module);
 
-			cc->Prepare(module->GetFunctionByName("serializer_test_2")); cc->Execute();
+					cc->Prepare(module->GetFunctionByName("serializer_test_2")); cc->Execute();
 
-			backup.Restore(module);
-			aatc_serializer_cleanup(engine, &backup);
+					backup.Restore(module);
+					aatc_serializer_cleanup(engine, &backup);
 
-			cc->Prepare(module->GetFunctionByName("serializer_test_3")); cc->Execute();
-		}
+					cc->Prepare(module->GetFunctionByName("serializer_test_3")); cc->Execute();
+				}
+		#endif
 
 
 	engine->ReturnContext(cc);

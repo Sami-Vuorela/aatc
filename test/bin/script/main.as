@@ -9,8 +9,8 @@ bool test_enable_print_failure = true;
 #include "test_container_unordered_set.as"
 #include "test_container_map.as"
 #include "test_container_unordered_map.as"
-#include "00 auto iterator tests.as"
-#include "00 serializer tests.as"
+// #include "00 auto iterator tests.as"
+// #include "00 serializer tests.as"
 
 void scriptmain(){
 	TestContainer_vector();
@@ -20,7 +20,7 @@ void scriptmain(){
 	TestContainer_map();
 	TestContainer_unordered_map();
 	
-	test_auto_iterators();
+	// test_auto_iterators();
 	
 	Print("");
 	Print("");

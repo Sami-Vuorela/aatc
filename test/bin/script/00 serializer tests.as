@@ -138,6 +138,8 @@ void serializer_test_1(){//sets values to global variables
 		@world.host = @sertest_host;
 		world.name = "real world";
 		
+		// @world.objects = vector<sertest_WorldObject@>();
+		
 		{
 			sertest_WorldObject@ wob = sertest_WorldObject();
 			world.objects.push_back(wob);
@@ -167,6 +169,8 @@ void serializer_test_1(){//sets values to global variables
 		
 		@world.host = @sertest_host;
 		world.name = "fantasy world";
+		
+		// @world.objects = vector<sertest_WorldObject@>();
 		
 		{
 			sertest_WorldObject@ wob = sertest_WorldObject();

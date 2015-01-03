@@ -52,7 +52,8 @@ public:
 
 void aatc_Initializer::Go(){
 	//init this guy here
-	aatc_primunion_defaultvalue.i64 = 0;
+	aatc_primunion_defaultvalue.ui64 = 0;
+	aatc_primunion_defaultvalue.ptr = nullptr;
 
 	engine->SetUserData(new aatc_engine_level_storage(engine), aatc_engine_userdata_id);
 	engine->SetEngineUserDataCleanupCallback(aatc_engine_cleanup, aatc_engine_userdata_id);

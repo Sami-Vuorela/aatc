@@ -70,6 +70,8 @@ void TestContainer_unordered_map(){
 			bool success = false;
 			float findresult = cont.find("2s",success);
 			if(success){
+				//test opIndex
+				findresult = cont["2s"];
 				if(findresult != 2.345){
 					test_success = false;
 					test_fail_reason = "find returned wrong answer";
@@ -116,6 +118,8 @@ void TestContainer_unordered_map(){
 			bool success = false;
 			string findresult = cont.find(Material("2s",22),success);
 			if(success){
+				//test opIndex
+				findresult = cont[Material("2s",22)];
 				if(findresult != "2.345s"){
 					test_success = false;
 					test_fail_reason = "find returned wrong answer";
