@@ -727,88 +727,6 @@ public:
 			return &aatc_primunion_defaultvalue.ptr;
 		}
 	}
-	const void* opIndex(void* newkey){
-		#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
-				if(need_errorcheck_missing_functions){
-					aatc_errorcheck_container_missingfunctions_operation_noret(aatc_CONTAINER_OPERATION::FIND, objtype_container->GetName(), objtype_key->GetName(), "find")
-						return &aatc_primunion_defaultvalue.ptr;
-				}
-			}
-		#endif
-
-		aatc_primunion findkey;
-		BuildPrimunion(findkey, newkey, datahandlingid_key, primitiveid_key);
-		//if(datahandlingid_key == aatc_DATAHANDLINGTYPE::STRING){ findkey.ptr = value; }
-
-		T_container::const_iterator it = T_container::find(findkey);
-		if(it == T_container::end()){
-
-			aatc_primunion_pair insertpair;
-
-			switch(datahandlingid_key){
-			case aatc_DATAHANDLINGTYPE::STRING:{
-												   //insertpair.first.ptr = new aatc_type_string(*((aatc_type_string*)newkey));
-												   insertpair.first.ptr = engine->CreateScriptObjectCopy(newkey, objtype_key);
-												   break; }
-			case aatc_DATAHANDLINGTYPE::HANDLE:{
-												   newkey = *(void**)newkey;
-												   StoreHandle(&(insertpair.first.ptr), newkey, objtype_key);
-												   break; }
-			case aatc_DATAHANDLINGTYPE::OBJECT:{
-												   insertpair.first.ptr = engine->CreateScriptObjectCopy(newkey, objtype_key);
-												   break; }
-			case aatc_DATAHANDLINGTYPE::PRIMITIVE:{
-													  switch(primitiveid_key){
-													  case aatc_PRIMITIVE_TYPE::INT8:{insertpair.first.i8 = *((aatc_type_int8*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::INT16:{insertpair.first.i16 = *((aatc_type_int16*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::INT32:{insertpair.first.i32 = *((aatc_type_int32*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::INT64:{insertpair.first.i64 = *((aatc_type_int64*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT8:{insertpair.first.ui8 = *((aatc_type_uint8*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT16:{insertpair.first.ui16 = *((aatc_type_uint16*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT32:{insertpair.first.ui32 = *((aatc_type_uint32*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT64:{insertpair.first.ui64 = *((aatc_type_uint64*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::FLOAT32:{insertpair.first.f32 = *((aatc_type_float32*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::FLOAT64:{insertpair.first.f64 = *((aatc_type_float64*)newkey); break; }
-													  };
-													  break; }
-			};
-
-			//insertpair.second.Init();
-
-			switch(datahandlingid_value){
-			case aatc_DATAHANDLINGTYPE::STRING:
-			case aatc_DATAHANDLINGTYPE::OBJECT:{
-												   insertpair.second.ptr = engine->CreateScriptObject(objtype_value);
-												   break; }
-			default:{
-						insertpair.second.Init();
-													  break; }
-			};
-
-			it = T_container::insert(insertpair).first;
-		}
-
-		switch(datahandlingid_value){
-			case aatc_DATAHANDLINGTYPE::HANDLE:{return &((*it).second.ptr); }
-			case aatc_DATAHANDLINGTYPE::OBJECT:
-			case aatc_DATAHANDLINGTYPE::STRING:{return (*it).second.ptr; }
-			case aatc_DATAHANDLINGTYPE::PRIMITIVE:{
-				switch(primitiveid_value){
-				case aatc_PRIMITIVE_TYPE::INT8:{return &((*it).second.i8); }
-				case aatc_PRIMITIVE_TYPE::INT16:{return &((*it).second.i16); }
-				case aatc_PRIMITIVE_TYPE::INT32:{return &((*it).second.i32); }
-				case aatc_PRIMITIVE_TYPE::INT64:{return &((*it).second.i64); }
-				case aatc_PRIMITIVE_TYPE::UINT8:{return &((*it).second.ui8); }
-				case aatc_PRIMITIVE_TYPE::UINT16:{return &((*it).second.ui16); }
-				case aatc_PRIMITIVE_TYPE::UINT32:{return &((*it).second.ui32); }
-				case aatc_PRIMITIVE_TYPE::UINT64:{return &((*it).second.ui64); }
-				case aatc_PRIMITIVE_TYPE::FLOAT32:{return &((*it).second.f32); }
-				case aatc_PRIMITIVE_TYPE::FLOAT64:{return &((*it).second.f64); }
-				};
-			break; }
-		};
-		return &aatc_primunion_defaultvalue.ptr;
-	}
 };
 
 
@@ -868,7 +786,8 @@ template<class T_container> void aatc_container_shared_map_template_Register(asI
 	sprintf_s(textbuf, 1000, "T_value& %s(const T_key &in,bool &out)", aatc_name_script_container_method_find);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHODPR(T_container, Find, (void*, bool&), const void*), asCALL_THISCALL); assert(r >= 0);
 
-	r = engine->RegisterObjectMethod(n_container_T, "T_value& opIndex(const T_key &in)", asMETHODPR(T_container, opIndex, (void*), const void*), asCALL_THISCALL); assert(r >= 0);
+	r = engine->RegisterObjectMethod(n_container_T, "const T_value& get_opIndex(const T_key &in) const", asMETHODPR(T_container, Find, (void*), const void*), asCALL_THISCALL); assert(r >= 0);
+	r = engine->RegisterObjectMethod(n_container_T, "void set_opIndex(const T_key&in,const T_value&in)", asMETHOD(T_container, Insert), asCALL_THISCALL); assert(r >= 0);
 }
 
 template<typename T_out, typename T_host> T_out aatc_reghelp_construct_hosted_iterator_map_template(T_host cont){
