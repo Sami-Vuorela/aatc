@@ -74,6 +74,9 @@ template<> void aatc_register_container<aatc_CONTAINERTYPE::MAP>(asIScriptEngine
 
 	sprintf_s(textbuf, 1000, "%s %s()", n_iterator_TT, aatc_name_script_container_method_begin);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asFunctionPtr(aatc_reghelp_construct_hosted_iterator_map_template<aect_iterator_shared_map_template<aatc_container_map_template>, aatc_container_map_template*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+
+	sprintf_s(textbuf, 1000, "%s %s()", n_iterator_TT, aatc_name_script_container_method_end);
+	r = engine->RegisterObjectMethod(n_container_T, textbuf, asFunctionPtr(aatc_reghelp_construct_hosted_iterator_map_template_end<aect_iterator_shared_map_template<aatc_container_map_template>, aatc_container_map_template*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 }
 
 template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::MAP>(aatc_template_specific_storage* tss){

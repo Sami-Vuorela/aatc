@@ -22,6 +22,33 @@ void scriptmain(){
 	
 	// test_auto_iterators();
 	
+	{//test container::end() and other iterator things
+		Print("test container::end()");
+		
+		map<int,int> cont;
+		
+		cont[1] = 11;
+		cont[3] = 33;
+		cont[2] = 22;
+		
+		auto it = cont.begin();
+		auto it_end = cont.end();
+		
+		Print("it IsEnd() = "+it.IsEnd());
+		Print("it equals end = "+(it == it_end));
+		Print("it equals end = "+(it == cont.end()));
+		
+		for(;it++;){
+			Print("value = "+it.value);
+		}
+		
+		Print("it IsEnd() = "+it.IsEnd());
+		Print("it equals end = "+(it == it_end));
+		Print("it equals end = "+(it == cont.end()));
+		
+		
+	}
+	
 	Print("");
 	Print("");
 	Print("Tests successful = "+test_success_count);

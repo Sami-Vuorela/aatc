@@ -129,7 +129,9 @@
 #define aatc_name_script_container_method_erase_value "erase_value"
 #define aatc_name_script_container_method_insert_index_before "insert_index_before"
 #define aatc_name_script_container_method_insert_index_after "insert_index_after"
+
 #define aatc_name_script_container_method_begin "begin"
+#define aatc_name_script_container_method_end "end"
 
 
 #define aatc_name_script_iterator_access_property "value"
@@ -139,6 +141,7 @@
 #define aatc_name_script_iterator_access_function "current"
 #define aatc_name_script_iterator_access_function_key "current_key"
 #define aatc_name_script_iterator_access_function_value "current_value"
+#define aatc_name_script_iterator_method_is_end "IsEnd"
 
 #define aatc_name_script_iterator "_iterator"
 #define aatc_name_script_funcpointer "aatc_funcpointer"

@@ -793,6 +793,11 @@ template<class T_container> void aatc_container_shared_map_template_Register(asI
 template<typename T_out, typename T_host> T_out aatc_reghelp_construct_hosted_iterator_map_template(T_host cont){
 	return T_out(&cont, 0);
 }
+template<typename T_out, typename T_host> T_out aatc_reghelp_construct_hosted_iterator_map_template_end(T_host cont){
+	T_out result(&cont, 0);
+	result.SetToEnd();
+	return result;
+}
 
 
 /*!\brief Internal template monster
@@ -882,6 +887,7 @@ public:
 			it++;
 			//if (it == host->end()){
 			if (it == it_end){
+				cont = 0;
 				return 0;
 			}else{
 				return 1;
@@ -1022,6 +1028,22 @@ public:
 		return nullptr;//should never happen, stops compiler warning
 	}
 
+	/*
+		Using this in script should be faster than (it == container.end()) because container.end() creates an object
+	*/
+	bool IsEnd(){
+		return !cont;
+	}
+	void SetToEnd(){
+		firstt = 0;
+		cont = 0;
+		it = it_end;
+	}
+
+	bool operator==(const aect_iterator_shared_map_template& other){
+		return it == other.it;
+	}
+
 	static void Register(asIScriptEngine* engine, const char* n_iterator, const char* n_container_T){
 		int r = 0;
 		char textbuf[1000];
@@ -1067,6 +1089,12 @@ public:
 
 		sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_iterator_T, n_iterator_T);
 		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_map_template, operator=), asCALL_THISCALL); assert(r >= 0);
+
+		sprintf_s(textbuf, 1000, "bool opEquals(const %s &in)", n_iterator_T);
+		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_map_template, operator==), asCALL_THISCALL); assert(r >= 0);
+
+		sprintf_s(textbuf, 1000, "bool %s()", aatc_name_script_iterator_method_is_end);
+		r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aect_iterator_shared_map_template, IsEnd), asCALL_THISCALL); assert(r >= 0);
 	}
 };
 
