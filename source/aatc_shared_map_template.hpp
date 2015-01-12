@@ -986,16 +986,7 @@ public:
 			//the default constructor must be registered, but you should never use it in script
 			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in)", asFunctionPtr(aatc_reghelp_constructor_template_default<aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in,?&in)", asFunctionPtr(static_constructor), asCALL_CDECL_OBJLAST); assert(r >= 0);
-			//sprintf(textbuf, "void f(int&in,%s@)", n_container_T);
-			//r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(static_constructor), asCALL_CDECL_OBJLAST); assert(r >= 0);
-
-			//sprintf_s(textbuf, 1000, "void f(const %s &in)", n_iterator_T);
-			//r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor_copy<aatc_iterator, aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
-
 			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_DESTRUCT, "void f()", asFUNCTION(aatc_reghelp_generic_destructor<aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
-
-			//r = engine->RegisterObjectMethod(n_iterator_T, "const T_key& current_key()", asMETHOD(aatc_iterator, Current_key_const), asCALL_THISCALL); assert(r >= 0);
-			//r = engine->RegisterObjectMethod(n_iterator_T, "T_value& current_value()", asMETHOD(aatc_iterator, Current_value), asCALL_THISCALL); assert(r >= 0);
 
 			sprintf_s(textbuf, 1000, "const T_key& %s()", aatc_name_script_iterator_access_function_key);
 			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current_key_const), asCALL_THISCALL); assert(r >= 0);
@@ -1121,19 +1112,9 @@ template<class T_container> void aatc_container_shared_map_template_Register(asI
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, End), asCALL_THISCALL); assert(r >= 0);
 }
 
-//template<typename T_out, typename T_host> T_out aatc_reghelp_construct_hosted_iterator_map_template(T_host cont){
-//	return T_out(&cont, 0);
-//}
-//template<typename T_out, typename T_host> T_out aatc_reghelp_construct_hosted_iterator_map_template_end(T_host cont){
-//	T_out result(&cont, 0);
-//	result.SetToEnd();
-//	return result;
-//}
 
 
-/*!\brief Internal template monster
 
-*/
+
 END_AS_NAMESPACE
-
 #endif

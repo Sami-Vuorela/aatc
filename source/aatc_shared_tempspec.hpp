@@ -337,7 +337,152 @@ public:
 		sprintf_s(textbuf, 1000, "void %s(const %s &in value,bool all = false)", aatc_name_script_container_method_erase_value, n_content);
 		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_tempspec, Erase_generic_value<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 	}
+
+
+
+
+
+	class aatc_iterator{
+	public:
+		aatc_container_shared_1tp_tempspec* host;
+		typename aatc_container_shared_1tp_tempspec::iterator it;
+		typename aatc_container_shared_1tp_tempspec::iterator it_end;
+
+		bool firstt;
+		bool cont;
+
+		aatc_iterator(aatc_container_shared_1tp_tempspec* _host) :
+			host(_host)
+		{
+			firstt = 1;
+			if(host->empty()){
+				cont = 0;
+			} else{
+				it = host->begin();
+				it_end = host->end();
+				cont = 1;
+			}
+		}
+		aatc_iterator(const aatc_iterator& other) :
+			host(other.host),
+			it(other.it),
+			it_end(other.it_end),
+			firstt(other.firstt),
+			cont(other.cont)
+		{}
+		aatc_iterator& operator=(const aatc_iterator& other){
+			host = other.host;
+			it = other.it;
+			it_end = other.it_end;
+			firstt = other.firstt;
+			cont = other.cont;
+
+			return *this;
+		}
+
+		//combine end check and continuation into one monster
+		bool Next(){
+			if(firstt){
+				if(cont){//all is well
+					firstt = 0;
+					return 1;
+				} else{//cont set to 0 in constructor because container is empty
+					return 0;
+				}
+			} else{
+				it++;
+				//if (it == host->end()){
+				if(it == it_end){
+					return 0;
+				} else{
+					return 1;
+				}
+			}
+		}
+
+		template<class T> const T_content& Current_get(){}
+		template<class T> void Current_set(const T_content& newval){}
+		template<> const T_content& Current_get<aatc_Y>(){ return *it; }
+		template<> void Current_set<aatc_Y>(const T_content& newval){ *it = newval; }
+
+		template<class T> T_content& Current(){}
+		template<> T_content& Current<aatc_Y>(){ return *it; }
+		template<class T_cond> static void Register_func_current(asIScriptEngine* engine, int& r, char* textbuf, const char* n_iterator, const char* n_content){}
+		template<> static void Register_func_current<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_iterator, const char* n_content){
+			sprintf_s(textbuf, 1000, "%s& %s()", n_content, aatc_name_script_iterator_access_function);
+			r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHOD(aatc_iterator, Current<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+
+			sprintf_s(textbuf, 1000, "%s& get_%s()", n_content, aatc_name_script_iterator_access_property);
+			r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHOD(aatc_iterator, Current_get<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+			sprintf_s(textbuf, 1000, "void set_%s(const %s &in)", aatc_name_script_iterator_access_property, n_content);
+			r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHOD(aatc_iterator, Current_set<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		}
+
+		template<class T> const T_content& Current_const(){}
+		template<> const T_content& Current_const<aatc_Y>(){ return *it; }
+		template<class T_cond> static void Register_func_current_const(asIScriptEngine* engine, int& r, char* textbuf, const char* n_iterator, const char* n_content){}
+		template<> static void Register_func_current_const<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_iterator, const char* n_content){
+			sprintf_s(textbuf, 1000, "const %s& %s()", n_content, aatc_name_script_iterator_access_function);
+			r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHOD(aatc_iterator, Current_const<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+
+			sprintf_s(textbuf, 1000, "const %s& get_%s()", n_content, aatc_name_script_iterator_access_property);
+			r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHOD(aatc_iterator, Current_get<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		}
+
+		/*
+		Using this in script should be faster than (it == container.end()) because container.end() creates an object
+		*/
+		bool IsEnd(){
+			return !cont;
+		}
+		void SetToEnd(){
+			firstt = 0;
+			cont = 0;
+			it = it_end;
+		}
+
+		bool operator==(const aatc_iterator& other){
+			return it == other.it;
+		}
+
+		template<class cond_EDITABLE = aatc_Y, class cond_CONST = aatc_N> static void Register(asIScriptEngine* engine, const char* n_iterator, const char* n_content, const char* n_containerTcontentT){
+			int r = 0;
+			char textbuf[1000];
+
+			r = engine->RegisterObjectType(n_iterator, sizeof(aatc_iterator), asOBJ_VALUE | asOBJ_POD | asGetTypeTraits<aatc_iterator>()); assert(r >= 0);
+
+			sprintf_s(textbuf, 1000, "void f(%s@)", n_containerTcontentT);
+			r = engine->RegisterObjectBehaviour(n_iterator, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor_1_param<aatc_iterator, aatc_container_shared_1tp_tempspec*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+			sprintf_s(textbuf, 1000, "void f(const %s &in)", n_iterator);
+			r = engine->RegisterObjectBehaviour(n_iterator, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor_copy<aatc_iterator, aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+
+			aatc_iterator::Register_func_current<cond_EDITABLE>(engine, r, textbuf, n_iterator, n_content);
+			aatc_iterator::Register_func_current_const<cond_CONST>(engine, r, textbuf, n_iterator, n_content);
+
+			r = engine->RegisterObjectMethod(n_iterator, "bool next()", asMETHOD(aatc_iterator, Next), asCALL_THISCALL); assert(r >= 0);
+			r = engine->RegisterObjectMethod(n_iterator, "bool opPreInc()", asMETHOD(aatc_iterator, Next), asCALL_THISCALL); assert(r >= 0);
+			r = engine->RegisterObjectMethod(n_iterator, "bool opPostInc()", asMETHOD(aatc_iterator, Next), asCALL_THISCALL); assert(r >= 0);
+
+			//explodes for some reason
+			//sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_iterator, n_iterator);
+			//r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHODPR(aatc_iterator, operator=, (const aatc_iterator&), aatc_iterator&), asCALL_THISCALL); assert(r >= 0);
+		}
+	};
+
+
+
+	aatc_iterator Begin(){
+		return aatc_iterator(this);
+	}
+	aatc_iterator End(){
+		aatc_iterator result(this);
+		result.SetToEnd();
+		return result;
+	}
 };
+
+
+
 template<class T_container, class T_content> T_content aatc_container_shared_1tp_tempspec<T_container, T_content>::defaultvalue = T_content();
 template<class T_container, class T_content> std::string aatc_container_shared_1tp_tempspec<T_container, T_content>::staticname_container = "test_container";
 template<class T_container, class T_content> std::string aatc_container_shared_1tp_tempspec<T_container, T_content>::staticname_content = "test_content";
@@ -351,7 +496,13 @@ void aatc_container_shared_1tp_tempspec_Register(asIScriptEngine* engine, const 
 
 
 	char n_container_T[1000];
-	sprintf_s(n_container_T,1000, "%s<%s>", n_container, n_content);
+	sprintf_s(n_container_T, 1000, "%s<%s>", n_container, n_content);
+
+	char n_iterator[1000];
+	sprintf_s(n_iterator, 1000, "%s%s", n_container, aatc_name_script_iterator);
+
+	char n_iterator_TT[1000];
+	sprintf_s(n_iterator_TT, 1000, "%s<%s>", n_iterator, n_content);
 
 	r = engine->RegisterObjectType(n_container_T, 0, asOBJ_REF); assert(r >= 0);
 
@@ -402,131 +553,27 @@ void aatc_container_shared_1tp_tempspec_Register(asIScriptEngine* engine, const 
 	dt_container::Register_func_erase_generic_value<std::conditional<GOTFUNC_EQUALS && std::is_same<T_traits::trait_needfunc_ERASE_GENERIC_VALUE, aatc_Y>::value, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T, n_content);
 
 	dt_container::Register_func_insert_generic_index<T_traits::trait_needfunc_INSERT_GENERIC_INDEX>(engine, r, textbuf, n_container, n_container_T, n_content);
+
+
+
+
+
+	dt_container::aatc_iterator::Register<T_traits::trait_iterator_editable, T_traits::trait_iterator_const>(engine, n_iterator_TT, n_content, n_container_T);
+
+	sprintf_s(textbuf, 1000, "%s %s()", n_iterator_TT, aatc_name_script_container_method_begin);
+	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(dt_container, Begin), asCALL_THISCALL); assert(r >= 0);
+
+	sprintf_s(textbuf, 1000, "%s %s()", n_iterator_TT, aatc_name_script_container_method_end);
+	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(dt_container, End), asCALL_THISCALL); assert(r >= 0);
+
+
+
+
 }
 
-
-/*!\brief Internal template monster
-
-*/
-template<class T_container, class T_content> class aect_iterator_shared_tempspec{
-public:
-	T_container* host;
-	typename T_container::iterator it;
-	typename T_container::iterator it_end;
-
-	bool firstt;
-	bool cont;
-
-	aect_iterator_shared_tempspec(T_container* _host) :
-		host(_host)
-	{
-		firstt = 1;
-		if (host->empty()){
-			cont = 0;
-		}
-		else{
-			it = host->begin();
-			it_end = host->end();
-			cont = 1;
-		}
-	}
-	aect_iterator_shared_tempspec(const aect_iterator_shared_tempspec& other):
-		host(other.host),
-		it(other.it),
-		it_end(other.it_end),
-		firstt(other.firstt),
-		cont(other.cont)
-	{}
-	aect_iterator_shared_tempspec& operator=(const aect_iterator_shared_tempspec& other){
-		host = other.host;
-		it = other.it;
-		it_end = other.it_end;
-		firstt = other.firstt;
-		cont = other.cont;
-
-		return *this;
-	}
-
-	//combine end check and continuation into one monster
-	bool Next(){
-		if (firstt){
-			if (cont){//all is well
-				firstt = 0;
-				return 1;
-			}
-			else{//cont set to 0 in constructor because container is empty
-				return 0;
-			}
-		}
-		else{
-			it++;
-			//if (it == host->end()){
-			if (it == it_end){
-				return 0;
-			}
-			else{
-				return 1;
-			}
-		}
-	}
-
-	template<class T> const T_content& Current_get(){}
-	template<class T> void Current_set(const T_content& newval){}
-	template<> const T_content& Current_get<aatc_Y>(){ return *it; }
-	template<> void Current_set<aatc_Y>(const T_content& newval){ *it = newval; }
-
-	template<class T> T_content& Current(){}
-	template<> T_content& Current<aatc_Y>(){ return *it; }
-	template<class T_cond> static void Register_func_current(asIScriptEngine* engine, int& r, char* textbuf, const char* n_iterator, const char* n_content){}
-	template<> static void Register_func_current<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_iterator, const char* n_content){
-		sprintf_s(textbuf, 1000, "%s& %s()", n_content, aatc_name_script_iterator_access_function);
-		r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHOD(aect_iterator_shared_tempspec, Current<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
-
-		sprintf_s(textbuf, 1000, "%s& get_%s()", n_content, aatc_name_script_iterator_access_property);
-		r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHOD(aect_iterator_shared_tempspec, Current_get<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
-		sprintf_s(textbuf, 1000, "void set_%s(const %s &in)", aatc_name_script_iterator_access_property, n_content);
-		r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHOD(aect_iterator_shared_tempspec, Current_set<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
-	}
-
-	template<class T> const T_content& Current_const(){}
-	template<> const T_content& Current_const<aatc_Y>(){ return *it; }
-	template<class T_cond> static void Register_func_current_const(asIScriptEngine* engine, int& r, char* textbuf, const char* n_iterator, const char* n_content){}
-	template<> static void Register_func_current_const<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_iterator, const char* n_content){
-		sprintf_s(textbuf, 1000, "const %s& %s()", n_content, aatc_name_script_iterator_access_function);
-		r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHOD(aect_iterator_shared_tempspec, Current_const<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
-
-		sprintf_s(textbuf, 1000, "const %s& get_%s()", n_content, aatc_name_script_iterator_access_property);
-		r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHOD(aect_iterator_shared_tempspec, Current_get<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
-	}
-
-	template<class cond_EDITABLE = aatc_Y, class cond_CONST = aatc_N> static void Register(asIScriptEngine* engine, const char* n_iterator, const char* n_content, const char* n_containerTcontentT){
-		int r = 0;
-		char textbuf[1000];
-
-		//r = engine->RegisterObjectType(n_iterator, sizeof(aect_iterator_shared_tempspec), asOBJ_VALUE | asOBJ_POD | asOBJ_APP_CLASS | asOBJ_APP_CLASS_CONSTRUCTOR); assert(r >= 0);
-		r = engine->RegisterObjectType(n_iterator, sizeof(aect_iterator_shared_tempspec), asOBJ_VALUE | asOBJ_POD | asGetTypeTraits<aect_iterator_shared_tempspec>()); assert(r >= 0);
-		
-		sprintf_s(textbuf,1000, "void f(%s@)", n_containerTcontentT);
-		r = engine->RegisterObjectBehaviour(n_iterator, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor_1_param<aect_iterator_shared_tempspec, T_container*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
-		sprintf_s(textbuf, 1000, "void f(const %s &in)", n_iterator);
-		r = engine->RegisterObjectBehaviour(n_iterator, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor_copy<aect_iterator_shared_tempspec, aect_iterator_shared_tempspec>), asCALL_CDECL_OBJLAST); assert(r >= 0);
-
-		aect_iterator_shared_tempspec::Register_func_current<cond_EDITABLE>(engine, r, textbuf, n_iterator, n_content);
-		aect_iterator_shared_tempspec::Register_func_current_const<cond_CONST>(engine, r, textbuf, n_iterator, n_content);
-
-		r = engine->RegisterObjectMethod(n_iterator, "bool next()", asMETHOD(aect_iterator_shared_tempspec, Next), asCALL_THISCALL); assert(r >= 0);
-		r = engine->RegisterObjectMethod(n_iterator, "bool opPreInc()", asMETHOD(aect_iterator_shared_tempspec, Next), asCALL_THISCALL); assert(r >= 0);
-		r = engine->RegisterObjectMethod(n_iterator, "bool opPostInc()", asMETHOD(aect_iterator_shared_tempspec, Next), asCALL_THISCALL); assert(r >= 0);
-
-		//explodes for some reason
-		//sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_iterator, n_iterator);
-		//r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHODPR(aect_iterator_shared_tempspec, operator=, (const aect_iterator_shared_tempspec&), aect_iterator_shared_tempspec&), asCALL_THISCALL); assert(r >= 0);
-	}
-};
 
 
 
 
 END_AS_NAMESPACE
-
 #endif
