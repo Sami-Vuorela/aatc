@@ -15,6 +15,8 @@
 
 BEGIN_AS_NAMESPACE
 
+
+
 void main_contents(){
 	//AngelScript::asPrepareMultithread();
 

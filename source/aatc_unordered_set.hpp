@@ -32,12 +32,11 @@
 #define _includedh_aatc_container_unordered_set
 
 #include "aatc_shared_template.hpp"
-#include "aatc_container_switches.hpp"
+#include "aatc_container_traits.hpp"
+//#include "aatc_container_switches.hpp"
 
 
 BEGIN_AS_NAMESPACE
-
-
 
 
 

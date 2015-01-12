@@ -158,7 +158,7 @@
     <ClInclude Include="..\..\..\source\aatc.hpp" />
     <ClInclude Include="..\..\..\source\aatc_common.hpp" />
     <ClInclude Include="..\..\..\source\aatc_config.hpp" />
-    <ClInclude Include="..\..\..\source\aatc_container_switches.hpp" />
+    <ClInclude Include="..\..\..\source\aatc_container_traits.hpp" />
     <ClInclude Include="..\..\..\source\aatc_internal_lists.hpp" />
     <ClInclude Include="..\..\..\source\aatc_list.hpp" />
     <ClInclude Include="..\..\..\source\aatc_map.hpp" />

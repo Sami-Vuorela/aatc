@@ -35,7 +35,8 @@ samivuorela@gmail.com
 
 
 #include "aatc_shared_tempspec.hpp"
-#include "aatc_container_switches.hpp"
+#include "aatc_container_traits.hpp"
+//#include "aatc_container_switches.hpp"
 
 #if aatc_CONFIG_USE_ASADDON_SERIALIZER
 #include "aatc_serializer.hpp"
@@ -136,23 +137,7 @@ template<
 	dt_container::staticname_container = aatc_name_script_container_vector;
 	dt_container::staticname_content = n_content;
 
-	aatc_container_shared_1tp_tempspec_Register<dt_container, dt_content, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH,
-		aatc_container_vector_needfunc_BACK_WRITE,
-		aatc_container_vector_needfunc_BACK_READ,
-		aatc_container_vector_needfunc_FRONT_WRITE,
-		aatc_container_vector_needfunc_FRONT_READ,
-		aatc_container_vector_needfunc_ERASE_POSITION,
-		aatc_container_vector_needfunc_ERASE_VALUE,
-		aatc_container_vector_needfunc_OP_INDEX,
-		aatc_container_vector_needfunc_RESERVE,
-		aatc_container_vector_needfunc_INSERT,
-		aatc_container_vector_needfunc_SORT_NATIVE,
-		aatc_container_vector_needfunc_SORT_GENERIC,
-		aatc_container_vector_needfunc_CONTAINS_NATIVE,
-		aatc_container_vector_needfunc_ERASE_GENERIC_INDEX,
-		aatc_container_vector_needfunc_ERASE_GENERIC_VALUE,
-		aatc_container_vector_needfunc_INSERT_GENERIC_INDEX
-	>(engine, aatc_name_script_container_vector, n_content);
+	aatc_container_shared_1tp_tempspec_Register<dt_container, dt_content, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH, aatc_container_traits_vector>(engine, aatc_name_script_container_vector, n_content);
 
 	aect_iterator_shared_tempspec<dt_container, dt_content>::Register<aatc_Y, aatc_N>(engine, n_iterator, n_content, n_containerTcontentT);
 
@@ -184,23 +169,7 @@ template<class dt_content, bool GOTFUNC_EQUALS = 1, bool GOTFUNC_LESS = 1, bool 
 	dt_container::staticname_container = aatc_name_script_container_list;
 	dt_container::staticname_content = n_content;
 
-	aatc_container_shared_1tp_tempspec_Register<dt_container, dt_content, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH,
-		aatc_container_list_needfunc_BACK_WRITE,
-		aatc_container_list_needfunc_BACK_READ,
-		aatc_container_list_needfunc_FRONT_WRITE,
-		aatc_container_list_needfunc_FRONT_READ,
-		aatc_container_list_needfunc_ERASE_POSITION,
-		aatc_container_list_needfunc_ERASE_VALUE,
-		aatc_container_list_needfunc_OP_INDEX,
-		aatc_container_list_needfunc_RESERVE,
-		aatc_container_list_needfunc_INSERT,
-		aatc_container_list_needfunc_SORT_NATIVE,
-		aatc_container_list_needfunc_SORT_GENERIC,
-		aatc_container_list_needfunc_CONTAINS_NATIVE,
-		aatc_container_list_needfunc_ERASE_GENERIC_INDEX,
-		aatc_container_list_needfunc_ERASE_GENERIC_VALUE,
-		aatc_container_list_needfunc_INSERT_GENERIC_INDEX
-	>(engine, aatc_name_script_container_list, n_content);
+	aatc_container_shared_1tp_tempspec_Register<dt_container, dt_content, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH, aatc_container_traits_list>(engine, aatc_name_script_container_list, n_content);
 
 	{//container type specific functions
 		sprintf_s(textbuf, 1000, "void remove(const %s &in)", n_content);
@@ -231,19 +200,7 @@ template<class dt_content, bool GOTFUNC_EQUALS = 1, bool GOTFUNC_LESS = 1, bool 
 	dt_container::staticname_container = aatc_name_script_container_set;
 	dt_container::staticname_content = n_content;
 
-	aatc_container_shared_1tp_tempspec_Register<dt_container, dt_content, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH,
-		aatc_container_set_needfunc_BACK_WRITE,
-		aatc_container_set_needfunc_BACK_READ,
-		aatc_container_set_needfunc_FRONT_WRITE,
-		aatc_container_set_needfunc_FRONT_READ,
-		aatc_container_set_needfunc_ERASE_POSITION,
-		aatc_container_set_needfunc_ERASE_VALUE,
-		aatc_container_set_needfunc_OP_INDEX,
-		aatc_container_set_needfunc_RESERVE,
-		aatc_container_set_needfunc_INSERT,
-		aatc_container_set_needfunc_SORT_NATIVE,
-		aatc_container_set_needfunc_SORT_GENERIC,
-		aatc_container_set_needfunc_CONTAINS_NATIVE>
+	aatc_container_shared_1tp_tempspec_Register<dt_container, dt_content, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH, aatc_container_traits_set>
 		(engine, aatc_name_script_container_set, n_content);
 
 	aect_iterator_shared_tempspec<dt_container, dt_content>::Register<aatc_N, aatc_Y>(engine, n_iterator, n_content, n_containerTcontentT);
@@ -270,19 +227,7 @@ template<class dt_content, bool GOTFUNC_EQUALS = 1, bool GOTFUNC_LESS = 1, bool 
 	dt_container::staticname_container = aatc_name_script_container_unordered_set;
 	dt_container::staticname_content = n_content;
 
-	aatc_container_shared_1tp_tempspec_Register<dt_container, dt_content, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH,
-		aatc_container_unordered_set_needfunc_BACK_WRITE,
-		aatc_container_unordered_set_needfunc_BACK_READ,
-		aatc_container_unordered_set_needfunc_FRONT_WRITE,
-		aatc_container_unordered_set_needfunc_FRONT_READ,
-		aatc_container_unordered_set_needfunc_ERASE_POSITION,
-		aatc_container_unordered_set_needfunc_ERASE_VALUE,
-		aatc_container_unordered_set_needfunc_OP_INDEX,
-		aatc_container_unordered_set_needfunc_RESERVE,
-		aatc_container_unordered_set_needfunc_INSERT,
-		aatc_container_unordered_set_needfunc_SORT_NATIVE,
-		aatc_container_unordered_set_needfunc_SORT_GENERIC,
-		aatc_container_unordered_set_needfunc_CONTAINS_NATIVE>
+	aatc_container_shared_1tp_tempspec_Register<dt_container, dt_content, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH, aatc_container_traits_unordered_set>
 		(engine, aatc_name_script_container_unordered_set, n_content);
 
 	aect_iterator_shared_tempspec<dt_container, dt_content>::Register<aatc_N, aatc_Y>(engine, n_iterator, n_content, n_containerTcontentT);

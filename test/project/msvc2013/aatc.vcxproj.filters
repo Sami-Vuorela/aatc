@@ -124,7 +124,7 @@
     <ClInclude Include="..\..\..\source\aatc_tempspecs.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_container_switches.hpp">
+    <ClInclude Include="..\..\..\source\aatc_container_traits.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
   </ItemGroup>

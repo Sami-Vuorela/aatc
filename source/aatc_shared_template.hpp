@@ -857,23 +857,7 @@ public:
 };
 
 
-template<class T_container,
-	bool cond_NEEDFUNC_BACK_WRITE = 0,
-	bool cond_NEEDFUNC_BACK_READ = 0,
-	bool cond_NEEDFUNC_FRONT_WRITE = 0,
-	bool cond_NEEDFUNC_FRONT_READ = 0,
-	bool cond_NEEDFUNC_ERASE_POSITION = 0,
-	bool cond_NEEDFUNC_ERASE_VALUE = 0,
-	bool cond_NEEDFUNC_OP_INDEX = 0,
-	bool cond_NEEDFUNC_RESERVE = 0,
-	bool cond_NEEDFUNC_INSERT = 0,
-	bool cond_NEEDFUNC_SORT_NATIVE = 0,
-	bool cond_NEEDFUNC_SORT_GENERIC = 0,
-	bool cond_NEEDFUNC_CONTAINS_NATIVE = 0,
-	typename cond_NEEDFUNC_ERASE_GENERIC_INDEX = aatc_NULLCLASS,
-	bool cond_NEEDFUNC_ERASE_GENERIC_VALUE = 0,
-	typename cond_NEEDFUNC_INSERT_GENERIC_INDEX = aatc_NULLCLASS
->
+template<class T_container, class T_traits>
 void aatc_container_shared_1tp_template_Register(asIScriptEngine* engine, const char* n_container){
 	int r = 0;
 
@@ -922,25 +906,25 @@ void aatc_container_shared_1tp_template_Register(asIScriptEngine* engine, const 
 	sprintf_s(textbuf, 1000, "%s %s()", aatc_name_script_sizetype, aatc_name_script_container_method_size);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Size), asCALL_THISCALL); assert(r >= 0);
 
-	T_container::Register_func_back_write<std::conditional<cond_NEEDFUNC_BACK_WRITE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_back_read<std::conditional<cond_NEEDFUNC_BACK_READ, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_front_write<std::conditional<cond_NEEDFUNC_FRONT_WRITE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_front_read<std::conditional<cond_NEEDFUNC_FRONT_READ, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_back_write<T_traits::trait_needfunc_BACK_WRITE>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_back_read<T_traits::trait_needfunc_BACK_READ>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_front_write<T_traits::trait_needfunc_FRONT_WRITE>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_front_read<T_traits::trait_needfunc_FRONT_READ>(engine, r, textbuf, n_container, n_container_T);
 	//T_container::Register_func_erase_position<std::conditional<cond_NEEDFUNC_ERASE_POSITION, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_erase_value<std::conditional<cond_NEEDFUNC_ERASE_VALUE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_op_index<std::conditional<cond_NEEDFUNC_OP_INDEX, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_reserve<std::conditional<cond_NEEDFUNC_RESERVE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_insert<std::conditional<cond_NEEDFUNC_INSERT,aatc_Y,aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_erase_value<T_traits::trait_needfunc_ERASE_VALUE>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_op_index<T_traits::trait_needfunc_OP_INDEX>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_reserve<T_traits::trait_needfunc_RESERVE>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_insert<T_traits::trait_needfunc_INSERT>(engine, r, textbuf, n_container, n_container_T);
 
-	T_container::Register_func_sort_native<std::conditional<cond_NEEDFUNC_SORT_NATIVE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_sort_generic<std::conditional<cond_NEEDFUNC_SORT_GENERIC, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_sort_native<T_traits::trait_needfunc_SORT_NATIVE>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_sort_generic<T_traits::trait_needfunc_SORT_GENERIC>(engine, r, textbuf, n_container, n_container_T);
 
-	T_container::Register_func_contains_native<std::conditional<cond_NEEDFUNC_CONTAINS_NATIVE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_contains_native<T_traits::trait_needfunc_CONTAINS_NATIVE>(engine, r, textbuf, n_container, n_container_T);
 
-	T_container::Register_func_erase_generic_index<cond_NEEDFUNC_ERASE_GENERIC_INDEX>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_erase_generic_value<std::conditional<cond_NEEDFUNC_ERASE_GENERIC_VALUE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_erase_generic_index<T_traits::trait_needfunc_ERASE_GENERIC_INDEX>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_erase_generic_value<T_traits::trait_needfunc_ERASE_GENERIC_VALUE>(engine, r, textbuf, n_container, n_container_T);
 
-	T_container::Register_func_insert_generic_index<cond_NEEDFUNC_INSERT_GENERIC_INDEX>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_insert_generic_index<T_traits::trait_needfunc_INSERT_GENERIC_INDEX>(engine, r, textbuf, n_container, n_container_T);
 }
 
 template<typename T_out, typename T_host> T_out aatc_reghelp_construct_hosted_iterator_template(T_host cont){

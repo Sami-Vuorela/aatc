@@ -71,19 +71,7 @@ template<> void aatc_register_container<aatc_CONTAINERTYPE::UNORDERED_SET>(asISc
 	char n_iterator_TT[1000];
 	sprintf_s(n_iterator_TT, 1000, "%s<T>", n_iterator);
 
-	aatc_container_shared_1tp_template_Register<aatc_container_unordered_set_template,
-		aatc_container_unordered_set_needfunc_BACK_WRITE,
-		aatc_container_unordered_set_needfunc_BACK_READ,
-		aatc_container_unordered_set_needfunc_FRONT_WRITE,
-		aatc_container_unordered_set_needfunc_FRONT_READ,
-		aatc_container_unordered_set_needfunc_ERASE_POSITION,
-		aatc_container_unordered_set_needfunc_ERASE_VALUE,
-		aatc_container_unordered_set_needfunc_OP_INDEX,
-		aatc_container_unordered_set_needfunc_RESERVE,
-		aatc_container_unordered_set_needfunc_INSERT,
-		aatc_container_unordered_set_needfunc_SORT_NATIVE,
-		aatc_container_unordered_set_needfunc_SORT_GENERIC,
-		aatc_container_unordered_set_needfunc_CONTAINS_NATIVE>
+	aatc_container_shared_1tp_template_Register<aatc_container_unordered_set_template, aatc_container_traits_unordered_set>
 	(engine, aatc_name_script_container_unordered_set);
 
 	aect_iterator_shared_template<aatc_container_unordered_set_template>::Register<aatc_N, aatc_Y>(engine, n_iterator, n_container_T);
