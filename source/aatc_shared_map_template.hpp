@@ -765,6 +765,8 @@ public:
 			primitiveid_key(other.primitiveid_key),
 			primitiveid_value(other.primitiveid_value)
 		{}
+		~aatc_iterator(){}
+
 		aatc_iterator& operator=(const aatc_iterator& other){
 			host = other.host;
 			it = other.it;
@@ -1030,6 +1032,138 @@ public:
 	}
 
 
+	aatc_iterator Find_iterator(void* value, bool& success){
+		#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
+				if(need_errorcheck_missing_functions){
+					aatc_errorcheck_container_missingfunctions_operation_noret(aatc_CONTAINER_OPERATION::FIND, objtype_container->GetName(), objtype_key->GetName(), "find")
+						return End();
+				}
+			}
+		#endif
+
+		aatc_primunion findkey;
+		BuildPrimunion(findkey, value, datahandlingid_key, primitiveid_key);
+
+		T_container::iterator it = T_container::find(findkey);
+
+
+		void* vthis = this;
+		aatc_iterator result(&vthis, 0);
+		result.it = it;
+
+
+
+		if(it == T_container::end()){
+			result.cont = 0;
+		}
+
+		return result;
+	}
+
+	bool Erase_iterator(const aatc_iterator& aatc_it){
+		T_container::iterator it = aatc_it.it;
+
+		if(it == T_container::end()){
+			return 0;
+		}else{
+			aatc_primunion old_key;
+			aatc_primunion old_value;
+
+			if(datahandlingid_key != aatc_DATAHANDLINGTYPE::PRIMITIVE){ old_key.ptr = (*it).first.ptr; }
+			if(datahandlingid_value != aatc_DATAHANDLINGTYPE::PRIMITIVE){ old_value.ptr = (*it).second.ptr; }
+
+			T_container::erase(it);
+
+			switch(datahandlingid_key){
+			case aatc_DATAHANDLINGTYPE::PRIMITIVE:{break; }
+			case aatc_DATAHANDLINGTYPE::STRING:{
+												   //delete ((aatc_type_string*)old_key.ptr);
+												   engine->ReleaseScriptObject(old_key.ptr, objtype_key);
+												   break; }
+			default:{
+						engine->ReleaseScriptObject(old_key.ptr, objtype_key);
+						break; }
+			};
+			switch(datahandlingid_value){
+			case aatc_DATAHANDLINGTYPE::PRIMITIVE:{break; }
+			case aatc_DATAHANDLINGTYPE::STRING:{
+												   //delete ((aatc_type_string*)old_value.ptr);
+												   engine->ReleaseScriptObject(old_value.ptr, objtype_value);
+												   break; }
+			default:{
+						engine->ReleaseScriptObject(old_value.ptr, objtype_value);
+						break; }
+			};
+
+			return 1;
+		}
+	}
+
+	aatc_type_sizetype Erase_iterator_range(const aatc_iterator& aatc_it_range_begin, const aatc_iterator& aatc_it_range_end){
+		T_container::iterator it_range_begin = aatc_it_range_begin.it;
+		T_container::iterator it_range_end = aatc_it_range_end.it;
+
+		if(it_range_begin == it_range_end){
+			return 0;
+		} else{
+			aatc_type_sizetype delcount = (aatc_type_sizetype)std::distance(it_range_begin, it_range_end);
+
+			std::vector<std::pair<aatc_primunion, aatc_primunion>> old_items;
+			old_items.reserve(delcount);
+
+			int nonprimitives = (datahandlingid_key != aatc_DATAHANDLINGTYPE::PRIMITIVE) + (datahandlingid_value != aatc_DATAHANDLINGTYPE::PRIMITIVE);
+
+			if(nonprimitives){
+				if(nonprimitives == 2){
+					for(auto it = it_range_begin; it != it_range_end; it++){
+						std::pair<aatc_primunion, aatc_primunion> pp;
+						pp.first.ptr = (*it).first.ptr;
+						pp.second.ptr = (*it).second.ptr;
+						old_items.push_back(pp);
+					}
+				} else{
+					if(datahandlingid_key != aatc_DATAHANDLINGTYPE::PRIMITIVE){
+						for(auto it = it_range_begin; it != it_range_end; it++){
+							std::pair<aatc_primunion, aatc_primunion> pp;
+							pp.first.ptr = (*it).first.ptr;
+							old_items.push_back(pp);
+						}
+					} else{
+						for(auto it = it_range_begin; it != it_range_end; it++){
+							std::pair<aatc_primunion, aatc_primunion> pp;
+							pp.second.ptr = (*it).second.ptr;
+							old_items.push_back(pp);
+						}
+					}
+				}
+			}
+
+			T_container::erase(it_range_begin, it_range_end);
+
+			if(nonprimitives){
+				if(nonprimitives == 2){
+					for(auto it = old_items.begin(); it != old_items.end(); it++){
+						engine->ReleaseScriptObject((*it).first.ptr, objtype_key);
+						engine->ReleaseScriptObject((*it).second.ptr, objtype_value);
+					}
+				} else{
+					if(datahandlingid_key != aatc_DATAHANDLINGTYPE::PRIMITIVE){
+						for(auto it = old_items.begin(); it != old_items.end(); it++){
+							engine->ReleaseScriptObject((*it).first.ptr, objtype_key);
+						}
+					} else{
+						for(auto it = old_items.begin(); it != old_items.end(); it++){
+							engine->ReleaseScriptObject((*it).second.ptr, objtype_value);
+						}
+					}
+				}
+			}
+
+			return delcount;
+		}
+	}
+
+
 
 };
 
@@ -1110,6 +1244,15 @@ template<class T_container> void aatc_container_shared_map_template_Register(asI
 
 	sprintf_s(textbuf, 1000, "%s %s()", n_iterator_TT, aatc_name_script_container_method_end);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, End), asCALL_THISCALL); assert(r >= 0);
+
+	sprintf_s(textbuf, 1000, "%s %s(const T_key &in)", n_iterator_TT, aatc_name_script_container_method_find_iterator);
+	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Find_iterator), asCALL_THISCALL); assert(r >= 0);
+
+	sprintf_s(textbuf, 1000, "bool %s(const %s &in)", aatc_name_script_container_method_erase_iterator, n_iterator_TT);
+	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Erase_iterator), asCALL_THISCALL); assert(r >= 0);
+
+	sprintf_s(textbuf, 1000, "%s %s(const %s &in,const %s &in)", aatc_name_script_sizetype, aatc_name_script_container_method_erase_iterator, n_iterator_TT, n_iterator_TT);
+	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Erase_iterator_range), asCALL_THISCALL); assert(r >= 0);
 }
 
 

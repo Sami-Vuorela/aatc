@@ -351,6 +351,7 @@ public:
 		bool firstt;
 		bool cont;
 
+		aatc_iterator(){}
 		aatc_iterator(aatc_container_shared_1tp_tempspec* _host) :
 			host(_host)
 		{
@@ -370,6 +371,8 @@ public:
 			firstt(other.firstt),
 			cont(other.cont)
 		{}
+		~aatc_iterator(){}
+
 		aatc_iterator& operator=(const aatc_iterator& other){
 			host = other.host;
 			it = other.it;
@@ -449,12 +452,15 @@ public:
 			int r = 0;
 			char textbuf[1000];
 
-			r = engine->RegisterObjectType(n_iterator, sizeof(aatc_iterator), asOBJ_VALUE | asOBJ_POD | asGetTypeTraits<aatc_iterator>()); assert(r >= 0);
+			r = engine->RegisterObjectType(n_iterator, sizeof(aatc_iterator), asOBJ_VALUE | asGetTypeTraits<aatc_iterator>()); assert(r >= 0);
 
+			sprintf_s(textbuf, 1000, "void f()", n_containerTcontentT);
+			r = engine->RegisterObjectBehaviour(n_iterator, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor<aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 			sprintf_s(textbuf, 1000, "void f(%s@)", n_containerTcontentT);
 			r = engine->RegisterObjectBehaviour(n_iterator, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor_1_param<aatc_iterator, aatc_container_shared_1tp_tempspec*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 			sprintf_s(textbuf, 1000, "void f(const %s &in)", n_iterator);
 			r = engine->RegisterObjectBehaviour(n_iterator, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor_copy<aatc_iterator, aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+			r = engine->RegisterObjectBehaviour(n_iterator, asBEHAVE_DESTRUCT, "void f()", asFUNCTION(aatc_reghelp_generic_destructor<aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
 			aatc_iterator::Register_func_current<cond_EDITABLE>(engine, r, textbuf, n_iterator, n_content);
 			aatc_iterator::Register_func_current_const<cond_CONST>(engine, r, textbuf, n_iterator, n_content);
@@ -463,9 +469,8 @@ public:
 			r = engine->RegisterObjectMethod(n_iterator, "bool opPreInc()", asMETHOD(aatc_iterator, Next), asCALL_THISCALL); assert(r >= 0);
 			r = engine->RegisterObjectMethod(n_iterator, "bool opPostInc()", asMETHOD(aatc_iterator, Next), asCALL_THISCALL); assert(r >= 0);
 
-			//explodes for some reason
-			//sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_iterator, n_iterator);
-			//r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHODPR(aatc_iterator, operator=, (const aatc_iterator&), aatc_iterator&), asCALL_THISCALL); assert(r >= 0);
+			sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_iterator, n_iterator);
+			r = engine->RegisterObjectMethod(n_iterator, textbuf, asMETHODPR(aatc_iterator, operator=, (const aatc_iterator&), aatc_iterator&), asCALL_THISCALL); assert(r >= 0);
 		}
 	};
 
@@ -478,6 +483,82 @@ public:
 		aatc_iterator result(this);
 		result.SetToEnd();
 		return result;
+	}
+
+
+
+
+	template<class T> bool Erase_iterator(const aatc_iterator& aatc_it){}
+	template<> bool Erase_iterator<aatc_Y>(const aatc_iterator& aatc_it){
+		T_container::iterator it = aatc_it.it;
+
+		if(T_container::empty()){
+			return 0;
+		} else{
+			T_container::erase(it);
+			return 1;
+		}
+	}
+	template<class T_cond> static void Register_func_Erase_iterator(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_content, const char* n_iterator_TT){}
+	template<> static void Register_func_Erase_iterator<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_content, const char* n_iterator_TT){
+		sprintf_s(textbuf, 1000, "bool %s(const %s &in)", aatc_name_script_container_method_erase_iterator, n_iterator_TT);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_tempspec, Erase_iterator<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+	}
+
+
+	template<class T> aatc_type_sizetype Erase_iterator_range(const aatc_iterator& aatc_it_range_begin, const aatc_iterator& aatc_it_range_end){}
+	template<> aatc_type_sizetype Erase_iterator_range<aatc_Y>(const aatc_iterator& aatc_it_range_begin, const aatc_iterator& aatc_it_range_end){
+		T_container::iterator it_range_begin = aatc_it_range_begin.it;
+		T_container::iterator it_range_end = aatc_it_range_end.it;
+
+		if(it_range_begin == it_range_end){
+			return 0;
+		} else{
+			aatc_type_sizetype delcount = (aatc_type_sizetype)std::distance(it_range_begin, it_range_end);
+			T_container::erase(it_range_begin, it_range_end);
+			return delcount;
+		}
+	}
+	template<class T_cond> static void Register_func_Erase_iterator_range(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_content, const char* n_iterator_TT){}
+	template<> static void Register_func_Erase_iterator_range<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_content, const char* n_iterator_TT){
+		sprintf_s(textbuf, 1000, "%s %s(const %s &in,const %s &in)", aatc_name_script_sizetype, aatc_name_script_container_method_erase_iterator, n_iterator_TT, n_iterator_TT);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_tempspec, Erase_iterator_range<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+	}
+
+
+	template<class T> aatc_iterator Find_iterator(const T_content& value){}
+	template<> aatc_iterator Find_iterator<aatc_Y>(const T_content& value){
+		auto it = T_container::find(value);
+
+		aatc_iterator result(this);
+		result.it = it;
+
+		if(it == T_container::end()){
+			result.cont = 0;
+		}
+
+		return result;
+	}
+	template<class T> aatc_iterator Find_iterator_generic(const T_content& value){}
+	template<> aatc_iterator Find_iterator_generic<aatc_Y>(const T_content& value){
+		auto it = std::find(T_container::begin(), T_container::end(), value);
+
+		aatc_iterator result(this);
+		result.it = it;
+
+		if(it == T_container::end()){
+			result.cont = 0;
+		}
+
+		return result;
+	}
+	template<class T_cond> static void Register_func_Find_iterator(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_content, const char* n_iterator_TT){
+		sprintf_s(textbuf, 1000, "%s %s(const %s &in)", n_iterator_TT, aatc_name_script_container_method_find_iterator, n_content);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_tempspec, Find_iterator_generic<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+	}
+	template<> static void Register_func_Find_iterator<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_content, const char* n_iterator_TT){
+		sprintf_s(textbuf, 1000, "%s %s(const %s &in)", n_iterator_TT, aatc_name_script_container_method_find_iterator, n_content);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_tempspec, Find_iterator<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 	}
 };
 
@@ -566,9 +647,14 @@ void aatc_container_shared_1tp_tempspec_Register(asIScriptEngine* engine, const 
 	sprintf_s(textbuf, 1000, "%s %s()", n_iterator_TT, aatc_name_script_container_method_end);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(dt_container, End), asCALL_THISCALL); assert(r >= 0);
 
+	dt_container::Register_func_Erase_iterator<T_traits::trait_needfunc_ERASE_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_content, n_iterator_TT);
+	dt_container::Register_func_Erase_iterator_range<T_traits::trait_needfunc_ERASE_RANGE_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_content, n_iterator_TT);
+	dt_container::Register_func_Find_iterator<T_traits::trait_needfunc_FIND_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_content, n_iterator_TT);
 
-
-
+	//sprintf_s(textbuf, 1000, "bool %s(const %s &in)", aatc_name_script_container_method_erase_iterator, n_iterator_TT);
+	//r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(dt_container, Erase_iterator), asCALL_THISCALL); assert(r >= 0);
+	//sprintf_s(textbuf, 1000, "bool %s(const %s &in,const %s &in)", aatc_name_script_container_method_erase_iterator, n_iterator_TT, n_iterator_TT);
+	//r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(dt_container, Erase_iterator_range), asCALL_THISCALL); assert(r >= 0);
 }
 
 

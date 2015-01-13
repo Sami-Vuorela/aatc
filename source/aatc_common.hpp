@@ -374,6 +374,14 @@ public:
 	aatc_containerfunctor_equals(asIScriptEngine* engine, aatc_containerfunctor_Settings* settings);
 
 	bool operator()(const void* lhs, const void* rhs) const;
+
+	class findif_version{
+	public:
+		void* target;
+		aatc_containerfunctor_equals* f;
+
+		bool operator()(const void* rhs) const;
+	};
 };
 /*!\brief Internal functor for container's comparisons.*/
 class aatc_containerfunctor_hash : public aatc_containerfunctor_Settings{

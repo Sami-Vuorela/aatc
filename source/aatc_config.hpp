@@ -132,6 +132,8 @@
 
 #define aatc_name_script_container_method_begin "begin"
 #define aatc_name_script_container_method_end "end"
+#define aatc_name_script_container_method_find_iterator "find_iterator"
+#define aatc_name_script_container_method_erase_iterator aatc_name_script_container_method_erase
 
 
 #define aatc_name_script_iterator_access_property "value"

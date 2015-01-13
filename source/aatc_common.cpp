@@ -420,6 +420,9 @@ bool aatc_containerfunctor_equals::operator()(const void* lhs, const void* rhs)c
 
 	return result;
 }
+bool aatc_containerfunctor_equals::findif_version::operator()(const void* rhs) const{
+	return (*f)(target, rhs);
+}
 
 aatc_containerfunctor_hash::aatc_containerfunctor_hash(asIScriptEngine* _engine, aatc_containerfunctor_Settings* settings) :
 	engine(_engine),

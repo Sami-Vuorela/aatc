@@ -40,6 +40,8 @@ BEGIN_AS_NAMESPACE
 
 class aatc_container_traits_1tp_base{
 public:
+	typedef aatc_N trait_is_associative;
+
 	typedef aatc_N trait_needfunc_BACK_WRITE;
 	typedef aatc_N trait_needfunc_BACK_READ;
 	typedef aatc_N trait_needfunc_FRONT_WRITE;
@@ -66,6 +68,10 @@ public:
 
 	typedef aatc_Y trait_iterator_editable;
 	typedef aatc_N trait_iterator_const;
+
+	typedef aatc_N trait_needfunc_ERASE_ITERATOR;
+	typedef aatc_N trait_needfunc_ERASE_RANGE_ITERATOR;
+	typedef aatc_N trait_needfunc_FIND_ITERATOR;
 };
 
 
@@ -87,6 +93,9 @@ public:
 	typedef aatc_Y trait_needfunc_RESERVE;
 
 	typedef aatc_Y trait_needfunc_SORT_GENERIC;
+
+	typedef aatc_Y trait_needfunc_ERASE_ITERATOR;
+	typedef aatc_Y trait_needfunc_ERASE_RANGE_ITERATOR;
 };
 
 class aatc_container_traits_list : public aatc_container_traits_1tp_base{
@@ -99,10 +108,15 @@ public:
 	typedef aatc_Y trait_needfunc_ERASE_GENERIC_VALUE;
 
 	typedef aatc_Y trait_needfunc_SORT_NATIVE;
+
+	typedef aatc_Y trait_needfunc_ERASE_ITERATOR;
+	typedef aatc_Y trait_needfunc_ERASE_RANGE_ITERATOR;
 };
 
 class aatc_container_traits_set : public aatc_container_traits_1tp_base{
 public:
+	typedef aatc_Y trait_is_associative;
+
 	typedef aatc_Y trait_needfunc_INSERT;
 	typedef aatc_Y trait_needfunc_ERASE_VALUE;
 	typedef aatc_Y trait_needfunc_CONTAINS_NATIVE;
@@ -111,10 +125,17 @@ public:
 
 	typedef aatc_N trait_iterator_editable;
 	typedef aatc_Y trait_iterator_const;
+
+	typedef aatc_Y trait_needfunc_ERASE_ITERATOR;
+	typedef aatc_Y trait_needfunc_ERASE_RANGE_ITERATOR;
+
+	typedef aatc_Y trait_needfunc_FIND_ITERATOR;
 };
 
 class aatc_container_traits_unordered_set : public aatc_container_traits_1tp_base{
 public:
+	typedef aatc_Y trait_is_associative;
+
 	typedef aatc_Y trait_needfunc_INSERT;
 	typedef aatc_Y trait_needfunc_ERASE_VALUE;
 	typedef aatc_Y trait_needfunc_CONTAINS_NATIVE;
@@ -123,6 +144,11 @@ public:
 
 	typedef aatc_N trait_iterator_editable;
 	typedef aatc_Y trait_iterator_const;
+
+	typedef aatc_Y trait_needfunc_ERASE_ITERATOR;
+	typedef aatc_Y trait_needfunc_ERASE_RANGE_ITERATOR;
+
+	typedef aatc_Y trait_needfunc_FIND_ITERATOR;
 };
 
 
