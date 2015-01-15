@@ -72,6 +72,8 @@ public:
 	typedef aatc_N trait_needfunc_ERASE_ITERATOR;
 	typedef aatc_N trait_needfunc_ERASE_RANGE_ITERATOR;
 	typedef aatc_N trait_needfunc_FIND_ITERATOR;
+
+	typedef aatc_N trait_needfunc_INSERT_ITERATOR;
 };
 
 
@@ -96,6 +98,8 @@ public:
 
 	typedef aatc_Y trait_needfunc_ERASE_ITERATOR;
 	typedef aatc_Y trait_needfunc_ERASE_RANGE_ITERATOR;
+
+	typedef aatc_Y trait_needfunc_INSERT_ITERATOR;
 };
 
 class aatc_container_traits_list : public aatc_container_traits_1tp_base{
@@ -111,6 +115,8 @@ public:
 
 	typedef aatc_Y trait_needfunc_ERASE_ITERATOR;
 	typedef aatc_Y trait_needfunc_ERASE_RANGE_ITERATOR;
+
+	typedef aatc_Y trait_needfunc_INSERT_ITERATOR;
 };
 
 class aatc_container_traits_set : public aatc_container_traits_1tp_base{

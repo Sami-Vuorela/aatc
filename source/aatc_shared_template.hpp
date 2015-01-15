@@ -1207,6 +1207,24 @@ public:
 	}
 
 
+	template<class T> void Insert_iterator(const aatc_iterator& aatc_it, void* value){}
+	template<> void Insert_iterator<aatc_Y>(const aatc_iterator& aatc_it, void* value){
+		void* final_value;
+
+		if(handlemode){
+			final_value = StoreHandle2(value);
+		} else{
+			final_value = engine->CreateScriptObjectCopy(value, objtype_content);
+		}
+
+		T_container::insert(aatc_it.it, final_value);
+	}
+	template<class T_cond> static void Register_func_Insert_iterator(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_iterator_TT){}
+	template<> static void Register_func_Insert_iterator<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_iterator_TT){
+		sprintf_s(textbuf, 1000, "void %s(const %s &in,const T &in)", aatc_name_script_container_method_insert_iterator, n_iterator_TT);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Insert_iterator<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+	}
+
 
 
 
@@ -1309,6 +1327,7 @@ void aatc_container_shared_1tp_template_Register(asIScriptEngine* engine, const 
 	T_container::Register_func_Erase_iterator<T_traits::trait_needfunc_ERASE_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_iterator_TT);
 	T_container::Register_func_Erase_range_iterator<T_traits::trait_needfunc_ERASE_RANGE_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_iterator_TT);
 	T_container::Register_func_Find_iterator<T_traits::trait_needfunc_FIND_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_iterator_TT);
+	T_container::Register_func_Insert_iterator<T_traits::trait_needfunc_INSERT_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_iterator_TT);
 }
 
 

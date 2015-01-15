@@ -560,6 +560,19 @@ public:
 		sprintf_s(textbuf, 1000, "%s %s(const %s &in)", n_iterator_TT, aatc_name_script_container_method_find_iterator, n_content);
 		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_tempspec, Find_iterator<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 	}
+
+
+
+
+	template<class T> void Insert_iterator(const aatc_iterator& aatc_it, const T_content& value){}
+	template<> void Insert_iterator<aatc_Y>(const aatc_iterator& aatc_it, const T_content& value){
+		T_container::insert(aatc_it.it, value);
+	}
+	template<class T_cond> static void Register_func_Insert_iterator(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_content, const char* n_iterator_TT){}
+	template<> static void Register_func_Insert_iterator<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_content, const char* n_iterator_TT){
+		sprintf_s(textbuf, 1000, "void %s(const %s &in,const %s &in)", aatc_name_script_container_method_insert_iterator, n_iterator_TT, n_content);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_tempspec, Insert_iterator<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+	}
 };
 
 
@@ -650,6 +663,7 @@ void aatc_container_shared_1tp_tempspec_Register(asIScriptEngine* engine, const 
 	dt_container::Register_func_Erase_iterator<T_traits::trait_needfunc_ERASE_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_content, n_iterator_TT);
 	dt_container::Register_func_Erase_iterator_range<T_traits::trait_needfunc_ERASE_RANGE_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_content, n_iterator_TT);
 	dt_container::Register_func_Find_iterator<T_traits::trait_needfunc_FIND_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_content, n_iterator_TT);
+	dt_container::Register_func_Insert_iterator<T_traits::trait_needfunc_INSERT_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_content, n_iterator_TT);
 
 	//sprintf_s(textbuf, 1000, "bool %s(const %s &in)", aatc_name_script_container_method_erase_iterator, n_iterator_TT);
 	//r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(dt_container, Erase_iterator), asCALL_THISCALL); assert(r >= 0);
