@@ -195,6 +195,8 @@ public:
 		objtype_content->Release();
 	}
 	void operator=(const aatc_container_shared_1tp_template& other){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		Clear();//will delete script objects or decrement handles
 
 		T_container::operator=(other);
@@ -306,6 +308,8 @@ public:
 
 
 	void Clear(){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		T_container::iterator it = T_container::begin();
 		T_container::iterator itend = T_container::end();
 		if (handlemode){
@@ -340,6 +344,8 @@ public:
 	template<class T> void Push_Back(void* value){}
 	template<class T> void Pop_Back(){}
 	template<> void Push_Back<aatc_Y>(void* value){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if (handlemode){
 			push_back(NULL);
 			StoreHandle(&back(), value);
@@ -349,6 +355,8 @@ public:
 		}
 	}
 	template<> void Pop_Back<aatc_Y>(){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if (handlemode){
 			ReleaseHandle(back());
 		}
@@ -383,6 +391,8 @@ public:
 	template<class T> void Push_Front(void* value){}
 	template<class T> void Pop_Front(){}
 	template<> void Push_Front<aatc_Y>(void* value){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if (handlemode){
 			push_front(NULL);
 			StoreHandle(&front(), value);
@@ -391,6 +401,8 @@ public:
 		}
 	}
 	template<> void Pop_Front<aatc_Y>(){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if (handlemode){
 			ReleaseHandle(front());
 		}else{
@@ -445,6 +457,8 @@ public:
 
 	template<class T> void Erase_value(void* value){}
 	template<> void Erase_value<aatc_Y>(void* value){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if (handlemode){
 			if(!handlemode_directcomp){
 				aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::ERASE_VALUE, objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_erase)
@@ -488,6 +502,8 @@ public:
 
 	template<class T> void Reserve(aatc_type_sizetype count){}
 	template<> void Reserve<aatc_Y>(aatc_type_sizetype count){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		T_container::reserve(count);
 	}
 	template<class T_cond> static void Register_func_reserve(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
@@ -498,6 +514,8 @@ public:
 
 	template<class T> void Insert(void* value){}
 	template<> void Insert<aatc_Y>(void* value){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if (handlemode){
 			if(!handlemode_directcomp){
 				aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::INSERT, objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_insert)
@@ -592,6 +610,8 @@ public:
 
 	//template<typename T_included, typename T_is_native> void Sort(bool ascending){}
 	template<typename T_is_native> void Sort(bool ascending){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if(handlemode_directcomp){
 			if(ascending){
 				_aatc_sort_basefunctor<T_is_native, std::less<void*>> a; a(*this);
@@ -619,6 +639,8 @@ public:
 	}
 	//template<typename T_included, typename T_is_native> void Sort_custom(aatc_script_Funcpointer* funcptr, bool ascending){}
 	template<typename T_is_native> void Sort_custom(aatc_script_Funcpointer* funcptr, bool ascending){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if(handlemode_directcomp){
 			if(ascending){
 				_aatc_sort_basefunctor<T_is_native, std::less<void*>> a; a(*this);
@@ -710,6 +732,8 @@ public:
 	//doxygen skip
 
 	template<class T_is_native> void Insert_generic_index_before(int index, void* value){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if((index > -1) && (index <= T_container::size())){
 			T_container::iterator ii = T_container::begin();
 			{_functor_iterator_setindex<T_is_native> ff; ff(ii, index); }
@@ -730,6 +754,8 @@ public:
 
 
 	template<class T_is_native> void Erase_generic_index(int position){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if((position > -1) && (position < T_container::size())){
 			T_container::iterator ii = T_container::begin();
 
@@ -746,6 +772,8 @@ public:
 	}
 
 	template<class T_is_native> void Erase_generic_index_range(int range_index_begin, int range_index_end){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if((range_index_begin > -1) && (range_index_begin < T_container::size())){
 			if((range_index_end > -1) && (range_index_end < T_container::size())){
 				T_container::iterator ii_range_begin = T_container::begin();
@@ -778,6 +806,8 @@ public:
 
 
 	template<class T_existence> void Erase_generic_value(void* value, bool all){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if(handlemode){ value = *(void**)value; }
 
 		if(handlemode_directcomp){
@@ -861,24 +891,20 @@ public:
 
 
 
-	class aatc_iterator{
+	class aatc_iterator : public aatc_iterator_base{
 	public:
 		aatc_container_shared_1tp_template* host;
 
 		typename aatc_container_shared_1tp_template::iterator it;
 		typename aatc_container_shared_1tp_template::iterator it_end;
 
-		bool cont;
-		bool firstt;
 		bool handlemode;
 
 		aatc_iterator() :
 			it(),
 			it_end()
-		{
-		}
+		{}
 		aatc_iterator(void *ref, aatc_type_astypeid typeId_targeaatc_container_shared_1tp_template) :
-			firstt(1),
 			it(),
 			it_end()
 		{
@@ -886,13 +912,17 @@ public:
 			Init();
 		}
 		aatc_iterator(const aatc_iterator& other) :
+			aatc_iterator_base(other),
+
 			host(other.host),
 			it(other.it),
 			it_end(other.it_end),
-			firstt(other.firstt),
-			cont(other.cont),
 			handlemode(other.handlemode)
-		{}
+		{
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				iterator_safety_version = other.iterator_safety_version;
+			#endif
+		}
 		~aatc_iterator(){}
 
 		aatc_iterator& operator=(const aatc_iterator& other){
@@ -903,10 +933,18 @@ public:
 			cont = other.cont;
 			handlemode = other.handlemode;
 
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				iterator_safety_version = other.iterator_safety_version;
+			#endif
+
 			return *this;
 		}
 
 		void Init(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				iterator_safety_version = host->iterator_safety_version;
+			#endif
+
 			if(host->empty()){
 				cont = 0;
 			} else{
@@ -920,6 +958,13 @@ public:
 
 		//combine end check and continuation into one monster
 		bool Next(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return 0;
+				}
+			#endif
+
 			if(firstt){
 				if(cont){//all is well
 					firstt = 0;
@@ -941,6 +986,13 @@ public:
 		template<class T> const void* Current_get(){}
 		template<class T> void Current_set(void* newval){}
 		template<> const void* Current_get<aatc_Y>(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return nullptr;
+				}
+			#endif
+
 			if(handlemode){
 				return &(*it);//return pointer to handle
 			} else{
@@ -948,6 +1000,13 @@ public:
 			}
 		}
 		template<> void Current_set<aatc_Y>(void* value){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return;
+				}
+			#endif
+
 			if(handlemode){
 				if(*it){
 					host->engine->ReleaseScriptObject(*it, host->objtype_content);
@@ -965,6 +1024,13 @@ public:
 
 		template<class T> void* Current(){}
 		template<> void* Current<aatc_Y>(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return nullptr;
+				}
+			#endif
+
 			if(handlemode){
 				return &(*(it));//return pointer to handle
 			} else{
@@ -985,6 +1051,13 @@ public:
 
 		template<class T> const void* Current_const(){}
 		template<> const void* Current_const<aatc_Y>(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return nullptr;
+				}
+			#endif
+
 			if(handlemode){
 				return &(*(it));//return pointer to handle
 			} else{
@@ -1076,6 +1149,15 @@ public:
 
 	template<class T> bool Erase_iterator(const aatc_iterator& aatc_it){}
 	template<> bool Erase_iterator<aatc_Y>(const aatc_iterator& aatc_it){
+		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+			if(iterator_safety_version != aatc_it.iterator_safety_version){
+				aatc_errorprint_container_iterator_invalid();
+				return 0;
+			}
+		#endif
+
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		T_container::iterator it = aatc_it.it;
 
 		if(it == T_container::end()){
@@ -1101,6 +1183,15 @@ public:
 
 	template<class T> aatc_type_sizetype Erase_range_iterator(const aatc_iterator& aatc_it_range_begin, const aatc_iterator& aatc_it_range_end){}
 	template<> aatc_type_sizetype Erase_range_iterator<aatc_Y>(const aatc_iterator& aatc_it_range_begin, const aatc_iterator& aatc_it_range_end){
+		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+			if((iterator_safety_version != aatc_it_range_begin.iterator_safety_version) || (iterator_safety_version != aatc_it_range_end.iterator_safety_version)){
+				aatc_errorprint_container_iterator_invalid();
+				return 0;
+			}
+		#endif
+
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		T_container::iterator it_range_begin = aatc_it_range_begin.it;
 		T_container::iterator it_range_end = aatc_it_range_end.it;
 
@@ -1209,6 +1300,15 @@ public:
 
 	template<class T> void Insert_iterator(const aatc_iterator& aatc_it, void* value){}
 	template<> void Insert_iterator<aatc_Y>(const aatc_iterator& aatc_it, void* value){
+		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+			if(iterator_safety_version != aatc_it.iterator_safety_version){
+				aatc_errorprint_container_iterator_invalid();
+				return;
+			}
+		#endif
+
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		void* final_value;
 
 		if(handlemode){

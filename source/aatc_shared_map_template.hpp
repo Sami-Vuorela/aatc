@@ -224,6 +224,8 @@ public:
 	}
 
 	void operator=(const aatc_container_shared_map_template& other){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		Clear();//will delete script objects or decrement handles
 
 		handlemode_directcomp = other.handlemode_directcomp;
@@ -443,6 +445,8 @@ public:
 	}
 
 	void Clear(){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		switch(datahandlingid_key){
 		case aatc_DATAHANDLINGTYPE::STRING:{
 											   auto it = T_container::begin();
@@ -507,6 +511,8 @@ public:
 				aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::INSERT, objtype_container->GetName(), objtype_key->GetName(), "insert")
 			}
 		#endif
+
+		aatc_errorcheck_container_iterator_safety_version_Increment();
 
 		//if(datahandlingid_key == aatc_DATAHANDLINGTYPE::HANDLE){
 		//	if(!newkey){
@@ -589,7 +595,9 @@ public:
 				aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::ERASE_VALUE, objtype_container->GetName(), objtype_key->GetName(), "erase")
 			}
 		#endif
-		
+
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		//if(datahandlingid_key == aatc_DATAHANDLINGTYPE::HANDLE){
 		//	if(!value){
 		//		return;
@@ -730,17 +738,12 @@ public:
 
 
 
-	class aatc_iterator{
+	class aatc_iterator : public aatc_iterator_base{
 	public:
 		aatc_container_shared_map_template* host;
 
 		typename aatc_container_shared_map_template::iterator it;
 		typename aatc_container_shared_map_template::iterator it_end;
-
-		bool cont;
-		bool firstt;
-		//bool handlemode_key;
-		//bool handlemode_value;
 
 		aatc_DATAHANDLINGTYPE datahandlingid_key;
 		aatc_DATAHANDLINGTYPE datahandlingid_value;
@@ -748,23 +751,25 @@ public:
 		aatc_PRIMITIVE_TYPE primitiveid_value;
 
 		aatc_iterator(){}
-		aatc_iterator(void *ref, aatc_type_astypeid typeId_target_container) :
-			firstt(1)
-		{
+		aatc_iterator(void *ref, aatc_type_astypeid typeId_target_container){
 			host = (aatc_container_shared_map_template*)(*(void**)ref);
 			Init();
 		}
 		aatc_iterator(const aatc_iterator& other) :
+			aatc_iterator_base(other),
+
 			host(other.host),
 			it(other.it),
 			it_end(other.it_end),
-			cont(other.cont),
-			firstt(other.firstt),
 			datahandlingid_key(other.datahandlingid_key),
 			datahandlingid_value(other.datahandlingid_value),
 			primitiveid_key(other.primitiveid_key),
 			primitiveid_value(other.primitiveid_value)
-		{}
+		{
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				iterator_safety_version = other.iterator_safety_version;
+			#endif
+		}
 		~aatc_iterator(){}
 
 		aatc_iterator& operator=(const aatc_iterator& other){
@@ -778,6 +783,10 @@ public:
 			primitiveid_key = other.primitiveid_key;
 			primitiveid_key = other.primitiveid_key;
 
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				iterator_safety_version = other.iterator_safety_version;
+			#endif
+
 			return *this;
 		}
 
@@ -786,6 +795,10 @@ public:
 		}
 
 		void Init(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				iterator_safety_version = host->iterator_safety_version;
+			#endif
+
 			if(host->empty()){
 				cont = 0;
 			} else{
@@ -805,6 +818,13 @@ public:
 
 		//combine end check and continuation into one monster
 		bool Next(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return 0;
+				}
+			#endif
+
 			if(firstt){
 				if(cont){//all is well
 					firstt = 0;
@@ -825,6 +845,13 @@ public:
 		}
 
 		const void* Current_key_get(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return nullptr;
+				}
+			#endif
+
 			switch(datahandlingid_key){
 			case aatc_DATAHANDLINGTYPE::HANDLE:{return &((*it).first.ptr); }//return pointer to handle
 			case aatc_DATAHANDLINGTYPE::OBJECT:{return (*it).first.ptr; }//return copy of pointer to object
@@ -848,6 +875,13 @@ public:
 		}
 
 		const void* Current_value_get(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return nullptr;
+				}
+			#endif
+
 			switch(datahandlingid_value){
 			case aatc_DATAHANDLINGTYPE::HANDLE:{return &((*it).second.ptr); }//return pointer to handle
 			case aatc_DATAHANDLINGTYPE::OBJECT:{return (*it).second.ptr; }//return copy of pointer to object
@@ -870,6 +904,13 @@ public:
 			return nullptr;//should never happen, stops compiler warning
 		}
 		void Current_value_set(void* value){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return;
+				}
+			#endif
+
 			switch(datahandlingid_value){
 			case aatc_DATAHANDLINGTYPE::HANDLE:{
 												   void** it_inner = &((*it).second.ptr);//convenience
@@ -912,6 +953,13 @@ public:
 
 
 		const void* Current_key_const(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return nullptr;
+				}
+			#endif
+
 			switch(datahandlingid_key){
 			case aatc_DATAHANDLINGTYPE::HANDLE:{return &((*it).first.ptr); }//return pointer to handle
 			case aatc_DATAHANDLINGTYPE::OBJECT:{return (*it).first.ptr; }//return copy of pointer to object
@@ -935,6 +983,13 @@ public:
 		}
 
 		void* Current_value(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+						if(iterator_safety_version != host->iterator_safety_version){
+							aatc_errorprint_iterator_container_modified();
+							return nullptr;
+						}
+			#endif
+
 			switch(datahandlingid_value){
 			case aatc_DATAHANDLINGTYPE::HANDLE:{return &((*it).second.ptr); }//return pointer to handle
 			case aatc_DATAHANDLINGTYPE::OBJECT:{return (*it).second.ptr; }//return copy of pointer to object
@@ -1061,11 +1116,20 @@ public:
 	}
 
 	bool Erase_iterator(const aatc_iterator& aatc_it){
+		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != aatc_it.iterator_safety_version){
+					aatc_errorprint_container_iterator_invalid();
+					return 0;
+				}
+		#endif
+
 		T_container::iterator it = aatc_it.it;
 
 		if(it == T_container::end()){
 			return 0;
-		}else{
+		} else{
+			aatc_errorcheck_container_iterator_safety_version_Increment();
+
 			aatc_primunion old_key;
 			aatc_primunion old_value;
 
@@ -1100,12 +1164,21 @@ public:
 	}
 
 	aatc_type_sizetype Erase_iterator_range(const aatc_iterator& aatc_it_range_begin, const aatc_iterator& aatc_it_range_end){
+		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+			if((iterator_safety_version != aatc_it_range_begin.iterator_safety_version) || (iterator_safety_version != aatc_it_range_end.iterator_safety_version)){
+				aatc_errorprint_container_iterator_invalid();
+				return 0;
+			}
+		#endif
+
 		T_container::iterator it_range_begin = aatc_it_range_begin.it;
 		T_container::iterator it_range_end = aatc_it_range_end.it;
 
 		if(it_range_begin == it_range_end){
 			return 0;
 		} else{
+			aatc_errorcheck_container_iterator_safety_version_Increment();
+
 			aatc_type_sizetype delcount = (aatc_type_sizetype)std::distance(it_range_begin, it_range_end);
 
 			std::vector<std::pair<aatc_primunion, aatc_primunion>> old_items;

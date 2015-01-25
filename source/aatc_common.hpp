@@ -152,8 +152,27 @@ BEGIN_AS_NAMESPACE
 class aatc_container_base{
 public:
 	asIScriptEngine* engine;
+
+	#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+		int_fast16_t iterator_safety_version;
+	#endif
+
+	aatc_container_base();
 	virtual ~aatc_container_base();
 };
+class aatc_iterator_base{
+public:
+	bool firstt;
+	bool cont;
+
+	#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+		int_fast16_t iterator_safety_version;
+	#endif
+
+	aatc_iterator_base();
+	aatc_iterator_base(const aatc_iterator_base& other);
+};
+
 #if aatc_CONFIG_USE_ASADDON_SERIALIZER
 	class CSerializedValue;
 	typedef bool(*aatc_funcptr_serializer_containerbase_is_thistype)(aatc_container_base* base);
@@ -577,6 +596,7 @@ if((index>size)){																	\
 	aatc_errorprint_container_access_bounds(aatc_type_sizetype(index), aatc_type_sizetype(size), n_container, n_content, n_operation);					\
 	return defaultvalue;																						\
 }
+
 #else
 #define aatc_errorcheck_container_missingfunctions_operation_retvoid(ID_OP,n_container,n_content,n_operation) {}
 #define aatc_errorcheck_container_missingfunctions_operation_retnull(ID_OP,n_container,n_content,n_operation) {}
@@ -586,7 +606,20 @@ if((index>size)){																	\
 #define aatc_errorcheck_container_access_empty_retdefaultn_container,n_content,n_operation) {}
 #define aatc_errorcheck_container_access_bounds_retdefault(index,size,n_container,n_content,n_operation) {}
 #endif
-	
+
+#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+	#define aatc_errorcheck_container_iterator_safety_version_Increment() iterator_safety_version++;
+#else
+	#define aatc_errorcheck_container_iterator_safety_version_Increment()
+#endif
+
+
+
+/*
+	These do nothing if
+	aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+	is set to 0
+*/
 
 /*!\brief Internal error printing function.*/
 void aatc_errorprint_container_missingfunctions_operation_missing(const char* name_container, const char* name_content, const char* name_operation);
@@ -594,6 +627,10 @@ void aatc_errorprint_container_missingfunctions_operation_missing(const char* na
 void aatc_errorprint_container_access_empty(const char* name_container, const char* name_content, const char* name_operation);
 /*!\brief Internal error printing function.*/
 void aatc_errorprint_container_access_bounds(aatc_type_sizetype index, aatc_type_sizetype size, const char* name_container, const char* name_content, const char* name_operation);
+/*!\brief Internal error printing function.*/
+void aatc_errorprint_iterator_container_modified();
+/*!\brief Internal error printing function.*/
+void aatc_errorprint_container_iterator_invalid();
 
 //check for missing functions, return bitmask of missing functions
 aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions_base(int CONTAINER_ID, aatc_template_specific_storage* tss);

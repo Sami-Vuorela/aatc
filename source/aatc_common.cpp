@@ -769,6 +769,17 @@ void aatc_errorprint_container_access_bounds(aatc_type_sizetype index, aatc_type
 #endif
 }
 
+void aatc_errorprint_iterator_container_modified(){
+	#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+		asGetActiveContext()->SetException(aatc_errormessage_iterator_container_modified);
+	#endif
+}
+void aatc_errorprint_container_iterator_invalid(){
+	#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+		asGetActiveContext()->SetException(aatc_errormessage_container_iterator_invalid);
+	#endif
+}
+
 
 
 aatc_DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(asIScriptEngine* engine,aatc_type_uint32 astypeid){
@@ -828,7 +839,23 @@ aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_fu
 //template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float32>(aatc_type_float32* input){ return asTYPEID_FLOAT; }
 //template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float64>(aatc_type_float64* input){ return asTYPEID_DOUBLE; }
 
+aatc_container_base::aatc_container_base()
+{
+	#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+		iterator_safety_version = 0;
+	#endif
+}
 aatc_container_base::~aatc_container_base(){}
+
+aatc_iterator_base::aatc_iterator_base():
+	firstt(1)
+{}
+aatc_iterator_base::aatc_iterator_base(const aatc_iterator_base& other) :
+	firstt(1),
+	cont(1)
+{}
+
+
 
 void* aatc_primunion::Get_Ptr_To_Primitive_Type(aatc_PRIMITIVE_TYPE primtype){
 	switch(primtype){

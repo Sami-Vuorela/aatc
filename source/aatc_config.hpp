@@ -91,6 +91,17 @@
 #define aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_MISSINGFUNCTIONS_ZERO_TOLERANCE_USE_DIRECTCOMP 1
 
 /*
+	Every operation that changes a container increments a version number.
+	If you try to access an iterator and it's version number differs from the container's, an exception will be thrown.
+	Without this, illegal access will crash.
+	This obviously reduces runtime performance.
+*/
+#define aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS 1
+
+
+
+
+/*
 	Random magical optimization numbers ahead.
 */
 //this number was used by boost, so it must be legit
@@ -319,6 +330,21 @@ enum aatc_CONTAINERTYPE{
 #define aatc_errormessage_container_access_bounds_formatting_param4 index
 #define aatc_errormessage_container_access_bounds_formatting_param5 size
 #define aatc_errormessage_container_access_bounds_formatting "%s<%s>::%s[%i] is out of bounds. Size = %i."
+
+/*
+	Happens when trying to access or set an iterator and the container has been modified after iterator construction.
+*/
+#define aatc_errormessage_iterator_container_modified "Invalid iterator. Container has been modified during iteration."
+/*
+	Used by the container if it tries to use an invalid iterator.
+	Example of erasing twice with the same iterator:
+		vector<int> myvec;
+		//add 1 2 3 4 5 to vector
+		auto it = myvec.find_iterator(3);
+		myvec.erase(it);
+		myvec.erase(it);//this line will cause this exception, because the first erase changed the container state and invalidated all iterators
+*/
+#define aatc_errormessage_container_iterator_invalid "Invalid iterator."
 
 
 
