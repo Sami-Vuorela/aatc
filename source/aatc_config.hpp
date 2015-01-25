@@ -156,6 +156,7 @@
 #define aatc_name_script_iterator_access_function_key "current_key"
 #define aatc_name_script_iterator_access_function_value "current_value"
 #define aatc_name_script_iterator_method_is_end "IsEnd"
+#define aatc_name_script_iterator_method_is_valid "IsValid"
 
 #define aatc_name_script_iterator "_iterator"
 #define aatc_name_script_funcpointer "aatc_funcpointer"

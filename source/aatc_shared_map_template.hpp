@@ -1016,12 +1016,19 @@ public:
 		Using this in script should be faster than (it == container.end()) because container.end() creates an object
 		*/
 		bool IsEnd(){
-			return !cont;
+			return it == it_end;
 		}
 		void SetToEnd(){
 			firstt = 0;
 			cont = 0;
 			it = it_end;
+		}
+		bool IsValid(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				return iterator_safety_version == host->iterator_safety_version;
+			#else
+				return 1;
+			#endif
 		}
 
 		bool operator==(const aatc_iterator& other){
@@ -1070,6 +1077,9 @@ public:
 
 			sprintf_s(textbuf, 1000, "bool %s()", aatc_name_script_iterator_method_is_end);
 			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, IsEnd), asCALL_THISCALL); assert(r >= 0);
+
+			sprintf_s(textbuf, 1000, "bool %s()", aatc_name_script_iterator_method_is_valid);
+			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, IsValid), asCALL_THISCALL); assert(r >= 0);
 		}
 	};
 
