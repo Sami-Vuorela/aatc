@@ -76,7 +76,10 @@ public:
 	aatc_container_list_tempspec& operator=(const aatc_container_list_tempspec& other){ aatc_container_shared_1tp_tempspec::operator=(other); return *this; }
 	aatc_container_list_tempspec& Swap(aatc_container_list_tempspec& other){ aatc_container_shared_1tp_tempspec::swap(other); return *this; }
 
-	void Remove(const T& value){ aatc_container_shared_1tp_tempspec::remove(value); }
+	void Remove(const T& value){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+		aatc_container_shared_1tp_tempspec::remove(value);
+	}
 };
 
 /*!\brief Actual class used for template specializations defined in c++.*/

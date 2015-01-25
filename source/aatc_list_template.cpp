@@ -95,6 +95,8 @@ bool aatc_container_list_template::scriptfunctor_removeif_objectmode::operator()
 
 
 int aatc_container_list_template::Remove(void* target){
+	aatc_errorcheck_container_iterator_safety_version_Increment();
+
 	if(handlemode_directcomp){
 		void* handle_target = *(void**)target;
 
