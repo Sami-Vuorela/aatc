@@ -76,3 +76,71 @@ This problem showed up only in debug mode.
 More help here: http://stackoverflow.com/questions/16596876/object-file-has-too-many-sections  
   
 This problem went away by separating the registration process to multiple cpp files.  
+
+
+
+
+operator[] for maps
+----------
+
+map and unordered_map containers now have an operator[].
+It can be used to access existing elements by key, or to add new things.
+
+Example of adding new things and looking up existing things.
+```
+map<int,int> mymap;
+
+mymap[1] = 11;
+mymap[3] = 33;
+mymap[2] = 22;
+
+Print("value at 1 = " + mymap[1]);
+Print("value at 2 = " + mymap[2]);
+Print("value at 3 = " + mymap[3]);
+```
+
+
+new container operations using iterators
+----------
+
+[Forum post](http://www.gamedev.net/topic/661910-template-containers-angelscript-addon-library-release/page-2#entry5204434)  
+
+New methods:
+```
+iterator container::end() //returns an iterator that points at the end, useful for...
+bool iterator::operator==(const iterator &in) //checking if your iterator equals end
+bool iterator::IsEnd() //check it with 1 c++ function call and no need for creating another iterator object
+
+bool container::erase(const iterator &in) //erase at iterator, returns true if something was erased (if iterator was not end)
+size_t container::erase(const iterator_range_begin &in,const iterator_range_end &in) //erase a range, returns amount of things erased
+
+//non map containers
+iterator container::find_iterator(const value &in) //find that returns an iterator, returns end if not found
+
+//vector and list
+void container::insert(const iterator &in, const value &in) //insert before iterator, using end iterator will insert at the end
+
+//map / uo_map
+iterator container::find_iterator(const key &in) //find that returns an iterator, returns end if not found
+```
+
+
+iterator safety with version numbers
+----------
+
+[Forum post](http://www.gamedev.net/topic/661910-template-containers-angelscript-addon-library-release/page-2#entry5206539)  
+
+Every operation that changes a container increments a version number.  
+If you try to access an iterator and it's version number differs from the container's, an exception will be thrown.
+Without this, illegal access will crash.  
+This obviously reduces runtime performance.  
+
+Enable / disable in the config at this line:
+```
+#define aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS 1
+```
+  
+Added one new method for iterators, always returns true if safety is disabled.
+```
+bool iterator::IsValid()
+```
