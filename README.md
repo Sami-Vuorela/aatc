@@ -36,3 +36,12 @@ Manual
 There is a doxygen manual available over at  
 http://sami-vuorela.github.io/aatc  
 go read that instead of this readme.
+
+
+
+Experimental branch
+----------
+
+There is a branch with all the newest stuff called "experimental".
+The master branch requires AS version 2.29.1, the experimental branch requires the latest version of AS from SVN.
+Link to the experimental branch: https://github.com/Sami-Vuorela/aatc/tree/experimental
