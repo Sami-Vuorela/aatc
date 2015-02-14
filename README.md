@@ -1,38 +1,69 @@
-Angelscript addon: Template Containers
+New features in the experimental branch:
 ----------
 
-Bringing over your good old friends, the STL containers from c++ to angelscript.
-Currently these container types are supported:
- * vector
- * list
- * set
- * unordered_set
- * map
- * unordered_map
 
-License
+
+auto iterators with container::begin()
 ----------
 
-This library uses the The zlib/libpng License, same thing that Angelscript itself uses.
-It is quite free indeed.
+Provides easier iterator syntax  
+  
+for(auto it = my_container.begin();it++;){  
+	Print("value = " + it.current());  
+}  
+  
+This syntax is slightly slower during loop initialization than the old  
+  
+for(vector_iterator it(@my_vector);it++;){  
+	Print("value = " + it.current());  
+}  
+  
+, because of 1 additional constructor and 1 copy, angelscript might even decide that the constructor needs an allocation, even though the iterator is a value object.  
+Ofcourse that doesn't matter much if your containers contain a lot of objects.  
+  
+If you don't like "begin" as the function name, you can change it in the config at the following line  
+#define aatc_name_script_container_method_begin "begin"  
+  
+Created using angelscript svn version 2076  
 
-You can read the license over at  
-http://opensource.org/licenses/zlib-license.php  
-or in the source files.
 
 
-
-Forum post
+virtual property accessors
 ----------
 
-Tell others about possible problems and your stories of victory at the angelscript forum  
-[Release post](http://www.gamedev.net/topic/661910-template-containers-angelscript-addon-library-release/)  
+You can now access iterators without calling functions with the new convenient virtual property accessors.  
+Their names can be configured in the config.  
+  
+Syntax:  
+for(auto it = myvec.begin();it++;){  
+  MyPrint("current value = " + it.value);  
+}  
 
 
 
-Manual
+serializer support
 ----------
 
-There is a doxygen manual available over at  
-http://sami-vuorela.github.io/aatc  
-go read that instead of this readme.
+Provides support for the as addon serializer.  
+
+Syntax:  
+	CSerializer* my_serializer = new CSerializer();  
+	aatc_serializer_register(engine, my_serializer);  
+  
+	my_serializer->Store(my_module);  
+  
+	//Do_Things_Requiring_Script_Serialization()  
+  
+	my_serializer->Restore(my_module);  
+	aatc_serializer_cleanup(engine, my_serializer);  
+  
+	delete my_serializer;  
+
+
+All the new template majicks required for serializer support have conjured up a new nightmare:  
+MSVC2013 gave me this error: "fatal error C1128: number of sections exceeded object file format limit : compile with /bigobj" when compiling the registration cpp files.  
+Apparently all the templates are using more than 65536 sections in the .obj file and thats too much for MSVC2013 default settings. Google "C1128" for help for setting that "/bigobj" setting.  
+This problem showed up only in debug mode.  
+More help here: http://stackoverflow.com/questions/16596876/object-file-has-too-many-sections  
+  
+This problem went away by separating the registration process to multiple cpp files.  
