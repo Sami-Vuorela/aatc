@@ -1,6 +1,5 @@
 var searchData=
 [
-  ['requirements',['Requirements',['../page_manual_requirements.html',1,'index']]],
-  ['registration',['Registration',['../page_manual_usage_registration.html',1,'page_manual_usage']]],
-  ['registering_20tempspecs',['Registering tempspecs',['../page_manual_usage_registration_tempspec.html',1,'page_manual_usage']]]
+  ['manual',['Manual',['../index.html',1,'']]],
+  ['map',['map',['../page_manual_usage_si_map.html',1,'page_manual_usage_script_interface']]]
 ];

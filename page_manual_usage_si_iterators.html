@@ -100,7 +100,7 @@ $(document).ready(function(){initNavTree('page_manual_usage_si_iterators.html','
 <div class="title">Iterators </div>  </div>
 </div><!--header-->
 <div class="contents">
-<div class="textblock"><p>Iterators are named "CONTAINERNAME_iterator". Iteration is done with only one function for better runtime performance. The iterators' constructor takes a handle to the host container.</p>
+<div class="textblock"><p>Iterators are named "CONTAINERNAME_iterator". Iteration is done with only one function for better runtime performance. The iterators' constructor takes a handle to the host container. Iterators can also be constructed with "container::begin()" and "container::end()".</p>
 <p>Iterator script interface:</p>
 <div class="fragment"><div class="line"><span class="keyword">template</span>&lt;<span class="keyword">typename</span> T&gt; <span class="keyword">class </span>vector_iterator{</div>
 <div class="line">    <span class="comment">//constructor</span></div>
@@ -110,22 +110,39 @@ $(document).ready(function(){initNavTree('page_manual_usage_si_iterators.html','
 <div class="line">    </div>
 <div class="line">    T&amp; current();</div>
 <div class="line">    </div>
+<div class="line">    <span class="comment">//property accessor for current value</span></div>
+<div class="line">    T get_value() <span class="keyword">const</span>;</div>
+<div class="line">    <span class="keywordtype">void</span> set_value(T value);</div>
+<div class="line">    </div>
 <div class="line">    <span class="keywordtype">bool</span> next();</div>
 <div class="line">    <span class="keywordtype">bool</span> opPostInc();<span class="comment">//operator++, same thing as next, but with 71% less keypresses and 100% more operator overloading swag</span></div>
+<div class="line">    </div>
+<div class="line">    <span class="keywordtype">bool</span> opEquals(<span class="keyword">const</span> vector_iterator &amp;in other);</div>
+<div class="line">    </div>
+<div class="line">    <span class="comment">//check if this iterator equals it&#39;s container&#39;s end() without building any AS objects</span></div>
+<div class="line">    <span class="keywordtype">bool</span> IsEnd();</div>
 <div class="line">};</div>
 </div><!-- fragment --> <p>The "next" method evaluates iteration ending and advances the iterator.</p>
-<p>The "map" and "unordered_map" containers' iterators can access both the key and value with the same iterator. Their iterators dont have a "current" method, instead they have "current_key" and "current_value". "current_key" returns const to preserve the container's ordering.</p>
+<p>The "map" and "unordered_map" containers' iterators can access both the key and value with the same iterator. Their iterators dont have a "current" method, instead they have "current_key" and "current_value". "current_key" returns a const reference to preserve the container's ordering.</p>
 <p><br />
 </p><dl class="section user"><dt>Examples</dt><dd></dd></dl>
-<p>Example of iterating through a vector:</p>
+<p>Example of iterating through a vector, clunkiest syntax:</p>
 <div class="fragment"><div class="line">vector&lt;int&gt; cont;</div>
 <div class="line">cont.push_back(1);</div>
 <div class="line">cont.push_back(2);</div>
 <div class="line">cont.push_back(3);</div>
-<div class="line"><span class="keywordflow">for</span>(vector_iterator&lt;int&gt; it(@cont);it++;){</div>
+<div class="line"><span class="keywordflow">for</span>(vector_iterator&lt;int&gt; it(@cont); it++;){</div>
 <div class="line">    Print(<span class="stringliteral">&quot;content = &quot;</span>+it.current());</div>
 <div class="line">}</div>
-</div><!-- fragment --> <p>Prints:</p>
+</div><!-- fragment --> <p>Example of iterating through a vector, neatest syntax:</p>
+<div class="fragment"><div class="line">vector&lt;int&gt; cont;</div>
+<div class="line">cont.push_back(1);</div>
+<div class="line">cont.push_back(2);</div>
+<div class="line">cont.push_back(3);</div>
+<div class="line"><span class="keywordflow">for</span>(<span class="keyword">auto</span> it = cont.begin(); it++;){</div>
+<div class="line">    Print(<span class="stringliteral">&quot;content = &quot;</span> + it.value);</div>
+<div class="line">}</div>
+</div><!-- fragment --> <p>Both print:</p>
 <div class="fragment"><div class="line">content = 1</div>
 <div class="line">content = 2</div>
 <div class="line">content = 3</div>
@@ -137,8 +154,8 @@ $(document).ready(function(){initNavTree('page_manual_usage_si_iterators.html','
 <div class="line">cont.insert(2,<span class="stringliteral">&quot;bb&quot;</span>);</div>
 <div class="line">cont.insert(1,<span class="stringliteral">&quot;aa&quot;</span>);</div>
 <div class="line">cont.insert(3,<span class="stringliteral">&quot;cc&quot;</span>);</div>
-<div class="line"><span class="keywordflow">for</span>(map_iterator&lt;int,string&gt; it(@cont);it++;){</div>
-<div class="line">    Print(<span class="stringliteral">&quot;content = &quot;</span>+it.current_key()+<span class="stringliteral">&quot; , &quot;</span>+it.current_value());</div>
+<div class="line"><span class="keywordflow">for</span>(<span class="keyword">auto</span> it = cont.begin(); it++;){</div>
+<div class="line">    Print(<span class="stringliteral">&quot;content = &quot;</span>+it.key+<span class="stringliteral">&quot; , &quot;</span>+it.value);</div>
 <div class="line">}</div>
 </div><!-- fragment --> <p>Prints:</p>
 <div class="fragment"><div class="line">content = 1 , aa</div>
@@ -150,7 +167,7 @@ $(document).ready(function(){initNavTree('page_manual_usage_si_iterators.html','
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="index.html">Manual</a></li><li class="navelem"><a class="el" href="page_manual_usage.html">Usage</a></li><li class="navelem"><a class="el" href="page_manual_usage_script_interface.html">Script Interface</a></li>
-    <li class="footer">Generated on Mon Oct 27 2014 20:16:49 for Angelscript addon Template Containers by
+    <li class="footer">Generated on Fri Mar 13 2015 12:54:38 for Angelscript addon Template Containers by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

@@ -1,5 +1,6 @@
 var searchData=
 [
-  ['script_20interface',['Script Interface',['../page_manual_usage_script_interface.html',1,'page_manual_usage']]],
-  ['set',['set',['../page_manual_usage_si_set.html',1,'page_manual_usage_script_interface']]]
+  ['requirements',['Requirements',['../page_manual_requirements.html',1,'index']]],
+  ['registration',['Registration',['../page_manual_usage_registration.html',1,'page_manual_usage']]],
+  ['registering_20tempspecs',['Registering tempspecs',['../page_manual_usage_registration_tempspec.html',1,'page_manual_usage']]]
 ];

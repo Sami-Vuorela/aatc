@@ -9,7 +9,7 @@ var classaatc__refcounted___g_c =
     [ "refcount_Release", "classaatc__refcounted___g_c.html#a24c0c28d59b782fb4ec061ce2021f3c5", null ],
     [ "ReleaseAllReferences", "classaatc__refcounted___g_c.html#a55daac3d661103890a776d8c1081eca7", null ],
     [ "SetGCFlag", "classaatc__refcounted___g_c.html#a83cf1cdd40e34bb17882768fa73ae1af", null ],
-    [ "engine", "classaatc__refcounted___g_c.html#a2c65021035e9e5a09268ec097f711390", null ],
+    [ "gc_engine", "classaatc__refcounted___g_c.html#a8765f489d67665ba22c4411a7d60e392", null ],
     [ "gcFlag", "classaatc__refcounted___g_c.html#a89fdc5791e76486a73a67f5f9fbf26de", null ],
     [ "refCount", "classaatc__refcounted___g_c.html#a498bf78ecdabf94de3bf1be35fc93f44", null ]
 ];

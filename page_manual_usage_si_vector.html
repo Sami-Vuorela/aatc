@@ -135,6 +135,17 @@ $(document).ready(function(){initNavTree('page_manual_usage_si_vector.html','');
 <div class="line">    <span class="keywordtype">void</span> sort(<span class="keywordtype">bool</span> ascending = <span class="keyword">true</span>);</div>
 <div class="line">    <span class="comment">//sort with another function</span></div>
 <div class="line">    <span class="keywordtype">void</span> sort(aatc_funcpointer@ func,<span class="keywordtype">bool</span> ascending = <span class="keyword">true</span>)</div>
+<div class="line">    </div>
+<div class="line">    vector_iterator&lt;T&gt; begin();</div>
+<div class="line">    vector_iterator&lt;T&gt; end();</div>
+<div class="line">    </div>
+<div class="line">    <span class="keywordtype">bool</span> erase(const vector_iterator&lt;T&gt; &amp;in iterator);</div>
+<div class="line">    <span class="keywordtype">int</span> erase(const vector_iterator&lt;T&gt; &amp;in iterator_range_begin, const vector_iterator&lt;T&gt; &amp;in iterator_range_end);</div>
+<div class="line">    </div>
+<div class="line">    <span class="comment">//find that returns an iterator, returns end if not found</span></div>
+<div class="line">    vector_iterator&lt;T&gt; find_iterator(const T &amp;in value);</div>
+<div class="line">    </div>
+<div class="line">    <span class="keywordtype">void</span> insert(const vector_iterator&lt;T&gt; &amp;in iterator, const T &amp;in value) <span class="comment">//insert value before iterator, using end iterator will insert at the end</span></div>
 <div class="line">};</div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- doc-content -->
@@ -142,7 +153,7 @@ $(document).ready(function(){initNavTree('page_manual_usage_si_vector.html','');
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="index.html">Manual</a></li><li class="navelem"><a class="el" href="page_manual_usage.html">Usage</a></li><li class="navelem"><a class="el" href="page_manual_usage_script_interface.html">Script Interface</a></li>
-    <li class="footer">Generated on Mon Oct 27 2014 20:16:49 for Angelscript addon Template Containers by
+    <li class="footer">Generated on Fri Mar 13 2015 12:54:38 for Angelscript addon Template Containers by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

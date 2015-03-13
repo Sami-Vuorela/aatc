@@ -122,6 +122,36 @@ $(document).ready(function(){initNavTree('page_manual_usage_si_map.html','');});
 <div class="line">    T_value&amp; find(<span class="keyword">const</span> T_key &amp;in key);</div>
 <div class="line">    <span class="comment">//find with success notice</span></div>
 <div class="line">    T_value&amp; find(<span class="keyword">const</span> T_key &amp;in key,<span class="keywordtype">bool</span> &amp;out success);</div>
+<div class="line">    </div>
+<div class="line">    <span class="comment">//property accessors for opIndex</span></div>
+<div class="line">    <span class="keyword">const</span> T_value&amp; get_opIndex(<span class="keyword">const</span> T_key &amp;in) <span class="keyword">const</span>;</div>
+<div class="line">    <span class="keywordtype">void</span> set_opIndex(<span class="keyword">const</span> T_key&amp;in,<span class="keyword">const</span> T_value&amp;in);</div>
+<div class="line">    <span class="comment">/*</span></div>
+<div class="line"><span class="comment">        example for opindex get:</span></div>
+<div class="line"><span class="comment">            mymap.insert(1,&quot;aa&quot;);</span></div>
+<div class="line"><span class="comment">            mymap.insert(2,&quot;bb&quot;);</span></div>
+<div class="line"><span class="comment">            </span></div>
+<div class="line"><span class="comment">            MyPrint(mymap[1]);</span></div>
+<div class="line"><span class="comment">            </span></div>
+<div class="line"><span class="comment">            //prints: aa</span></div>
+<div class="line"><span class="comment">            </span></div>
+<div class="line"><span class="comment">        example for opindex set:</span></div>
+<div class="line"><span class="comment">            mymap[1] = &quot;aa&quot;;</span></div>
+<div class="line"><span class="comment">            mymap[2] = &quot;bb&quot;;</span></div>
+<div class="line"><span class="comment">            </span></div>
+<div class="line"><span class="comment">            MyPrint(mymap[2]);</span></div>
+<div class="line"><span class="comment">            </span></div>
+<div class="line"><span class="comment">            //prints: bb</span></div>
+<div class="line"><span class="comment">     */</span></div>
+<div class="line">    </div>
+<div class="line">    map_iterator&lt;T&gt; begin();</div>
+<div class="line">    map_iterator&lt;T&gt; end();</div>
+<div class="line">    </div>
+<div class="line">    <span class="keywordtype">bool</span> erase(<span class="keyword">const</span> map_iterator&lt;T&gt; &amp;in iterator);</div>
+<div class="line">    <span class="keywordtype">int</span> erase(<span class="keyword">const</span> map_iterator&lt;T&gt; &amp;in iterator_range_begin, <span class="keyword">const</span> map_iterator&lt;T&gt; &amp;in iterator_range_end);</div>
+<div class="line">    </div>
+<div class="line">    <span class="comment">//find that returns an iterator, returns end if not found</span></div>
+<div class="line">    map_iterator&lt;T&gt; find_iterator(<span class="keyword">const</span> T &amp;in key);</div>
 <div class="line">};</div>
 </div><!-- fragment --> </div></div><!-- contents -->
 </div><!-- doc-content -->
@@ -129,7 +159,7 @@ $(document).ready(function(){initNavTree('page_manual_usage_si_map.html','');});
 <div id="nav-path" class="navpath"><!-- id is needed for treeview function! -->
   <ul>
     <li class="navelem"><a class="el" href="index.html">Manual</a></li><li class="navelem"><a class="el" href="page_manual_usage.html">Usage</a></li><li class="navelem"><a class="el" href="page_manual_usage_script_interface.html">Script Interface</a></li>
-    <li class="footer">Generated on Mon Oct 27 2014 20:16:49 for Angelscript addon Template Containers by
+    <li class="footer">Generated on Fri Mar 13 2015 12:54:38 for Angelscript addon Template Containers by
     <a href="http://www.doxygen.org/index.html">
     <img class="footer" src="doxygen.png" alt="doxygen"/></a> 1.8.8 </li>
   </ul>

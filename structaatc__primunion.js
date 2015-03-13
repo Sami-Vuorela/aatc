@@ -1,5 +1,8 @@
 var structaatc__primunion =
 [
+    [ "Get_Ptr_To_Primitive_Type", "structaatc__primunion.html#a7d83cb8835a5c19ccd39e776cce0d72a", null ],
+    [ "Get_Ptr_To_Primitive_Type_const", "structaatc__primunion.html#a5dc1d89741899c6872720459fb6c54ba", null ],
+    [ "Init", "structaatc__primunion.html#aa1023c212cd1c82fc78f9429bfeee9ed", null ],
     [ "f32", "structaatc__primunion.html#ae841b7eade5d74edf079182a20d9b64a", null ],
     [ "f64", "structaatc__primunion.html#a8a4d2e48d400790bbee8effc703ae2cc", null ],
     [ "i16", "structaatc__primunion.html#add9488b8430d4a4fbec972b235baa993", null ],
