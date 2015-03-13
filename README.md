@@ -25,7 +25,7 @@ or in the source files.
 Forum post
 ----------
 
-Tell others about possible problems and your stories of victory at the angelscript forum  
+Tell others about possible problems and tell tall tales of victory at the angelscript forum  
 [Release post](http://www.gamedev.net/topic/661910-template-containers-angelscript-addon-library-release/)  
 
 
@@ -43,5 +43,13 @@ Experimental branch
 ----------
 
 There is a branch with all the newest stuff called "experimental".
-The master branch requires AS version 2.29.1, the experimental branch requires the latest version of AS from SVN.
+The master branch requires AS version 2.30.0, the experimental branch requires the latest version of AS from SVN.  
 Link to the experimental branch: https://github.com/Sami-Vuorela/aatc/tree/experimental
+
+
+
+Legacy branches
+----------
+
+There is a legacy branch that requires only as version 2 29 1  
+Link to the experimental branch: https://github.com/Sami-Vuorela/aatc/tree/legacy-as-ver-2-29-1
