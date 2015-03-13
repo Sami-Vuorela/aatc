@@ -51,5 +51,5 @@ Link to the experimental branch: https://github.com/Sami-Vuorela/aatc/tree/exper
 Legacy branches
 ----------
 
-There is a legacy branch that requires only as version 2 29 1  
-Link to the experimental branch: https://github.com/Sami-Vuorela/aatc/tree/legacy-as-ver-2-29-1
+There is a legacy branch that requires only as version 2.29.1  
+Link to the 2.29.1 legacy branch: https://github.com/Sami-Vuorela/aatc/tree/legacy-as-ver-2-29-1
