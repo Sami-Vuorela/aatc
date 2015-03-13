@@ -69,11 +69,6 @@ aatc_hash_type aatc_functor_hash<aatc_type_float64>::operator()(const aatc_type_
 aatc_hash_type aatc_functor_hash<aatc_type_string>::operator()(const aatc_type_string& a) const{
 	return aatc_hashfunc_djb2(a);
 }
-#if aatc_CONFIG_USE_ASADDON_REF
-	aatc_hash_type aatc_functor_hash<aatc_ait_ref>::operator()(const aatc_ait_ref& a) const{
-		return (aatc_hash_type)a.m_ref;
-	}
-#endif
 
 
 

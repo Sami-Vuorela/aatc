@@ -1,5 +1,5 @@
 /*! \page page_manual_usage_si_iterators Iterators
-<p>Iterators are named "CONTAINERNAME_iterator". Iteration is done with only one function for better runtime performance. The iterators' constructor takes a handle to the host container.</p>
+<p>Iterators are named "CONTAINERNAME_iterator". Iteration is done with only one function for better runtime performance. The iterators' constructor takes a handle to the host container. Iterators can also be constructed with "container::begin()" and "container::end()".</p>
 
 <p>Iterator script interface:</p>
 \code{.cpp}
@@ -11,25 +11,44 @@
 		
 		T& current();
 		
+		//property accessor for current value
+		T get_value() const;
+		void set_value(T value);
+		
 		bool next();
 		bool opPostInc();//operator++, same thing as next, but with 71% less keypresses and 100% more operator overloading swag
+		
+		bool opEquals(const vector_iterator &in other);
+		
+		//check if this iterator equals it's container's end() without building any AS objects
+		bool IsEnd();
 	};
 \endcode
 <p>The "next" method evaluates iteration ending and advances the iterator.</p>
-<p>The "map" and "unordered_map" containers' iterators can access both the key and value with the same iterator. Their iterators dont have a "current" method, instead they have "current_key" and "current_value". "current_key" returns const to preserve the container's ordering.</p>
+<p>The "map" and "unordered_map" containers' iterators can access both the key and value with the same iterator. Their iterators dont have a "current" method, instead they have "current_key" and "current_value". "current_key" returns a const reference to preserve the container's ordering.</p>
 \n
 \par Examples
-<p>Example of iterating through a vector:</p>
+<p>Example of iterating through a vector, clunkiest syntax:</p>
 \code{.cpp}
 	vector<int> cont;
 	cont.push_back(1);
 	cont.push_back(2);
 	cont.push_back(3);
-	for(vector_iterator<int> it(@cont);it++;){
+	for(vector_iterator<int> it(@cont); it++;){
 		Print("content = "+it.current());
 	}
 \endcode
-<p>Prints:</p>
+<p>Example of iterating through a vector, neatest syntax:</p>
+\code{.cpp}
+	vector<int> cont;
+	cont.push_back(1);
+	cont.push_back(2);
+	cont.push_back(3);
+	for(auto it = cont.begin(); it++;){
+		Print("content = " + it.value);
+	}
+\endcode
+<p>Both print:</p>
 \code{.cpp}
 content = 1
 content = 2
@@ -43,8 +62,8 @@ content = 3
 	cont.insert(2,"bb");
 	cont.insert(1,"aa");
 	cont.insert(3,"cc");
-	for(map_iterator<int,string> it(@cont);it++;){
-		Print("content = "+it.current_key()+" , "+it.current_value());
+	for(auto it = cont.begin(); it++;){
+		Print("content = "+it.key+" , "+it.value);
 	}
 \endcode
 <p>Prints:</p>

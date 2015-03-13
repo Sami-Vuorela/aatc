@@ -49,35 +49,6 @@
 	};
 #endif
 
-#if aatc_CONFIG_USE_ASADDON_REF
-	#if AS_USE_NAMESPACE
-		typedef AngelScript::CScriptHandle aatc_ait_ref;
-	#else
-		typedef CScriptHandle aatc_ait_ref;
-	#endif
-	
-
-	//for map / set
-	template<> class std::less<aatc_ait_ref>{
-	public:
-		bool operator()(const aatc_ait_ref& lhs, const aatc_ait_ref& rhs) const{
-			return lhs.m_ref < rhs.m_ref;
-		}
-	};
-	template<> class std::greater<aatc_ait_ref>{
-	public:
-		bool operator()(const aatc_ait_ref& lhs, const aatc_ait_ref& rhs) const{
-			return lhs.m_ref > rhs.m_ref;
-		}
-	};
-	//template<> class std::greater<aatc_ait_ref>{
-	//public:
-	//	bool operator()(const aatc_ait_ref& lhs, const aatc_ait_ref& rhs) const{
-	//		return lhs.m_ref > rhs.m_ref;
-	//	}
-	//};
-#endif
-
 
 
 BEGIN_AS_NAMESPACE
@@ -128,12 +99,6 @@ BEGIN_AS_NAMESPACE
 	public:
 		aatc_hash_type operator()(const aatc_type_string& a) const;
 	};
-	#if aatc_CONFIG_USE_ASADDON_REF
-		template<> class aatc_functor_hash<aatc_ait_ref>{
-		public:
-			aatc_hash_type operator()(const aatc_ait_ref& a) const;
-		};
-	#endif
 
 	/*
 		Use these to register your c++ classes for hashing in containers that don't have a tempspec available.

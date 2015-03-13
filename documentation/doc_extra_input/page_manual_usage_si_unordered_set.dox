@@ -17,6 +17,15 @@ template<typename T> class unordered_set{
 	void insert(T &in value);
 	void erase(T &in value);
 	bool contains(T &in value);
+	
+	unordered_set_iterator<T> begin();
+	unordered_set_iterator<T> end();
+	
+	bool erase(const unordered_set_iterator<T> &in iterator);
+	int erase(const unordered_set_iterator<T> &in iterator_range_begin, const unordered_set_iterator<T> &in iterator_range_end);
+	
+	//find that returns an iterator, returns end if not found
+	unordered_set_iterator<T> find_iterator(const T &in value);
 };
 \endcode
 */

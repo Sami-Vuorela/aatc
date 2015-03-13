@@ -35,6 +35,17 @@ template<typename T> class vector{
 	void sort(bool ascending = true);
 	//sort with another function
 	void sort(aatc_funcpointer@ func,bool ascending = true)
+	
+	vector_iterator<T> begin();
+	vector_iterator<T> end();
+	
+	bool erase(const vector_iterator<T> &in iterator);
+	int erase(const vector_iterator<T> &in iterator_range_begin, const vector_iterator<T> &in iterator_range_end);
+	
+	//find that returns an iterator, returns end if not found
+	vector_iterator<T> find_iterator(const T &in value);
+	
+	void insert(const vector_iterator<T> &in iterator, const T &in value) //insert value before iterator, using end iterator will insert at the end
 };
 \endcode
 */

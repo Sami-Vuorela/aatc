@@ -22,6 +22,36 @@ template<typename T_key,typename T_value> class unordered_map{
 	T_value& find(const T_key &in key);
 	//find with success notice
 	T_value& find(const T_key &in key,bool &out success);
+	
+	//property accessors for opIndex
+	const T_value& get_opIndex(const T_key &in) const;
+	void set_opIndex(const T_key&in,const T_value&in);
+	/*
+		example for opindex get:
+			mymap.insert(1,"aa");
+			mymap.insert(2,"bb");
+			
+			MyPrint(mymap[1]);
+			
+			//prints: aa
+			
+		example for opindex set:
+			mymap[1] = "aa";
+			mymap[2] = "bb";
+			
+			MyPrint(mymap[2]);
+			
+			//prints: bb
+	*/
+	
+	unordered_map_iterator<T> begin();
+	unordered_map_iterator<T> end();
+	
+	bool erase(const unordered_map_iterator<T> &in iterator);
+	int erase(const unordered_map_iterator<T> &in iterator_range_begin, const unordered_map_iterator<T> &in iterator_range_end);
+	
+	//find that returns an iterator, returns end if not found
+	unordered_map_iterator<T> find_iterator(const T &in key);
 };
 \endcode
 */

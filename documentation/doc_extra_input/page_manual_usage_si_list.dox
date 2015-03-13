@@ -33,6 +33,17 @@ template<typename T> class list{
 	void sort(bool ascending = true);
 	//sort with another function
 	void sort(aatc_funcpointer@ func,bool ascending = true)
+	
+	list_iterator<T> begin();
+	list_iterator<T> end();
+	
+	bool erase(const list_iterator<T> &in iterator);
+	int erase(const list_iterator<T> &in iterator_range_begin, const list_iterator<T> &in iterator_range_end);
+	
+	//find that returns an iterator, returns end if not found
+	list_iterator<T> find_iterator(const T &in value);
+	
+	void insert(const list_iterator<T> &in iterator, const T &in value) //insert value before iterator, using end iterator will insert at the end
 };
 \endcode
 */

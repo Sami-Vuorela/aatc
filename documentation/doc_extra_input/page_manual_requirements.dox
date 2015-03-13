@@ -1,11 +1,8 @@
 /*! \page page_manual_requirements Requirements
-<p>Angelscript version 2.29.1 (for template value types)</p>
+<p>Angelscript version 2.30.0</p>
 A c++ compiler that supports these c++11 features
 -# std::conditional
 -# header <atomic>
 <p>Your angelscript engine needs a string registered (been developing with the official addon scriptstdstring)</p>
 <p>There is no generic call convention interface available yet, so if your angelscript project was dependant on that, you can't use AATC yet.</p>
-<BR>
-<p>Warning about AS version 2.29.2</p>
-<p>AS version 2.29.2 has some template related bugs and will not work with AATC, you will have to use either AS version 2.29.1 or the latest version of AS from SVN.</p>
 */

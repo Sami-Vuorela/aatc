@@ -48,19 +48,11 @@
 #define aatc_CONFIG_USE_BOOST 0
 
 //enable this if you're using the official as addon: serializer
-#define aatc_CONFIG_USE_ASADDON_SERIALIZER 1
+#define aatc_CONFIG_USE_ASADDON_SERIALIZER 0
 #define aatc_CONFIG_USE_ASADDON_SERIALIZER_also_register_string_usertype 1
 #define aatc_serializer_addonpath "serializer/serializer.h"
 
-/*
-	Enable this if you want the containers to have a
-	template specialization of the official addon ref object.
-	You must provide a path to the addon's header.
-	You must have modified the ref addon to make
-	the members m_ref and m_type public.
-*/
-#define aatc_CONFIG_USE_ASADDON_REF 0
-#define aatc_CONFIG_USE_ASADDON_REF_PATH "C:\Dev\VC2013\angelscript_2.28.2\add_on\scripthandle\scripthandle.h"
+
 
 /*
 	Directly compare handles as pointers in c++ instead of comparing the script objects by calling script functions.
@@ -253,10 +245,6 @@ typedef aatc_type_int32 aatc_type_astypeid;
 	#include <mutex>
 	#include <algorithm>
 	#include <atomic>
-#endif
-
-#if aatc_CONFIG_USE_ASADDON_REF
-	#include aatc_CONFIG_USE_ASADDON_REF_PATH
 #endif
 
 /*

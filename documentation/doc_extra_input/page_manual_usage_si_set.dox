@@ -17,6 +17,15 @@ template<typename T> class set{
 	void insert(T &in value);
 	void erase(T &in value);
 	bool contains(T &in value);
+	
+	set_iterator<T> begin();
+	set_iterator<T> end();
+	
+	bool erase(const set_iterator<T> &in iterator);
+	int erase(const set_iterator<T> &in iterator_range_begin, const set_iterator<T> &in iterator_range_end);
+	
+	//find that returns an iterator, returns end if not found
+	set_iterator<T> find_iterator(const T &in value);
 };
 \endcode
 */

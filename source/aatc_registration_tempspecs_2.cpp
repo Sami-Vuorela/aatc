@@ -65,10 +65,6 @@ void aatc_Initializer::RegisterTempspecs2(){
 	#if aatc_include_primitive_native_tempspec_STRING
 		aatc_reghelp_tempspec_all<aatc_type_string, 1, 1, 1>(engine, "string");
 	#endif
-
-	#if aatc_CONFIG_USE_ASADDON_REF
-		aatc_reghelp_tempspec_all<aatc_ait_ref, 1, 1, 0>(engine, "ref");
-	#endif
 }
 
 
