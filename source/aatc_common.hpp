@@ -112,29 +112,72 @@ BEGIN_AS_NAMESPACE
 	*/
 	template<class T> class aatc_functor_hash{
 	public:
-		std::size_t operator()(const T& a) const{
-			return (std::size_t)a;
+		aatc_hash_type operator()(const T& a) const{
+			return (aatc_hash_type)a;
 		}
 	};
 	template<> class aatc_functor_hash<aatc_type_float32>{
 	public:
-		std::size_t operator()(const aatc_type_float32& a) const;
+		aatc_hash_type operator()(const aatc_type_float32& a) const;
 	};
 	template<> class aatc_functor_hash<aatc_type_float64>{
 	public:
-		std::size_t operator()(const aatc_type_float64& a) const;
+		aatc_hash_type operator()(const aatc_type_float64& a) const;
 	};
 	template<> class aatc_functor_hash<aatc_type_string>{
 	public:
-		std::size_t operator()(const aatc_type_string& a) const;
+		aatc_hash_type operator()(const aatc_type_string& a) const;
 	};
 	#if aatc_CONFIG_USE_ASADDON_REF
 		template<> class aatc_functor_hash<aatc_ait_ref>{
 		public:
-			std::size_t operator()(const aatc_ait_ref& a) const;
+			aatc_hash_type operator()(const aatc_ait_ref& a) const;
 		};
 	#endif
 
+	/*
+		Use these to register your c++ classes for hashing in containers that don't have a tempspec available.
+		Because you can't register functors with RegisterObjectMethod.
+	*/
+	template<typename T> aatc_hash_type aatc_func_hash_value(const T& me){ aatc_functor_hash<T> functor; return functor(me); }
+
+	template<typename T_your_cpp_type> void aatc_Register_aatc_func_hash_value(asIScriptEngine* engine, const char* name_your_type_in_script){
+		char textbuf[1000];
+		sprintf_s(textbuf, 1000, "%s %s()", aatc_hash_type_scriptname_actual, aatc_name_script_requiredmethod_hash);
+		int error = engine->RegisterObjectMethod(name_your_type_in_script, textbuf, asFUNCTION(aatc_func_hash_value<T_your_cpp_type>), asCALL_CDECL_OBJLAST); assert(error >= 0);
+	}
+
+
+//just to make all containers derive from the same thing
+class aatc_container_base{
+public:
+	asIScriptEngine* engine;
+
+	#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+		int_fast16_t iterator_safety_version;
+	#endif
+
+	aatc_container_base();
+	virtual ~aatc_container_base();
+};
+class aatc_iterator_base{
+public:
+	bool firstt;
+	bool cont;
+
+	#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+		int_fast16_t iterator_safety_version;
+	#endif
+
+	aatc_iterator_base();
+	aatc_iterator_base(const aatc_iterator_base& other);
+};
+
+#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+	class CSerializedValue;
+	typedef bool(*aatc_funcptr_serializer_containerbase_is_thistype)(aatc_container_base* base);
+	typedef void(*aatc_funcptr_serializer_containerbase_process)(aatc_container_base* base, CSerializedValue* val);
+#endif
 
 /*
 	Enum listing the different container operations
@@ -200,6 +243,17 @@ public:
 /*!\brief Stores dataz about aatc containers. One for each engine.*/
 class aatc_engine_level_storage{
 public:
+	#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+		class serializer_helper{
+		public:
+			aatc_funcptr_serializer_containerbase_is_thistype funcptr_is_thistype;
+			std::string container_content_name;
+			aatc_funcptr_serializer_containerbase_process funcptr_process_store;
+			aatc_funcptr_serializer_containerbase_process funcptr_process_restore;
+			aatc_funcptr_serializer_containerbase_process funcptr_process_cleanup;
+		};
+	#endif
+
 	asIScriptEngine* engine;
 
 	typedef aatc_ait_storage_map<aatc_type_uint32, aatc_containertype_specific_storage*> tmap_ctss;
@@ -210,8 +264,12 @@ public:
 	std::vector<asIScriptContext*> context_cache;
 	aatc_ait_fastlock context_cache_lock;
 	
-
 	asIObjectType* objtype_tempcont_list;
+
+#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+	std::vector<serializer_helper> serializer_tempspec_helpers[aatc_CONTAINERTYPE_COUNT];
+#endif
+
 
 	aatc_engine_level_storage(asIScriptEngine* engine);
 	~aatc_engine_level_storage();
@@ -224,9 +282,10 @@ public:
 	void Clean();
 };
 
-//convenience, uses engine level storage, aetc must be initialized
+//convenience, uses engine level storage, aatc must be initialized
 asIScriptContext* aatc_contextcache_Get();
 void aatc_contextcache_Return(asIScriptContext* c);
+aatc_engine_level_storage* aatc_Get_ELS(asIScriptEngine* engine);
 
 
 
@@ -268,7 +327,7 @@ public:
 /*!\brief Basetype for script refcounted and GCd c++ objects to derive from.*/
 class aatc_refcounted_GC{
 public:
-	asIScriptEngine* engine;
+	asIScriptEngine* gc_engine;
 	mutable int refCount;
 	mutable bool gcFlag;
 
@@ -334,6 +393,14 @@ public:
 	aatc_containerfunctor_equals(asIScriptEngine* engine, aatc_containerfunctor_Settings* settings);
 
 	bool operator()(const void* lhs, const void* rhs) const;
+
+	class findif_version{
+	public:
+		void* target;
+		aatc_containerfunctor_equals* f;
+
+		bool operator()(const void* rhs) const;
+	};
 };
 /*!\brief Internal functor for container's comparisons.*/
 class aatc_containerfunctor_hash : public aatc_containerfunctor_Settings{
@@ -345,7 +412,7 @@ public:
 	bool need_init;
 	aatc_containerfunctor_hash(asIScriptEngine* engine, aatc_containerfunctor_Settings* settings);
 
-	std::size_t operator()(const void* ptr) const;
+	aatc_hash_type operator()(const void* ptr) const;
 };
 
 
@@ -409,7 +476,7 @@ enum class aatc_PRIMITIVE_TYPE : int_fast8_t{
 	FLOAT64
 };
 
-aatc_DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(aatc_type_uint32 astypeid);
+aatc_DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(asIScriptEngine* engine,aatc_type_uint32 astypeid);
 aatc_PRIMITIVE_TYPE aatc_Determine_Primitivetype(aatc_type_uint32 astypeid);
 
 /*!\brief This monstrosity is used to store any primitive or handle using the same allocation code.*/
@@ -430,8 +497,13 @@ struct aatc_primunion{
 
 		void* ptr;
 	};
+	void* Get_Ptr_To_Primitive_Type(aatc_PRIMITIVE_TYPE primtype);
+	const void* Get_Ptr_To_Primitive_Type_const(aatc_PRIMITIVE_TYPE primtype)const;
+
+	void Init();
 };
 extern aatc_primunion aatc_primunion_defaultvalue;
+typedef std::pair<aatc_primunion, aatc_primunion> aatc_primunion_pair;
 
 //for maps
 class aatc_containerfunctor_map_Settings{
@@ -478,11 +550,11 @@ public:
 	bool need_init;
 	aatc_containerfunctor_map_hash(asIScriptEngine* engine, aatc_containerfunctor_map_Settings* settings);
 
-	std::size_t operator()(const aatc_primunion& a) const;
+	aatc_hash_type operator()(const aatc_primunion& a) const;
 };
 
 /*!\brief Hash function for string. Apparently its fast and good.*/
-std::size_t aatc_hashfunc_djb2(const aatc_type_string& a);
+aatc_hash_type aatc_hashfunc_djb2(const aatc_type_string& a);
 
 /*
 	errorchecking macros
@@ -524,6 +596,7 @@ if((index>size)){																	\
 	aatc_errorprint_container_access_bounds(aatc_type_sizetype(index), aatc_type_sizetype(size), n_container, n_content, n_operation);					\
 	return defaultvalue;																						\
 }
+
 #else
 #define aatc_errorcheck_container_missingfunctions_operation_retvoid(ID_OP,n_container,n_content,n_operation) {}
 #define aatc_errorcheck_container_missingfunctions_operation_retnull(ID_OP,n_container,n_content,n_operation) {}
@@ -533,7 +606,20 @@ if((index>size)){																	\
 #define aatc_errorcheck_container_access_empty_retdefaultn_container,n_content,n_operation) {}
 #define aatc_errorcheck_container_access_bounds_retdefault(index,size,n_container,n_content,n_operation) {}
 #endif
-	
+
+#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+	#define aatc_errorcheck_container_iterator_safety_version_Increment() iterator_safety_version++;
+#else
+	#define aatc_errorcheck_container_iterator_safety_version_Increment()
+#endif
+
+
+
+/*
+	These do nothing if
+	aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+	is set to 0
+*/
 
 /*!\brief Internal error printing function.*/
 void aatc_errorprint_container_missingfunctions_operation_missing(const char* name_container, const char* name_content, const char* name_operation);
@@ -541,6 +627,10 @@ void aatc_errorprint_container_missingfunctions_operation_missing(const char* na
 void aatc_errorprint_container_access_empty(const char* name_container, const char* name_content, const char* name_operation);
 /*!\brief Internal error printing function.*/
 void aatc_errorprint_container_access_bounds(aatc_type_sizetype index, aatc_type_sizetype size, const char* name_container, const char* name_content, const char* name_operation);
+/*!\brief Internal error printing function.*/
+void aatc_errorprint_iterator_container_modified();
+/*!\brief Internal error printing function.*/
+void aatc_errorprint_container_iterator_invalid();
 
 //check for missing functions, return bitmask of missing functions
 aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions_base(int CONTAINER_ID, aatc_template_specific_storage* tss);
@@ -562,6 +652,29 @@ template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type
 template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::UNORDERED_SET>(aatc_template_specific_storage* tss);
 template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::MAP>(aatc_template_specific_storage* tss);
 template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::UNORDERED_MAP>(aatc_template_specific_storage* tss);
+
+
+
+//template<typename T> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype(T* input){ return asTYPEID_INT32; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<bool>(bool* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int8>(aatc_type_int8* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int16>(aatc_type_int16* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int32>(aatc_type_int32* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int64>(aatc_type_int64* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint8>(aatc_type_uint8* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint16>(aatc_type_uint16* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint32>(aatc_type_uint32* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint64>(aatc_type_uint64* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float32>(aatc_type_float32* input);
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float64>(aatc_type_float64* input);
+
+
+//#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+//template<typename T> void register_tempspec_helper(aatc_engine_level_storage* els, std::string container_content_name){}
+//template<typename T> void register_tempspec_helper(aatc_engine_level_storage* els, std::string container_content_name){}
+//#endif
+
+
 
 
 

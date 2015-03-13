@@ -36,6 +36,8 @@ samivuorela@gmail.com
 BEGIN_AS_NAMESPACE
 
 
+
+
 aatc_Initializer::aatc_Initializer(asIScriptEngine* _engine):
 	engine(_engine)
 {
@@ -44,11 +46,11 @@ aatc_Initializer::aatc_Initializer(asIScriptEngine* _engine):
 	}
 }
 void aatc_RegisterAllContainers(asIScriptEngine* engine){
-	aatc_Initializer aetc(engine);
+	aatc_Initializer aatc(engine);
 	for(int i = 0; i < aatc_CONTAINERTYPE_COUNT; i++){
-		aetc.include_container[i] = 1;
+		aatc.include_container[i] = 1;
 	}
-	aetc.Go();
+	aatc.Go();
 }
 
 

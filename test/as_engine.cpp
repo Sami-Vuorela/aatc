@@ -4,6 +4,12 @@
 
 #include "../source/aatc.hpp"
 
+//#include "scriptarray/scriptarray.h"
+
+
+
+
+
 
 
 
@@ -55,6 +61,7 @@ asIScriptEngine* aet_CreateEngine(){
 	RegisterStdString(engine);
 	//RegisterStdStringUtils(engine);
 
+	//RegisterScriptArray(engine, 0);
 
 
 	aatc_RegisterAllContainers(engine);

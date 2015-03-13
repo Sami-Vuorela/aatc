@@ -9,6 +9,8 @@ bool test_enable_print_failure = true;
 #include "test_container_unordered_set.as"
 #include "test_container_map.as"
 #include "test_container_unordered_map.as"
+// #include "00 auto iterator tests.as"
+// #include "00 serializer tests.as"
 
 void scriptmain(){
 	TestContainer_vector();
@@ -20,6 +22,6 @@ void scriptmain(){
 	
 	Print("");
 	Print("");
-	Print("Test successfull = "+test_success_count);
-	Print("Test failed = "+test_failure_count);
+	Print("Tests successful = "+test_success_count);
+	Print("Tests failed = "+test_failure_count);
 }

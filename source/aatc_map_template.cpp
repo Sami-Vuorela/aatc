@@ -29,64 +29,36 @@ samivuorela@gmail.com
 
 
 
-#include "aatc_shared_map_template.hpp"
+#include "aatc_map.hpp"
 
 
 
 BEGIN_AS_NAMESPACE
 
-typedef aatc_acit_map<
-	aatc_primunion,
-	aatc_primunion,
-	aatc_containerfunctor_map_comp
-> aatc_acit_map_with_functors;
 
-//class aatc_container_set_template : public aatc_container_shared_1tp_template<aatc_acit_set_with_comphelper, aatc_CONTAINERTYPE::SET, aatc_bcw_comphelper<aatc_acit_set_with_comphelper>>{
+aatc_container_map_template::aatc_container_map_template(asIScriptEngine* _engine, asIObjectType* _objtype) :
+	aatc_container_shared_map_template(_engine, _objtype)
+{}
+aatc_container_map_template::aatc_container_map_template(const aatc_container_map_template& other) :
+	aatc_container_shared_map_template(other.engine, other.objtype_container)
+{
+	(*this) = other;
+}
+aatc_container_map_template::~aatc_container_map_template(){}
 
-/*!\brief Actual class used for templates defined in script.*/
-class aatc_container_map_template : public aatc_container_shared_map_template<aatc_acit_map_with_functors, aatc_CONTAINERTYPE::MAP, aatc_bcwshared_map_1_param<aatc_acit_map_with_functors, aatc_containerfunctor_map_comp>>{
-public:
-	typedef aatc_acit_map_with_functors bt;
-
-	aatc_container_map_template(asIScriptEngine* _engine, asIObjectType* _objtype) :
-		aatc_container_shared_map_template(_engine, _objtype)
-	{}
-	aatc_container_map_template(const aatc_container_map_template& other) :
-		aatc_container_shared_map_template(other.engine, other.objtype_container)
-	{
-		(*this) = other;
-	}
-	~aatc_container_map_template(){}
-
-	static aatc_container_map_template* Factory(asIObjectType* _objtype_container){
-		return new aatc_container_map_template(asGetActiveContext()->GetEngine(), _objtype_container);
-	}
-	static aatc_container_map_template* Factory_copy(asIObjectType* _objtype, const aatc_container_map_template& other){
-		return new aatc_container_map_template(other);
-	}
-	aatc_container_map_template& operator=(const aatc_container_map_template& other){ aatc_container_shared_map_template::operator=(other); return *this; }
-	aatc_container_map_template& Swap(aatc_container_map_template& other){ aatc_container_shared_map_template::swap(other); return *this; }
-};
+aatc_container_map_template* aatc_container_map_template::Factory(asIObjectType* _objtype_container){
+	return new aatc_container_map_template(_objtype_container->GetEngine(), _objtype_container);
+}
+aatc_container_map_template* aatc_container_map_template::Factory_copy(asIObjectType* _objtype, const aatc_container_map_template& other){
+	return new aatc_container_map_template(other);
+}
+aatc_container_map_template& aatc_container_map_template::operator=(const aatc_container_map_template& other){ aatc_container_shared_map_template::operator=(other); return *this; }
+aatc_container_map_template& aatc_container_map_template::Swap(aatc_container_map_template& other){ aatc_container_shared_map_template::swap(other); return *this; }
 
 
 
 template<> void aatc_register_container<aatc_CONTAINERTYPE::MAP>(asIScriptEngine* engine, aatc_Initializer* initializer){
-	int r = 0;
-	char textbuf[1000];
-
-	char n_container_T[1000];
-	char n_iterator[1000];
-	sprintf_s(n_container_T, 1000, "%s<T_key,T_value>", aatc_name_script_container_map);
-	sprintf_s(n_iterator, 1000, "%s%s", aatc_name_script_container_map, aatc_name_script_iterator);
-	char n_iterator_TT[1000];
-	sprintf_s(n_iterator_TT, 1000, "%s<T_key,T_value>", n_iterator);
-
 	aatc_container_shared_map_template_Register<aatc_container_map_template>(engine, aatc_name_script_container_map);
-
-	aect_iterator_shared_map_template<aatc_container_map_template>::Register(engine, n_iterator, n_container_T);
-
-	sprintf_s(textbuf, 1000, "%s begin()", n_iterator_TT);
-	r = engine->RegisterObjectMethod(n_container_T, textbuf, asFunctionPtr(aatc_reghelp_construct_hosted_iterator_map_template<aect_iterator_shared_map_template<aatc_container_map_template>, aatc_container_map_template*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 }
 
 template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::MAP>(aatc_template_specific_storage* tss){
@@ -104,4 +76,7 @@ template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type
 
 	return mask;
 }
+
+
+
 END_AS_NAMESPACE

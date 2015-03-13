@@ -47,6 +47,10 @@
 */
 #define aatc_CONFIG_USE_BOOST 0
 
+//enable this if you're using the official as addon: serializer
+#define aatc_CONFIG_USE_ASADDON_SERIALIZER 1
+#define aatc_CONFIG_USE_ASADDON_SERIALIZER_also_register_string_usertype 1
+#define aatc_serializer_addonpath "serializer/serializer.h"
 
 /*
 	Enable this if you want the containers to have a
@@ -85,6 +89,17 @@
 	force the container into directcomp mode where script methods are not needed instead of raising an exception.
 */
 #define aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_MISSINGFUNCTIONS_ZERO_TOLERANCE_USE_DIRECTCOMP 1
+
+/*
+	Every operation that changes a container increments a version number.
+	If you try to access an iterator and it's version number differs from the container's, an exception will be thrown.
+	Without this, illegal access will crash.
+	This obviously reduces runtime performance.
+*/
+#define aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS 1
+
+
+
 
 /*
 	Random magical optimization numbers ahead.
@@ -126,6 +141,23 @@
 #define aatc_name_script_container_method_insert_index_before "insert_index_before"
 #define aatc_name_script_container_method_insert_index_after "insert_index_after"
 
+#define aatc_name_script_container_method_begin "begin"
+#define aatc_name_script_container_method_end "end"
+#define aatc_name_script_container_method_find_iterator "find_iterator"
+#define aatc_name_script_container_method_erase_iterator aatc_name_script_container_method_erase
+#define aatc_name_script_container_method_insert_iterator "insert"
+
+
+#define aatc_name_script_iterator_access_property "value"
+#define aatc_name_script_iterator_access_property_key "key"
+#define aatc_name_script_iterator_access_property_value "value"
+//a function which returns a reference is also provided, because property accessors can't use compound operators ( +=, *= etc)
+#define aatc_name_script_iterator_access_function "current"
+#define aatc_name_script_iterator_access_function_key "current_key"
+#define aatc_name_script_iterator_access_function_value "current_value"
+#define aatc_name_script_iterator_method_is_end "IsEnd"
+#define aatc_name_script_iterator_method_is_valid "IsValid"
+
 #define aatc_name_script_iterator "_iterator"
 #define aatc_name_script_funcpointer "aatc_funcpointer"
 #define aatc_name_script_requiredmethod_hash "hash"
@@ -147,6 +179,39 @@ typedef std::string			aatc_type_string;//use whatever you use in script (users o
 
 typedef aatc_type_int32 aatc_type_sizetype;
 #define aatc_name_script_sizetype "int"
+
+typedef aatc_type_int32 aatc_type_astypeid;
+#define aatc_type_astypeid_typeid asTYPEID_INT32
+
+#if defined AS_64BIT_PTR
+	#define aatc_astypeid_of_pointer asTYPEID_UINT64
+#else
+	#define aatc_astypeid_of_pointer asTYPEID_UINT32
+#endif
+
+
+
+#if defined AS_64BIT_PTR
+	#define aatc_ENABLE_HASHTYPE_BITS 64
+#else
+	#define aatc_ENABLE_HASHTYPE_BITS 32
+#endif
+
+#if aatc_ENABLE_HASHTYPE_BITS == 32
+	typedef aatc_type_uint32 aatc_hash_type;
+	#define aatc_hash_type_scriptname_actual "uint"
+#endif
+#if aatc_ENABLE_HASHTYPE_BITS == 64
+	typedef aatc_type_uint64 aatc_hash_type;
+	#define aatc_hash_type_scriptname_actual "uint64"
+#endif
+
+//use script typedef for convenience in script?
+#define aatc_ENABLE_REGISTER_TYPEDEF_HASH_TYPE 1
+//this will appear in script if typedef is enabled
+#define aatc_hash_type_scriptname "aatc_hash_t"
+
+
 
 /*
 	edit: this doesnt apply to map and uo map, they always support primitives
@@ -266,6 +331,21 @@ enum aatc_CONTAINERTYPE{
 #define aatc_errormessage_container_access_bounds_formatting_param4 index
 #define aatc_errormessage_container_access_bounds_formatting_param5 size
 #define aatc_errormessage_container_access_bounds_formatting "%s<%s>::%s[%i] is out of bounds. Size = %i."
+
+/*
+	Happens when trying to access or set an iterator and the container has been modified after iterator construction.
+*/
+#define aatc_errormessage_iterator_container_modified "Invalid iterator. Container has been modified during iteration."
+/*
+	Used by the container if it tries to use an invalid iterator.
+	Example of erasing twice with the same iterator:
+		vector<int> myvec;
+		//add 1 2 3 4 5 to vector
+		auto it = myvec.find_iterator(3);
+		myvec.erase(it);
+		myvec.erase(it);//this line will cause this exception, because the first erase changed the container state and invalidated all iterators
+*/
+#define aatc_errormessage_container_iterator_invalid "Invalid iterator."
 
 
 

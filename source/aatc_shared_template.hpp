@@ -95,7 +95,8 @@ public:
 /*!\brief Internal template monster
 
 */
-template<class T_container, int T_CONTAINERTYPEID, class bcw = aatc_bcw_basic<T_container>> class aatc_container_shared_1tp_template :	public bcw,
+template<class T_container, int T_CONTAINERTYPEID, class bcw = aatc_bcw_basic<T_container>> class aatc_container_shared_1tp_template :	public aatc_container_base,
+																																		public bcw,
 																																		public aatc_refcounted_GC,
 																																		public aatc_containerfunctor_Settings
 {
@@ -105,11 +106,10 @@ public:
 	//typename typedef std::conditional<NEED_COMPHELPER, aatc_bcw_comphelper<T_container>, aatc_bcw_basic<T_container>>::type bct;
 	//typename typedef bcw bct;
 
-	asIScriptEngine* engine;
 	asIObjectType* objtype_container;
 	asIObjectType* objtype_content;
-	int astypeid_container;
-	int astypeid_content;
+	aatc_type_astypeid astypeid_container;
+	aatc_type_astypeid astypeid_content;
 	asDWORD typeflags_container;
 	asDWORD typeflags_content;
 
@@ -124,10 +124,11 @@ public:
 	aatc_container_shared_1tp_template(asIScriptEngine* _engine, asIObjectType* _objtype) :
 		bcw(_engine, this),
 		aatc_refcounted_GC(_engine),
-		engine(_engine),
 		objtype_container(_objtype),
 		directcomp_forced(0)
 	{
+		engine = _engine;
+
 		handlemode_directcomp = aatc_CONFIG_DEFAULT_HANDLEMODE_DIRECTCOMP;
 
 		objtype_content = objtype_container->GetSubType();
@@ -144,7 +145,7 @@ public:
 		//problem_nofunc_eq_or_cmp = 0;
 		//problem_nofunc_cmp = 0;
 
-		els = (aatc_engine_level_storage*)asGetActiveContext()->GetEngine()->GetUserData(aatc_engine_userdata_id);
+		els = aatc_Get_ELS(engine);
 		aatc_containertype_specific_storage* ctss = els->GetContainerTypeSpecificStorage(T_CONTAINERTYPEID);
 
 		if (astypeid_content & asTYPEID_OBJHANDLE){
@@ -194,6 +195,8 @@ public:
 		objtype_content->Release();
 	}
 	void operator=(const aatc_container_shared_1tp_template& other){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		Clear();//will delete script objects or decrement handles
 
 		T_container::operator=(other);
@@ -231,6 +234,13 @@ public:
 			}
 		}
 	}
+	void swap(aatc_container_shared_1tp_template& other){
+		T_container::swap(static_cast<T_container&>(other));
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+			other.iterator_safety_version++;
+		#endif
+	}
 	//aatc_container_shared_1tp_template(const aatc_container_shared_1tp_template& other){
 	//	(*this) = other;
 	//}
@@ -245,21 +255,21 @@ public:
 
 	void StoreHandle(void** target, void* ptr_to_handle){
 		*target = *(void**)ptr_to_handle;
-		if (handlemode_needref){
+		//if (handlemode_needref){
 			engine->AddRefScriptObject(*target, objtype_content);
-		}
+		//}
 	}
 	void* StoreHandle2(void* ptr_to_handle){
 		void* result = *(void**)ptr_to_handle;
-		if(handlemode_needref){
+		//if(handlemode_needref){
 			engine->AddRefScriptObject(result, objtype_content);
-		}
+		//}
 		return result;
 	}
 	void ReleaseHandle(void* handle){
-		if (handlemode_needref){
+		//if (handlemode_needref){
 			engine->ReleaseScriptObject(handle, objtype_content);
-		}
+		//}
 	}
 
 	aatc_type_sizetype Count(void* value){
@@ -305,6 +315,8 @@ public:
 
 
 	void Clear(){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		T_container::iterator it = T_container::begin();
 		T_container::iterator itend = T_container::end();
 		if (handlemode){
@@ -339,6 +351,8 @@ public:
 	template<class T> void Push_Back(void* value){}
 	template<class T> void Pop_Back(){}
 	template<> void Push_Back<aatc_Y>(void* value){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if (handlemode){
 			push_back(NULL);
 			StoreHandle(&back(), value);
@@ -348,6 +362,8 @@ public:
 		}
 	}
 	template<> void Pop_Back<aatc_Y>(){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if (handlemode){
 			ReleaseHandle(back());
 		}
@@ -382,6 +398,8 @@ public:
 	template<class T> void Push_Front(void* value){}
 	template<class T> void Pop_Front(){}
 	template<> void Push_Front<aatc_Y>(void* value){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if (handlemode){
 			push_front(NULL);
 			StoreHandle(&front(), value);
@@ -390,6 +408,8 @@ public:
 		}
 	}
 	template<> void Pop_Front<aatc_Y>(){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if (handlemode){
 			ReleaseHandle(front());
 		}else{
@@ -444,6 +464,8 @@ public:
 
 	template<class T> void Erase_value(void* value){}
 	template<> void Erase_value<aatc_Y>(void* value){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if (handlemode){
 			if(!handlemode_directcomp){
 				aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::ERASE_VALUE, objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_erase)
@@ -487,6 +509,8 @@ public:
 
 	template<class T> void Reserve(aatc_type_sizetype count){}
 	template<> void Reserve<aatc_Y>(aatc_type_sizetype count){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		T_container::reserve(count);
 	}
 	template<class T_cond> static void Register_func_reserve(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){}
@@ -497,6 +521,8 @@ public:
 
 	template<class T> void Insert(void* value){}
 	template<> void Insert<aatc_Y>(void* value){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if (handlemode){
 			if(!handlemode_directcomp){
 				aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::INSERT, objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_insert)
@@ -591,6 +617,8 @@ public:
 
 	//template<typename T_included, typename T_is_native> void Sort(bool ascending){}
 	template<typename T_is_native> void Sort(bool ascending){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if(handlemode_directcomp){
 			if(ascending){
 				_aatc_sort_basefunctor<T_is_native, std::less<void*>> a; a(*this);
@@ -618,6 +646,8 @@ public:
 	}
 	//template<typename T_included, typename T_is_native> void Sort_custom(aatc_script_Funcpointer* funcptr, bool ascending){}
 	template<typename T_is_native> void Sort_custom(aatc_script_Funcpointer* funcptr, bool ascending){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if(handlemode_directcomp){
 			if(ascending){
 				_aatc_sort_basefunctor<T_is_native, std::less<void*>> a; a(*this);
@@ -709,6 +739,8 @@ public:
 	//doxygen skip
 
 	template<class T_is_native> void Insert_generic_index_before(int index, void* value){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if((index > -1) && (index <= T_container::size())){
 			T_container::iterator ii = T_container::begin();
 			{_functor_iterator_setindex<T_is_native> ff; ff(ii, index); }
@@ -729,6 +761,8 @@ public:
 
 
 	template<class T_is_native> void Erase_generic_index(int position){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if((position > -1) && (position < T_container::size())){
 			T_container::iterator ii = T_container::begin();
 
@@ -745,6 +779,8 @@ public:
 	}
 
 	template<class T_is_native> void Erase_generic_index_range(int range_index_begin, int range_index_end){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if((range_index_begin > -1) && (range_index_begin < T_container::size())){
 			if((range_index_end > -1) && (range_index_end < T_container::size())){
 				T_container::iterator ii_range_begin = T_container::begin();
@@ -777,6 +813,8 @@ public:
 
 
 	template<class T_existence> void Erase_generic_value(void* value, bool all){
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
 		if(handlemode){ value = *(void**)value; }
 
 		if(handlemode_directcomp){
@@ -853,26 +891,470 @@ public:
 		sprintf_s(textbuf, 1000, "void %s(const T &in value)", aatc_name_script_container_method_erase_value, aatc_name_script_sizetype);
 		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHODPR(aatc_container_shared_1tp_template, Erase_generic_value<aatc_Y>, (void*), void), asCALL_THISCALL); assert(r >= 0);
 	}
+
+
+
+
+
+
+
+	class aatc_iterator : public aatc_iterator_base{
+	public:
+		aatc_container_shared_1tp_template* host;
+
+		typename aatc_container_shared_1tp_template::iterator it;
+		typename aatc_container_shared_1tp_template::iterator it_end;
+
+		bool handlemode;
+
+		aatc_iterator() :
+			it(),
+			it_end()
+		{}
+		aatc_iterator(void *ref, aatc_type_astypeid typeId_targeaatc_container_shared_1tp_template) :
+			it(),
+			it_end()
+		{
+			host = (aatc_container_shared_1tp_template*)(*(void**)ref);
+			Init();
+		}
+		aatc_iterator(const aatc_iterator& other) :
+			aatc_iterator_base(other),
+
+			host(other.host),
+			it(other.it),
+			it_end(other.it_end),
+			handlemode(other.handlemode)
+		{
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				iterator_safety_version = other.iterator_safety_version;
+			#endif
+		}
+		~aatc_iterator(){}
+
+		aatc_iterator& operator=(const aatc_iterator& other){
+			host = other.host;
+			it = other.it;
+			it_end = other.it_end;
+			firstt = other.firstt;
+			cont = other.cont;
+			handlemode = other.handlemode;
+
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				iterator_safety_version = other.iterator_safety_version;
+			#endif
+
+			return *this;
+		}
+
+		void Init(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				iterator_safety_version = host->iterator_safety_version;
+			#endif
+
+			if(host->empty()){
+				cont = 0;
+			} else{
+				handlemode = host->handlemode;
+
+				it = host->begin();
+				it_end = host->end();
+				cont = 1;
+			}
+		}
+
+		//combine end check and continuation into one monster
+		bool Next(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return 0;
+				}
+			#endif
+
+			if(firstt){
+				if(cont){//all is well
+					firstt = 0;
+					return 1;
+				} else{//cont set to 0 in constructor because container is empty
+					return 0;
+				}
+			} else{
+				it++;
+				//if (it == host->end()){
+				if(it == it_end){
+					return 0;
+				} else{
+					return 1;
+				}
+			}
+		}
+
+		template<class T> const void* Current_get(){}
+		template<class T> void Current_set(void* newval){}
+		template<> const void* Current_get<aatc_Y>(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return nullptr;
+				}
+			#endif
+
+			if(handlemode){
+				return &(*it);//return pointer to handle
+			} else{
+				return *it;//return copy of pointer to object
+			}
+		}
+		template<> void Current_set<aatc_Y>(void* value){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return;
+				}
+			#endif
+
+			if(handlemode){
+				if(*it){
+					host->engine->ReleaseScriptObject(*it, host->objtype_content);
+				}
+				if(value){
+					*it = host->StoreHandle2(value);
+				} else{
+					*it = nullptr;
+				}
+			} else{
+				host->engine->ReleaseScriptObject(*it, host->objtype_content);
+				*it = host->engine->CreateScriptObjectCopy(value, host->objtype_content);
+			}
+		}
+
+		template<class T> void* Current(){}
+		template<> void* Current<aatc_Y>(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return nullptr;
+				}
+			#endif
+
+			if(handlemode){
+				return &(*(it));//return pointer to handle
+			} else{
+				return *(it);//return copy of pointer to object
+			}
+		}
+		template<class T_cond> static void Register_func_current(asIScriptEngine* engine, int& r, const char* n_iterator_T){}
+		template<> static void Register_func_current<aatc_Y>(asIScriptEngine* engine, int& r, const char* n_iterator_T){
+			char textbuf[1000];
+			sprintf_s(textbuf, 1000, "T& %s()", aatc_name_script_iterator_access_function);
+			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+
+			sprintf_s(textbuf, 1000, "T& get_%s()", aatc_name_script_iterator_access_property);
+			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current_get<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+			sprintf_s(textbuf, 1000, "void set_%s(const T &in)", aatc_name_script_iterator_access_property);
+			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current_set<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		}
+
+		template<class T> const void* Current_const(){}
+		template<> const void* Current_const<aatc_Y>(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				if(iterator_safety_version != host->iterator_safety_version){
+					aatc_errorprint_iterator_container_modified();
+					return nullptr;
+				}
+			#endif
+
+			if(handlemode){
+				return &(*(it));//return pointer to handle
+			} else{
+				return *(it);//return copy of pointer to object
+			}
+		}
+		template<class T_cond> static void Register_func_current_const(asIScriptEngine* engine, int& r, const char* n_iterator_T){}
+		template<> static void Register_func_current_const<aatc_Y>(asIScriptEngine* engine, int& r, const char* n_iterator_T){
+			char textbuf[1000];
+			sprintf_s(textbuf, 1000, "const T& %s()", aatc_name_script_iterator_access_function);
+			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current_const<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+
+			sprintf_s(textbuf, 1000, "const T& get_%s()", aatc_name_script_iterator_access_property);
+			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current_get<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+		}
+
+
+		static void static_constructor_default(asIObjectType* objtype, void *memory){
+			new(memory)aatc_iterator();
+		}
+		static void static_constructor(asIObjectType* objtype, void *ref, aatc_type_astypeid typeId, void *memory){
+			new(memory)aatc_iterator(ref, typeId);
+		}
+		//static void static_constructor_copy(asIObjectType* objtype, const aatc_iterator& other, void *memory){
+		//	new(memory)aatc_iterator(other);
+		//}
+
+		/*
+		Using this in script should be faster than (it == container.end()) because container.end() creates an object
+		*/
+		bool IsEnd(){
+			return it == it_end;
+		}
+		void SetToEnd(){
+			firstt = 0;
+			cont = 0;
+			it = it_end;
+		}
+		bool IsValid(){
+			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+				return iterator_safety_version == host->iterator_safety_version;
+			#else
+				return 1;
+			#endif
+		}
+
+		bool operator==(const aatc_iterator& other){
+			return it == other.it;
+		}
+
+		template<class cond_EDITABLE = aatc_Y, class cond_CONST = aatc_N> static void Register(asIScriptEngine* engine, const char* n_iterator, const char* n_container_T){
+			int r = 0;
+			char textbuf[1000];
+
+			char n_iterator_T[1000];
+			sprintf_s(n_iterator_T, 1000, "%s<T>", n_iterator);
+
+			char n_iterator_class_T[1000];
+			sprintf_s(n_iterator_class_T, 1000, "%s<class T>", n_iterator);
+
+			r = engine->RegisterObjectType(n_iterator_class_T, sizeof(aatc_iterator), asOBJ_VALUE | asOBJ_TEMPLATE | asGetTypeTraits<aatc_iterator>()); assert(r >= 0);
+
+			//the default constructor must be registered, but you should never use it in script
+			//r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in)", asFunctionPtr(aatc_reghelp_constructor_template_default<aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in)", asFunctionPtr(static_constructor_default), asCALL_CDECL_OBJLAST); assert(r >= 0);
+			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in,?&in)", asFunctionPtr(static_constructor), asCALL_CDECL_OBJLAST); assert(r >= 0);
+
+			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_DESTRUCT, "void f()", asFUNCTION(aatc_reghelp_generic_destructor<aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+
+			aatc_iterator::Register_func_current<cond_EDITABLE>(engine, r, n_iterator_T);
+			aatc_iterator::Register_func_current_const<cond_CONST>(engine, r, n_iterator_T);
+
+			r = engine->RegisterObjectMethod(n_iterator_T, "bool next()", asMETHOD(aatc_iterator, Next), asCALL_THISCALL); assert(r >= 0);
+			r = engine->RegisterObjectMethod(n_iterator_T, "bool opPreInc()", asMETHOD(aatc_iterator, Next), asCALL_THISCALL); assert(r >= 0);
+			r = engine->RegisterObjectMethod(n_iterator_T, "bool opPostInc()", asMETHOD(aatc_iterator, Next), asCALL_THISCALL); assert(r >= 0);
+
+			sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_iterator_T, n_iterator_T);
+			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, operator=), asCALL_THISCALL); assert(r >= 0);
+
+			sprintf_s(textbuf, 1000, "bool opEquals(const %s &in)", n_iterator_T);
+			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, operator==), asCALL_THISCALL); assert(r >= 0);
+
+			sprintf_s(textbuf, 1000, "bool %s()", aatc_name_script_iterator_method_is_end);
+			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, IsEnd), asCALL_THISCALL); assert(r >= 0);
+
+			sprintf_s(textbuf, 1000, "bool %s()", aatc_name_script_iterator_method_is_valid);
+			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, IsValid), asCALL_THISCALL); assert(r >= 0);
+		}
+	};
+
+
+
+	aatc_iterator Begin(){
+		void* vthis = this;
+		return aatc_iterator(&vthis, 0);
+	}
+	aatc_iterator End(){
+		void* vthis = this;
+		aatc_iterator result(&vthis, 0);
+		result.SetToEnd();
+		return result;
+	}
+
+
+
+	template<class T> bool Erase_iterator(const aatc_iterator& aatc_it){}
+	template<> bool Erase_iterator<aatc_Y>(const aatc_iterator& aatc_it){
+		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+			if(iterator_safety_version != aatc_it.iterator_safety_version){
+				aatc_errorprint_container_iterator_invalid();
+				return 0;
+			}
+		#endif
+
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
+		T_container::iterator it = aatc_it.it;
+
+		if(it == T_container::end()){
+			return 0;
+		} else{
+			if(handlemode){
+				ReleaseHandle(*it);
+				T_container::erase(it);
+			} else{
+				void* object_to_release = *it;
+				T_container::erase(it);//erasing needs object alive to call opCmp
+				engine->ReleaseScriptObject(object_to_release, objtype_content);
+			}
+
+			return 1;
+		}
+	}
+	template<class T_cond> static void Register_func_Erase_iterator(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_iterator_TT){}
+	template<> static void Register_func_Erase_iterator<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_iterator_TT){
+		sprintf_s(textbuf, 1000, "bool %s(const %s &in)", aatc_name_script_container_method_erase_iterator, n_iterator_TT);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Erase_iterator<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+	}
+
+	template<class T> aatc_type_sizetype Erase_range_iterator(const aatc_iterator& aatc_it_range_begin, const aatc_iterator& aatc_it_range_end){}
+	template<> aatc_type_sizetype Erase_range_iterator<aatc_Y>(const aatc_iterator& aatc_it_range_begin, const aatc_iterator& aatc_it_range_end){
+		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+			if((iterator_safety_version != aatc_it_range_begin.iterator_safety_version) || (iterator_safety_version != aatc_it_range_end.iterator_safety_version)){
+				aatc_errorprint_container_iterator_invalid();
+				return 0;
+			}
+		#endif
+
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
+		T_container::iterator it_range_begin = aatc_it_range_begin.it;
+		T_container::iterator it_range_end = aatc_it_range_end.it;
+
+		//if((it_range_begin == T_container::end()) && (it_range_end == T_container::end())){
+		if(it_range_begin == it_range_end){
+			return 0;
+		} else{
+			aatc_type_sizetype delcount = 0;
+
+			if(handlemode){
+				for(auto it = it_range_begin; it != it_range_end; it++){
+					ReleaseHandle(*it);
+					delcount++;
+				}
+				T_container::erase(it_range_begin, it_range_end);
+			} else{
+				std::vector<void*> objects_to_release;//ohhh my performance
+				//objects_to_release.insert(it_range_begin, it_range_end);
+				objects_to_release.reserve(T_container::size());
+				for(auto it = it_range_begin; it != it_range_end; it++){
+					objects_to_release.push_back(*it);
+				}
+
+				T_container::erase(it_range_begin, it_range_end);//erasing needs objects alive to call opCmp
+
+				for(auto it = objects_to_release.begin(); it != objects_to_release.end(); it++){
+					engine->ReleaseScriptObject(*it, objtype_content);
+					delcount++;
+				}
+			}
+
+			return delcount;
+		}
+	}
+	template<class T_cond> static void Register_func_Erase_range_iterator(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_iterator_TT){}
+	template<> static void Register_func_Erase_range_iterator<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_iterator_TT){
+		sprintf_s(textbuf, 1000, "%s %s(const %s &in,const %s &in)", aatc_name_script_sizetype, aatc_name_script_container_method_erase_iterator, n_iterator_TT, n_iterator_TT);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Erase_range_iterator<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+	}
+
+
+
+	template<class T> aatc_iterator Find_iterator(void* value){}
+	template<> aatc_iterator Find_iterator<aatc_Y>(void* value){
+		if(!handlemode_directcomp){
+			aatc_errorcheck_container_missingfunctions_operation_noret(aatc_CONTAINER_OPERATION::FIND, objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_find)
+				void* vthis = this;
+				aatc_iterator result(&vthis, 0);
+				result.SetToEnd();
+				return result;
+			}
+		}
+		if(handlemode){ value = *(void**)value; }
+
+		auto it = T_container::find(value);
+
+		void* vthis = this;
+		aatc_iterator result(&vthis, 0);
+			result.it = it;
+			if(it == T_container::end()){
+				result.cont = 0;
+			}
+
+		return result;
+	}
+	template<class T> aatc_iterator Find_iterator_generic(void* value){}
+	template<> aatc_iterator Find_iterator_generic<aatc_Y>(void* value){
+		if(!handlemode_directcomp){
+			aatc_errorcheck_container_missingfunctions_operation_noret(aatc_CONTAINER_OPERATION::FIND, objtype_container->GetName(), objtype_content->GetName(), aatc_name_script_container_method_find)
+				void* vthis = this;
+				aatc_iterator result(&vthis, 0);
+				result.SetToEnd();
+				return result;
+			}
+		}
+		if(handlemode){ value = *(void**)value; }
+
+
+		aatc_containerfunctor_equals eq(engine, this);
+		aatc_containerfunctor_equals::findif_version eq_fi;
+		eq_fi.f = &eq;
+		eq_fi.target = value;
+
+		//auto it = std::find(T_container::begin(), T_container::end(), value);
+		//auto it = std::find(T_container::begin(), T_container::end(), value);
+		auto it = std::find_if(T_container::begin(), T_container::end(), eq_fi);
+
+		void* vthis = this;
+		aatc_iterator result(&vthis, 0);
+		result.it = it;
+		if(it == T_container::end()){
+			result.cont = 0;
+		}
+
+		return result;
+	}
+	template<class T_cond> static void Register_func_Find_iterator(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_iterator_TT){
+		sprintf_s(textbuf, 1000, "%s %s(const T &in)", n_iterator_TT, aatc_name_script_container_method_find_iterator);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Find_iterator_generic<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+	}
+	template<> static void Register_func_Find_iterator<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_iterator_TT){
+		sprintf_s(textbuf, 1000, "%s %s(const T &in)", n_iterator_TT, aatc_name_script_container_method_find_iterator);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Find_iterator<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+	}
+
+
+	template<class T> void Insert_iterator(const aatc_iterator& aatc_it, void* value){}
+	template<> void Insert_iterator<aatc_Y>(const aatc_iterator& aatc_it, void* value){
+		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+			if(iterator_safety_version != aatc_it.iterator_safety_version){
+				aatc_errorprint_container_iterator_invalid();
+				return;
+			}
+		#endif
+
+		aatc_errorcheck_container_iterator_safety_version_Increment();
+
+		void* final_value;
+
+		if(handlemode){
+			final_value = StoreHandle2(value);
+		} else{
+			final_value = engine->CreateScriptObjectCopy(value, objtype_content);
+		}
+
+		T_container::insert(aatc_it.it, final_value);
+	}
+	template<class T_cond> static void Register_func_Insert_iterator(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_iterator_TT){}
+	template<> static void Register_func_Insert_iterator<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T, const char* n_iterator_TT){
+		sprintf_s(textbuf, 1000, "void %s(const %s &in,const T &in)", aatc_name_script_container_method_insert_iterator, n_iterator_TT);
+		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Insert_iterator<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
+	}
+
+
+
+
 };
 
 
-template<class T_container,
-	bool cond_NEEDFUNC_BACK_WRITE = 0,
-	bool cond_NEEDFUNC_BACK_READ = 0,
-	bool cond_NEEDFUNC_FRONT_WRITE = 0,
-	bool cond_NEEDFUNC_FRONT_READ = 0,
-	bool cond_NEEDFUNC_ERASE_POSITION = 0,
-	bool cond_NEEDFUNC_ERASE_VALUE = 0,
-	bool cond_NEEDFUNC_OP_INDEX = 0,
-	bool cond_NEEDFUNC_RESERVE = 0,
-	bool cond_NEEDFUNC_INSERT = 0,
-	bool cond_NEEDFUNC_SORT_NATIVE = 0,
-	bool cond_NEEDFUNC_SORT_GENERIC = 0,
-	bool cond_NEEDFUNC_CONTAINS_NATIVE = 0,
-	typename cond_NEEDFUNC_ERASE_GENERIC_INDEX = aatc_NULLCLASS,
-	bool cond_NEEDFUNC_ERASE_GENERIC_VALUE = 0,
-	typename cond_NEEDFUNC_INSERT_GENERIC_INDEX = aatc_NULLCLASS
->
+template<class T_container, class T_traits>
 void aatc_container_shared_1tp_template_Register(asIScriptEngine* engine, const char* n_container){
 	int r = 0;
 
@@ -881,6 +1363,12 @@ void aatc_container_shared_1tp_template_Register(asIScriptEngine* engine, const 
 
 	char n_container_class_T[1000];
 	sprintf_s(n_container_class_T, 1000, "%s<class T>", n_container);
+
+	char n_iterator[1000];
+	sprintf_s(n_iterator, 1000, "%s%s", n_container, aatc_name_script_iterator);
+
+	char n_iterator_TT[1000];
+	sprintf_s(n_iterator_TT, 1000, "%s<T>", n_iterator);
 
 	char textbuf[1000];
 
@@ -921,166 +1409,53 @@ void aatc_container_shared_1tp_template_Register(asIScriptEngine* engine, const 
 	sprintf_s(textbuf, 1000, "%s %s()", aatc_name_script_sizetype, aatc_name_script_container_method_size);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Size), asCALL_THISCALL); assert(r >= 0);
 
-	T_container::Register_func_back_write<std::conditional<cond_NEEDFUNC_BACK_WRITE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_back_read<std::conditional<cond_NEEDFUNC_BACK_READ, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_front_write<std::conditional<cond_NEEDFUNC_FRONT_WRITE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_front_read<std::conditional<cond_NEEDFUNC_FRONT_READ, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_back_write<T_traits::trait_needfunc_BACK_WRITE>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_back_read<T_traits::trait_needfunc_BACK_READ>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_front_write<T_traits::trait_needfunc_FRONT_WRITE>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_front_read<T_traits::trait_needfunc_FRONT_READ>(engine, r, textbuf, n_container, n_container_T);
 	//T_container::Register_func_erase_position<std::conditional<cond_NEEDFUNC_ERASE_POSITION, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_erase_value<std::conditional<cond_NEEDFUNC_ERASE_VALUE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_op_index<std::conditional<cond_NEEDFUNC_OP_INDEX, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_reserve<std::conditional<cond_NEEDFUNC_RESERVE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_insert<std::conditional<cond_NEEDFUNC_INSERT,aatc_Y,aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_erase_value<T_traits::trait_needfunc_ERASE_VALUE>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_op_index<T_traits::trait_needfunc_OP_INDEX>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_reserve<T_traits::trait_needfunc_RESERVE>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_insert<T_traits::trait_needfunc_INSERT>(engine, r, textbuf, n_container, n_container_T);
 
-	T_container::Register_func_sort_native<std::conditional<cond_NEEDFUNC_SORT_NATIVE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_sort_generic<std::conditional<cond_NEEDFUNC_SORT_GENERIC, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_sort_native<T_traits::trait_needfunc_SORT_NATIVE>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_sort_generic<T_traits::trait_needfunc_SORT_GENERIC>(engine, r, textbuf, n_container, n_container_T);
 
-	T_container::Register_func_contains_native<std::conditional<cond_NEEDFUNC_CONTAINS_NATIVE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_contains_native<T_traits::trait_needfunc_CONTAINS_NATIVE>(engine, r, textbuf, n_container, n_container_T);
 
-	T_container::Register_func_erase_generic_index<cond_NEEDFUNC_ERASE_GENERIC_INDEX>(engine, r, textbuf, n_container, n_container_T);
-	T_container::Register_func_erase_generic_value<std::conditional<cond_NEEDFUNC_ERASE_GENERIC_VALUE, aatc_Y, aatc_N>::type>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_erase_generic_index<T_traits::trait_needfunc_ERASE_GENERIC_INDEX>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_erase_generic_value<T_traits::trait_needfunc_ERASE_GENERIC_VALUE>(engine, r, textbuf, n_container, n_container_T);
 
-	T_container::Register_func_insert_generic_index<cond_NEEDFUNC_INSERT_GENERIC_INDEX>(engine, r, textbuf, n_container, n_container_T);
+	T_container::Register_func_insert_generic_index<T_traits::trait_needfunc_INSERT_GENERIC_INDEX>(engine, r, textbuf, n_container, n_container_T);
+
+
+
+	T_container::aatc_iterator::Register<T_traits::trait_iterator_editable, T_traits::trait_iterator_const>(engine, n_iterator, n_container_T);
+
+	sprintf_s(textbuf, 1000, "%s %s()", n_iterator_TT, aatc_name_script_container_method_begin);
+	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Begin), asCALL_THISCALL); assert(r >= 0);
+
+	sprintf_s(textbuf, 1000, "%s %s()", n_iterator_TT, aatc_name_script_container_method_end);
+	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, End), asCALL_THISCALL); assert(r >= 0);
+
+	//sprintf_s(textbuf, 1000, "bool %s(const %s &in)", aatc_name_script_container_method_erase_iterator, n_iterator_TT);
+	//r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Erase_iterator), asCALL_THISCALL); assert(r >= 0);
+
+	//sprintf_s(textbuf, 1000, "%s %s(const %s &in,const %s &in)", aatc_name_script_sizetype, aatc_name_script_container_method_erase_iterator, n_iterator_TT, n_iterator_TT);
+	//r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Erase_iterator_range), asCALL_THISCALL); assert(r >= 0);
+
+
+
+	T_container::Register_func_Erase_iterator<T_traits::trait_needfunc_ERASE_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_iterator_TT);
+	T_container::Register_func_Erase_range_iterator<T_traits::trait_needfunc_ERASE_RANGE_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_iterator_TT);
+	T_container::Register_func_Find_iterator<T_traits::trait_needfunc_FIND_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_iterator_TT);
+	T_container::Register_func_Insert_iterator<T_traits::trait_needfunc_INSERT_ITERATOR>(engine, r, textbuf, n_container, n_container_T, n_iterator_TT);
 }
 
-template<typename T_out, typename T_host> T_out aatc_reghelp_construct_hosted_iterator_template(T_host cont){
-	return T_out(&cont,0,nullptr);
-}
 
-
-/*!\brief Internal template monster
-
-*/
-template<class T_container> class aect_iterator_shared_template{
-public:
-	T_container* host;
-
-	//#if aatc_container_shared_1tp_USEFUNCS_CONST_ITERATOR_ONLY
-	//	typename T_container::const_iterator it;
-	//	typename T_container::const_iterator it_end;
-	//#else
-	//	typename T_container::iterator it;
-	//	typename T_container::iterator it_end;
-	//#endif
-
-	typename T_container::iterator it;
-	typename T_container::iterator it_end;
-
-	bool cont;
-	bool firstt;
-	bool handlemode;
-
-	aect_iterator_shared_template(){}
-	aect_iterator_shared_template(void *ref, int typeId_target_container, asIObjectType* objtype):
-		firstt(1)
-	{
-		host = (T_container*)(*(void**)ref);
-		Init();
-	}
-	aect_iterator_shared_template(const aect_iterator_shared_template& other) :
-		host(other.host),
-		it(other.it),
-		it_end(other.it_end),
-		firstt(other.firstt),
-		cont(other.cont),
-		handlemode(other.handlemode)
-	{}
-
-	void Init(){
-		if (host->empty()){
-			cont = 0;
-		}else{
-			handlemode = host->handlemode;
-
-			it = host->begin();
-			it_end = host->end();
-			cont = 1;
-		}
-	}
-
-	//combine end check and continuation into one monster
-	bool Next(){
-		if (firstt){
-			if (cont){//all is well
-				firstt = 0;
-				return 1;
-			}else{//cont set to 0 in constructor because container is empty
-				return 0;
-			}
-		}else{
-			it++;
-			//if (it == host->end()){
-			if (it == it_end){
-				return 0;
-			}else{
-				return 1;
-			}
-		}
-	}
-
-
-	template<class T> void* Current(){}
-	template<> void* Current<aatc_Y>(){
-		if (handlemode){
-			return &(*(it));//return pointer to handle
-		}else{
-			return *(it);//return copy of pointer to object
-		}
-	}
-	template<class T_cond> static void Register_func_current(asIScriptEngine* engine, int& r, const char* n_iterator_T){}
-	template<> static void Register_func_current<aatc_Y>(asIScriptEngine* engine, int& r, const char* n_iterator_T){
-		r = engine->RegisterObjectMethod(n_iterator_T, "T& current()", asMETHOD(aect_iterator_shared_template, Current<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
-	}
-
-	template<class T> const void* Current_const(){}
-	template<> const void* Current_const<aatc_Y>(){
-		if (handlemode){
-			return &(*(it));//return pointer to handle
-		}else{
-			return *(it);//return copy of pointer to object
-		}
-	}
-	template<class T_cond> static void Register_func_current_const(asIScriptEngine* engine, int& r, const char* n_iterator_T){}
-	template<> static void Register_func_current_const<aatc_Y>(asIScriptEngine* engine, int& r, const char* n_iterator_T){
-		r = engine->RegisterObjectMethod(n_iterator_T, "const T& current()", asMETHOD(aect_iterator_shared_template, Current_const<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
-	}
-
-
-	static void static_constructor(asIObjectType* objtype, void *ref, int typeId, void *memory){
-		new(memory)aect_iterator_shared_template(ref, typeId, objtype);
-	}
-
-	template<class cond_EDITABLE = aatc_Y, class cond_CONST = aatc_N> static void Register(asIScriptEngine* engine, const char* n_iterator, const char* n_container_T){
-		int r = 0;
-		char textbuf[1000];
-
-		char n_iterator_T[1000];
-		sprintf_s(n_iterator_T, 1000, "%s<T>", n_iterator);
-
-		char n_iterator_class_T[1000];
-		sprintf_s(n_iterator_class_T, 1000, "%s<class T>", n_iterator);
-
-		r = engine->RegisterObjectType(n_iterator_class_T, sizeof(aect_iterator_shared_template), asOBJ_VALUE | asOBJ_TEMPLATE | asGetTypeTraits<aect_iterator_shared_template>()); assert(r >= 0);
-
-		//the default constructor must be registered, but you should never use it in script
-		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in)", asFunctionPtr(aatc_reghelp_constructor_template_default<aect_iterator_shared_template>), asCALL_CDECL_OBJLAST); assert(r >= 0);
-		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in,?&in)", asFunctionPtr(static_constructor), asCALL_CDECL_OBJLAST); assert(r >= 0);
-		//sprintf(textbuf, "void f(int&in,%s@)", n_container_T);
-		//r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(static_constructor), asCALL_CDECL_OBJLAST); assert(r >= 0);
-		sprintf_s(textbuf, 1000, "void f(const %s &in)", n_iterator_T);
-		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor_copy<aect_iterator_shared_template, aect_iterator_shared_template>), asCALL_CDECL_OBJLAST); assert(r >= 0);
-
-		r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_DESTRUCT, "void f()", asFUNCTION(aatc_reghelp_generic_destructor<aect_iterator_shared_template>), asCALL_CDECL_OBJLAST); assert(r >= 0);
-
-		aect_iterator_shared_template::Register_func_current<cond_EDITABLE>(engine, r, n_iterator_T);
-		aect_iterator_shared_template::Register_func_current_const<cond_CONST>(engine, r, n_iterator_T);
-
-		r = engine->RegisterObjectMethod(n_iterator_T, "bool next()", asMETHOD(aect_iterator_shared_template, Next), asCALL_THISCALL); assert(r >= 0);
-		r = engine->RegisterObjectMethod(n_iterator_T, "bool opPostInc()", asMETHOD(aect_iterator_shared_template, Next), asCALL_THISCALL); assert(r >= 0);
-	}
-};
 
 
 
 END_AS_NAMESPACE
-
 #endif

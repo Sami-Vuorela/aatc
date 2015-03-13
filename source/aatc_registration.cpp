@@ -29,38 +29,38 @@ samivuorela@gmail.com
 
 
 
-#include "aatc_common.hpp"
-#include "aatc_vector.hpp"
-#include "aatc_list.hpp"
-#include "aatc_set.hpp"
-#include "aatc_unordered_set.hpp"
-//#include "aatc_map.hpp"
+#include "aatc_internal_lists.hpp"
+#include "aatc_templatemagic.hpp"
+
+
 
 
 
 BEGIN_AS_NAMESPACE
 
 
-template<class T, bool GOTFUNC_EQUALS, bool GOTFUNC_LESS, bool GOTFUNC_HASH> void aatc_reghelp_tempspec_all(asIScriptEngine* engine, const char* n_content){
-	aatc_register_container_tempspec_vector<T, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH>(engine, n_content);
-	aatc_register_container_tempspec_list<T, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH>(engine, n_content);
-	aatc_register_container_tempspec_set<T, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH>(engine, n_content);
-	if(GOTFUNC_HASH){
-		aatc_register_container_tempspec_unordered_set<T, GOTFUNC_EQUALS, GOTFUNC_LESS, GOTFUNC_HASH>(engine, n_content);
+
+template<int i, typename TT> class aatc_Initializer_tm_iterate_register_all_containers{
+public:
+	static const int id = std::tuple_element<i, aatc_infos_all_tuple>::type::container_id;
+	void operator()(TT& tup){
+		if(std::get<0>(tup)->include_container[id]){ aatc_register_container<id>(std::get<1>(tup), std::get<0>(tup)); }
 	}
-}
-
-aatc_type_uint64 aatc_hashfunc_djb2_aswrapper(const aatc_type_string& a){return aatc_hashfunc_djb2(a);}
-
+};
 
 
 
 void aatc_Initializer::Go(){
 	//init this guy here
-	aatc_primunion_defaultvalue.i64 = 0;
+	aatc_primunion_defaultvalue.ui64 = 0;
+	aatc_primunion_defaultvalue.ptr = nullptr;
 
 	engine->SetUserData(new aatc_engine_level_storage(engine), aatc_engine_userdata_id);
 	engine->SetEngineUserDataCleanupCallback(aatc_engine_cleanup, aatc_engine_userdata_id);
+
+	#if aatc_ENABLE_REGISTER_TYPEDEF_HASH_TYPE
+		engine->RegisterTypedef(aatc_hash_type_scriptname, aatc_hash_type_scriptname_actual);
+	#endif
 
 	{
 		int r = 0;
@@ -85,58 +85,17 @@ void aatc_Initializer::Go(){
 			r = engine->RegisterObjectMethod(n_funcpointer, "void Call()", asMETHOD(aatc_script_Funcpointer, scriptsidecall_CallVoid), asCALL_THISCALL); assert(r >= 0);
 		}
 		{//register hash functions
-			r = engine->RegisterGlobalFunction("uint64 aatc_Hashfunc_djb2(string &in)", asFUNCTION(aatc_hashfunc_djb2_aswrapper), asCALL_CDECL); assert(r >= 0);
+			sprintf_s(textbuf, 1000, "%s aatc_Hashfunc_djb2(string &in)", aatc_hash_type_scriptname_actual);
+			r = engine->RegisterGlobalFunction(textbuf, asFUNCTION(aatc_hashfunc_djb2), asCALL_CDECL); assert(r >= 0);
 		}
 	}
 
-	if (include_container[aatc_CONTAINERTYPE::LIST]){ aatc_register_container<aatc_CONTAINERTYPE::LIST>(engine, this); }
-	if (include_container[aatc_CONTAINERTYPE::VECTOR]){ aatc_register_container<aatc_CONTAINERTYPE::VECTOR>(engine, this); }
-	if(include_container[aatc_CONTAINERTYPE::SET]){ aatc_register_container<aatc_CONTAINERTYPE::SET>(engine, this); }
-	if(include_container[aatc_CONTAINERTYPE::UNORDERED_SET]){ aatc_register_container<aatc_CONTAINERTYPE::UNORDERED_SET>(engine, this); }
-	if(include_container[aatc_CONTAINERTYPE::MAP]){ aatc_register_container<aatc_CONTAINERTYPE::MAP>(engine, this); }
-	if(include_container[aatc_CONTAINERTYPE::UNORDERED_MAP]){ aatc_register_container<aatc_CONTAINERTYPE::UNORDERED_MAP>(engine, this); }
+	aatc_tm_iterator_1arg_functor<0, aatc_infos_all_tuple_size - 1, aatc_Initializer_tm_iterate_register_all_containers, std::tuple< aatc_Initializer*, asIScriptEngine*>> f; f(std::make_tuple(this, engine));
 
 
-	#if aatc_include_primitive_native_tempspec_INT8
-		aatc_reghelp_tempspec_all<aatc_type_int8,1,1,1>(engine, "int8");
-	#endif
-	#if aatc_include_primitive_native_tempspec_INT16
-		aatc_reghelp_tempspec_all<aatc_type_int16, 1, 1, 1>(engine, "int16");
-	#endif
-	#if aatc_include_primitive_native_tempspec_INT32
-		aatc_reghelp_tempspec_all<aatc_type_int32, 1, 1, 1>(engine, "int");
-	#endif
-	#if aatc_include_primitive_native_tempspec_INT64
-		aatc_reghelp_tempspec_all<aatc_type_int64, 1, 1, 1>(engine, "int64");
-	#endif
 
-	#if aatc_include_primitive_native_tempspec_UINT8
-		aatc_reghelp_tempspec_all<aatc_type_uint8, 1, 1, 1>(engine, "uint8");
-	#endif
-	#if aatc_include_primitive_native_tempspec_UINT16
-		aatc_reghelp_tempspec_all<aatc_type_uint16, 1, 1, 1>(engine, "uint16");
-	#endif
-	#if aatc_include_primitive_native_tempspec_UINT32
-		aatc_reghelp_tempspec_all<aatc_type_uint32, 1, 1, 1>(engine, "uint");
-	#endif
-	#if aatc_include_primitive_native_tempspec_UINT64
-		aatc_reghelp_tempspec_all<aatc_type_uint64, 1, 1, 1>(engine, "uint64");
-	#endif
-
-	#if aatc_include_primitive_native_tempspec_FLOAT32
-		aatc_reghelp_tempspec_all<aatc_type_float32, 1, 1, 1>(engine, "float");
-	#endif
-	#if aatc_include_primitive_native_tempspec_FLOAT64
-		aatc_reghelp_tempspec_all<aatc_type_float64, 1, 1, 1>(engine, "double");
-	#endif
-
-	#if aatc_include_primitive_native_tempspec_STRING
-		aatc_reghelp_tempspec_all<aatc_type_string, 1, 1, 1>(engine, "string");
-	#endif
-
-	#if aatc_CONFIG_USE_ASADDON_REF
-		aatc_reghelp_tempspec_all<aatc_ait_ref, 1, 1, 0>(engine, "ref");
-	#endif
+	RegisterTempspecs();
+	RegisterTempspecs2();
 }
 
 

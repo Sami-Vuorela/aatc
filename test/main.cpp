@@ -1,11 +1,21 @@
 #include "as_engine.hpp"
 #include "scriptbuilder\scriptbuilder.h"
 
+#include "serializer\serializer.h"
 
+#include "../source/aatc_common.hpp"
+
+
+
+
+
+#define TEST_SERIALIZER 0
 
 
 
 BEGIN_AS_NAMESPACE
+
+
 
 void main_contents(){
 	//AngelScript::asPrepareMultithread();
@@ -24,8 +34,29 @@ void main_contents(){
 	asIScriptFunction* func_scriptmain = module->GetFunctionByName("scriptmain");
 
 	asIScriptContext* cc = engine->RequestContext();
+
 		cc->Prepare(func_scriptmain);
 		cc->Execute();
+
+		#if TEST_SERIALIZER
+				{
+					cc->Prepare(module->GetFunctionByName("serializer_test_1")); cc->Execute();
+
+
+					CSerializer backup;
+					aatc_serializer_register(engine, &backup);
+					backup.Store(module);
+
+					cc->Prepare(module->GetFunctionByName("serializer_test_2")); cc->Execute();
+
+					backup.Restore(module);
+					aatc_serializer_cleanup(engine, &backup);
+
+					cc->Prepare(module->GetFunctionByName("serializer_test_3")); cc->Execute();
+				}
+		#endif
+
+
 	engine->ReturnContext(cc);
 
 	engine->Release();

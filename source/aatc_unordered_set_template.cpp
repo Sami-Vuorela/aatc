@@ -29,77 +29,39 @@ samivuorela@gmail.com
 
 
 
-#include "aatc_shared_template.hpp"
 #include "aatc_unordered_set.hpp"
 
 
 
 BEGIN_AS_NAMESPACE
 
-//template<> void aatc_errorcheck_container_missingfunctions_operation<aatc_CONTAINERTYPE::UNORDERED_SET, aatc_CONTAINER_OPERATION::INSERT>(const char* name_container, const char* name_content, const char* name_operation);
-//template<> void aatc_errorprint_container_missingfunctions_operation<aatc_CONTAINERTYPE::UNORDERED_SET, aatc_CONTAINER_OPERATION::INSERT>(const char* name_container, const char* name_content, const char* name_operation);
 
 
-typedef aatc_acit_unordered_set<void*, aatc_containerfunctor_hash, aatc_containerfunctor_equals> aatc_acit_unordered_set_with_functors;
+aatc_container_unordered_set_template::aatc_container_unordered_set_template(asIScriptEngine* _engine, asIObjectType* _objtype) :
+	aatc_container_shared_1tp_template(_engine,_objtype)
+{}
+aatc_container_unordered_set_template::aatc_container_unordered_set_template(const aatc_container_unordered_set_template& other) :
+	aatc_container_shared_1tp_template(other.engine, other.objtype_container)
+{
+	(*this) = other;
+}
+aatc_container_unordered_set_template::~aatc_container_unordered_set_template(){}
 
-/*!\brief Actual class used for templates defined in script.*/
-class aatc_container_unordered_set_template : public aatc_container_shared_1tp_template<aatc_acit_unordered_set_with_functors, aatc_CONTAINERTYPE::UNORDERED_SET, aatc_bcw_hashmap<aatc_acit_unordered_set_with_functors, aatc_containerfunctor_hash, aatc_containerfunctor_equals, aatc_CONFIG_DEFAULT_CONTAINER_UNORDERED_SET_DEFAULTBUCKETCOUNT>>{
-public:
-	typedef aatc_acit_unordered_set_with_functors bt;
+aatc_container_unordered_set_template* aatc_container_unordered_set_template::Factory(asIObjectType* _objtype){
+	asIScriptEngine* engine = _objtype->GetEngine();
+	return new aatc_container_unordered_set_template(engine, _objtype);
+}
+aatc_container_unordered_set_template* aatc_container_unordered_set_template::Factory_copy(asIObjectType* _objtype, const aatc_container_unordered_set_template& other){
+	return new aatc_container_unordered_set_template(other);
+}
+aatc_container_unordered_set_template& aatc_container_unordered_set_template::operator=(const aatc_container_unordered_set_template& other){ aatc_container_shared_1tp_template::operator=(other); return *this; }
+aatc_container_unordered_set_template& aatc_container_unordered_set_template::Swap(aatc_container_unordered_set_template& other){ aatc_container_shared_1tp_template::swap(other); return *this; }
 
-	aatc_container_unordered_set_template(asIScriptEngine* _engine, asIObjectType* _objtype) :
-		aatc_container_shared_1tp_template(_engine,_objtype)
-	{}
-	aatc_container_unordered_set_template(const aatc_container_unordered_set_template& other) :
-		aatc_container_shared_1tp_template(other.engine, other.objtype_container)
-	{
-		(*this) = other;
-	}
-	~aatc_container_unordered_set_template(){}
-
-	static aatc_container_unordered_set_template* Factory(asIObjectType* _objtype){
-		asIScriptEngine* engine = asGetActiveContext()->GetEngine();
-		return new aatc_container_unordered_set_template(engine, _objtype);
-	}
-	static aatc_container_unordered_set_template* Factory_copy(asIObjectType* _objtype, const aatc_container_unordered_set_template& other){
-		return new aatc_container_unordered_set_template(other);
-	}
-	aatc_container_unordered_set_template& operator=(const aatc_container_unordered_set_template& other){ aatc_container_shared_1tp_template::operator=(other); return *this; }
-	aatc_container_unordered_set_template& Swap(aatc_container_unordered_set_template& other){ aatc_container_shared_1tp_template::swap(other); return *this; }
-};
 
 
 
 template<> void aatc_register_container<aatc_CONTAINERTYPE::UNORDERED_SET>(asIScriptEngine* engine, aatc_Initializer* initializer){
-	int r = 0;
-	char textbuf[1000];
-
-	char n_container_T[1000];
-	char n_iterator[1000];
-	sprintf_s(n_container_T,1000, "%s<T>", aatc_name_script_container_unordered_set);
-	sprintf_s(n_iterator, 1000, "%s%s", aatc_name_script_container_unordered_set, aatc_name_script_iterator);
-	char n_iterator_TT[1000];
-	sprintf_s(n_iterator_TT, 1000, "%s<T>", n_iterator);
-
-	aatc_container_shared_1tp_template_Register<aatc_container_unordered_set_template,
-		aatc_container_unordered_set_needfunc_BACK_WRITE,
-		aatc_container_unordered_set_needfunc_BACK_READ,
-		aatc_container_unordered_set_needfunc_FRONT_WRITE,
-		aatc_container_unordered_set_needfunc_FRONT_READ,
-		aatc_container_unordered_set_needfunc_ERASE_POSITION,
-		aatc_container_unordered_set_needfunc_ERASE_VALUE,
-		aatc_container_unordered_set_needfunc_OP_INDEX,
-		aatc_container_unordered_set_needfunc_RESERVE,
-		aatc_container_unordered_set_needfunc_INSERT,
-		aatc_container_unordered_set_needfunc_SORT_NATIVE,
-		aatc_container_unordered_set_needfunc_SORT_GENERIC,
-		aatc_container_unordered_set_needfunc_CONTAINS_NATIVE>
-	(engine, aatc_name_script_container_unordered_set);
-
-	aect_iterator_shared_template<aatc_container_unordered_set_template>::Register<aatc_N, aatc_Y>(engine, n_iterator, n_container_T);
-
-	sprintf_s(textbuf, 1000, "%s begin()", n_iterator_TT);
-	r = engine->RegisterObjectMethod(n_container_T, textbuf, asFunctionPtr(aatc_reghelp_construct_hosted_iterator_template<aect_iterator_shared_template<aatc_container_unordered_set_template>, aatc_container_unordered_set_template*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+	aatc_container_shared_1tp_template_Register<aatc_container_unordered_set_template, aatc_container_traits_unordered_set>(engine, aatc_name_script_container_unordered_set);
 }
 
 template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::UNORDERED_SET>(aatc_template_specific_storage* tss){
@@ -116,5 +78,7 @@ template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type
 
 	return mask;
 }
+
+
 
 END_AS_NAMESPACE

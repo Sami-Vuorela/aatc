@@ -48,30 +48,30 @@ BEGIN_AS_NAMESPACE
 
 aatc_primunion aatc_primunion_defaultvalue = aatc_primunion();
 
-std::size_t aatc_hashfunc_djb2(const aatc_type_string& a){
-	std::size_t hash = 5381;
+aatc_hash_type aatc_hashfunc_djb2(const aatc_type_string& a){
+	aatc_hash_type hash = 5381;
 	for(int i = 0; i < a.size(); i++){
 		hash = ((hash << 5) + hash) + a[i];
 	}
 	return hash;
 }
 
-std::size_t aatc_functor_hash<aatc_type_float32>::operator()(const aatc_type_float32& a) const{
+aatc_hash_type aatc_functor_hash<aatc_type_float32>::operator()(const aatc_type_float32& a) const{
 	aatc_primunion pu;
 	pu.f32 = a;
 	return pu.ui64;
 }
-std::size_t aatc_functor_hash<aatc_type_float64>::operator()(const aatc_type_float64& a) const{
+aatc_hash_type aatc_functor_hash<aatc_type_float64>::operator()(const aatc_type_float64& a) const{
 	aatc_primunion pu;
 	pu.f64 = a;
 	return pu.ui64;
 }
-std::size_t aatc_functor_hash<aatc_type_string>::operator()(const aatc_type_string& a) const{
+aatc_hash_type aatc_functor_hash<aatc_type_string>::operator()(const aatc_type_string& a) const{
 	return aatc_hashfunc_djb2(a);
 }
 #if aatc_CONFIG_USE_ASADDON_REF
-	std::size_t aatc_functor_hash<aatc_ait_ref>::operator()(const aatc_ait_ref& a) const{
-		return (std::size_t)a.m_ref;
+	aatc_hash_type aatc_functor_hash<aatc_ait_ref>::operator()(const aatc_ait_ref& a) const{
+		return (aatc_hash_type)a.m_ref;
 	}
 #endif
 
@@ -261,7 +261,7 @@ void aatc_refcounted::refcount_Release(){
 aatc_refcounted_GC::aatc_refcounted_GC(asIScriptEngine *engine){
 	refCount = 1;
 	gcFlag = false;
-	this->engine = engine;
+	this->gc_engine = engine;
 }
 aatc_refcounted_GC::~aatc_refcounted_GC(){}
 
@@ -420,6 +420,9 @@ bool aatc_containerfunctor_equals::operator()(const void* lhs, const void* rhs)c
 
 	return result;
 }
+bool aatc_containerfunctor_equals::findif_version::operator()(const void* rhs) const{
+	return (*f)(target, rhs);
+}
 
 aatc_containerfunctor_hash::aatc_containerfunctor_hash(asIScriptEngine* _engine, aatc_containerfunctor_Settings* settings) :
 	engine(_engine),
@@ -428,7 +431,7 @@ aatc_containerfunctor_hash::aatc_containerfunctor_hash(asIScriptEngine* _engine,
 {
 	els = (aatc_engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
 }
-std::size_t aatc_containerfunctor_hash::operator()(const void* ptr) const{
+aatc_hash_type aatc_containerfunctor_hash::operator()(const void* ptr) const{
 	if(need_init){
 		//need_init = 0;
 		//func_hash = host_settings->func_hash;
@@ -438,11 +441,11 @@ std::size_t aatc_containerfunctor_hash::operator()(const void* ptr) const{
 		(const_cast<aatc_containerfunctor_hash*>(this))->func_hash = host_settings->func_hash;
 	}
 	if(handlemode_directcomp){
-		return (std::size_t)ptr;
+		return (aatc_hash_type)ptr;
 		//return reinterpret_cast<std::size_t>(ptr);
 	}
 
-	std::size_t result;
+	aatc_hash_type result;
 
 	asIScriptContext* cc = els->contextcache_Get();
 		cc->Prepare(func_hash);
@@ -571,7 +574,7 @@ need_init(1)
 {
 	els = (aatc_engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
 }
-std::size_t aatc_containerfunctor_map_hash::operator()(const aatc_primunion& pu) const{
+aatc_hash_type aatc_containerfunctor_map_hash::operator()(const aatc_primunion& pu) const{
 	if(need_init){
 		//need_init = 0;
 		//func_hash = host_settings->func_hash;
@@ -584,27 +587,27 @@ std::size_t aatc_containerfunctor_map_hash::operator()(const aatc_primunion& pu)
 	}
 	if(datahandlingid_key == aatc_DATAHANDLINGTYPE::PRIMITIVE){
 		switch(primitiveid_key){
-			case aatc_PRIMITIVE_TYPE::INT8:{return (std::size_t)pu.i8; }
-			case aatc_PRIMITIVE_TYPE::INT16:{return (std::size_t)pu.i16; }
-			case aatc_PRIMITIVE_TYPE::INT32:{return (std::size_t)pu.i32; }
-			case aatc_PRIMITIVE_TYPE::INT64:{return (std::size_t)pu.i64; }
-			case aatc_PRIMITIVE_TYPE::UINT8:{return (std::size_t)pu.ui8; }
-			case aatc_PRIMITIVE_TYPE::UINT16:{return (std::size_t)pu.ui16; }
-			case aatc_PRIMITIVE_TYPE::UINT32:{return (std::size_t)pu.ui32; }
-			case aatc_PRIMITIVE_TYPE::UINT64:{return (std::size_t)pu.ui64; }
-			case aatc_PRIMITIVE_TYPE::FLOAT32:{return (std::size_t)pu.f32; }
-			case aatc_PRIMITIVE_TYPE::FLOAT64:{return (std::size_t)pu.f64; }
+			case aatc_PRIMITIVE_TYPE::INT8:{return (aatc_hash_type)pu.i8; }
+			case aatc_PRIMITIVE_TYPE::INT16:{return (aatc_hash_type)pu.i16; }
+			case aatc_PRIMITIVE_TYPE::INT32:{return (aatc_hash_type)pu.i32; }
+			case aatc_PRIMITIVE_TYPE::INT64:{return (aatc_hash_type)pu.i64; }
+			case aatc_PRIMITIVE_TYPE::UINT8:{return (aatc_hash_type)pu.ui8; }
+			case aatc_PRIMITIVE_TYPE::UINT16:{return (aatc_hash_type)pu.ui16; }
+			case aatc_PRIMITIVE_TYPE::UINT32:{return (aatc_hash_type)pu.ui32; }
+			case aatc_PRIMITIVE_TYPE::UINT64:{return (aatc_hash_type)pu.ui64; }
+			case aatc_PRIMITIVE_TYPE::FLOAT32:{return (aatc_hash_type)pu.f32; }
+			case aatc_PRIMITIVE_TYPE::FLOAT64:{return (aatc_hash_type)pu.f64; }
 		};
 	}
 	if(datahandlingid_key == aatc_DATAHANDLINGTYPE::STRING){
 		return aatc_functor_hash<aatc_type_string>()(*((aatc_type_string*)pu.ptr));
 	}
 	if(handlemode_directcomp){
-		return (std::size_t)pu.ptr;
+		return (aatc_hash_type)pu.ptr;
 		//return reinterpret_cast<std::size_t>(ptr);
 	}
 
-	std::size_t result;
+	aatc_hash_type result;
 
 	asIScriptContext* cc = els->contextcache_Get();
 	cc->Prepare(func_hash);
@@ -721,12 +724,15 @@ void aatc_script_Funcpointer::scriptsidecall_CallVoid(){
 //	ref.Set(NULL, NULL);
 //}
 
+aatc_engine_level_storage* aatc_Get_ELS(asIScriptEngine* engine){
+	return (aatc_engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
+}
 asIScriptContext* aatc_contextcache_Get(){
-	aatc_engine_level_storage* els = (aatc_engine_level_storage*)asGetActiveContext()->GetEngine()->GetUserData(aatc_engine_userdata_id);
+	aatc_engine_level_storage* els = aatc_Get_ELS(asGetActiveContext()->GetEngine());
 	return els->contextcache_Get();
 }
 void aatc_contextcache_Return(asIScriptContext* c){
-	aatc_engine_level_storage* els = (aatc_engine_level_storage*)asGetActiveContext()->GetEngine()->GetUserData(aatc_engine_userdata_id);
+	aatc_engine_level_storage* els = aatc_Get_ELS(asGetActiveContext()->GetEngine());
 	els->contextcache_Return(c);
 }
 
@@ -763,10 +769,21 @@ void aatc_errorprint_container_access_bounds(aatc_type_sizetype index, aatc_type
 #endif
 }
 
+void aatc_errorprint_iterator_container_modified(){
+	#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+		asGetActiveContext()->SetException(aatc_errormessage_iterator_container_modified);
+	#endif
+}
+void aatc_errorprint_container_iterator_invalid(){
+	#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+		asGetActiveContext()->SetException(aatc_errormessage_container_iterator_invalid);
+	#endif
+}
 
 
-aatc_DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(aatc_type_uint32 astypeid){
-	if(astypeid == asGetActiveContext()->GetEngine()->GetStringFactoryReturnTypeId()){
+
+aatc_DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(asIScriptEngine* engine,aatc_type_uint32 astypeid){
+	if(astypeid == engine->GetStringFactoryReturnTypeId()){
 		return aatc_DATAHANDLINGTYPE::STRING;
 	}
 	if(astypeid & asTYPEID_MASK_OBJECT){
@@ -809,6 +826,61 @@ aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_fu
 }
 
 
+
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<bool>(bool* input){ return asTYPEID_BOOL; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int8>(aatc_type_int8* input){ return asTYPEID_INT8; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int16>(aatc_type_int16* input){ return asTYPEID_INT16; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int32>(aatc_type_int32* input){ return asTYPEID_INT32; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int64>(aatc_type_int64* input){ return asTYPEID_INT64; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint8>(aatc_type_uint8* input){ return asTYPEID_UINT8; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint16>(aatc_type_uint16* input){ return asTYPEID_UINT16; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint32>(aatc_type_uint32* input){ return asTYPEID_UINT32; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint64>(aatc_type_uint64* input){ return asTYPEID_UINT64; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float32>(aatc_type_float32* input){ return asTYPEID_FLOAT; }
+//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float64>(aatc_type_float64* input){ return asTYPEID_DOUBLE; }
+
+aatc_container_base::aatc_container_base()
+{
+	#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+		iterator_safety_version = 0;
+	#endif
+}
+aatc_container_base::~aatc_container_base(){}
+
+aatc_iterator_base::aatc_iterator_base():
+	firstt(1)
+{}
+aatc_iterator_base::aatc_iterator_base(const aatc_iterator_base& other) :
+	firstt(1),
+	cont(1)
+{}
+
+
+
+void* aatc_primunion::Get_Ptr_To_Primitive_Type(aatc_PRIMITIVE_TYPE primtype){
+	switch(primtype){
+		case aatc_PRIMITIVE_TYPE::INT8:{return &i8; }
+		case aatc_PRIMITIVE_TYPE::INT16:{return &i16; }
+		case aatc_PRIMITIVE_TYPE::INT32:{return &i32; }
+		case aatc_PRIMITIVE_TYPE::INT64:{return &i64; }
+		case aatc_PRIMITIVE_TYPE::UINT8:{return &ui8; }
+		case aatc_PRIMITIVE_TYPE::UINT16:{return &ui16; }
+		case aatc_PRIMITIVE_TYPE::UINT32:{return &ui32; }
+		case aatc_PRIMITIVE_TYPE::UINT64:{return &ui64; }
+		case aatc_PRIMITIVE_TYPE::FLOAT32:{return &f32; }
+		case aatc_PRIMITIVE_TYPE::FLOAT64:{return &f64; }
+	};
+	return nullptr;
+}
+const void* aatc_primunion::Get_Ptr_To_Primitive_Type_const(aatc_PRIMITIVE_TYPE primtype)const{
+	return const_cast<aatc_primunion*>(this)->Get_Ptr_To_Primitive_Type(primtype);
+	//return const_cast<void*>(Get_Ptr_To_Primitive_Type(primtype));
+}
+
+void aatc_primunion::Init(){
+	ui32 = 0;
+	ptr = nullptr;
+}
 
 
 

@@ -54,6 +54,10 @@ public:
 		Call this after setting your settings.
 	*/
 	void Go();
+	void _Go2();
+
+	void RegisterTempspecs();
+	void RegisterTempspecs2();
 };
 
 /*!
@@ -61,6 +65,11 @@ Just call this if you want to have every container available and dont care about
 */
 void aatc_RegisterAllContainers(asIScriptEngine* engine);
 
+#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+class CSerializer;
+void aatc_serializer_register(asIScriptEngine* engine, CSerializer* serializer);
+void aatc_serializer_cleanup(asIScriptEngine* engine, CSerializer* serializer);
+#endif
 
 
 END_AS_NAMESPACE

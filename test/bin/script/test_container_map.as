@@ -23,6 +23,8 @@ void TestContainer_map(){
 			bool success = false;
 			int findresult = cont.find(2,success);
 			if(success){
+				//test opIndex
+				findresult = cont[2];
 				if(findresult != 20){
 					test_success = false;
 					test_fail_reason = "find returned wrong answer";

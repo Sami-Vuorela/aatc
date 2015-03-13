@@ -42,17 +42,17 @@ class Material{
 	int id;
 	Material(){
 		objectcount_material++;
-		//Print("object constructor   count="+objectcount_material);
+		// Print("object constructor   count="+objectcount_material);
 	}
 	Material(string _name,int _id){
 		name = _name;
 		id = _id;
 		objectcount_material++;
-		//Print("object constructor   count="+objectcount_material);
+		// Print("object constructor   count="+objectcount_material);
 	}
 	~Material(){
 		objectcount_material--;
-		//Print("object destructor   count="+objectcount_material);
+		// Print("object destructor   count="+objectcount_material);
 	}
 	
 	//methods required for some containers
@@ -62,5 +62,5 @@ class Material{
 		if(name == other.name){return 0;}
 		if(name < other.name){return -1;}else{return 1;}
 	}
-	uint64 hash(){return aatc_Hashfunc_djb2(name);}
+	aatc_hash_t hash(){return aatc_Hashfunc_djb2(name);}
 };
