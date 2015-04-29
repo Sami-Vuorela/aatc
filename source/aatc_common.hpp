@@ -150,14 +150,14 @@ public:
 	Used mostly for error checking.
 */
 enum aatc_CONTAINER_OPERATION{
-	COUNT,
-	ERASE_VALUE,
-	INSERT,
-	SORT,
-	CONTAINS_NATIVE,
-	REMOVE,
-	FIND,
-	ERASE_GENERIC_VALUE
+	COUNT = 1,
+	ERASE_VALUE = 2,
+	INSERT = 4,
+	SORT = 8,
+	CONTAINS_NATIVE = 16,
+	REMOVE = 32,
+	FIND = 64,
+	ERASE_GENERIC_VALUE = 128
 };
 
 typedef aatc_type_uint32 aatc_container_operations_bitmask_type;
