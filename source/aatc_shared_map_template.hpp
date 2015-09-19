@@ -215,7 +215,7 @@ public:
 
 		objtype_container->Release();
 
-		if(objectmode_value){
+		if(objectmode_key){
 			objtype_key->Release();
 		}
 		if(objectmode_value){
