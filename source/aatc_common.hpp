@@ -31,8 +31,6 @@
 #ifndef _includedh_aatc_common
 #define _includedh_aatc_common
 
-//#include "cm/core/thirdparty/tp_angelscript.hpp"
-
 #include "aatc.hpp"
 
 
@@ -228,8 +226,6 @@ public:
 
 	std::vector<asIScriptContext*> context_cache;
 	aatc_ait_fastlock context_cache_lock;
-	
-	asIObjectType* objtype_tempcont_list;
 
 #if aatc_CONFIG_USE_ASADDON_SERIALIZER
 	std::vector<serializer_helper> serializer_tempspec_helpers[aatc_CONTAINERTYPE_COUNT];
@@ -280,7 +276,7 @@ template<class T> void aatc_reghelp_generic_destructor(void *memory){
 /*!\brief Basetype for script refcounted c++ objects to derive from.*/
 class aatc_refcounted{
 public:
-	int refcount;
+	mutable int refcount;
 
 	aatc_refcounted();
 	virtual ~aatc_refcounted();

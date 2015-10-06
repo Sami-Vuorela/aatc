@@ -33,7 +33,7 @@
 #define _includedh_aatc_config
 
 
-//#include "cm/core/thirdparty/tp_angelscript.hpp"
+
 #include <stdio.h>
 #include <stdint.h>
 #include "angelscript.h"

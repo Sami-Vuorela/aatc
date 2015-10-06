@@ -242,3 +242,6 @@ AS_DEBUG/
 
 #whatever this is
 *.exp
+
+.exe
+.lib

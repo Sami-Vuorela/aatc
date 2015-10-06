@@ -1,5 +1,5 @@
 /*! \page page_manual_requirements Requirements
-<p>Angelscript version 2.30.0</p>
+<p>Angelscript version >= 2.30.0</p>
 A c++ compiler that supports these c++11 features
 -# std::conditional
 -# header <atomic>

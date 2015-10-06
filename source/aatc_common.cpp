@@ -71,8 +71,7 @@ aatc_hash_type aatc_functor_hash<aatc_type_string>::operator()(const aatc_type_s
 
 
 aatc_engine_level_storage::aatc_engine_level_storage(asIScriptEngine* _engine) :
-	engine(_engine),
-	objtype_tempcont_list(NULL)
+	engine(_engine)
 {}
 aatc_engine_level_storage::~aatc_engine_level_storage(){}
 
@@ -252,10 +251,10 @@ void aatc_refcounted::refcount_Release(){
 	}
 }
 
-aatc_refcounted_GC::aatc_refcounted_GC(){
-	refCount = 1;
-	gcFlag = false;
-}
+aatc_refcounted_GC::aatc_refcounted_GC():
+	refCount(1),
+	gcFlag(0)
+{}
 aatc_refcounted_GC::~aatc_refcounted_GC(){}
 
 void aatc_refcounted_GC::refcount_Add(){
