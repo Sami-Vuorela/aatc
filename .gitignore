@@ -245,3 +245,5 @@ AS_DEBUG/
 
 .exe
 .lib
+*.lib
+*.exe
