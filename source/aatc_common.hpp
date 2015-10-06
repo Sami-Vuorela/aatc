@@ -31,8 +31,6 @@
 #ifndef _includedh_aatc_common
 #define _includedh_aatc_common
 
-//#include "cm/core/thirdparty/tp_angelscript.hpp"
-
 #include "aatc.hpp"
 
 
@@ -228,8 +226,6 @@ public:
 
 	std::vector<asIScriptContext*> context_cache;
 	aatc_ait_fastlock context_cache_lock;
-	
-	asIObjectType* objtype_tempcont_list;
 
 #if aatc_CONFIG_USE_ASADDON_SERIALIZER
 	std::vector<serializer_helper> serializer_tempspec_helpers[aatc_CONTAINERTYPE_COUNT];
@@ -280,7 +276,7 @@ template<class T> void aatc_reghelp_generic_destructor(void *memory){
 /*!\brief Basetype for script refcounted c++ objects to derive from.*/
 class aatc_refcounted{
 public:
-	int refcount;
+	mutable int refcount;
 
 	aatc_refcounted();
 	virtual ~aatc_refcounted();
@@ -292,11 +288,10 @@ public:
 /*!\brief Basetype for script refcounted and GCd c++ objects to derive from.*/
 class aatc_refcounted_GC{
 public:
-	asIScriptEngine* gc_engine;
 	mutable int refCount;
 	mutable bool gcFlag;
 
-	aatc_refcounted_GC(asIScriptEngine* engine);
+	aatc_refcounted_GC();
 	virtual ~aatc_refcounted_GC();
 
 	void refcount_Add();
@@ -312,7 +307,9 @@ public:
 //refcounted and gc basetype
 
 
-bool aatc_templatecallback_container(asIObjectType *ot, bool &dontGarbageCollect);
+bool aatc_templatecallback_1tp(asIObjectType *ot, bool &dontGarbageCollect);
+bool aatc_templatecallback_map(asIObjectType *ot, bool &dontGarbageCollect);
+bool aatc_templatecallback_typeid(asIObjectType *ot, int typeId, bool &dontGarbageCollect);
 
 //call before engine destruction, as engine is supposed to automatically call this
 //because of SetEngineUserDataCleanupCallback(this function),

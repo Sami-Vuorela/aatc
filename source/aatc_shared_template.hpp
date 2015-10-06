@@ -123,7 +123,7 @@ public:
 
 	aatc_container_shared_1tp_template(asIScriptEngine* _engine, asIObjectType* _objtype) :
 		bcw(_engine, this),
-		aatc_refcounted_GC(_engine),
+		aatc_refcounted_GC(),
 		objtype_container(_objtype),
 		directcomp_forced(0)
 	{
@@ -138,9 +138,6 @@ public:
 
 		typeflags_container = objtype_container->GetFlags();
 		typeflags_content = objtype_content->GetFlags();
-
-		objtype_container->AddRef();
-		objtype_content->AddRef();
 
 		//problem_nofunc_eq_or_cmp = 0;
 		//problem_nofunc_cmp = 0;
@@ -190,9 +187,6 @@ public:
 	}
 	virtual ~aatc_container_shared_1tp_template(){
 		Clear();
-
-		objtype_container->Release();
-		objtype_content->Release();
 	}
 	void operator=(const aatc_container_shared_1tp_template& other){
 		aatc_errorcheck_container_iterator_safety_version_Increment();
@@ -1386,13 +1380,13 @@ void aatc_container_shared_1tp_template_Register(asIScriptEngine* engine, const 
 
 	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_ADDREF, "void f()", asMETHOD(T_container, refcount_Add), asCALL_THISCALL); assert(r >= 0);
 	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_RELEASE, "void f()", asMETHOD(T_container, refcount_Release), asCALL_THISCALL); assert(r >= 0);
-	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_SETGCFLAG, "void f()", asMETHOD(aatc_refcounted_GC, SetGCFlag), asCALL_THISCALL); assert(r >= 0);
-	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_GETGCFLAG, "bool f()", asMETHOD(aatc_refcounted_GC, GetGCFlag), asCALL_THISCALL); assert(r >= 0);
-	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_GETREFCOUNT, "int f()", asMETHOD(aatc_refcounted_GC, GetRefCount), asCALL_THISCALL); assert(r >= 0);
+	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_SETGCFLAG, "void f()", asMETHODPR(T_container, SetGCFlag, (), void), asCALL_THISCALL); assert(r >= 0);
+	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_GETGCFLAG, "bool f()", asMETHODPR(T_container, GetGCFlag, (), bool), asCALL_THISCALL); assert(r >= 0);
+	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_GETREFCOUNT, "int f()", asMETHODPR(T_container, GetRefCount, (), int), asCALL_THISCALL); assert(r >= 0);
 	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_ENUMREFS, "void f(int&in)", asMETHODPR(T_container, EnumReferences, (asIScriptEngine*), void), asCALL_THISCALL); assert(r >= 0);
 	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_RELEASEREFS, "void f(int&in)", asMETHODPR(T_container, ReleaseAllReferences, (asIScriptEngine*), void), asCALL_THISCALL); assert(r >= 0);
 
-	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_TEMPLATE_CALLBACK, "bool f(int&in, bool&out)", asFUNCTION(aatc_templatecallback_container), asCALL_CDECL); assert(r >= 0);
+	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_TEMPLATE_CALLBACK, "bool f(int&in, bool&out)", asFUNCTION(aatc_templatecallback_1tp), asCALL_CDECL); assert(r >= 0);
 
 	sprintf_s(textbuf, 1000, "void %s(bool)", aatc_name_script_container_method_set_directcomp);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, SetDirectcomp), asCALL_THISCALL); assert(r >= 0);

@@ -1,6 +1,6 @@
 If there is no project file available for your platform, you can follow these steps to make a project that builds the test:
 
-1. Link with the angelscript library (required version = 2.29.1)
+1. Link with the angelscript library (required version = 2.30.0)
 2. add these include directories:
      <your_angelscript_install_dir>/angelscript/include
      <your_angelscript_install_dir>/add_on

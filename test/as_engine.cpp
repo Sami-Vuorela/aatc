@@ -42,7 +42,7 @@ asIScriptContext* aet_engine_contextcallback_request(asIScriptEngine* engine, vo
 	return cc;
 }
 void aet_engine_contextcallback_return(asIScriptEngine* engine, asIScriptContext* context, void* userdata){
-
+	context->Release();
 }
 
 

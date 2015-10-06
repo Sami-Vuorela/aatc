@@ -31,8 +31,6 @@ samivuorela@gmail.com
 
 #include "aatc_common.hpp"
 
-//#include "cm/core/print.hpp"
-
 
 #if !aatc_CONFIG_USE_BOOST
 	aatc_std_Spinlock::aatc_std_Spinlock() : state(1) {}
@@ -73,8 +71,7 @@ aatc_hash_type aatc_functor_hash<aatc_type_string>::operator()(const aatc_type_s
 
 
 aatc_engine_level_storage::aatc_engine_level_storage(asIScriptEngine* _engine) :
-	engine(_engine),
-	objtype_tempcont_list(NULL)
+	engine(_engine)
 {}
 aatc_engine_level_storage::~aatc_engine_level_storage(){}
 
@@ -245,19 +242,19 @@ aatc_refcounted::aatc_refcounted() :
 	refcount(1)
 {}
 aatc_refcounted::~aatc_refcounted(){}
-void aatc_refcounted::refcount_Add(){ refcount++; }
+void aatc_refcounted::refcount_Add(){
+	asAtomicInc(refcount);
+}
 void aatc_refcounted::refcount_Release(){
-	refcount--;
-	if (refcount == 0){
+	if (asAtomicDec(refcount) == 0){
 		delete this;
 	}
 }
 
-aatc_refcounted_GC::aatc_refcounted_GC(asIScriptEngine *engine){
-	refCount = 1;
-	gcFlag = false;
-	this->gc_engine = engine;
-}
+aatc_refcounted_GC::aatc_refcounted_GC():
+	refCount(1),
+	gcFlag(0)
+{}
 aatc_refcounted_GC::~aatc_refcounted_GC(){}
 
 void aatc_refcounted_GC::refcount_Add(){
@@ -287,9 +284,23 @@ void aatc_engine_cleanup(asIScriptEngine* engine){
 	delete ss;
 }
 
-bool aatc_templatecallback_container(asIObjectType *ot, bool &dontGarbageCollect){
-	int typeId = ot->GetSubTypeId();
+bool aatc_templatecallback_1tp(asIObjectType *ot, bool &dontGarbageCollect){
+	return aatc_templatecallback_typeid(ot, ot->GetSubTypeId(), dontGarbageCollect);
+}
+bool aatc_templatecallback_map(asIObjectType *ot, bool &dontGarbageCollect){
+	int typeId_key = ot->GetSubTypeId(0);
+	int typeId_value = ot->GetSubTypeId(1);
 
+	bool dont_gc_key = 0;
+	bool dont_gc_value = 0;
+	bool result_key = aatc_templatecallback_typeid(ot, typeId_key, dont_gc_key);
+	bool result_value = aatc_templatecallback_typeid(ot, typeId_value, dont_gc_value);
+
+	dontGarbageCollect = dont_gc_key && dont_gc_value;
+
+	return result_key && result_value;
+}
+bool aatc_templatecallback_typeid(asIObjectType *ot, int typeId, bool &dontGarbageCollect){
 	if ((typeId & asTYPEID_MASK_OBJECT) && !(typeId & asTYPEID_OBJHANDLE)){
 		asIObjectType *subtype = ot->GetEngine()->GetObjectTypeById(typeId);
 		asDWORD flags = subtype->GetFlags();
