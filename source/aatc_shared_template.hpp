@@ -948,6 +948,9 @@ public:
 
 			if(host->empty()){
 				cont = 0;
+
+				it = host->end();
+				it_end = host->end();
 			} else{
 				handlemode = host->handlemode;
 

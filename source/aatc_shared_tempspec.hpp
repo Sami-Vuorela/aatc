@@ -399,6 +399,9 @@ public:
 			firstt = 1;
 			if(host->empty()){
 				cont = 0;
+
+				it = host->end();
+				it_end = host->end();
 			} else{
 				it = host->begin();
 				it_end = host->end();

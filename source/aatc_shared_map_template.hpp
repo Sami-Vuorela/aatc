@@ -794,6 +794,9 @@ public:
 
 			if(host->empty()){
 				cont = 0;
+
+				it = host->end();
+				it_end = host->end();
 			} else{
 				//handlemode_key = (host->datahandlingid_key == aatc_DATAHANDLINGTYPE::HANDLE);
 				//handlemode_value = (host->datahandlingid_value == aatc_DATAHANDLINGTYPE::HANDLE);
