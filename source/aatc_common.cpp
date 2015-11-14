@@ -855,8 +855,8 @@ aatc_iterator_base::aatc_iterator_base():
 	firstt(1)
 {}
 aatc_iterator_base::aatc_iterator_base(const aatc_iterator_base& other) :
-	firstt(1),
-	cont(1)
+	firstt(other.firstt),
+	cont(other.cont)
 {}
 
 

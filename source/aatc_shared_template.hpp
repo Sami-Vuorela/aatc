@@ -918,6 +918,7 @@ public:
 			host(other.host),
 			it(other.it),
 			it_end(other.it_end),
+
 			handlemode(other.handlemode)
 		{
 			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
@@ -930,8 +931,10 @@ public:
 			host = other.host;
 			it = other.it;
 			it_end = other.it_end;
+
 			firstt = other.firstt;
 			cont = other.cont;
+
 			handlemode = other.handlemode;
 
 			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
@@ -1082,7 +1085,10 @@ public:
 		static void static_constructor_default(asIObjectType* objtype, void *memory){
 			new(memory)aatc_iterator();
 		}
-		static void static_constructor(asIObjectType* objtype, void *ref, aatc_type_astypeid typeId, void *memory){
+		static void static_constructor_copy(asIObjectType* objtype, aatc_iterator* other, void *memory) {
+			new(memory)aatc_iterator(*other);
+		}
+		static void static_constructor_parentcontainer(asIObjectType* objtype, void *ref, aatc_type_astypeid typeId, void *memory){
 			new(memory)aatc_iterator(ref, typeId);
 		}
 		//static void static_constructor_copy(asIObjectType* objtype, const aatc_iterator& other, void *memory){
@@ -1126,8 +1132,11 @@ public:
 
 			//the default constructor must be registered, but you should never use it in script
 			//r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in)", asFunctionPtr(aatc_reghelp_constructor_template_default<aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+
 			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in)", asFunctionPtr(static_constructor_default), asCALL_CDECL_OBJLAST); assert(r >= 0);
-			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in,?&in)", asFunctionPtr(static_constructor), asCALL_CDECL_OBJLAST); assert(r >= 0);
+			sprintf_s(textbuf, 1000, "void f(int&in,const %s &in)", n_iterator_T);
+			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(static_constructor_copy), asCALL_CDECL_OBJLAST); assert(r >= 0);
+			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in,?&in)", asFunctionPtr(static_constructor_parentcontainer), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
 			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_DESTRUCT, "void f()", asFUNCTION(aatc_reghelp_generic_destructor<aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 

@@ -754,6 +754,7 @@ public:
 			host(other.host),
 			it(other.it),
 			it_end(other.it_end),
+
 			datahandlingid_key(other.datahandlingid_key),
 			datahandlingid_value(other.datahandlingid_value),
 			primitiveid_key(other.primitiveid_key),
@@ -769,8 +770,10 @@ public:
 			host = other.host;
 			it = other.it;
 			it_end = other.it_end;
+
 			firstt = other.firstt;
 			cont = other.cont;
+
 			datahandlingid_key = other.datahandlingid_key;
 			datahandlingid_value = other.datahandlingid_value;
 			primitiveid_key = other.primitiveid_key;
@@ -783,7 +786,10 @@ public:
 			return *this;
 		}
 
-		static void static_constructor(asIObjectType* objtype_container, void *ref, aatc_type_astypeid typeId, void *memory){
+		static void static_constructor_copy(asIObjectType* objtype_container, aatc_iterator* other, void *memory) {
+			new(memory)aatc_iterator(*other);
+		}
+		static void static_constructor_parentcontainer(asIObjectType* objtype_container, void *ref, aatc_type_astypeid typeId, void *memory){
 			new(memory)aatc_iterator(ref, typeId);
 		}
 
@@ -1045,7 +1051,9 @@ public:
 
 			//the default constructor must be registered, but you should never use it in script
 			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in)", asFunctionPtr(aatc_reghelp_constructor_template_default<aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
-			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in,?&in)", asFunctionPtr(static_constructor), asCALL_CDECL_OBJLAST); assert(r >= 0);
+			sprintf_s(textbuf, 1000, "void f(int&in,const %s &in)", n_iterator_T); 
+			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(static_constructor_copy), asCALL_CDECL_OBJLAST); assert(r >= 0);
+			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in,?&in)", asFunctionPtr(static_constructor_parentcontainer), asCALL_CDECL_OBJLAST); assert(r >= 0);
 			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_DESTRUCT, "void f()", asFUNCTION(aatc_reghelp_generic_destructor<aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
 			sprintf_s(textbuf, 1000, "const T_key& %s()", aatc_name_script_iterator_access_function_key);
