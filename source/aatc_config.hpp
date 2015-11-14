@@ -36,16 +36,14 @@
 
 #include <stdio.h>
 #include <stdint.h>
+#include <assert.h>
+
+
 #include "angelscript.h"
 
 
 
 
-/*
-	BOOST POWERR!!
-	Will use boost containers instead of std containers when available.
-*/
-#define aatc_CONFIG_USE_BOOST 0
 
 //enable this if you're using the official as addon: serializer
 #define aatc_CONFIG_USE_ASADDON_SERIALIZER 0
@@ -96,7 +94,7 @@
 /*
 	Random magical optimization numbers ahead.
 */
-//this number was used by boost, so it must be legit
+//this number was used by boost, so it must be legit ... right?
 #define aatc_CONFIG_DEFAULT_CONTAINER_UNORDERED_SET_DEFAULTBUCKETCOUNT 11
 #define aatc_CONFIG_DEFAULT_CONTAINER_UNORDERED_MAP_DEFAULTBUCKETCOUNT 11
 #define aatc_engine_userdata_id 8899
@@ -226,56 +224,31 @@ typedef aatc_type_int32 aatc_type_astypeid;
 #define aatc_include_primitive_native_tempspec_STRING	1
 #define aatc_include_primitive_native_tempspec_REF		1
 
-#if aatc_CONFIG_USE_BOOST
-	#include <vector>
-	#include <list>
-	#include <set>
-	#include <boost/unordered_set.hpp>
-	#include <map>
-	#include <boost/unordered_map.hpp>
-	#include <boost/thread/thread.hpp>
-	#include <boost/thread/mutex.hpp>
-#else
-	#include <vector>
-	#include <list>
-	#include <set>
-	#include <unordered_set>
-	#include <map>
-	#include <unordered_map>
-	#include <mutex>
-	#include <algorithm>
-	#include <atomic>
-#endif
+#include <vector>
+#include <list>
+#include <set>
+#include <unordered_set>
+#include <map>
+#include <unordered_map>
+#include <mutex>
+#include <algorithm>
+#include <atomic>
 
 /*
 	Actual container classes to use.
 	ait  = actual implementation type
 	acit = actual container implementation type
 */
-
-#if aatc_CONFIG_USE_BOOST
-	#define aatc_ait_storage_map boost::unordered_map
-	#define aatc_ait_storage_pair std::pair
-	#define aatc_ait_fastlock boost::detail::spinlock
-	#define aatc_acit_vector std::vector
-	#define aatc_acit_list std::list
-	#define aatc_acit_set std::set
-	#define aatc_acit_unordered_set boost::unordered_set
-	#define aatc_acit_map std::map
-	#define aatc_acit_unordered_map boost::unordered_map
-	#define aatc_acit_flatset std::set//boost::flatset didnt work at the time, might work for you just fine
-#else
-	#define aatc_ait_storage_map std::unordered_map
-	#define aatc_ait_storage_pair std::pair
-	#define aatc_ait_fastlock aatc_std_Spinlock
-	#define aatc_acit_vector std::vector
-	#define aatc_acit_list std::list
-	#define aatc_acit_set std::set
-	#define aatc_acit_unordered_set std::unordered_set
-	#define aatc_acit_map std::map
-	#define aatc_acit_unordered_map std::unordered_map
-	#define aatc_acit_flatset std::set
-#endif
+#define aatc_ait_storage_map std::unordered_map
+#define aatc_ait_storage_pair std::pair
+#define aatc_ait_fastlock aatc_std_Spinlock
+#define aatc_acit_vector std::vector
+#define aatc_acit_list std::list
+#define aatc_acit_set std::set
+#define aatc_acit_unordered_set std::unordered_set
+#define aatc_acit_map std::map
+#define aatc_acit_unordered_map std::unordered_map
+#define aatc_acit_flatset std::set
 
 
 

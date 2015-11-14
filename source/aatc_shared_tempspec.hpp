@@ -556,7 +556,7 @@ public:
 
 			r = engine->RegisterObjectType(n_iterator, sizeof(aatc_iterator), asOBJ_VALUE | asGetTypeTraits<aatc_iterator>()); assert(r >= 0);
 
-			sprintf_s(textbuf, 1000, "void f()", n_containerTcontentT);
+			sprintf_s(textbuf, 1000, "void f()");
 			r = engine->RegisterObjectBehaviour(n_iterator, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor<aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 			sprintf_s(textbuf, 1000, "void f(%s@)", n_containerTcontentT);
 			r = engine->RegisterObjectBehaviour(n_iterator, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(aatc_reghelp_constructor_1_param<aatc_iterator, aatc_container_shared_1tp_tempspec*>), asCALL_CDECL_OBJLAST); assert(r >= 0);

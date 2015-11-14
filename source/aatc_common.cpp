@@ -32,11 +32,9 @@ samivuorela@gmail.com
 #include "aatc_common.hpp"
 
 
-#if !aatc_CONFIG_USE_BOOST
-	aatc_std_Spinlock::aatc_std_Spinlock() : state(1) {}
-	void aatc_std_Spinlock::lock(){while (state.exchange(0, std::memory_order_acquire) == 0);}
-	void aatc_std_Spinlock::unlock(){state.store(1, std::memory_order_release);}
-#endif
+aatc_std_Spinlock::aatc_std_Spinlock() : state(1) {}
+void aatc_std_Spinlock::lock(){while (state.exchange(0, std::memory_order_acquire) == 0);}
+void aatc_std_Spinlock::unlock(){state.store(1, std::memory_order_release);}
 
 
 

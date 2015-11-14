@@ -880,9 +880,9 @@ public:
 	template<> static void Register_func_erase_generic_value<aatc_Y>(asIScriptEngine* engine, int& r, char* textbuf, const char* n_container, const char* n_container_T){
 		//sprintf_s(textbuf, 1000, "void %s(const T &in value,bool all = false)", aatc_name_script_container_method_erase_value, aatc_name_script_sizetype);
 		//r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(aatc_container_shared_1tp_template, Erase_generic_value<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
-		sprintf_s(textbuf, 1000, "void %s(const T &in value,bool all)", aatc_name_script_container_method_erase_value, aatc_name_script_sizetype);
+		sprintf_s(textbuf, 1000, "void %s(const T &in value,bool all)", aatc_name_script_container_method_erase_value);
 		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHODPR(aatc_container_shared_1tp_template, Erase_generic_value<aatc_Y>, (void*, bool), void), asCALL_THISCALL); assert(r >= 0);
-		sprintf_s(textbuf, 1000, "void %s(const T &in value)", aatc_name_script_container_method_erase_value, aatc_name_script_sizetype);
+		sprintf_s(textbuf, 1000, "void %s(const T &in value)", aatc_name_script_container_method_erase_value);
 		r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHODPR(aatc_container_shared_1tp_template, Erase_generic_value<aatc_Y>, (void*), void), asCALL_THISCALL); assert(r >= 0);
 	}
 

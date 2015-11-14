@@ -135,7 +135,6 @@ int aatc_container_list_template::Remove(void* target){
 
 template<> void aatc_register_container<aatc_CONTAINERTYPE::LIST>(asIScriptEngine* engine, aatc_Initializer* initializer){
 	int r = 0;
-	char textbuf[1000];
 
 	char n_container_T[1000];
 	char n_iterator[1000];

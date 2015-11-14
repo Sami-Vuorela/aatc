@@ -35,17 +35,15 @@
 
 
 
-#if !aatc_CONFIG_USE_BOOST
-	/*!\brief Minimal spinlock class*/
-	class aatc_std_Spinlock{
-	public:
-		//std::atomic<int> m_state = ATOMIC_VAR_INIT(1);//this thing useful?
-		std::atomic<int> state;
-		aatc_std_Spinlock();
-		void lock();
-		void unlock();
-	};
-#endif
+/*!\brief Minimal spinlock class*/
+class aatc_std_Spinlock{
+public:
+	//std::atomic<int> m_state = ATOMIC_VAR_INIT(1);//this thing useful?
+	std::atomic<int> state;
+	aatc_std_Spinlock();
+	void lock();
+	void unlock();
+};
 
 
 
