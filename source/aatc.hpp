@@ -46,7 +46,7 @@ public:
 	/*!
 		This array will default to all false.
 	*/
-	bool include_container[aatc_CONTAINERTYPE::aatc_CONTAINERTYPE_COUNT];
+	bool include_container[aatc_CONTAINERTYPE::_COUNT];
 
 	aatc_Initializer(asIScriptEngine* engine);
 

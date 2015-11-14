@@ -103,8 +103,8 @@ public:
 	std::list<Container_1tp> containers_1tp;
 	std::list<Container_map> containers_map;
 
-	store_handle_in_container_1tp funcs_store_handle_1tp[aatc_CONTAINERTYPE_COUNT];
-	store_handle_in_container_map funcs_store_handle_map[aatc_CONTAINERTYPE_COUNT];
+	store_handle_in_container_1tp funcs_store_handle_1tp[aatc_CONTAINERTYPE::_COUNT];
+	store_handle_in_container_map funcs_store_handle_map[aatc_CONTAINERTYPE::_COUNT];
 
 
 	aatc_serializer_specific_storage(asIScriptEngine* engine, CSerializer* serializer);

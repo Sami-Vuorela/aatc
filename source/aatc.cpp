@@ -41,13 +41,13 @@ BEGIN_AS_NAMESPACE
 aatc_Initializer::aatc_Initializer(asIScriptEngine* _engine):
 	engine(_engine)
 {
-	for (int i = 0; i < aatc_CONTAINERTYPE::aatc_CONTAINERTYPE_COUNT; i++){
+	for (int i = 0; i < aatc_CONTAINERTYPE::_COUNT; i++){
 		include_container[i] = 0;
 	}
 }
 void aatc_RegisterAllContainers(asIScriptEngine* engine){
 	aatc_Initializer aatc(engine);
-	for(int i = 0; i < aatc_CONTAINERTYPE_COUNT; i++){
+	for(int i = 0; i < aatc_CONTAINERTYPE::_COUNT; i++){
 		aatc.include_container[i] = 1;
 	}
 	aatc.Go();

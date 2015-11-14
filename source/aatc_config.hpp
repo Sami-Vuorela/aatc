@@ -261,15 +261,12 @@ typedef aatc_type_int32 aatc_type_astypeid;
 enum aatc_CONTAINERTYPE{
 	VECTOR,
 	LIST,
-	MAP,
-	UNORDERED_MAP,
 	SET,
 	UNORDERED_SET,
-	FLATSET,
-	QUEUE,
-	DEQUEUE,
-	STACK,
-	aatc_CONTAINERTYPE_COUNT
+	MAP,
+	UNORDERED_MAP,
+
+	_COUNT
 };
 
 

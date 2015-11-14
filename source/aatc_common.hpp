@@ -226,7 +226,7 @@ public:
 	aatc_ait_fastlock context_cache_lock;
 
 #if aatc_CONFIG_USE_ASADDON_SERIALIZER
-	std::vector<serializer_helper> serializer_tempspec_helpers[aatc_CONTAINERTYPE_COUNT];
+	std::vector<serializer_helper> serializer_tempspec_helpers[aatc_CONTAINERTYPE::_COUNT];
 #endif
 
 
