@@ -55,13 +55,9 @@ namespace aatc {
 
 			vector(asIObjectType* objtype);
 			vector(const vector& other);
-			~vector();
-
-			static vector* Factory(asIObjectType* objtype);
-			static vector* Factory_copy(asIObjectType* objtype, const vector& other);
 
 			vector& operator=(const vector& other);
-			vector& Swap(vector& other);
+			vector& swap(vector& other);
 		};
 
 

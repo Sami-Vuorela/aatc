@@ -275,6 +275,26 @@ namespace aatc {
 		void aect_iterator_template_generic_constructor_dummydefault(asIObjectType* objtype, void *memory);
 
 
+		class RegistrationState {
+		public:
+			const static int bufsize = 10000;
+
+			asIScriptEngine* engine;
+
+			char n_container[bufsize];
+			char n_container_T[bufsize];
+			char n_container_class_T[bufsize];
+
+			char n_iterator[bufsize];
+			char n_iterator_TT[bufsize];
+
+			char textbuf[bufsize];
+			int error;
+
+			RegistrationState(asIScriptEngine* engine);
+		};
+
+
 
 
 
@@ -398,13 +418,13 @@ namespace aatc {
 			return;																										\
 		}
 		#define aatc_errorcheck_container_access_empty_retnull(n_container,n_content,n_operation)						\
-		if(T_container::empty()){																						\
-			aatc_errorprint_container_access_empty(n_container, n_content, n_operation);								\
+		if(t->container.empty()){																						\
+			aatc::common::aatc_errorprint_container_access_empty(n_container, n_content, n_operation);								\
 			return NULL;																								\
 		}
 		#define aatc_errorcheck_container_access_empty_retdefault(n_container,n_content,n_operation)					\
-		if(T_container::empty()){																						\
-			aatc_errorprint_container_access_empty(n_container, n_content, n_operation);								\
+		if(t->container.empty()){																						\
+			aatc::common::aatc_errorprint_container_access_empty(n_container, n_content, n_operation);								\
 			return defaultvalue;																						\
 		}
 		#define aatc_errorcheck_container_access_bounds_retdefault(index,size,n_container,n_content,n_operation)		\

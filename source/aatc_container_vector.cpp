@@ -46,31 +46,28 @@ namespace aatc {
 		{
 			(*this) = other;
 		}
-		vector::~vector() {
 
-		}
-
-		vector* vector::Factory(asIObjectType* _objtype) {
-			return new vector(_objtype);
-		}
-		vector* vector::Factory_copy(asIObjectType* _objtype, const vector& other){
-			return new vector(other);
-		}
-
-		vector& vector::operator=(const vector& other) {
-
-			return *this;
-		}
-		vector& vector::Swap(vector& other) {
-			
+		vector& vector::operator=(const vector& other) { containerbase::operator=(other); return *this; }
+		vector& vector::swap(vector& other) {
+			aatc::container::shared::templated::method::swap(this, other);
 			return *this;
 		}
 
+		void debug_Register_Vector(asIScriptEngine* engine, aatc_Initializer* initializer) {
+			aatc::common::RegistrationState rs(engine);
+
+			aatc::container::shared::templated::register_containerbase<vector>(rs, "vector");
 
 
-//template<> void aatc_register_container<aatc_CONTAINERTYPE::VECTOR>(asIScriptEngine* engine, aatc_Initializer* initializer) {
-//	aatc_container_shared_1tp_template_Register<aatc_container_vector_template, aatc_container_traits_vector>(engine, aatc_name_script_container_vector);
-//}
+
+			aatc::container::shared::templated::register_method::swap<vector>(rs);
+
+			aatc::container::shared::templated::register_method::push_back<vector>(rs);
+			aatc::container::shared::templated::register_method::back<vector>(rs);
+		}
+
+
+
 //
 //template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::VECTOR>(aatc_template_specific_storage* tss) {
 //	aatc_container_operations_bitmask_type mask = 0;
@@ -90,4 +87,5 @@ namespace aatc {
 
 	};//namespace container
 };//namespace aatc
+
 END_AS_NAMESPACE

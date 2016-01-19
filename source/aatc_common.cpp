@@ -602,6 +602,15 @@ namespace aatc {
 
 
 
+
+
+		RegistrationState::RegistrationState(asIScriptEngine* engine):
+			engine(engine),
+			error(0)
+		{}
+
+
+
 	};//namespace common
 };//namespace aatc
 END_AS_NAMESPACE
