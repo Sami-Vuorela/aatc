@@ -91,6 +91,8 @@ namespace aatc {
 
 					typename bcw container;
 
+					aatc::common::engine_level_storage* els;
+
 					asIObjectType* objtype_container;
 					asIObjectType* objtype_content;
 					aatc_type_astypeid astypeid_container;
@@ -100,12 +102,10 @@ namespace aatc {
 
 					bool handlemode_needref;
 
-					aatc::common::engine_level_storage* els;
-
 					aatc::common::container_operations_bitmask_type missing_functions;
 
 					bool directcomp_forced;
-
+					
 					Containerbase(asIScriptEngine* _engine, asIObjectType* _objtype) :
 						aatc::container::shared::container_basicbase(_engine),
 						container(_engine, this),
@@ -167,6 +167,59 @@ namespace aatc {
 						#endif
 
 						engine->NotifyGarbageCollectorOfNewObject(this, objtype_container);
+					}
+
+					void SetDirectcomp(bool ss) {
+						if (directcomp_forced) { return; }
+						handlemode_directcomp = ss;
+					}
+
+					//handle input is void* that points at handle which is a void*
+					//handle output is void* that points at handle which is a void*
+					void StoreHandle(void** target, void* ptr_to_handle) {
+						*target = *(void**)ptr_to_handle;
+						engine->AddRefScriptObject(*target, objtype_content);
+					}
+					void* StoreHandle2(void* ptr_to_handle) {
+						void* result = *(void**)ptr_to_handle;
+						engine->AddRefScriptObject(result, objtype_content);
+						return result;
+					}
+					void ReleaseHandle(void* handle) {
+						engine->ReleaseScriptObject(handle, objtype_content);
+					}
+
+					bool empty() {return container.empty();}
+					aatc_type_sizetype Size() { return (aatc_type_sizetype)(container.size()); }
+
+					void Clear() {
+						safety_iteratorversion_Increment();
+
+						iteratortype it = container.begin();
+						iteratortype itend = container.end();
+						if (handlemode) {
+							for (; it != itend; it++) {
+								ReleaseHandle(*it);
+							}
+						} else {
+							for (; it != itend; it++) {
+								engine->ReleaseScriptObject(*it, objtype_content);
+							}
+						}
+						container.clear();
+					}
+
+					void EnumReferences(asIScriptEngine* engine) {
+						if (astypeid_content & asTYPEID_MASK_OBJECT) {//dont do this for primitives
+							iteratortype it = container.begin();
+							iteratortype itend = container.end();
+							for (; it != itend; it++) {
+								engine->GCEnumCallback(*it);
+							}
+						}
+					}
+					void ReleaseAllReferences(asIScriptEngine* engine) {
+						Clear();
 					}
 
 
@@ -242,13 +295,13 @@ namespace aatc {
 							if (host->empty()) {
 								cont = 0;
 
-								it = host->end();
-								it_end = host->end();
+								it = host->container.end();
+								it_end = host->container.end();
 							} else {
 								handlemode = host->handlemode;
 
-								it = host->begin();
-								it_end = host->end();
+								it = host->container.begin();
+								it_end = host->container.end();
 								cont = 1;
 							}
 						}
@@ -256,7 +309,7 @@ namespace aatc {
 						//combine end check and continuation into one monster
 						bool Next() {
 							if (!IsValid()) {
-								aatc_errorprint_iterator_container_modified();
+								aatc::common::aatc_errorprint_iterator_container_modified();
 								return 0;
 							}
 
@@ -282,7 +335,7 @@ namespace aatc {
 
 						template<typename T_dummy> const void* Current_get() {
 							if (!IsValid()) {
-								aatc_errorprint_iterator_container_modified();
+								aatc::common::aatc_errorprint_iterator_container_modified();
 								return nullptr;
 							}
 
@@ -294,7 +347,7 @@ namespace aatc {
 						}
 						template<typename T_dummy> void Current_set(void* value) {
 							if (!IsValid()) {
-								aatc_errorprint_iterator_container_modified();
+								aatc::common::aatc_errorprint_iterator_container_modified();
 								return;
 							}
 
@@ -315,7 +368,7 @@ namespace aatc {
 
 						template<typename T_dummy> void* Current() {
 							if (!IsValid()) {
-								aatc_errorprint_iterator_container_modified();
+								aatc::common::aatc_errorprint_iterator_container_modified();
 								return nullptr;
 							}
 
@@ -328,7 +381,7 @@ namespace aatc {
 
 						template<typename T_dummy> const void* Current_const() {
 							if (!IsValid()) {
-								aatc_errorprint_iterator_container_modified();
+								aatc::common::aatc_errorprint_iterator_container_modified();
 								return nullptr;
 							}
 
@@ -367,7 +420,7 @@ namespace aatc {
 						}
 						bool IsValid() {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
-								return iterator_safety_version == host->iterator_safety_version;
+								return safety_iteratorversion == host->safety_iteratorversion;
 							#else
 								return 1;
 							#endif
@@ -381,20 +434,20 @@ namespace aatc {
 						template<> static void Register_func_current<tag::iterator_access_is_mutable>(asIScriptEngine* engine, int& r, const char* n_iterator_T) {
 							char textbuf[1000];
 							sprintf_s(textbuf, 1000, "T& %s()", aatc_name_script_iterator_access_function);
-							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current), asCALL_THISCALL); assert(r >= 0);
+							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(Iterator, Current<int>), asCALL_THISCALL); assert(r >= 0);
 
 							sprintf_s(textbuf, 1000, "T& get_%s()", aatc_name_script_iterator_access_property);
-							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current_get), asCALL_THISCALL); assert(r >= 0);
+							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(Iterator, Current_get<int>), asCALL_THISCALL); assert(r >= 0);
 							sprintf_s(textbuf, 1000, "void set_%s(const T &in)", aatc_name_script_iterator_access_property);
-							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current_set), asCALL_THISCALL); assert(r >= 0);
+							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(Iterator, Current_set<int>), asCALL_THISCALL); assert(r >= 0);
 						}
 						template<> static void Register_func_current<tag::iterator_access_is_const>(asIScriptEngine* engine, int& r, const char* n_iterator_T) {
 							char textbuf[1000];
 							sprintf_s(textbuf, 1000, "const T& %s()", aatc_name_script_iterator_access_function);
-							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current_const), asCALL_THISCALL); assert(r >= 0);
+							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(Iterator, Current_const<int>), asCALL_THISCALL); assert(r >= 0);
 
 							sprintf_s(textbuf, 1000, "const T& get_%s()", aatc_name_script_iterator_access_property);
-							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current_get), asCALL_THISCALL); assert(r >= 0);
+							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(Iterator, Current_get<int>), asCALL_THISCALL); assert(r >= 0);
 						}
 
 
@@ -409,32 +462,32 @@ namespace aatc {
 							char n_iterator_class_T[1000];
 							sprintf_s(n_iterator_class_T, 1000, "%s<class T>", n_iterator);
 
-							r = engine->RegisterObjectType(n_iterator_class_T, sizeof(aatc_iterator), asOBJ_VALUE | asOBJ_TEMPLATE | asGetTypeTraits<aatc_iterator>()); assert(r >= 0);
+							r = engine->RegisterObjectType(n_iterator_class_T, sizeof(Iterator), asOBJ_VALUE | asOBJ_TEMPLATE | asGetTypeTraits<Iterator>()); assert(r >= 0);
 
 							r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in)", asFunctionPtr(static_constructor_default), asCALL_CDECL_OBJLAST); assert(r >= 0);
 							sprintf_s(textbuf, 1000, "void f(int&in,const %s &in)", n_iterator_T);
 							r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, textbuf, asFunctionPtr(static_constructor_copy), asCALL_CDECL_OBJLAST); assert(r >= 0);
 							r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in,?&in)", asFunctionPtr(static_constructor_parentcontainer), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
-							r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_DESTRUCT, "void f()", asFUNCTION(aatc_reghelp_generic_destructor<aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
+							r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_DESTRUCT, "void f()", asFUNCTION(aatc::common::reghelp::generic_destructor<Iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
-							aatc_iterator::Register_func_current<T_container_tags::iterator_access>(engine, r, n_iterator_T);
+							Iterator::Register_func_current<T_container_tags::iterator_access>(engine, r, n_iterator_T);
 
-							r = engine->RegisterObjectMethod(n_iterator_T, "bool next()", asMETHOD(aatc_iterator, Next), asCALL_THISCALL); assert(r >= 0);
-							r = engine->RegisterObjectMethod(n_iterator_T, "bool opPreInc()", asMETHOD(aatc_iterator, Next), asCALL_THISCALL); assert(r >= 0);
-							r = engine->RegisterObjectMethod(n_iterator_T, "bool opPostInc()", asMETHOD(aatc_iterator, Next), asCALL_THISCALL); assert(r >= 0);
+							r = engine->RegisterObjectMethod(n_iterator_T, "bool next()", asMETHOD(Iterator, Next), asCALL_THISCALL); assert(r >= 0);
+							r = engine->RegisterObjectMethod(n_iterator_T, "bool opPreInc()", asMETHOD(Iterator, Next), asCALL_THISCALL); assert(r >= 0);
+							r = engine->RegisterObjectMethod(n_iterator_T, "bool opPostInc()", asMETHOD(Iterator, Next), asCALL_THISCALL); assert(r >= 0);
 
 							sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_iterator_T, n_iterator_T);
-							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, operator=), asCALL_THISCALL); assert(r >= 0);
+							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(Iterator, operator=), asCALL_THISCALL); assert(r >= 0);
 
 							sprintf_s(textbuf, 1000, "bool opEquals(const %s &in)", n_iterator_T);
-							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, operator==), asCALL_THISCALL); assert(r >= 0);
+							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(Iterator, operator==), asCALL_THISCALL); assert(r >= 0);
 
 							sprintf_s(textbuf, 1000, "bool %s()", aatc_name_script_iterator_method_is_end);
-							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, IsEnd), asCALL_THISCALL); assert(r >= 0);
+							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(Iterator, IsEnd), asCALL_THISCALL); assert(r >= 0);
 
 							sprintf_s(textbuf, 1000, "bool %s()", aatc_name_script_iterator_method_is_valid);
-							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, IsValid), asCALL_THISCALL); assert(r >= 0);
+							r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(Iterator, IsValid), asCALL_THISCALL); assert(r >= 0);
 						}
 					};
 

@@ -206,17 +206,19 @@ namespace aatc {
 		//doxygen skip
 		#ifndef DOXYGEN_SHOULD_SKIP_THIS
 
-		template<class T> void aatc_reghelp_constructor(void *memory){ new(memory)T(); }
-		template<class T, class T_other> void aatc_reghelp_constructor_copy(const T_other& other, void *memory){ new(memory)T(other); }
-		template<class T, class T_input1> void aatc_reghelp_constructor_1_param(T_input1 x, void *memory){ new(memory)T(x); }
-		template<typename T_out, typename T_host> T_out aatc_reghelp_construct_hosted(T_host cont){
-			return T_out(cont);
-		}
-		template<class T> void aatc_reghelp_constructor_template_default(asIObjectType* objtype,void *memory){ new(memory)T(); }
+		namespace reghelp {
+			template<class T> void constructor(void *memory) { new(memory)T(); }
+			template<class T, class T_other> void constructor_copy(const T_other& other, void *memory) { new(memory)T(other); }
+			template<class T, class T_input1> void constructor_1_param(T_input1 x, void *memory) { new(memory)T(x); }
+			template<typename T_out, typename T_host> T_out construct_hosted(T_host cont) {
+				return T_out(cont);
+			}
+			template<class T> void constructor_template_default(asIObjectType* objtype, void *memory) { new(memory)T(); }
 
-		template<class T> void aatc_reghelp_generic_destructor(void *memory){
-			((T*)memory)->~T();
-		}
+			template<class T> void generic_destructor(void *memory) {
+				((T*)memory)->~T();
+			}
+		};
 
 		#endif
 		//doxygen skip
