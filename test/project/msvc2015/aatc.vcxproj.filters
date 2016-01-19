@@ -71,6 +71,15 @@
     <ClCompile Include="..\..\..\source\aatc_registration_tempspecs_2.cpp">
       <Filter>as addons\aatc</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_hash.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_container_shared.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_container_vector.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\as_engine.hpp">
@@ -125,6 +134,18 @@
       <Filter>as addons\aatc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\aatc_container_traits.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_shared_template.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_shared.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_hash.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_vector.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
   </ItemGroup>

@@ -137,7 +137,7 @@ template<typename containertype_template, typename cond_is_associative, int cont
 				}
 			}
 		} else{
-			aatc_engine_level_storage* els = aatc_Get_ELS(container_base->engine);
+			engine_level_storage* els = aatc_Get_ELS(container_base->engine);
 
 			auto itend = els->serializer_tempspec_helpers[containertype_id].end();
 			for(auto it = els->serializer_tempspec_helpers[containertype_id].begin(); it != itend; it++){
@@ -183,7 +183,7 @@ template<typename containertype_template, typename cond_is_associative, int cont
 				}
 			}
 		} else{
-			aatc_engine_level_storage* els = aatc_Get_ELS(container_base->engine);
+			engine_level_storage* els = aatc_Get_ELS(container_base->engine);
 
 			auto itend = els->serializer_tempspec_helpers[containertype_id].end();
 			for(auto it = els->serializer_tempspec_helpers[containertype_id].begin(); it != itend; it++){
@@ -198,7 +198,7 @@ template<typename containertype_template, typename cond_is_associative, int cont
 		aatc_container_base* container_base = (aatc_container_base*)val->GetUserData();
 
 		if(container_base){//templates wont have this
-			aatc_engine_level_storage* els = aatc_Get_ELS(container_base->engine);
+			engine_level_storage* els = aatc_Get_ELS(container_base->engine);
 
 			auto itend = els->serializer_tempspec_helpers[containertype_id].end();
 			for(auto it = els->serializer_tempspec_helpers[containertype_id].begin(); it != itend; it++){

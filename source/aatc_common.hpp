@@ -76,17 +76,6 @@ namespace aatc {
 
 
 
-		class aatc_container_base{
-		public:
-			asIScriptEngine* engine;
-
-			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
-				int_fast16_t iterator_safety_version;
-			#endif
-
-			aatc_container_base();
-			virtual ~aatc_container_base();
-		};
 		class aatc_iterator_base{
 		public:
 			bool firstt;
@@ -288,58 +277,6 @@ namespace aatc {
 
 
 
-		class aatc_containerfunctor_Settings{
-		public:
-			bool handlemode;
-			bool handlemode_directcomp;
-			asIScriptFunction* func_cmp;
-			asIScriptFunction* func_equals;
-			asIScriptFunction* func_hash;
-		};
-		/*!\brief Internal functor for container's comparisons.*/
-		class aatc_containerfunctor_comp : public aatc_containerfunctor_Settings{
-		public:
-			asIScriptEngine* engine;
-			engine_level_storage* els;
-			aatc_containerfunctor_Settings* host_settings;
-
-			bool need_init;
-			aatc_containerfunctor_comp(asIScriptEngine* engine, aatc_containerfunctor_Settings* settings);
-
-			bool operator()(const void* lhs, const void* rhs) const;
-		};
-		/*!\brief Internal functor for container's comparisons.*/
-		class aatc_containerfunctor_equals : public aatc_containerfunctor_Settings{
-		public:
-			asIScriptEngine* engine;
-			engine_level_storage* els;
-			aatc_containerfunctor_Settings* host_settings;
-
-			bool need_init;
-			aatc_containerfunctor_equals(asIScriptEngine* engine, aatc_containerfunctor_Settings* settings);
-
-			bool operator()(const void* lhs, const void* rhs) const;
-
-			class findif_version{
-			public:
-				void* target;
-				aatc_containerfunctor_equals* f;
-
-				bool operator()(const void* rhs) const;
-			};
-		};
-		/*!\brief Internal functor for container's comparisons.*/
-		class aatc_containerfunctor_hash : public aatc_containerfunctor_Settings{
-		public:
-			asIScriptEngine* engine;
-			engine_level_storage* els;
-			aatc_containerfunctor_Settings* host_settings;
-
-			bool need_init;
-			aatc_containerfunctor_hash(asIScriptEngine* engine, aatc_containerfunctor_Settings* settings);
-
-			aatc_hash_type operator()(const void* ptr) const;
-		};
 
 
 

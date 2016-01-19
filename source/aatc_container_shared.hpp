@@ -44,6 +44,20 @@ namespace aatc {
 
 
 
+			class container_basicbase {
+			public:
+				asIScriptEngine* engine;
+
+				#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+					int8_t safety_iteratorversion;
+				#endif
+
+				container_basicbase(asIScriptEngine* engine);
+				virtual ~container_basicbase();
+
+				void safety_iteratorversion_Increment();
+			};
+
 			namespace containerfunctor {
 				class Settings {
 				public:

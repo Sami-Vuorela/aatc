@@ -55,7 +55,7 @@ void aatc_Initializer::Go(){
 	aatc_primunion_defaultvalue.ui64 = 0;
 	aatc_primunion_defaultvalue.ptr = nullptr;
 
-	engine->SetUserData(new aatc_engine_level_storage(engine), aatc_engine_userdata_id);
+	engine->SetUserData(new engine_level_storage(engine), aatc_engine_userdata_id);
 	engine->SetEngineUserDataCleanupCallback(aatc_engine_cleanup, aatc_engine_userdata_id);
 
 	#if aatc_ENABLE_REGISTER_TYPEDEF_HASH_TYPE

@@ -346,107 +346,8 @@ namespace aatc {
 		//do nothing
 		void aect_iterator_template_generic_constructor_dummydefault(asIObjectType* objtype, void *memory){}
 
-		aatc_containerfunctor_comp::aatc_containerfunctor_comp(asIScriptEngine* _engine, aatc_containerfunctor_Settings* settings) :
-			engine(_engine),
-			host_settings(settings),
-			need_init(1)
-		{
-			els = (engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
-		}
-		bool aatc_containerfunctor_comp::operator()(const void* lhs, const void* rhs)const{
-			if (need_init){
-				(const_cast<aatc_containerfunctor_comp*>(this))->need_init = 0;
-				(const_cast<aatc_containerfunctor_comp*>(this))->handlemode_directcomp = host_settings->handlemode_directcomp;
-				(const_cast<aatc_containerfunctor_comp*>(this))->func_cmp = host_settings->func_cmp;
-			}
-			if(handlemode_directcomp){
-				return lhs < rhs;
-			}
 
-			bool result;
 
-			asIScriptContext* cc = els->contextcache_Get();
-				cc->Prepare(func_cmp);
-				cc->SetObject(const_cast<void*>(lhs));
-				cc->SetArgObject(0, const_cast<void*>(rhs));
-				cc->Execute();
-				//result = (bool)cc->GetReturnByte();
-			result = (cc->GetReturnDWord() == -1);
-
-			els->contextcache_Return(cc);
-
-			return result;
-		}
-
-		aatc_containerfunctor_equals::aatc_containerfunctor_equals(asIScriptEngine* _engine, aatc_containerfunctor_Settings* settings) :
-			engine(_engine),
-			host_settings(settings),
-			need_init(1)
-		{
-			els = (engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
-		}
-		bool aatc_containerfunctor_equals::operator()(const void* lhs, const void* rhs)const{
-			if(need_init){
-				(const_cast<aatc_containerfunctor_equals*>(this))->need_init = 0;
-				(const_cast<aatc_containerfunctor_equals*>(this))->handlemode_directcomp = host_settings->handlemode_directcomp;
-				(const_cast<aatc_containerfunctor_equals*>(this))->func_equals = host_settings->func_equals;
-			}
-			if(handlemode_directcomp){
-				return lhs == rhs;
-			}
-
-			bool result;
-
-			asIScriptContext* cc = els->contextcache_Get();
-			cc->Prepare(func_equals);
-				cc->SetObject(const_cast<void*>(lhs));
-				cc->SetArgObject(0, const_cast<void*>(rhs));
-			cc->Execute();
-			result = (cc->GetReturnDWord() != 0);
-
-			els->contextcache_Return(cc);
-
-			return result;
-		}
-		bool aatc_containerfunctor_equals::findif_version::operator()(const void* rhs) const{
-			return (*f)(target, rhs);
-		}
-
-		aatc_containerfunctor_hash::aatc_containerfunctor_hash(asIScriptEngine* _engine, aatc_containerfunctor_Settings* settings) :
-			engine(_engine),
-			host_settings(settings),
-			need_init(1)
-		{
-			els = (engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
-		}
-		aatc_hash_type aatc_containerfunctor_hash::operator()(const void* ptr) const{
-			if(need_init){
-				//need_init = 0;
-				//func_hash = host_settings->func_hash;
-				//handlemode_directcomp = host_settings->handlemode_directcomp;
-				(const_cast<aatc_containerfunctor_hash*>(this))->need_init = 0;
-				(const_cast<aatc_containerfunctor_hash*>(this))->handlemode_directcomp = host_settings->handlemode_directcomp;
-				(const_cast<aatc_containerfunctor_hash*>(this))->func_hash = host_settings->func_hash;
-			}
-			if(handlemode_directcomp){
-				return (aatc_hash_type)ptr;
-				//return reinterpret_cast<std::size_t>(ptr);
-			}
-
-			aatc_hash_type result;
-
-			asIScriptContext* cc = els->contextcache_Get();
-				cc->Prepare(func_hash);
-					cc->SetObject(const_cast<void*>(ptr));
-				if(cc->Execute() == asEXECUTION_EXCEPTION){
-					result = 0;
-				}else{
-					result = cc->GetReturnQWord();
-				}
-			els->contextcache_Return(cc);
-
-			return result;
-		}
 
 
 
@@ -663,13 +564,6 @@ namespace aatc {
 		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float32>(aatc_type_float32* input){ return asTYPEID_FLOAT; }
 		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float64>(aatc_type_float64* input){ return asTYPEID_DOUBLE; }
 
-		aatc_container_base::aatc_container_base()
-		{
-			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
-				iterator_safety_version = 0;
-			#endif
-		}
-		aatc_container_base::~aatc_container_base(){}
 
 		aatc_iterator_base::aatc_iterator_base():
 			firstt(1)

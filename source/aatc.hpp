@@ -36,41 +36,43 @@
 
 
 BEGIN_AS_NAMESPACE
+namespace aatc {
 
 
-/*!\brief The initializer class used for engine specific registration settings*/
-class aatc_Initializer{
-public:
-	asIScriptEngine* engine;
+	/*!\brief The initializer class used for engine specific registration settings*/
+	class aatc_Initializer {
+	public:
+		asIScriptEngine* engine;
+
+		/*!
+			This array will default to all false.
+		*/
+		bool include_container[aatc_CONTAINERTYPE::_COUNT];
+
+		aatc_Initializer(asIScriptEngine* engine);
+
+		/*!
+			Call this after setting your settings.
+		*/
+		void Go();
+		void _Go2();
+
+		void RegisterTempspecs();
+		void RegisterTempspecs2();
+	};
 
 	/*!
-		This array will default to all false.
+	Just call this if you want to have every container available and dont care about engine specific settings.
 	*/
-	bool include_container[aatc_CONTAINERTYPE::_COUNT];
-
-	aatc_Initializer(asIScriptEngine* engine);
-
-	/*!
-		Call this after setting your settings.
-	*/
-	void Go();
-	void _Go2();
-
-	void RegisterTempspecs();
-	void RegisterTempspecs2();
-};
-
-/*!
-Just call this if you want to have every container available and dont care about engine specific settings.
-*/
-void aatc_RegisterAllContainers(asIScriptEngine* engine);
+	void aatc_RegisterAllContainers(asIScriptEngine* engine);
 
 #if aatc_CONFIG_USE_ASADDON_SERIALIZER
-class CSerializer;
-void aatc_serializer_register(asIScriptEngine* engine, CSerializer* serializer);
-void aatc_serializer_cleanup(asIScriptEngine* engine, CSerializer* serializer);
+	class CSerializer;
+	void aatc_serializer_register(asIScriptEngine* engine, CSerializer* serializer);
+	void aatc_serializer_cleanup(asIScriptEngine* engine, CSerializer* serializer);
 #endif
 
 
+};//namespace aatc
 END_AS_NAMESPACE
 #endif

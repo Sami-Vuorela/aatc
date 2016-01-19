@@ -41,6 +41,20 @@ namespace aatc {
 
 
 
+			container_basicbase::container_basicbase(asIScriptEngine* engine):
+				engine(engine)
+			{
+				#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+					safety_iteratorversion = 0;
+				#endif
+			}
+			container_basicbase::~container_basicbase() {}
+
+			void container_basicbase::safety_iteratorversion_Increment() {
+				#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+					safety_iteratorversion++;
+				#endif
+			}
 
 
 			namespace containerfunctor {
