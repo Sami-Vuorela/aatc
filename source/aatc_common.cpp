@@ -565,10 +565,10 @@ namespace aatc {
 		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float64>(aatc_type_float64* input){ return asTYPEID_DOUBLE; }
 
 
-		aatc_iterator_base::aatc_iterator_base():
+		iterator_base::iterator_base():
 			firstt(1)
 		{}
-		aatc_iterator_base::aatc_iterator_base(const aatc_iterator_base& other) :
+		iterator_base::iterator_base(const iterator_base& other) :
 			firstt(other.firstt),
 			cont(other.cont)
 		{}

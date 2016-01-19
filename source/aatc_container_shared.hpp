@@ -44,6 +44,16 @@ namespace aatc {
 
 
 
+			namespace tag {
+				struct iterator_access_is_const {};
+				struct iterator_access_is_mutable {};
+			};
+
+			class tagbase {
+			public:
+				typedef tag::iterator_access_is_mutable iterator_access;
+			};
+
 			class container_basicbase {
 			public:
 				asIScriptEngine* engine;

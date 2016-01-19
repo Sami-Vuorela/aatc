@@ -76,17 +76,17 @@ namespace aatc {
 
 
 
-		class aatc_iterator_base{
+		class iterator_base{
 		public:
 			bool firstt;
 			bool cont;
 
 			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
-				int_fast16_t iterator_safety_version;
+				int_fast16_t safety_iteratorversion;
 			#endif
 
-			aatc_iterator_base();
-			aatc_iterator_base(const aatc_iterator_base& other);
+			iterator_base();
+			iterator_base(const iterator_base& other);
 		};
 
 		#if aatc_CONFIG_USE_ASADDON_SERIALIZER

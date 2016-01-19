@@ -42,11 +42,14 @@ BEGIN_AS_NAMESPACE
 namespace aatc {
 	namespace container {
 
-
-
-		class vector : public aatc::container::shared::templated::Containerbase<aatc_acit_vector<void*>, aatc_CONTAINERTYPE::VECTOR> {
+		class vector_tags : public aatc::container::shared::tagbase {
 		public:
-			typename typedef aatc::container::shared::templated::Containerbase < aatc_acit_vector<void*>, aatc_CONTAINERTYPE::VECTOR> containerbase;
+			typedef aatc::container::shared::tag::iterator_access_is_mutable iterator_access;
+		};
+
+		class vector : public aatc::container::shared::templated::Containerbase < aatc_acit_vector<void*>, aatc_CONTAINERTYPE::VECTOR, vector_tags> {
+		public:
+			typename typedef aatc::container::shared::templated::Containerbase < aatc_acit_vector<void*>, aatc_CONTAINERTYPE::VECTOR, vector_tags> containerbase;
 
 
 
