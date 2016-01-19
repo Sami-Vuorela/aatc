@@ -39,9 +39,28 @@
 #include <assert.h>
 
 
+
 #include "angelscript.h"
 
 
+
+#include <algorithm>
+#include <atomic>
+#include <mutex>
+
+#include <string>
+
+#include <vector>
+#include <list>
+#include <set>
+#include <unordered_set>
+#include <map>
+#include <unordered_map>
+
+
+
+BEGIN_AS_NAMESPACE
+namespace aatc {
 
 
 
@@ -164,8 +183,7 @@ typedef int64_t		aatc_type_int64;
 typedef float		aatc_type_float32;
 typedef double		aatc_type_float64;
 
-#include <string>
-typedef std::string			aatc_type_string;//use whatever you use in script (users of angelscript addon scriptstdstring should use std::string here)
+typedef ::std::string aatc_type_string;//use whatever you use in script (users of angelscript addon scriptstdstring should use std::string here)
 
 typedef aatc_type_int32 aatc_type_sizetype;
 #define aatc_name_script_sizetype "int"
@@ -201,6 +219,10 @@ typedef aatc_type_int32 aatc_type_astypeid;
 //this will appear in script if typedef is enabled
 #define aatc_hash_type_scriptname "aatc_hash_t"
 
+namespace common {
+	class std_Spinlock;
+};
+typedef common::std_Spinlock aatc_ait_fastlock;
 
 
 /*
@@ -224,15 +246,6 @@ typedef aatc_type_int32 aatc_type_astypeid;
 #define aatc_include_primitive_native_tempspec_STRING	1
 #define aatc_include_primitive_native_tempspec_REF		1
 
-#include <vector>
-#include <list>
-#include <set>
-#include <unordered_set>
-#include <map>
-#include <unordered_map>
-#include <mutex>
-#include <algorithm>
-#include <atomic>
 
 /*
 	Actual container classes to use.
@@ -241,14 +254,12 @@ typedef aatc_type_int32 aatc_type_astypeid;
 */
 #define aatc_ait_storage_map std::unordered_map
 #define aatc_ait_storage_pair std::pair
-#define aatc_ait_fastlock aatc_std_Spinlock
 #define aatc_acit_vector std::vector
 #define aatc_acit_list std::list
 #define aatc_acit_set std::set
 #define aatc_acit_unordered_set std::unordered_set
 #define aatc_acit_map std::map
 #define aatc_acit_unordered_map std::unordered_map
-#define aatc_acit_flatset std::set
 
 
 
@@ -307,6 +318,8 @@ enum aatc_CONTAINERTYPE{
 
 
 
+};//namespace aatc
+END_AS_NAMESPACE
 
 
 

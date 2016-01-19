@@ -115,7 +115,7 @@ public:
 
 	bool handlemode_needref;
 
-	aatc_engine_level_storage* els;
+	engine_level_storage* els;
 
 	aatc_container_operations_bitmask_type missing_functions;
 

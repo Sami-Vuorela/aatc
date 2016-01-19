@@ -66,8 +66,8 @@ template<typename T> void aatc_serializer_usertype_container_shared_1tp_tempspec
 	delete buffer;
 }
 
-template<typename dt_container, int containertype_id> void aatc_serializer_register_container_shared_1tp_tempspec_helpers(aatc_engine_level_storage* els, const char* n_content){
-	els->serializer_tempspec_helpers[containertype_id].push_back(aatc_engine_level_storage::serializer_helper());
+template<typename dt_container, int containertype_id> void aatc_serializer_register_container_shared_1tp_tempspec_helpers(engine_level_storage* els, const char* n_content){
+	els->serializer_tempspec_helpers[containertype_id].push_back(engine_level_storage::serializer_helper());
 	els->serializer_tempspec_helpers[containertype_id].back().funcptr_is_thistype = aatc_serializer_containerbase_is_thistype<dt_container>;
 	els->serializer_tempspec_helpers[containertype_id].back().container_content_name = n_content;
 	els->serializer_tempspec_helpers[containertype_id].back().funcptr_process_store = aatc_serializer_usertype_container_shared_1tp_tempspec_store<dt_container>;

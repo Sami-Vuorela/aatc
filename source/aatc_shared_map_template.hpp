@@ -88,7 +88,7 @@ class aatc_container_shared_map_template :	public aatc_container_base,
 											public aatc_containerfunctor_map_Settings
 {
 public:
-	aatc_engine_level_storage* els;
+	engine_level_storage* els;
 
 	aatc_DATAHANDLINGTYPE datahandlingid_value;
 	aatc_PRIMITIVE_TYPE primitiveid_value;
