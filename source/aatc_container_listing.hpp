@@ -58,27 +58,27 @@ namespace aatc {
 
 
 			template<int CONTAINER_ID> void register_container(asIScriptEngine* engine) {}
-			template<int CONTAINER_ID> common::container_operations_bitmask_type register_errorcheck_container_type_missing_functions(common::template_specific_storage* tss) { return 0; }
+			template<int CONTAINER_ID> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template(enginestorage::template_specific_storage* tss) { return 0; }
 
 
 
 			template<> void register_container<CONTAINER::VECTOR>(asIScriptEngine* engine);
-			template<> common::container_operations_bitmask_type register_errorcheck_container_type_missing_functions<CONTAINER::VECTOR>(common::template_specific_storage* tss);
+			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::VECTOR>(enginestorage::template_specific_storage* tss);
 
-			template<> void register_container<CONTAINER::LIST>(asIScriptEngine* engine);
-			template<> common::container_operations_bitmask_type register_errorcheck_container_type_missing_functions<CONTAINER::LIST>(common::template_specific_storage* tss);
+			//template<> void register_container<CONTAINER::LIST>(asIScriptEngine* engine);
+			//template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::LIST>(enginestorage::template_specific_storage* tss);
 
-			template<> void register_container<CONTAINER::SET>(asIScriptEngine* engine);
-			template<> common::container_operations_bitmask_type register_errorcheck_container_type_missing_functions<CONTAINER::SET>(common::template_specific_storage* tss);
+			//template<> void register_container<CONTAINER::SET>(asIScriptEngine* engine);
+			//template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::SET>(enginestorage::template_specific_storage* tss);
 
-			template<> void register_container<CONTAINER::UNORDERED_SET>(asIScriptEngine* engine);
-			template<> common::container_operations_bitmask_type register_errorcheck_container_type_missing_functions<CONTAINER::UNORDERED_SET>(common::template_specific_storage* tss);
+			//template<> void register_container<CONTAINER::UNORDERED_SET>(asIScriptEngine* engine);
+			//template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::UNORDERED_SET>(enginestorage::template_specific_storage* tss);
 
-			template<> void register_container<CONTAINER::MAP>(asIScriptEngine* engine);
-			template<> common::container_operations_bitmask_type register_errorcheck_container_type_missing_functions<CONTAINER::MAP>(common::template_specific_storage* tss);
+			//template<> void register_container<CONTAINER::MAP>(asIScriptEngine* engine);
+			//template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::MAP>(enginestorage::template_specific_storage* tss);
 
-			template<> void register_container<CONTAINER::UNORDERED_MAP>(asIScriptEngine* engine);
-			template<> common::container_operations_bitmask_type register_errorcheck_container_type_missing_functions<CONTAINER::UNORDERED_MAP>(common::template_specific_storage* tss);
+			//template<> void register_container<CONTAINER::UNORDERED_MAP>(asIScriptEngine* engine);
+			//template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::UNORDERED_MAP>(enginestorage::template_specific_storage* tss);
 
 
 

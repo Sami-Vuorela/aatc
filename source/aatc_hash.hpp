@@ -74,6 +74,10 @@ namespace aatc {
 			}
 		};
 
+		namespace hashfunc {
+			aatc_hash_type djb2(const aatc_type_string& a);
+		};
+
 
 
 		/*

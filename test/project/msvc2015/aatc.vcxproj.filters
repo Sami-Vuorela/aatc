@@ -29,25 +29,7 @@
     <ClCompile Include="..\..\..\source\aatc_common.cpp">
       <Filter>as addons\aatc</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\aatc_list_template.cpp">
-      <Filter>as addons\aatc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\aatc_map_template.cpp">
-      <Filter>as addons\aatc</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\source\aatc_registration.cpp">
-      <Filter>as addons\aatc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\aatc_set_template.cpp">
-      <Filter>as addons\aatc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\aatc_unordered_map_template.cpp">
-      <Filter>as addons\aatc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\aatc_unordered_set_template.cpp">
-      <Filter>as addons\aatc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\aatc_vector_template.cpp">
       <Filter>as addons\aatc</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\Dev\angelscript_svn\sdk\add_on\scriptbuilder\scriptbuilder.cpp">
@@ -59,17 +41,8 @@
     <ClCompile Include="..\..\..\..\..\..\..\..\Dev\angelscript_svn\sdk\add_on\serializer\serializer.cpp">
       <Filter>as addons</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\source\aatc_serializer.cpp">
-      <Filter>as addons\aatc</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\..\..\..\..\..\Dev\angelscript_svn\sdk\add_on\scriptarray\scriptarray.cpp">
       <Filter>as addons</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\aatc_registration_tempspecs.cpp">
-      <Filter>as addons\aatc</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\source\aatc_registration_tempspecs_2.cpp">
-      <Filter>as addons\aatc</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\aatc_hash.cpp">
       <Filter>as addons\aatc</Filter>
@@ -78,6 +51,9 @@
       <Filter>as addons\aatc</Filter>
     </ClCompile>
     <ClCompile Include="..\..\..\source\aatc_container_vector.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_enginestorage.cpp">
       <Filter>as addons\aatc</Filter>
     </ClCompile>
   </ItemGroup>
@@ -152,6 +128,9 @@
       <Filter>as addons\aatc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\aatc_container_listing.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_enginestorage.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
   </ItemGroup>

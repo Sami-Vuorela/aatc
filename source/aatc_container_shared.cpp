@@ -31,6 +31,7 @@ samivuorela@gmail.com
 
 #include "aatc_container_shared.hpp"
 #include "aatc_hash.hpp"
+#include "aatc_enginestorage.hpp"
 
 
 
@@ -63,7 +64,7 @@ namespace aatc {
 					host_settings(settings),
 					need_init(1)
 				{
-					els = (aatc::common::engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
+					els = (enginestorage::engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
 				}
 
 				Comp::Comp(asIScriptEngine* _engine, Settings* settings) :
@@ -164,7 +165,7 @@ namespace aatc {
 					host_settings(settings),
 					need_init(1)
 				{
-					els = (aatc::common::engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
+					els = (enginestorage::engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
 				}
 
 				Comp::Comp(asIScriptEngine* _engine, Settings* settings) :

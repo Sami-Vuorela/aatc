@@ -82,7 +82,7 @@ namespace aatc {
 				class Base {
 				public:
 					asIScriptEngine* engine;
-					aatc::common::engine_level_storage* els;
+					enginestorage::engine_level_storage* els;
 					Settings* host_settings;
 
 					bool need_init;
@@ -128,7 +128,7 @@ namespace aatc {
 				class Base {
 				public:
 					asIScriptEngine* engine;
-					aatc::common::engine_level_storage* els;
+					enginestorage::engine_level_storage* els;
 					Settings* host_settings;
 
 					bool need_init;

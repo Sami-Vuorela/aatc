@@ -64,7 +64,7 @@ asIScriptEngine* aet_CreateEngine(){
 	//RegisterScriptArray(engine, 0);
 
 
-	aatc_RegisterAllContainers(engine);
+	aatc::RegisterAllContainers(engine);
 
 
 

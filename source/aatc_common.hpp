@@ -37,6 +37,13 @@
 
 BEGIN_AS_NAMESPACE
 namespace aatc {
+
+	namespace enginestorage {
+		class template_specific_storage;
+		class containertype_specific_storage;
+		class engine_level_storage;
+	};//namespace enginestorage
+
 	namespace common {
 
 
@@ -112,96 +119,6 @@ namespace aatc {
 		};
 
 		typedef aatc_type_uint32 container_operations_bitmask_type;
-
-		class template_specific_storage;
-		class containertype_specific_storage;
-		class engine_level_storage;
-
-
-		/*!\brief Stores the function pointers of a specific container<datatype>. One per datatype per container type per engine.*/
-		class template_specific_storage{
-		public:
-			containertype_specific_storage* ctss;
-
-			asIScriptFunction* func_equals;
-			asIScriptFunction* func_cmp;
-			asIScriptFunction* func_hash;
-
-			container_operations_bitmask_type missing_functions;
-
-			template_specific_storage(containertype_specific_storage* ctss,aatc_type_uint32 id);
-		};
-
-		/*!\brief Stores dataz about a specific container type. One per container type per engine.*/
-		class containertype_specific_storage{
-		public:
-			engine_level_storage* els;
-			aatc_type_uint32 container_id;
-
-			//typedef aatc_ait_storage_map<uint32, aatc_iterator_storage*> tmap_is;
-			//typedef aatc_ait_storage_pair<uint32, aatc_iterator_storage*> tpair_is;
-			//tmap_is iterator_storages;
-			//aatc_ait_fastlock iterator_storages_lock;
-
-			typedef aatc_ait_storage_map<aatc_type_uint32, template_specific_storage*> tmap_tss;
-			typedef aatc_ait_storage_pair<aatc_type_uint32, template_specific_storage*> tpair_tss;
-			tmap_tss template_specific_storages;
-			aatc_ait_fastlock template_specific_storages_lock;
-
-			//aatc_iterator_storage* GetIteratorStorage(uint32 id);
-			template_specific_storage* GetTemplateSpecificStorage(aatc_type_uint32 id);
-
-			containertype_specific_storage(engine_level_storage* els, aatc_type_uint32 container_id);
-			~containertype_specific_storage();
-		};
-
-
-		/*!\brief Stores dataz about aatc containers. One for each engine.*/
-		class engine_level_storage{
-		public:
-			#if aatc_CONFIG_USE_ASADDON_SERIALIZER
-				class serializer_helper{
-				public:
-					aatc_funcptr_serializer_containerbase_is_thistype funcptr_is_thistype;
-					std::string container_content_name;
-					aatc_funcptr_serializer_containerbase_process funcptr_process_store;
-					aatc_funcptr_serializer_containerbase_process funcptr_process_restore;
-					aatc_funcptr_serializer_containerbase_process funcptr_process_cleanup;
-				};
-			#endif
-
-			asIScriptEngine* engine;
-
-			typedef aatc_ait_storage_map<aatc_type_uint32, containertype_specific_storage*> tmap_ctss;
-			typedef aatc_ait_storage_pair<aatc_type_uint32, containertype_specific_storage*> tpair_ctss;
-			tmap_ctss containertype_specific_storages;
-			aatc_ait_fastlock containertype_specific_storages_lock;
-
-			std::vector<asIScriptContext*> context_cache;
-			aatc_ait_fastlock context_cache_lock;
-
-		#if aatc_CONFIG_USE_ASADDON_SERIALIZER
-			std::vector<serializer_helper> serializer_tempspec_helpers[aatc_CONTAINERTYPE::_COUNT];
-		#endif
-
-
-			engine_level_storage(asIScriptEngine* engine);
-			~engine_level_storage();
-
-			containertype_specific_storage* GetContainerTypeSpecificStorage(aatc_type_uint32 id);
-
-			asIScriptContext* contextcache_Get();
-			void contextcache_Return(asIScriptContext* a);
-
-			void Clean();
-		};
-
-		//convenience, uses engine level storage, aatc must be initialized
-		asIScriptContext* aatc_contextcache_Get();
-		void aatc_contextcache_Return(asIScriptContext* c);
-		engine_level_storage* aatc_Get_ELS(asIScriptEngine* engine);
-
-
 
 		//doxygen skip
 		#ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -470,7 +387,7 @@ namespace aatc {
 		void aatc_errorprint_container_iterator_invalid();
 
 		//check for missing functions, return bitmask of missing functions
-		container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions_base(int CONTAINER_ID, template_specific_storage* tss);
+		container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions_base(int CONTAINER_ID, enginestorage::template_specific_storage* tss);
 
 
 

@@ -51,13 +51,18 @@ namespace aatc {
 			return pu.ui64;
 		}
 		aatc_hash_type hashfunctor<aatc_type_string>::operator()(const aatc_type_string& a) const {
-			//hashfunc "djb2" for std string
-			aatc_hash_type hash = 5381;
-			for (int i = 0; i < a.size(); i++) {
-				hash = ((hash << 5) + hash) + a[i];
-			}
-			return hash;
+			return hashfunc::djb2(a);
 		}
+
+		namespace hashfunc {
+			aatc_hash_type djb2(const aatc_type_string& a) {
+				aatc_hash_type hash = 5381;
+				for (int i = 0; i < a.size(); i++) {
+					hash = ((hash << 5) + hash) + a[i];
+				}
+				return hash;
+			}
+		};
 
 
 

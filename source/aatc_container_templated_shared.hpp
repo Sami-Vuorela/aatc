@@ -34,6 +34,7 @@ samivuorela@gmail.com
 
 
 #include "aatc_common.hpp"
+#include "aatc_enginestorage.hpp"
 #include "aatc_container_shared.hpp"
 #include "aatc_container_listing.hpp"
 
@@ -106,7 +107,7 @@ namespace aatc {
 
 					typename bcw container;
 
-					aatc::common::engine_level_storage* els;
+					enginestorage::engine_level_storage* els;
 
 					asIObjectType* objtype_container;
 					asIObjectType* objtype_content;
@@ -140,8 +141,8 @@ namespace aatc {
 						//problem_nofunc_eq_or_cmp = 0;
 						//problem_nofunc_cmp = 0;
 
-						els = aatc::common::aatc_Get_ELS(engine);
-						aatc::common::containertype_specific_storage* ctss = els->GetContainerTypeSpecificStorage(T_CONTAINERTYPEID);
+						els = enginestorage::Get_ELS(engine);
+						enginestorage::containertype_specific_storage* ctss = els->GetContainerTypeSpecificStorage(T_CONTAINERTYPEID);
 
 						if (astypeid_content & asTYPEID_OBJHANDLE) {
 							handlemode = 1;
@@ -154,7 +155,7 @@ namespace aatc {
 							handlemode_directcomp = 0;
 						}
 
-						aatc::common::template_specific_storage* tss = ctss->GetTemplateSpecificStorage(astypeid_content);
+						aatc::enginestorage::template_specific_storage* tss = ctss->GetTemplateSpecificStorage(astypeid_content);
 						func_equals = tss->func_equals;
 						func_cmp = tss->func_cmp;
 						func_hash = tss->func_hash;

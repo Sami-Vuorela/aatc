@@ -143,17 +143,9 @@
     <ClCompile Include="..\..\..\source\aatc_common.cpp" />
     <ClCompile Include="..\..\..\source\aatc_container_shared.cpp" />
     <ClCompile Include="..\..\..\source\aatc_container_vector.cpp" />
+    <ClCompile Include="..\..\..\source\aatc_enginestorage.cpp" />
     <ClCompile Include="..\..\..\source\aatc_hash.cpp" />
-    <ClCompile Include="..\..\..\source\aatc_list_template.cpp" />
-    <ClCompile Include="..\..\..\source\aatc_map_template.cpp" />
     <ClCompile Include="..\..\..\source\aatc_registration.cpp" />
-    <ClCompile Include="..\..\..\source\aatc_registration_tempspecs.cpp" />
-    <ClCompile Include="..\..\..\source\aatc_registration_tempspecs_2.cpp" />
-    <ClCompile Include="..\..\..\source\aatc_serializer.cpp" />
-    <ClCompile Include="..\..\..\source\aatc_set_template.cpp" />
-    <ClCompile Include="..\..\..\source\aatc_unordered_map_template.cpp" />
-    <ClCompile Include="..\..\..\source\aatc_unordered_set_template.cpp" />
-    <ClCompile Include="..\..\..\source\aatc_vector_template.cpp" />
     <ClCompile Include="..\..\as_engine.cpp" />
     <ClCompile Include="..\..\main.cpp" />
   </ItemGroup>
@@ -167,6 +159,7 @@
     <ClInclude Include="..\..\..\source\aatc_container_traits.hpp" />
     <ClInclude Include="..\..\..\source\aatc_container_templated_shared.hpp" />
     <ClInclude Include="..\..\..\source\aatc_container_vector.hpp" />
+    <ClInclude Include="..\..\..\source\aatc_enginestorage.hpp" />
     <ClInclude Include="..\..\..\source\aatc_hash.hpp" />
     <ClInclude Include="..\..\..\source\aatc_internal_lists.hpp" />
     <ClInclude Include="..\..\..\source\aatc_list.hpp" />

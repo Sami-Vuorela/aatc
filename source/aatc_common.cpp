@@ -30,6 +30,7 @@ samivuorela@gmail.com
 
 
 #include "aatc_common.hpp"
+#include "aatc_enginestorage.hpp"
 
 
 
@@ -52,169 +53,6 @@ namespace aatc {
 
 
 
-		engine_level_storage::engine_level_storage(asIScriptEngine* _engine) :
-			engine(_engine)
-		{}
-		engine_level_storage::~engine_level_storage(){}
-
-		template_specific_storage* containertype_specific_storage::GetTemplateSpecificStorage(aatc_type_uint32 id){
-			template_specific_storage* result;
-
-			//template_specific_storages_lock.lock();
-			els->containertype_specific_storages_lock.lock();
-				tmap_tss::iterator it = template_specific_storages.find(id);
-				if (it == template_specific_storages.end()){
-					result = new template_specific_storage(this,id);
-					template_specific_storages.insert(tpair_tss(id, result));
-				}else{
-					result = it->second;
-				}
-			els->containertype_specific_storages_lock.unlock();
-			//template_specific_storages_lock.unlock();
-
-			return result;
-		}
-		containertype_specific_storage* engine_level_storage::GetContainerTypeSpecificStorage(aatc_type_uint32 id){
-			containertype_specific_storage* result;
-
-			containertype_specific_storages_lock.lock();
-				tmap_ctss::iterator it = containertype_specific_storages.find(id);
-				if (it == containertype_specific_storages.end()){
-					result = new containertype_specific_storage(this, id);
-					containertype_specific_storages.insert(tpair_ctss(id, result));
-				}
-				else{
-					result = it->second;
-				}
-			containertype_specific_storages_lock.unlock();
-
-			return result;
-		}
-
-		containertype_specific_storage::containertype_specific_storage(engine_level_storage* _els, aatc_type_uint32 container_id) :
-			els(_els),
-			container_id(container_id)
-		{}
-		containertype_specific_storage::~containertype_specific_storage(){
-			for (auto it = template_specific_storages.begin(); it != template_specific_storages.end(); it++){
-				const auto& pp = *it;
-				delete pp.second;
-			}
-		}
-
-		void engine_level_storage::Clean(){
-			for (auto it = containertype_specific_storages.begin(); it != containertype_specific_storages.end(); it++){
-				const auto& pp = *it;
-				delete pp.second;
-			}
-			containertype_specific_storages.clear();
-
-			for (auto it = context_cache.begin(); it != context_cache.end(); it++){
-				auto* a = *it;
-				a->Release();
-
-			}
-			context_cache.clear();
-		}
-
-		template_specific_storage::template_specific_storage(containertype_specific_storage* ctss,aatc_type_uint32 subtypeid) :
-			ctss(ctss),
-			func_equals(NULL),
-			func_cmp(NULL),
-			func_hash(NULL)
-		{
-			asIScriptEngine* engine = asGetActiveContext()->GetEngine();
-			asIObjectType* objtype = engine->GetObjectTypeById(subtypeid);
-
-			//get opEquals or opCmp function for this type to be stored
-
-			bool mustBeConst = (subtypeid & asTYPEID_HANDLETOCONST) ? true : false;
-
-			if (objtype){
-				for (asUINT i = 0; i < objtype->GetMethodCount(); i++){
-					asIScriptFunction *func = objtype->GetMethodByIndex(i);
-
-					asDWORD flags = 0;
-					int returnTypeId = func->GetReturnTypeId(&flags);
-
-					if(func->GetParamCount() == 0){
-						if(strcmp(func->GetName(), aatc_name_script_requiredmethod_hash) == 0){
-							if((returnTypeId == asTYPEID_UINT64) || (returnTypeId == asTYPEID_UINT32) || (returnTypeId == asTYPEID_UINT16) || (returnTypeId == asTYPEID_UINT8)){
-								func_hash = func;
-							}
-						}
-					}
-					if (func->GetParamCount() == 1 && (!mustBeConst || func->IsReadOnly())){
-
-						// The method must not return a reference
-						if (flags != asTM_NONE)
-							continue;
-
-						// opCmp returns an int and opEquals returns a bool
-						bool isCmp = false, isEq = false;
-						if (returnTypeId == asTYPEID_INT32 && strcmp(func->GetName(), "opCmp") == 0){
-							isCmp = true;
-						}
-						if (returnTypeId == asTYPEID_BOOL && strcmp(func->GetName(), "opEquals") == 0){
-							isEq = true;
-						}
-
-						if(!isCmp && !isEq){
-							continue;
-						}
-
-
-						// The parameter must either be a reference to the subtype or a handle to the subtype
-						int paramTypeId;
-						func->GetParam(0, &paramTypeId, &flags);
-
-						if ((paramTypeId & ~(asTYPEID_OBJHANDLE | asTYPEID_HANDLETOCONST)) != (subtypeid &  ~(asTYPEID_OBJHANDLE | asTYPEID_HANDLETOCONST))){
-							continue;
-						}
-
-						if ((flags & asTM_INREF)){
-							if ((paramTypeId & asTYPEID_OBJHANDLE) || (mustBeConst && !(flags & asTM_CONST))){
-								continue;
-							}
-						}else if (paramTypeId & asTYPEID_OBJHANDLE){
-							if (mustBeConst && !(paramTypeId & asTYPEID_HANDLETOCONST)){
-								continue;
-							}
-						}else{
-							continue;
-						}
-
-						if (isCmp){
-							func_cmp = func;
-						}else if (isEq){
-							func_equals = func;
-						}
-					}
-				}
-			}
-
-			missing_functions = aatc_errorcheck_container_type_missing_functions_base(ctss->container_id,this);
-		}
-
-		asIScriptContext* engine_level_storage::contextcache_Get(){
-			asIScriptContext* result;
-
-			context_cache_lock.lock();
-				if (context_cache.empty()){
-					result = engine->CreateContext();
-				}else{
-					result = context_cache.back();
-					context_cache.pop_back();
-				}
-			context_cache_lock.unlock();
-
-			return result;
-		}
-		void engine_level_storage::contextcache_Return(asIScriptContext* a){
-			context_cache_lock.lock();
-				context_cache.push_back(a);
-			context_cache_lock.unlock();
-		}
 
 
 
@@ -260,7 +98,7 @@ namespace aatc {
 
 
 		void aatc_engine_cleanup(asIScriptEngine* engine){
-			engine_level_storage* ss = (engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
+			enginestorage::engine_level_storage* ss = (enginestorage::engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
 
 			ss->Clean();
 			delete ss;
@@ -438,7 +276,7 @@ namespace aatc {
 		}
 
 		void aatc_script_Funcpointer::scriptsidecall_CallVoid(){
-			engine_level_storage* els = (engine_level_storage*)asGetActiveContext()->GetEngine()->GetUserData(aatc_engine_userdata_id);
+			enginestorage::engine_level_storage* els = (enginestorage::engine_level_storage*)asGetActiveContext()->GetEngine()->GetUserData(aatc_engine_userdata_id);
 			asIScriptContext* c = els->contextcache_Get();
 				Prepare(c);
 				Execute(c);
@@ -448,18 +286,6 @@ namespace aatc {
 		//void aatc_script_Funcpointer::ReleaseRef(){
 		//	ref.Set(NULL, NULL);
 		//}
-
-		engine_level_storage* aatc_Get_ELS(asIScriptEngine* engine){
-			return (engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
-		}
-		asIScriptContext* aatc_contextcache_Get(){
-			engine_level_storage* els = aatc_Get_ELS(asGetActiveContext()->GetEngine());
-			return els->contextcache_Get();
-		}
-		void aatc_contextcache_Return(asIScriptContext* c){
-			engine_level_storage* els = aatc_Get_ELS(asGetActiveContext()->GetEngine());
-			els->contextcache_Return(c);
-		}
 
 
 		void aatc_errorprint_container_missingfunctions_operation_missing(const char* name_container, const char* name_content, const char* name_operation){
@@ -538,17 +364,17 @@ namespace aatc {
 			};
 		}
 
-		container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions_base(int CONTAINER_ID, template_specific_storage* tss){
-			switch(CONTAINER_ID){
-				case aatc_CONTAINERTYPE::VECTOR: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::VECTOR>(tss);
-				case aatc_CONTAINERTYPE::LIST: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::LIST>(tss);
-				case aatc_CONTAINERTYPE::SET: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::SET>(tss);
-				case aatc_CONTAINERTYPE::UNORDERED_SET: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::UNORDERED_SET>(tss);
-				case aatc_CONTAINERTYPE::MAP: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::MAP>(tss);
-				case aatc_CONTAINERTYPE::UNORDERED_MAP: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::UNORDERED_MAP>(tss);
-			};
-			return 0;
-		}
+		//container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions_base(int CONTAINER_ID, template_specific_storage* tss){
+		//	switch(CONTAINER_ID){
+		//		case aatc_CONTAINERTYPE::VECTOR: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::VECTOR>(tss);
+		//		case aatc_CONTAINERTYPE::LIST: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::LIST>(tss);
+		//		case aatc_CONTAINERTYPE::SET: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::SET>(tss);
+		//		case aatc_CONTAINERTYPE::UNORDERED_SET: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::UNORDERED_SET>(tss);
+		//		case aatc_CONTAINERTYPE::MAP: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::MAP>(tss);
+		//		case aatc_CONTAINERTYPE::UNORDERED_MAP: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::UNORDERED_MAP>(tss);
+		//	};
+		//	return 0;
+		//}
 
 
 

@@ -79,7 +79,7 @@ namespace aatc {
 				templated::shared::register_method::push_back<vector>(rs);
 				templated::shared::register_method::back<vector>(rs);
 			}
-			template<> common::container_operations_bitmask_type register_errorcheck_container_type_missing_functions<CONTAINER::VECTOR>(common::template_specific_storage* tss) {
+			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::VECTOR>(enginestorage::template_specific_storage* tss) {
 				common::container_operations_bitmask_type mask = 0;
 				
 				if (!tss->func_cmp) {
