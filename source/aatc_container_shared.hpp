@@ -54,6 +54,8 @@ namespace aatc {
 				typedef tag::iterator_access_is_mutable iterator_access;
 			};
 
+
+
 			class container_basicbase {
 			public:
 				asIScriptEngine* engine;
@@ -113,7 +115,7 @@ namespace aatc {
 					Hash(asIScriptEngine* engine, Settings* settings);
 					aatc_hash_type operator()(const void* ptr) const;
 				};
-			};
+			};//namespace containerfunctor
 			namespace containerfunctor_map {
 				class Settings {
 				public:
@@ -151,9 +153,30 @@ namespace aatc {
 					Hash(asIScriptEngine* engine, Settings* settings);
 					aatc_hash_type operator()(const aatc::common::primunion& a) const;
 				};
-			};//namespace detail
+			};//namespace containerfunctor_map
 
 
+
+			namespace autoregister {
+				template<template<typename T_content> typename tempspec_container_template> void register_all_tempspec_basics_for_container(asIScriptEngine* engine) {
+					common::RegistrationState rs(engine);
+
+					tempspec_container_template<aatc_type_int8>::Register(rs, "int8");
+					tempspec_container_template<aatc_type_int16>::Register(rs, "int16");
+					tempspec_container_template<aatc_type_int32>::Register(rs, "int");
+					tempspec_container_template<aatc_type_int64>::Register(rs, "int64");
+
+					tempspec_container_template<aatc_type_uint8>::Register(rs, "uint8");
+					tempspec_container_template<aatc_type_uint16>::Register(rs, "uint16");
+					tempspec_container_template<aatc_type_uint32>::Register(rs, "uint");
+					tempspec_container_template<aatc_type_uint64>::Register(rs, "uint64");
+
+					tempspec_container_template<aatc_type_float32>::Register(rs, "float");
+					tempspec_container_template<aatc_type_float64>::Register(rs, "double");
+
+					tempspec_container_template<aatc_type_string>::Register(rs, "string");
+				}
+			};//namespace autoregister
 
 
 

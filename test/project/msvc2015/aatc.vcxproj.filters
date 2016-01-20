@@ -133,5 +133,11 @@
     <ClInclude Include="..\..\..\source\aatc_enginestorage.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_tempspec_shared.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_tempspec_shared_method.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

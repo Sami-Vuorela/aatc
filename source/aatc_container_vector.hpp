@@ -35,6 +35,7 @@ samivuorela@gmail.com
 
 #include "aatc_common.hpp"
 #include "aatc_container_templated_shared.hpp"
+#include "aatc_container_tempspec_shared_method.hpp"
 
 
 
@@ -53,15 +54,57 @@ namespace aatc {
 
 		namespace templated {
 
-			
+
 
 			class vector : public shared::Containerbase < aatc_acit_vector<void*>, aatc::container::listing::CONTAINER::VECTOR, vector_tags> {
 			public:
 				vector(asIObjectType* objtype);
 				vector(const vector& other);
-
 				vector& operator=(const vector& other);
+
+
+
 				vector& swap(vector& other);
+
+				void push_back(void* a);
+				void* back();
+			};
+
+
+
+		};//namespace templated
+		namespace tempspec {
+
+
+
+			template<typename T> class vector : public shared::Containerbase < aatc_acit_vector<T>, T, vector_tags> {
+			public:
+				vector() {}
+				vector(const vector& other):
+					Containerbase(other)
+				{}
+				vector& vector::operator=(const vector& other) { Containerbase::operator=(other); return *this; }
+
+
+
+				vector& swap(vector& other) { shared::method::swap(this, other); return *this; }
+
+				void push_back(const T& a) { shared::method::push_back(this, a); }
+				T back() { return shared::method::back(this); }
+
+
+
+				static void Register(common::RegistrationState& rs, const char* n_content) {
+					using namespace tempspec::shared;
+
+					register_containerbase<vector>(rs, "vector", n_content);
+
+
+
+					register_method::swap<vector>(rs);
+					register_method::push_back<vector>(rs);
+					register_method::back<vector>(rs);
+				}
 			};
 
 

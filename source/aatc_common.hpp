@@ -202,6 +202,9 @@ namespace aatc {
 			char n_container_T[bufsize];
 			char n_container_class_T[bufsize];
 
+			char n_content[bufsize];
+			char n_containerTcontentT[bufsize];
+			
 			char n_iterator[bufsize];
 			char n_iterator_T[bufsize];
 			char n_iterator_class_T[bufsize];

@@ -156,6 +156,8 @@
     <ClInclude Include="..\..\..\source\aatc_container_listing.hpp" />
     <ClInclude Include="..\..\..\source\aatc_container_shared.hpp" />
     <ClInclude Include="..\..\..\source\aatc_container_templated_shared_method.hpp" />
+    <ClInclude Include="..\..\..\source\aatc_container_tempspec_shared.hpp" />
+    <ClInclude Include="..\..\..\source\aatc_container_tempspec_shared_method.hpp" />
     <ClInclude Include="..\..\..\source\aatc_container_traits.hpp" />
     <ClInclude Include="..\..\..\source\aatc_container_templated_shared.hpp" />
     <ClInclude Include="..\..\..\source\aatc_container_vector.hpp" />

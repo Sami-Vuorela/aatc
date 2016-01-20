@@ -51,11 +51,18 @@ namespace aatc {
 			{
 				(*this) = other;
 			}
-
 			vector& vector::operator=(const vector& other) { Containerbase::operator=(other); return *this; }
+
 			vector& vector::swap(vector& other) {
 				shared::method::swap(this, other);
 				return *this;
+			}
+
+			void vector::push_back(void* a) {
+				shared::method::push_back(this, a);
+			}
+			void* vector::back() {
+				return shared::method::back(this);
 			}
 
 
@@ -66,18 +73,36 @@ namespace aatc {
 
 
 			template<> void register_container<CONTAINER::VECTOR>(asIScriptEngine* engine) {
-				using templated::vector;
-
 				common::RegistrationState rs(engine);
 
-				templated::shared::register_containerbase<vector>(rs, "vector");
-				vector::Iterator::Register(rs);
+				{
+					using templated::vector;
+					using namespace templated::shared;
+
+					register_containerbase<vector>(rs, "vector");
 
 
 
-				templated::shared::register_method::swap<vector>(rs);
-				templated::shared::register_method::push_back<vector>(rs);
-				templated::shared::register_method::back<vector>(rs);
+					register_method::swap<vector>(rs);
+					register_method::push_back<vector>(rs);
+					register_method::back<vector>(rs);
+				}
+
+				container::shared::autoregister::register_all_tempspec_basics_for_container<tempspec::vector>(engine);
+
+				//tempspec::vector<int>::Register(rs,"int");
+
+				//{
+				//	using namespace tempspec::shared;
+
+				//	register_containerbase<tempspec::vector<int>>(rs, "vector","int");
+
+
+
+				//	register_method::swap<tempspec::vector<int>>(rs);
+				//	register_method::push_back<tempspec::vector<int>>(rs);
+				//	register_method::back<tempspec::vector<int>>(rs);
+				//}
 			}
 			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::VECTOR>(enginestorage::template_specific_storage* tss) {
 				common::container_operations_bitmask_type mask = 0;
