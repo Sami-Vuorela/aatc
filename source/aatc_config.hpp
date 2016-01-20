@@ -244,7 +244,6 @@ typedef common::std_Spinlock aatc_ait_fastlock;
 #define aatc_include_primitive_native_tempspec_FLOAT32	1
 #define aatc_include_primitive_native_tempspec_FLOAT64	1
 #define aatc_include_primitive_native_tempspec_STRING	1
-#define aatc_include_primitive_native_tempspec_REF		1
 
 
 /*
@@ -265,20 +264,6 @@ typedef common::std_Spinlock aatc_ait_fastlock;
 
 
 
-/*
-	Enum listing the different containers,
-	used for template specailizations and other magics.
-*/
-enum aatc_CONTAINERTYPE{
-	VECTOR,
-	LIST,
-	SET,
-	UNORDERED_SET,
-	MAP,
-	UNORDERED_MAP,
-
-	_COUNT
-};
 
 
 

@@ -31,57 +31,70 @@ samivuorela@gmail.com
 
 #include "aatc_container_vector.hpp"
 
+#include "aatc_container_listing.hpp"
+#include "aatc_container_templated_shared_method.hpp"
+
 
 
 BEGIN_AS_NAMESPACE
 namespace aatc {
 	namespace container {
-
-
-		vector::vector(asIObjectType* _objtype) :
-			containerbase(_objtype->GetEngine(), _objtype)
-		{}
-		vector::vector(const vector& other) :
-			containerbase(other.engine, other.objtype_container)
-		{
-			(*this) = other;
-		}
-
-		vector& vector::operator=(const vector& other) { containerbase::operator=(other); return *this; }
-		vector& vector::swap(vector& other) {
-			aatc::container::shared::templated::method::swap(this, other);
-			return *this;
-		}
-
-		void debug_Register_Vector(asIScriptEngine* engine, aatc_Initializer* initializer) {
-			aatc::common::RegistrationState rs(engine);
-
-			aatc::container::shared::templated::register_containerbase<vector>(rs, "vector");
+		namespace templated {
 
 
 
-			aatc::container::shared::templated::register_method::swap<vector>(rs);
+			vector::vector(asIObjectType* _objtype) :
+				Containerbase(_objtype->GetEngine(), _objtype)
+			{}
+			vector::vector(const vector& other) :
+				Containerbase(other.engine, other.objtype_container)
+			{
+				(*this) = other;
+			}
 
-			aatc::container::shared::templated::register_method::push_back<vector>(rs);
-			aatc::container::shared::templated::register_method::back<vector>(rs);
-		}
+			vector& vector::operator=(const vector& other) { Containerbase::operator=(other); return *this; }
+			vector& vector::swap(vector& other) {
+				shared::method::swap(this, other);
+				return *this;
+			}
 
 
 
-//
-//template<> aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::VECTOR>(aatc_template_specific_storage* tss) {
-//	aatc_container_operations_bitmask_type mask = 0;
-//
-//	if (!tss->func_cmp) {
-//		mask |= aatc_CONTAINER_OPERATION::SORT;
-//	}
-//	if (!tss->func_equals) {
-//		mask |= aatc_CONTAINER_OPERATION::COUNT;
-//	}
-//
-//	return mask;
-//}
+		};//namespace templated
+		namespace listing {
 
+
+
+			template<> void register_container<CONTAINER::VECTOR>(asIScriptEngine* engine) {
+				using templated::vector;
+
+				common::RegistrationState rs(engine);
+
+				templated::shared::register_containerbase<vector>(rs, "vector");
+				vector::Iterator::Register(rs);
+
+
+
+				templated::shared::register_method::swap<vector>(rs);
+				templated::shared::register_method::push_back<vector>(rs);
+				templated::shared::register_method::back<vector>(rs);
+			}
+			template<> common::container_operations_bitmask_type register_errorcheck_container_type_missing_functions<CONTAINER::VECTOR>(common::template_specific_storage* tss) {
+				common::container_operations_bitmask_type mask = 0;
+				
+				if (!tss->func_cmp) {
+					mask |= common::aatc_CONTAINER_OPERATION::SORT;
+				}
+				if (!tss->func_equals) {
+					mask |= common::aatc_CONTAINER_OPERATION::COUNT;
+				}
+				
+				return mask;
+			}
+
+
+
+		};//namespace listing
 
 
 

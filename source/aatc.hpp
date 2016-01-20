@@ -32,6 +32,7 @@
 #define _includedh_aatc_aatc
 
 #include "aatc_config.hpp"
+#include "aatc_container_listing.hpp"
 
 
 
@@ -39,38 +40,46 @@ BEGIN_AS_NAMESPACE
 namespace aatc {
 
 
+
+	/*!
+	Just call this if you want to have every container available and dont care about engine specific settings.
+	*/
+	void RegisterAllContainers(asIScriptEngine* engine);
+
+
+
 	/*!\brief The initializer class used for engine specific registration settings*/
-	class aatc_Initializer {
+	class Initializer {
 	public:
-		asIScriptEngine* engine;
 
 		/*!
 			This array will default to all false.
 		*/
-		bool include_container[aatc_CONTAINERTYPE::_COUNT];
+		bool include_container[container::listing::CONTAINER::_COUNT];
 
-		aatc_Initializer(asIScriptEngine* engine);
+		Initializer(asIScriptEngine* engine);
 
 		/*!
 			Call this after setting your settings.
 		*/
 		void Go();
-		void _Go2();
+
+
+	private:
+		asIScriptEngine* engine;
 
 		void RegisterTempspecs();
 		void RegisterTempspecs2();
 	};
 
-	/*!
-	Just call this if you want to have every container available and dont care about engine specific settings.
-	*/
-	void aatc_RegisterAllContainers(asIScriptEngine* engine);
 
-#if aatc_CONFIG_USE_ASADDON_SERIALIZER
-	class CSerializer;
-	void aatc_serializer_register(asIScriptEngine* engine, CSerializer* serializer);
-	void aatc_serializer_cleanup(asIScriptEngine* engine, CSerializer* serializer);
-#endif
+
+	#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+		class ::CSerializer;
+		void aatc_serializer_register(asIScriptEngine* engine, CSerializer* serializer);
+		void aatc_serializer_cleanup(asIScriptEngine* engine, CSerializer* serializer);
+	#endif
+
 
 
 };//namespace aatc

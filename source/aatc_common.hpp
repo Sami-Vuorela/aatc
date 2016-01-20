@@ -31,7 +31,7 @@
 #ifndef _includedh_aatc_common
 #define _includedh_aatc_common
 
-#include "aatc.hpp"
+#include "aatc_config.hpp"
 
 
 
@@ -286,8 +286,9 @@ namespace aatc {
 			char n_container_class_T[bufsize];
 
 			char n_iterator[bufsize];
-			char n_iterator_TT[bufsize];
-
+			char n_iterator_T[bufsize];
+			char n_iterator_class_T[bufsize];
+			
 			char textbuf[bufsize];
 			int error;
 
@@ -473,21 +474,6 @@ namespace aatc {
 
 
 
-		template<int containerid> void aatc_register_container(asIScriptEngine* engine, aatc_Initializer* initializer){}
-		template<> void aatc_register_container<aatc_CONTAINERTYPE::VECTOR>(asIScriptEngine* engine, aatc_Initializer* initializer);
-		template<> void aatc_register_container<aatc_CONTAINERTYPE::LIST>(asIScriptEngine* engine, aatc_Initializer* initializer);
-		template<> void aatc_register_container<aatc_CONTAINERTYPE::SET>(asIScriptEngine* engine, aatc_Initializer* initializer);
-		template<> void aatc_register_container<aatc_CONTAINERTYPE::UNORDERED_SET>(asIScriptEngine* engine, aatc_Initializer* initializer);
-		template<> void aatc_register_container<aatc_CONTAINERTYPE::MAP>(asIScriptEngine* engine, aatc_Initializer* initializer);
-		template<> void aatc_register_container<aatc_CONTAINERTYPE::UNORDERED_MAP>(asIScriptEngine* engine, aatc_Initializer* initializer);
-
-		template<int CONTAINER_ID> container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions(template_specific_storage* tss){ return 0; }
-		template<> container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::VECTOR>(template_specific_storage* tss);
-		template<> container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::LIST>(template_specific_storage* tss);
-		template<> container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::SET>(template_specific_storage* tss);
-		template<> container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::UNORDERED_SET>(template_specific_storage* tss);
-		template<> container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::MAP>(template_specific_storage* tss);
-		template<> container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::UNORDERED_MAP>(template_specific_storage* tss);
 
 
 

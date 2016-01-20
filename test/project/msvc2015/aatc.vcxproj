@@ -161,9 +161,11 @@
     <ClInclude Include="..\..\..\source\aatc.hpp" />
     <ClInclude Include="..\..\..\source\aatc_common.hpp" />
     <ClInclude Include="..\..\..\source\aatc_config.hpp" />
+    <ClInclude Include="..\..\..\source\aatc_container_listing.hpp" />
     <ClInclude Include="..\..\..\source\aatc_container_shared.hpp" />
+    <ClInclude Include="..\..\..\source\aatc_container_templated_shared_method.hpp" />
     <ClInclude Include="..\..\..\source\aatc_container_traits.hpp" />
-    <ClInclude Include="..\..\..\source\aatc_container_shared_template.hpp" />
+    <ClInclude Include="..\..\..\source\aatc_container_templated_shared.hpp" />
     <ClInclude Include="..\..\..\source\aatc_container_vector.hpp" />
     <ClInclude Include="..\..\..\source\aatc_hash.hpp" />
     <ClInclude Include="..\..\..\source\aatc_internal_lists.hpp" />

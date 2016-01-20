@@ -34,7 +34,7 @@ samivuorela@gmail.com
 
 
 #include "aatc_common.hpp"
-#include "aatc_container_shared_template.hpp"
+#include "aatc_container_templated_shared.hpp"
 
 
 
@@ -42,26 +42,31 @@ BEGIN_AS_NAMESPACE
 namespace aatc {
 	namespace container {
 
-		class vector_tags : public aatc::container::shared::tagbase {
+
+
+		class vector_tags : public shared::tagbase {
 		public:
-			typedef aatc::container::shared::tag::iterator_access_is_mutable iterator_access;
-		};
-
-		class vector : public aatc::container::shared::templated::Containerbase < aatc_acit_vector<void*>, aatc_CONTAINERTYPE::VECTOR, vector_tags> {
-		public:
-			typename typedef aatc::container::shared::templated::Containerbase < aatc_acit_vector<void*>, aatc_CONTAINERTYPE::VECTOR, vector_tags> containerbase;
-
-
-
-			vector(asIObjectType* objtype);
-			vector(const vector& other);
-
-			vector& operator=(const vector& other);
-			vector& swap(vector& other);
+			typedef shared::tag::iterator_access_is_mutable iterator_access;
 		};
 
 
 
+		namespace templated {
+
+			
+
+			class vector : public shared::Containerbase < aatc_acit_vector<void*>, aatc::container::listing::CONTAINER::VECTOR, vector_tags> {
+			public:
+				vector(asIObjectType* objtype);
+				vector(const vector& other);
+
+				vector& operator=(const vector& other);
+				vector& swap(vector& other);
+			};
+
+
+
+		};//namespace templated
 	};//namespace container
 };//namespace aatc
 END_AS_NAMESPACE

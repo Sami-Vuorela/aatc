@@ -136,9 +136,6 @@
     <ClInclude Include="..\..\..\source\aatc_container_traits.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_container_shared_template.hpp">
-      <Filter>as addons\aatc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\source\aatc_container_shared.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
@@ -146,6 +143,15 @@
       <Filter>as addons\aatc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\aatc_container_vector.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_templated_shared.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_templated_shared_method.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_listing.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
   </ItemGroup>
