@@ -5,6 +5,7 @@
 
 #include "../source/aatc_common.hpp"
 
+#include "../source/aatc_container_vector.hpp"
 
 
 
@@ -31,11 +32,27 @@ void main_contents(){
 
 	asIScriptModule* module = engine->GetModule("testmodule");
 
+
+
+
+	aatc::container::tempspec::vector<int>* testcont = new aatc::container::tempspec::vector<int>();
+
+	testcont->push_back(11);
+	testcont->push_back(22);
+
+
 	asIScriptFunction* func_scriptmain = module->GetFunctionByName("scriptmain");
+	asIScriptFunction* func_scriptmain2 = module->GetFunctionByName("scriptmain2");
 
 	asIScriptContext* cc = engine->RequestContext();
 
 		cc->Prepare(func_scriptmain);
+		cc->Execute();
+
+
+
+		cc->Prepare(func_scriptmain2);
+		cc->SetArgAddress(0, testcont);
 		cc->Execute();
 
 		#if TEST_SERIALIZER

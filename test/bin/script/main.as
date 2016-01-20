@@ -12,6 +12,7 @@ bool test_enable_print_failure = true;
 // #include "00 auto iterator tests.as"
 // #include "00 serializer tests.as"
 
+
 void scriptmain(){
 	//TestContainer_vector();
 	//TestContainer_list();
@@ -95,4 +96,16 @@ void scriptmain(){
 	Print("");
 	Print("Tests successful = "+test_success_count);
 	Print("Tests failed = "+test_failure_count);
+}
+
+void scriptmain2(vector<int>@ cont){
+		for(auto it = cont.begin(); it++;){
+			Print(""+it.value);
+		}
+		
+		Print(""+cont.back());
+		
+		Print("");
+		Print("");
+		Print("");
 }
