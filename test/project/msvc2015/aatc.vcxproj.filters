@@ -56,6 +56,9 @@
     <ClCompile Include="..\..\..\source\aatc_enginestorage.cpp">
       <Filter>as addons\aatc</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_container_map.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\as_engine.hpp">
@@ -137,6 +140,15 @@
       <Filter>as addons\aatc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\aatc_container_tempspec_shared_method.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_templated_map_shared.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_map.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_templated_map_shared_method.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
   </ItemGroup>

@@ -84,7 +84,7 @@ namespace aatc {
 			func_cmp(NULL),
 			func_hash(NULL)
 		{
-			asIScriptEngine* engine = asGetActiveContext()->GetEngine();
+			asIScriptEngine* engine = ctss->els->engine;
 			asIObjectType* objtype = engine->GetObjectTypeById(subtypeid);
 
 			//get opEquals or opCmp function for this type to be stored

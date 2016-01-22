@@ -6,6 +6,7 @@
 #include "../source/aatc_common.hpp"
 
 #include "../source/aatc_container_vector.hpp"
+#include "../source/aatc_container_map.hpp"
 
 
 
@@ -32,8 +33,23 @@ void main_contents(){
 
 	asIScriptModule* module = engine->GetModule("testmodule");
 
+	auto ot = engine->GetObjectTypeByDecl("map<int,int>");
 
+	aatc::container::templated::map::map* cont_map = new aatc::container::templated::map::map(ot);
+	{
+		{
+			int key = 1;
+			int value = 11;
 
+			cont_map->insert(&key, &value);
+		}
+		{
+			int key = 2;
+			int value = 22;
+
+			cont_map->insert(&key, &value);
+		}
+	}
 
 	aatc::container::tempspec::vector<int>* testcont = new aatc::container::tempspec::vector<int>();
 
@@ -43,6 +59,7 @@ void main_contents(){
 
 	asIScriptFunction* func_scriptmain = module->GetFunctionByName("scriptmain");
 	asIScriptFunction* func_scriptmain2 = module->GetFunctionByName("scriptmain2");
+	asIScriptFunction* func_test_container_interface_map_1 = module->GetFunctionByName("test_container_interface_map_1");
 
 	asIScriptContext* cc = engine->RequestContext();
 
@@ -53,6 +70,10 @@ void main_contents(){
 
 		cc->Prepare(func_scriptmain2);
 		cc->SetArgAddress(0, testcont);
+		cc->Execute();
+
+		cc->Prepare(func_test_container_interface_map_1);
+		cc->SetArgAddress(0, cont_map);
 		cc->Execute();
 
 		#if TEST_SERIALIZER

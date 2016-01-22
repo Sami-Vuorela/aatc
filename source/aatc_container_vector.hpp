@@ -45,9 +45,13 @@ namespace aatc {
 
 
 
-		class vector_tags : public shared::tagbase {
-		public:
-			typedef shared::tag::iterator_access_is_mutable iterator_access;
+		namespace detail {
+			namespace tags_of_container {
+				class vector : public shared::tagbase {
+				public:
+					typedef shared::tag::iterator_access_is_mutable iterator_access;
+				};
+			};
 		};
 
 
@@ -56,7 +60,11 @@ namespace aatc {
 
 
 
-			class vector : public shared::Containerbase < aatc_acit_vector<void*>, aatc::container::listing::CONTAINER::VECTOR, vector_tags> {
+			class vector : public shared::Containerbase <
+				aatc_acit_vector<void*>,
+				aatc::container::listing::CONTAINER::VECTOR,
+				container::detail::tags_of_container::vector
+			> {
 			public:
 				vector(asIObjectType* objtype);
 				vector(const vector& other);
@@ -77,7 +85,11 @@ namespace aatc {
 
 
 
-			template<typename T> class vector : public shared::Containerbase < aatc_acit_vector<T>, T, vector_tags> {
+			template<typename T_content> class vector : public shared::Containerbase <
+				aatc_acit_vector<T_content>,
+				T_content,
+				container::detail::tags_of_container::vector
+			> {
 			public:
 				vector() {}
 				vector(const vector& other):
@@ -89,8 +101,8 @@ namespace aatc {
 
 				vector& swap(vector& other) { shared::method::swap(this, other); return *this; }
 
-				void push_back(const T& a) { shared::method::push_back(this, a); }
-				T back() { return shared::method::back(this); }
+				void push_back(const T_content& a) { shared::method::push_back(this, a); }
+				T_content back() { return shared::method::back(this); }
 
 
 
@@ -109,7 +121,7 @@ namespace aatc {
 
 
 
-		};//namespace templated
+		};//namespace tempspec
 	};//namespace container
 };//namespace aatc
 END_AS_NAMESPACE

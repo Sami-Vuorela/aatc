@@ -91,6 +91,18 @@ void scriptmain(){
 		
 		Print(""+cont.back());
 	}
+	Print("");
+	{
+		map<int,int> cont;
+		
+		cont.insert(1,11);
+		cont.insert(3,33);
+		cont.insert(2,22);
+		
+		for(auto it = cont.begin(); it++;){
+			Print(""+ it.key +" , " + it.value);
+		}
+	}
 	
 	Print("");
 	Print("");
@@ -104,6 +116,16 @@ void scriptmain2(vector<int>@ cont){
 		}
 		
 		Print(""+cont.back());
+		
+		Print("");
+		Print("");
+		Print("");
+}
+
+void test_container_interface_map_1(map<int,int>@ cont){
+		for(auto it = cont.begin(); it++;){
+			Print(""+ it.key +" , " + it.value);
+		}
 		
 		Print("");
 		Print("");
