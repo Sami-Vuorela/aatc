@@ -35,7 +35,7 @@ void main_contents(){
 
 	auto ot = engine->GetObjectTypeByDecl("map<int,int>");
 
-	aatc::container::templated::mapped::map* cont_map = new aatc::container::templated::mapped::map(ot);
+	aatc::container::mapped::templated::map* cont_map = new aatc::container::mapped::templated::map(ot);
 	{
 		{
 			int key = 1;
@@ -55,7 +55,6 @@ void main_contents(){
 
 	testcont->push_back(11);
 	testcont->push_back(22);
-
 
 	asIScriptFunction* func_scriptmain = module->GetFunctionByName("scriptmain");
 	asIScriptFunction* func_scriptmain2 = module->GetFunctionByName("scriptmain2");

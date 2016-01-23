@@ -151,10 +151,10 @@
     <ClInclude Include="..\..\..\source\aatc_container_unordered_map.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_container_templated_mapped_shared.hpp">
+    <ClInclude Include="..\..\..\source\aatc_container_mapped_templated_shared.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_container_templated_mapped_shared_method.hpp">
+    <ClInclude Include="..\..\..\source\aatc_container_mapped_templated_shared_method.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
   </ItemGroup>

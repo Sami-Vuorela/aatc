@@ -34,13 +34,14 @@ samivuorela@gmail.com
 
 
 #include "aatc_common.hpp"
-#include "aatc_container_templated_mapped_shared.hpp"
+#include "aatc_container_mapped_templated_shared.hpp"
 
 
 
 BEGIN_AS_NAMESPACE
 namespace aatc {
 	namespace container {
+
 
 
 		namespace detail {
@@ -50,23 +51,22 @@ namespace aatc {
 					typedef shared::tag::iterator_access_is_const iterator_access;
 				};
 			};
+
+			namespace container_native_with_functors {
+				typedef aatc_acit_map<
+					common::primunion,
+					common::primunion,
+					container::shared::containerfunctor_map::Comp
+				> map;
+			};
 		};
 
 
 
-		namespace templated {
-			namespace mapped {
+		namespace mapped {
+			namespace templated {
 
 
-				namespace detail {
-					namespace container_native_with_functors {
-						typedef aatc_acit_map<
-							common::primunion,
-							common::primunion,
-							container::shared::containerfunctor_map::Comp
-						> map;
-					};
-				};
 
 				class map : public shared::Containerbase <
 					detail::container_native_with_functors::map,
@@ -91,8 +91,8 @@ namespace aatc {
 
 
 
-			};//namespace mapped
-		};//namespace templated
+			};//namespace templated
+		};//namespace mapped
 	};//namespace container
 };//namespace aatc
 END_AS_NAMESPACE

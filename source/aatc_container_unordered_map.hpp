@@ -34,7 +34,7 @@ samivuorela@gmail.com
 
 
 #include "aatc_common.hpp"
-#include "aatc_container_templated_mapped_shared.hpp"
+#include "aatc_container_mapped_templated_shared.hpp"
 
 
 
@@ -50,25 +50,22 @@ namespace aatc {
 					typedef shared::tag::iterator_access_is_const iterator_access;
 				};
 			};
+			namespace container_native_with_functors {
+				typedef aatc_acit_unordered_map<
+					common::primunion,
+					common::primunion,
+					container::shared::containerfunctor_map::Hash,
+					container::shared::containerfunctor_map::Equals
+				> unordered_map;
+			};
 		};
 
 
 
-		namespace templated {
-			namespace mapped {
+		namespace mapped {
+			namespace templated {
 
 
-
-				namespace detail {
-					namespace container_native_with_functors {
-						typedef aatc_acit_unordered_map<
-							common::primunion,
-							common::primunion,
-							container::shared::containerfunctor_map::Hash,
-							container::shared::containerfunctor_map::Equals
-						> unordered_map;
-					};
-				};
 
 				class unordered_map : public shared::Containerbase <
 					detail::container_native_with_functors::unordered_map,
@@ -94,8 +91,8 @@ namespace aatc {
 
 
 
-			};//namespace mapped
-		};//namespace templated
+			};//namespace templated
+		};//namespace mapped
 	};//namespace container
 };//namespace aatc
 END_AS_NAMESPACE

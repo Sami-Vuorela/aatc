@@ -32,15 +32,15 @@ samivuorela@gmail.com
 #include "aatc_container_map.hpp"
 
 #include "aatc_container_listing.hpp"
-#include "aatc_container_templated_mapped_shared_method.hpp"
+#include "aatc_container_mapped_templated_shared_method.hpp"
 
 
 
 BEGIN_AS_NAMESPACE
 namespace aatc {
 	namespace container {
-		namespace templated {
-			namespace mapped {
+		namespace mapped {
+			namespace templated {
 
 
 
@@ -65,8 +65,8 @@ namespace aatc {
 
 
 
-			};//namespace mapped
-		};//namespace templated
+			};//namespace templated
+		};//namespace mapped
 		namespace listing {
 
 
@@ -75,8 +75,8 @@ namespace aatc {
 				common::RegistrationState rs(engine);
 
 				{
-					using templated::mapped::map;
-					using namespace templated::mapped::shared;
+					using mapped::templated::map;
+					using namespace mapped::templated::shared;
 
 					register_containerbase<map>(rs, "map");
 
