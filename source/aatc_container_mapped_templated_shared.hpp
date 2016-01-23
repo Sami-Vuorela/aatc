@@ -28,8 +28,8 @@ samivuorela@gmail.com
 */
 
 
-#ifndef _includedh_aatc_container_templated_mapped_shared
-#define _includedh_aatc_container_templated_mapped_shared
+#ifndef _includedh_aatc_container_mapped_templated_shared
+#define _includedh_aatc_container_mapped_templated_shared
 
 
 
@@ -43,8 +43,8 @@ samivuorela@gmail.com
 BEGIN_AS_NAMESPACE
 namespace aatc {
 	namespace container {
-		namespace templated {
-			namespace mapped {
+		namespace mapped {
+			namespace templated {
 				namespace shared {
 
 
@@ -960,9 +960,9 @@ namespace aatc {
 						rs.error = rs.engine->RegisterObjectType(rs.n_container_class_T, 0, asOBJ_REF | asOBJ_GC | asOBJ_TEMPLATE); assert(rs.error >= 0);
 
 						sprintf_s(rs.textbuf, aatc::common::RegistrationState::bufsize, "%s@ f(int&in)", rs.n_container_T);
-						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(container::templated::mapped::shared::Factory<T_container>, (asIObjectType*), T_container*), asCALL_CDECL); assert(rs.error >= 0);
+						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(container::mapped::templated::shared::Factory<T_container>, (asIObjectType*), T_container*), asCALL_CDECL); assert(rs.error >= 0);
 						sprintf_s(rs.textbuf, aatc::common::RegistrationState::bufsize, "%s@ f(int&in,const %s &in)", rs.n_container_T, rs.n_container_T);
-						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(container::templated::mapped::shared::Factory_copy<T_container>, (asIObjectType*, const T_container&), T_container*), asCALL_CDECL); assert(rs.error >= 0);
+						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(container::mapped::templated::shared::Factory_copy<T_container>, (asIObjectType*, const T_container&), T_container*), asCALL_CDECL); assert(rs.error >= 0);
 						sprintf_s(rs.textbuf, aatc::common::RegistrationState::bufsize, "%s& opAssign(const %s &in)", rs.n_container_T, rs.n_container_T);
 						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, operator=), asCALL_THISCALL); assert(rs.error >= 0);
 
@@ -1002,8 +1002,8 @@ namespace aatc {
 
 
 				};//namespace shared
-			};//namespace mapped
-		};//namespace templated
+			};//namespace templated
+		};//namespace mapped
 	};//namespace container
 };//namespace aatc
 END_AS_NAMESPACE

@@ -28,20 +28,20 @@ samivuorela@gmail.com
 */
 
 
-#ifndef _includedh_aatc_container_templated_mapped_shared_method
-#define _includedh_aatc_container_templated_mapped_shared_method
+#ifndef _includedh_aatc_container_mapped_templated_shared_method
+#define _includedh_aatc_container_mapped_templated_shared_method
 
 
 
-#include "aatc_container_templated_mapped_shared.hpp"
+#include "aatc_container_mapped_templated_shared.hpp"
 
 
 
 BEGIN_AS_NAMESPACE
 namespace aatc {
 	namespace container {
-		namespace templated {
-			namespace mapped {
+		namespace mapped {
+			namespace templated {
 				namespace shared {
 
 
@@ -173,8 +173,8 @@ namespace aatc {
 
 
 				};//namespace shared
-			};//namespace mapped
-		};//namespace templated
+			};//namespace templated
+		};//namespace mapped
 	};//namespace container
 };//namespace aatc
 END_AS_NAMESPACE
