@@ -58,29 +58,29 @@ namespace aatc {
 
 			common::container_operations_bitmask_type missing_functions;
 
-			template_specific_storage(containertype_specific_storage* ctss,aatc_type_uint32 id);
+			template_specific_storage(containertype_specific_storage* ctss,config::t::uint32 id);
 		};
 
 		/*!\brief Stores dataz about a specific container type. One per container type per engine.*/
 		class containertype_specific_storage{
 		public:
 			engine_level_storage* els;
-			aatc_type_uint32 container_id;
+			config::t::uint32 container_id;
 
 			//typedef aatc_ait_storage_map<uint32, aatc_iterator_storage*> tmap_is;
 			//typedef aatc_ait_storage_pair<uint32, aatc_iterator_storage*> tpair_is;
 			//tmap_is iterator_storages;
-			//aatc_ait_fastlock iterator_storages_lock;
+			//config::ait_fastlock iterator_storages_lock;
 
-			typedef aatc_ait_storage_map<aatc_type_uint32, template_specific_storage*> tmap_tss;
-			typedef aatc_ait_storage_pair<aatc_type_uint32, template_specific_storage*> tpair_tss;
+			typedef aatc_ait_storage_map<config::t::uint32, template_specific_storage*> tmap_tss;
+			typedef aatc_ait_storage_pair<config::t::uint32, template_specific_storage*> tpair_tss;
 			tmap_tss template_specific_storages;
-			aatc_ait_fastlock template_specific_storages_lock;
+			config::ait_fastlock template_specific_storages_lock;
 
 			common::container_operations_bitmask_type (*func_errorcheck_missing_functions_make_bitfield_for_template)(template_specific_storage* tss);
 
 			//aatc_iterator_storage* GetIteratorStorage(uint32 id);
-			template_specific_storage* GetTemplateSpecificStorage(aatc_type_uint32 id);
+			template_specific_storage* GetTemplateSpecificStorage(config::t::uint32 id);
 
 			~containertype_specific_storage();
 		};
@@ -105,7 +105,7 @@ namespace aatc {
 			containertype_specific_storage containertype_specific_storages[123];
 
 			std::vector<asIScriptContext*> context_cache;
-			aatc_ait_fastlock context_cache_lock;
+			config::ait_fastlock context_cache_lock;
 
 		#if aatc_CONFIG_USE_ASADDON_SERIALIZER
 			std::vector<serializer_helper> serializer_tempspec_helpers[aatc_CONTAINERTYPE::_COUNT];
@@ -115,7 +115,7 @@ namespace aatc {
 			engine_level_storage(asIScriptEngine* engine);
 			~engine_level_storage();
 
-			containertype_specific_storage* GetContainerTypeSpecificStorage(aatc_type_uint32 id);
+			containertype_specific_storage* GetContainerTypeSpecificStorage(config::t::uint32 id);
 
 			asIScriptContext* contextcache_Get();
 			void contextcache_Return(asIScriptContext* a);

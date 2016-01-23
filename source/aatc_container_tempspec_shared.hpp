@@ -98,13 +98,13 @@ namespace aatc {
 						safety_iteratorversion_Increment();
 					}
 
-					aatc_type_sizetype count(const T_content& value) { return (aatc_type_sizetype)(std::count(container.begin(), container.end(), value)); }
+					config::t::sizetype count(const T_content& value) { return (config::t::sizetype)(std::count(container.begin(), container.end(), value)); }
 					void clear() {
 						container.clear();
 						safety_iteratorversion_Increment();
 					}
 					bool empty() { return container.empty(); }
-					aatc_type_sizetype size() { return (aatc_type_sizetype)(container.size()); }
+					config::t::sizetype size() { return (config::t::sizetype)(container.size()); }
 
 
 
@@ -367,7 +367,7 @@ namespace aatc {
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, clear), asCALL_THISCALL); assert(rs.error >= 0);
 					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s()", config::scriptname::method::container::empty);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, empty), asCALL_THISCALL); assert(rs.error >= 0);
-					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s()", aatc_name_script_sizetype, config::scriptname::method::container::size);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s()", config::scriptname::t::size, config::scriptname::method::container::size);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, size), asCALL_THISCALL); assert(rs.error >= 0);
 
 					T_container::Iterator::Register(rs);

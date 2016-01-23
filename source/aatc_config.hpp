@@ -103,6 +103,14 @@ namespace aatc {
 
 
 
+#if defined AS_64BIT_PTR
+	#define aatc_ENABLE_HASHTYPE_BITS 64
+#else
+	#define aatc_ENABLE_HASHTYPE_BITS 32
+#endif
+
+//use script typedef for convenience in script?
+#define aatc_ENABLE_REGISTER_TYPEDEF_HASH_TYPE 1
 
 
 namespace config {
@@ -127,6 +135,14 @@ namespace config {
 
 		typedef int32 sizetype;
 		typedef int32 astypeid;
+
+
+
+		#if aatc_ENABLE_HASHTYPE_BITS == 32
+			typedef uint32 hash;
+		#elif aatc_ENABLE_HASHTYPE_BITS == 64
+			typedef uint64 hash;
+		#endif
 	};
 
 	/*
@@ -149,6 +165,13 @@ namespace config {
 	namespace scriptname {
 		namespace t {
 			static const char* size = "int";
+			static const char* hash = "aatc_hash_t";
+
+			#if aatc_ENABLE_HASHTYPE_BITS == 32
+				static const char* hash_actual = "uint";
+			#elif aatc_ENABLE_HASHTYPE_BITS == 64
+				static const char* hash_actual = "uint64";
+			#endif
 		};
 
 		namespace container {
@@ -214,60 +237,34 @@ namespace config {
 
 
 
+	namespace errormessage {
+		namespace iterator {
+			/*
+				Happens when trying to access or set an iterator and the container has been modified after iterator construction.
+			*/
+			static const char* container_modified = "Invalid iterator. Container has been modified during iteration.";
+
+			/*
+				Used by the container if it tries to use an invalid iterator.
+
+				Example of erasing twice with the same iterator:
+				vector<int> myvec;
+				//add 1 2 3 4 5 to vector
+				auto it = myvec.find_iterator(3);
+				myvec.erase(it);//no problem
+				myvec.erase(it);//this line will cause this exception, because the first erase changed the container state and invalidated all iterators
+			*/
+			static const char* is_invalid = "Invalid iterator.";
+		};
+	};
 };
 
-//primitive typedefs, set these appropriately for your platform if stdint doesnt work
-typedef uint8_t		aatc_type_uint8;
-typedef uint16_t	aatc_type_uint16;
-typedef uint32_t	aatc_type_uint32;
-typedef uint64_t	aatc_type_uint64;
-typedef int8_t		aatc_type_int8;
-typedef int16_t		aatc_type_int16;
-typedef int32_t		aatc_type_int32;
-typedef int64_t		aatc_type_int64;
-typedef float		aatc_type_float32;
-typedef double		aatc_type_float64;
-
-typedef ::std::string aatc_type_string;//use whatever you use in script (users of angelscript addon scriptstdstring should use std::string here)
-
-typedef aatc_type_int32 aatc_type_sizetype;
-#define aatc_name_script_sizetype "int"
-
-typedef aatc_type_int32 aatc_type_astypeid;
-#define aatc_type_astypeid_typeid asTYPEID_INT32
-
-#if defined AS_64BIT_PTR
-	#define aatc_astypeid_of_pointer asTYPEID_UINT64
-#else
-	#define aatc_astypeid_of_pointer asTYPEID_UINT32
-#endif
 
 
-
-#if defined AS_64BIT_PTR
-	#define aatc_ENABLE_HASHTYPE_BITS 64
-#else
-	#define aatc_ENABLE_HASHTYPE_BITS 32
-#endif
-
-#if aatc_ENABLE_HASHTYPE_BITS == 32
-	typedef aatc_type_uint32 aatc_hash_type;
-	#define aatc_hash_type_scriptname_actual "uint"
-#endif
-#if aatc_ENABLE_HASHTYPE_BITS == 64
-	typedef aatc_type_uint64 aatc_hash_type;
-	#define aatc_hash_type_scriptname_actual "uint64"
-#endif
-
-//use script typedef for convenience in script?
-#define aatc_ENABLE_REGISTER_TYPEDEF_HASH_TYPE 1
-//this will appear in script if typedef is enabled
-#define aatc_hash_type_scriptname "aatc_hash_t"
-
-namespace common {
-	class std_Spinlock;
+namespace common { class std_Spinlock; };
+namespace config {
+	typedef common::std_Spinlock ait_fastlock;
 };
-typedef common::std_Spinlock aatc_ait_fastlock;
 
 
 
@@ -315,20 +312,6 @@ typedef common::std_Spinlock aatc_ait_fastlock;
 #define aatc_errormessage_container_access_bounds_formatting_param5 size
 #define aatc_errormessage_container_access_bounds_formatting "%s<%s>::%s[%i] is out of bounds. Size = %i."
 
-/*
-	Happens when trying to access or set an iterator and the container has been modified after iterator construction.
-*/
-#define aatc_errormessage_iterator_container_modified "Invalid iterator. Container has been modified during iteration."
-/*
-	Used by the container if it tries to use an invalid iterator.
-	Example of erasing twice with the same iterator:
-		vector<int> myvec;
-		//add 1 2 3 4 5 to vector
-		auto it = myvec.find_iterator(3);
-		myvec.erase(it);
-		myvec.erase(it);//this line will cause this exception, because the first erase changed the container state and invalidated all iterators
-*/
-#define aatc_errormessage_container_iterator_invalid "Invalid iterator."
 
 
 

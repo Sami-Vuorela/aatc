@@ -97,8 +97,8 @@ public:
 	asIObjectType* objtype_key;
 	asIObjectType* objtype_value;
 
-	aatc_type_astypeid astypeid_key;
-	aatc_type_astypeid astypeid_value;
+	config::t::astypeid astypeid_key;
+	config::t::astypeid astypeid_value;
 
 	bool objectmode_key;
 	bool objectmode_value;
@@ -422,16 +422,16 @@ public:
 												   break; }
 			case aatc_DATAHANDLINGTYPE::PRIMITIVE:{
 				switch(pt){
-					case aatc_PRIMITIVE_TYPE::INT8:{pu.i8 = *((aatc_type_int8*)inputvalue); break; }
-					case aatc_PRIMITIVE_TYPE::INT16:{pu.i16 = *((aatc_type_int16*)inputvalue); break; }
-					case aatc_PRIMITIVE_TYPE::INT32:{pu.i32 = *((aatc_type_int32*)inputvalue); break; }
-					case aatc_PRIMITIVE_TYPE::INT64:{pu.i64 = *((aatc_type_int64*)inputvalue); break; }
-					case aatc_PRIMITIVE_TYPE::UINT8:{pu.ui8 = *((aatc_type_uint8*)inputvalue); break; }
-					case aatc_PRIMITIVE_TYPE::UINT16:{pu.ui16 = *((aatc_type_uint16*)inputvalue); break; }
-					case aatc_PRIMITIVE_TYPE::UINT32:{pu.ui32 = *((aatc_type_uint32*)inputvalue); break; }
-					case aatc_PRIMITIVE_TYPE::UINT64:{pu.ui64 = *((aatc_type_uint64*)inputvalue); break; }
-					case aatc_PRIMITIVE_TYPE::FLOAT32:{pu.f32 = *((aatc_type_float32*)inputvalue); break; }
-					case aatc_PRIMITIVE_TYPE::FLOAT64:{pu.f64 = *((aatc_type_float64*)inputvalue); break; }
+					case aatc_PRIMITIVE_TYPE::INT8:{pu.i8 = *((config::t::int8*)inputvalue); break; }
+					case aatc_PRIMITIVE_TYPE::INT16:{pu.i16 = *((config::t::int16*)inputvalue); break; }
+					case aatc_PRIMITIVE_TYPE::INT32:{pu.i32 = *((config::t::int32*)inputvalue); break; }
+					case aatc_PRIMITIVE_TYPE::INT64:{pu.i64 = *((config::t::int64*)inputvalue); break; }
+					case aatc_PRIMITIVE_TYPE::UINT8:{pu.ui8 = *((config::t::uint8*)inputvalue); break; }
+					case aatc_PRIMITIVE_TYPE::UINT16:{pu.ui16 = *((config::t::uint16*)inputvalue); break; }
+					case aatc_PRIMITIVE_TYPE::UINT32:{pu.ui32 = *((config::t::uint32*)inputvalue); break; }
+					case aatc_PRIMITIVE_TYPE::UINT64:{pu.ui64 = *((config::t::uint64*)inputvalue); break; }
+					case aatc_PRIMITIVE_TYPE::FLOAT32:{pu.f32 = *((config::t::float32*)inputvalue); break; }
+					case aatc_PRIMITIVE_TYPE::FLOAT64:{pu.f64 = *((config::t::float64*)inputvalue); break; }
 				};
 			break; }
 		};
@@ -445,7 +445,7 @@ public:
 											   auto it = T_container::begin();
 											   auto itend = T_container::end();
 											   for(; it != itend; it++){
-												   //delete (aatc_type_string*)(const_cast<aatc_primunion&>((*it).first).ptr);
+												   //delete (config::t::string*)(const_cast<aatc_primunion&>((*it).first).ptr);
 												   engine->ReleaseScriptObject((*it).first.ptr, objtype_key);
 											   }
 											   break; }
@@ -470,7 +470,7 @@ public:
 											   auto it = T_container::begin();
 											   auto itend = T_container::end();
 											   for(; it != itend; it++){
-												   //delete (aatc_type_string*)(const_cast<aatc_primunion&>((*it).second).ptr);
+												   //delete (config::t::string*)(const_cast<aatc_primunion&>((*it).second).ptr);
 												   engine->ReleaseScriptObject((*it).second.ptr, objtype_value);
 											   }
 											   break; }
@@ -494,7 +494,7 @@ public:
 		T_container::clear();
 	}
 	bool Empty(){ return T_container::empty(); }
-	aatc_type_sizetype Size(){ return (aatc_type_sizetype)(T_container::size()); }
+	config::t::sizetype Size(){ return (config::t::sizetype)(T_container::size()); }
 
 
 
@@ -525,7 +525,7 @@ public:
 
 			switch(datahandlingid_key){
 			case aatc_DATAHANDLINGTYPE::STRING:{
-												   //insertpair.first.ptr = new aatc_type_string(*((aatc_type_string*)newkey));
+												   //insertpair.first.ptr = new config::t::string(*((config::t::string*)newkey));
 												   insertpair.first.ptr = engine->CreateScriptObjectCopy(newkey, objtype_key);
 												   break; }
 			case aatc_DATAHANDLINGTYPE::HANDLE:{
@@ -537,22 +537,22 @@ public:
 												   break; }
 			case aatc_DATAHANDLINGTYPE::PRIMITIVE:{
 													  switch(primitiveid_key){
-													  case aatc_PRIMITIVE_TYPE::INT8:{insertpair.first.i8 = *((aatc_type_int8*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::INT16:{insertpair.first.i16 = *((aatc_type_int16*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::INT32:{insertpair.first.i32 = *((aatc_type_int32*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::INT64:{insertpair.first.i64 = *((aatc_type_int64*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT8:{insertpair.first.ui8 = *((aatc_type_uint8*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT16:{insertpair.first.ui16 = *((aatc_type_uint16*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT32:{insertpair.first.ui32 = *((aatc_type_uint32*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT64:{insertpair.first.ui64 = *((aatc_type_uint64*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::FLOAT32:{insertpair.first.f32 = *((aatc_type_float32*)newkey); break; }
-													  case aatc_PRIMITIVE_TYPE::FLOAT64:{insertpair.first.f64 = *((aatc_type_float64*)newkey); break; }
+													  case aatc_PRIMITIVE_TYPE::INT8:{insertpair.first.i8 = *((config::t::int8*)newkey); break; }
+													  case aatc_PRIMITIVE_TYPE::INT16:{insertpair.first.i16 = *((config::t::int16*)newkey); break; }
+													  case aatc_PRIMITIVE_TYPE::INT32:{insertpair.first.i32 = *((config::t::int32*)newkey); break; }
+													  case aatc_PRIMITIVE_TYPE::INT64:{insertpair.first.i64 = *((config::t::int64*)newkey); break; }
+													  case aatc_PRIMITIVE_TYPE::UINT8:{insertpair.first.ui8 = *((config::t::uint8*)newkey); break; }
+													  case aatc_PRIMITIVE_TYPE::UINT16:{insertpair.first.ui16 = *((config::t::uint16*)newkey); break; }
+													  case aatc_PRIMITIVE_TYPE::UINT32:{insertpair.first.ui32 = *((config::t::uint32*)newkey); break; }
+													  case aatc_PRIMITIVE_TYPE::UINT64:{insertpair.first.ui64 = *((config::t::uint64*)newkey); break; }
+													  case aatc_PRIMITIVE_TYPE::FLOAT32:{insertpair.first.f32 = *((config::t::float32*)newkey); break; }
+													  case aatc_PRIMITIVE_TYPE::FLOAT64:{insertpair.first.f64 = *((config::t::float64*)newkey); break; }
 													  };
 													  break; }
 			};
 			switch(datahandlingid_value){
 			case aatc_DATAHANDLINGTYPE::STRING:{
-												   //insertpair.second.ptr = new aatc_type_string(*((aatc_type_string*)newvalue));
+												   //insertpair.second.ptr = new config::t::string(*((config::t::string*)newvalue));
 												   insertpair.second.ptr = engine->CreateScriptObjectCopy(newvalue, objtype_value);
 												   break; }
 			case aatc_DATAHANDLINGTYPE::HANDLE:{
@@ -564,16 +564,16 @@ public:
 												   break; }
 			case aatc_DATAHANDLINGTYPE::PRIMITIVE:{
 													  switch(primitiveid_value){
-													  case aatc_PRIMITIVE_TYPE::INT8:{insertpair.second.i8 = *((aatc_type_int8*)newvalue); break; }
-													  case aatc_PRIMITIVE_TYPE::INT16:{insertpair.second.i16 = *((aatc_type_int16*)newvalue); break; }
-													  case aatc_PRIMITIVE_TYPE::INT32:{insertpair.second.i32 = *((aatc_type_int32*)newvalue); break; }
-													  case aatc_PRIMITIVE_TYPE::INT64:{insertpair.second.i64 = *((aatc_type_int64*)newvalue); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT8:{insertpair.second.ui8 = *((aatc_type_uint8*)newvalue); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT16:{insertpair.second.ui16 = *((aatc_type_uint16*)newvalue); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT32:{insertpair.second.ui32 = *((aatc_type_uint32*)newvalue); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT64:{insertpair.second.ui64 = *((aatc_type_uint64*)newvalue); break; }
-													  case aatc_PRIMITIVE_TYPE::FLOAT32:{insertpair.second.f32 = *((aatc_type_float32*)newvalue); break; }
-													  case aatc_PRIMITIVE_TYPE::FLOAT64:{insertpair.second.f64 = *((aatc_type_float64*)newvalue); break; }
+													  case aatc_PRIMITIVE_TYPE::INT8:{insertpair.second.i8 = *((config::t::int8*)newvalue); break; }
+													  case aatc_PRIMITIVE_TYPE::INT16:{insertpair.second.i16 = *((config::t::int16*)newvalue); break; }
+													  case aatc_PRIMITIVE_TYPE::INT32:{insertpair.second.i32 = *((config::t::int32*)newvalue); break; }
+													  case aatc_PRIMITIVE_TYPE::INT64:{insertpair.second.i64 = *((config::t::int64*)newvalue); break; }
+													  case aatc_PRIMITIVE_TYPE::UINT8:{insertpair.second.ui8 = *((config::t::uint8*)newvalue); break; }
+													  case aatc_PRIMITIVE_TYPE::UINT16:{insertpair.second.ui16 = *((config::t::uint16*)newvalue); break; }
+													  case aatc_PRIMITIVE_TYPE::UINT32:{insertpair.second.ui32 = *((config::t::uint32*)newvalue); break; }
+													  case aatc_PRIMITIVE_TYPE::UINT64:{insertpair.second.ui64 = *((config::t::uint64*)newvalue); break; }
+													  case aatc_PRIMITIVE_TYPE::FLOAT32:{insertpair.second.f32 = *((config::t::float32*)newvalue); break; }
+													  case aatc_PRIMITIVE_TYPE::FLOAT64:{insertpair.second.f64 = *((config::t::float64*)newvalue); break; }
 													  };
 													  break; }
 			};
@@ -616,7 +616,7 @@ public:
 			switch(datahandlingid_key){
 			case aatc_DATAHANDLINGTYPE::PRIMITIVE:{break; }
 			case aatc_DATAHANDLINGTYPE::STRING:{
-												   //delete ((aatc_type_string*)old_key.ptr);
+												   //delete ((config::t::string*)old_key.ptr);
 												   engine->ReleaseScriptObject(old_key.ptr, objtype_key);
 												   break; }
 			default:{
@@ -626,7 +626,7 @@ public:
 			switch(datahandlingid_value){
 			case aatc_DATAHANDLINGTYPE::PRIMITIVE:{break; }
 			case aatc_DATAHANDLINGTYPE::STRING:{
-												   //delete ((aatc_type_string*)old_value.ptr);
+												   //delete ((config::t::string*)old_value.ptr);
 												   engine->ReleaseScriptObject(old_value.ptr, objtype_value);
 												   break; }
 			default:{
@@ -744,7 +744,7 @@ public:
 		aatc_PRIMITIVE_TYPE primitiveid_value;
 
 		aatc_iterator(){}
-		aatc_iterator(void *ref, aatc_type_astypeid typeId_target_container){
+		aatc_iterator(void *ref, config::t::astypeid typeId_target_container){
 			host = (aatc_container_shared_map_template*)(*(void**)ref);
 			Init();
 		}
@@ -789,7 +789,7 @@ public:
 		static void static_constructor_copy(asIObjectType* objtype_container, aatc_iterator* other, void *memory) {
 			new(memory)aatc_iterator(*other);
 		}
-		static void static_constructor_parentcontainer(asIObjectType* objtype_container, void *ref, aatc_type_astypeid typeId, void *memory){
+		static void static_constructor_parentcontainer(asIObjectType* objtype_container, void *ref, config::t::astypeid typeId, void *memory){
 			new(memory)aatc_iterator(ref, typeId);
 		}
 
@@ -936,18 +936,18 @@ public:
 												   break; }
 			case aatc_DATAHANDLINGTYPE::PRIMITIVE:{
 													  switch(primitiveid_value){
-													  case aatc_PRIMITIVE_TYPE::INT8:{((*it).second.i8) = *((aatc_type_int8*)value); break; }
-													  case aatc_PRIMITIVE_TYPE::INT16:{((*it).second.i16) = *((aatc_type_int16*)value); break; }
-													  case aatc_PRIMITIVE_TYPE::INT32:{((*it).second.i32) = *((aatc_type_int32*)value); break; }
-													  case aatc_PRIMITIVE_TYPE::INT64:{((*it).second.i64) = *((aatc_type_int64*)value); break; }
+													  case aatc_PRIMITIVE_TYPE::INT8:{((*it).second.i8) = *((config::t::int8*)value); break; }
+													  case aatc_PRIMITIVE_TYPE::INT16:{((*it).second.i16) = *((config::t::int16*)value); break; }
+													  case aatc_PRIMITIVE_TYPE::INT32:{((*it).second.i32) = *((config::t::int32*)value); break; }
+													  case aatc_PRIMITIVE_TYPE::INT64:{((*it).second.i64) = *((config::t::int64*)value); break; }
 
-													  case aatc_PRIMITIVE_TYPE::UINT8:{((*it).second.ui8) = *((aatc_type_uint8*)value); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT16:{((*it).second.ui16) = *((aatc_type_uint16*)value); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT32:{((*it).second.ui32) = *((aatc_type_uint32*)value); break; }
-													  case aatc_PRIMITIVE_TYPE::UINT64:{((*it).second.ui64) = *((aatc_type_uint64*)value); break; }
+													  case aatc_PRIMITIVE_TYPE::UINT8:{((*it).second.ui8) = *((config::t::uint8*)value); break; }
+													  case aatc_PRIMITIVE_TYPE::UINT16:{((*it).second.ui16) = *((config::t::uint16*)value); break; }
+													  case aatc_PRIMITIVE_TYPE::UINT32:{((*it).second.ui32) = *((config::t::uint32*)value); break; }
+													  case aatc_PRIMITIVE_TYPE::UINT64:{((*it).second.ui64) = *((config::t::uint64*)value); break; }
 
-													  case aatc_PRIMITIVE_TYPE::FLOAT32:{((*it).second.f32) = *((aatc_type_float32*)value); break; }
-													  case aatc_PRIMITIVE_TYPE::FLOAT64:{((*it).second.f64) = *((aatc_type_float64*)value); break; }
+													  case aatc_PRIMITIVE_TYPE::FLOAT32:{((*it).second.f32) = *((config::t::float32*)value); break; }
+													  case aatc_PRIMITIVE_TYPE::FLOAT64:{((*it).second.f64) = *((config::t::float64*)value); break; }
 													  };
 													  break; }
 			};
@@ -1155,7 +1155,7 @@ public:
 			switch(datahandlingid_key){
 			case aatc_DATAHANDLINGTYPE::PRIMITIVE:{break; }
 			case aatc_DATAHANDLINGTYPE::STRING:{
-												   //delete ((aatc_type_string*)old_key.ptr);
+												   //delete ((config::t::string*)old_key.ptr);
 												   engine->ReleaseScriptObject(old_key.ptr, objtype_key);
 												   break; }
 			default:{
@@ -1165,7 +1165,7 @@ public:
 			switch(datahandlingid_value){
 			case aatc_DATAHANDLINGTYPE::PRIMITIVE:{break; }
 			case aatc_DATAHANDLINGTYPE::STRING:{
-												   //delete ((aatc_type_string*)old_value.ptr);
+												   //delete ((config::t::string*)old_value.ptr);
 												   engine->ReleaseScriptObject(old_value.ptr, objtype_value);
 												   break; }
 			default:{
@@ -1177,7 +1177,7 @@ public:
 		}
 	}
 
-	aatc_type_sizetype Erase_iterator_range(const aatc_iterator& aatc_it_range_begin, const aatc_iterator& aatc_it_range_end){
+	config::t::sizetype Erase_iterator_range(const aatc_iterator& aatc_it_range_begin, const aatc_iterator& aatc_it_range_end){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 			if((iterator_safety_version != aatc_it_range_begin.iterator_safety_version) || (iterator_safety_version != aatc_it_range_end.iterator_safety_version)){
 				aatc_errorprint_container_iterator_invalid();
@@ -1193,7 +1193,7 @@ public:
 		} else{
 			aatc_errorcheck_container_iterator_safety_version_Increment();
 
-			aatc_type_sizetype delcount = (aatc_type_sizetype)std::distance(it_range_begin, it_range_end);
+			config::t::sizetype delcount = (config::t::sizetype)std::distance(it_range_begin, it_range_end);
 
 			std::vector<std::pair<aatc_primunion, aatc_primunion>> old_items;
 			old_items.reserve(delcount);
@@ -1302,7 +1302,7 @@ template<class T_container> void aatc_container_shared_map_template_Register(asI
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Clear), asCALL_THISCALL); assert(r >= 0);
 	sprintf_s(textbuf, 1000, "bool %s()", config::scriptname::method::container::empty);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Empty), asCALL_THISCALL); assert(r >= 0);
-	sprintf_s(textbuf, 1000, "%s %s()", aatc_name_script_sizetype, config::scriptname::method::container::size);
+	sprintf_s(textbuf, 1000, "%s %s()", config::scriptname::t::size, config::scriptname::method::container::size);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Size), asCALL_THISCALL); assert(r >= 0);
 
 	sprintf_s(textbuf, 1000, "void %s(const T_key&in,const T_value&in)", config::scriptname::method::container::insert);
@@ -1338,7 +1338,7 @@ template<class T_container> void aatc_container_shared_map_template_Register(asI
 	sprintf_s(textbuf, 1000, "bool %s(const %s &in)", config::scriptname::method::container::erase_iterator, n_iterator_TT);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Erase_iterator), asCALL_THISCALL); assert(r >= 0);
 
-	sprintf_s(textbuf, 1000, "%s %s(const %s &in,const %s &in)", aatc_name_script_sizetype, config::scriptname::method::container::erase_iterator, n_iterator_TT, n_iterator_TT);
+	sprintf_s(textbuf, 1000, "%s %s(const %s &in,const %s &in)", config::scriptname::t::size, config::scriptname::method::container::erase_iterator, n_iterator_TT, n_iterator_TT);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Erase_iterator_range), asCALL_THISCALL); assert(r >= 0);
 }
 

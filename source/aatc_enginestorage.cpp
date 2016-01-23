@@ -43,7 +43,7 @@ namespace aatc {
 		{}
 		engine_level_storage::~engine_level_storage(){}
 
-		template_specific_storage* containertype_specific_storage::GetTemplateSpecificStorage(aatc_type_uint32 id){
+		template_specific_storage* containertype_specific_storage::GetTemplateSpecificStorage(config::t::uint32 id){
 			template_specific_storage* result;
 
 			template_specific_storages_lock.lock();
@@ -58,7 +58,7 @@ namespace aatc {
 
 			return result;
 		}
-		containertype_specific_storage* engine_level_storage::GetContainerTypeSpecificStorage(aatc_type_uint32 id){
+		containertype_specific_storage* engine_level_storage::GetContainerTypeSpecificStorage(config::t::uint32 id){
 			return &(containertype_specific_storages[id]);
 		}
 
@@ -78,7 +78,7 @@ namespace aatc {
 			context_cache.clear();
 		}
 
-		template_specific_storage::template_specific_storage(containertype_specific_storage* ctss,aatc_type_uint32 subtypeid) :
+		template_specific_storage::template_specific_storage(containertype_specific_storage* ctss,config::t::uint32 subtypeid) :
 			ctss(ctss),
 			func_equals(NULL),
 			func_cmp(NULL),
@@ -154,8 +154,7 @@ namespace aatc {
 				}
 			}
 
-			ctss->func_errorcheck_missing_functions_make_bitfield_for_template(this);
-			//missing_functions = aatc_errorcheck_container_type_missing_functions_base(ctss->container_id,this);
+			missing_functions = ctss->func_errorcheck_missing_functions_make_bitfield_for_template(this);
 		}
 
 		asIScriptContext* engine_level_storage::contextcache_Get(){

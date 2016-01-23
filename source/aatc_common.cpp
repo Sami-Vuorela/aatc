@@ -206,7 +206,7 @@ namespace aatc {
 			return new aatc_script_Funcpointer();
 		}
 
-		bool aatc_script_Funcpointer::Set(aatc_type_string _funcname){
+		bool aatc_script_Funcpointer::Set(config::t::string _funcname){
 			asIScriptContext* ctx = asGetActiveContext();
 			engine = ctx->GetEngine();
 
@@ -232,7 +232,7 @@ namespace aatc {
 			}
 			return ready;
 		}
-		bool aatc_script_Funcpointer::Set(aatc_type_string _funcname, void* ref, int tid){
+		bool aatc_script_Funcpointer::Set(config::t::string _funcname, void* ref, int tid){
 			funcname = _funcname;
 			ready = 0;
 			func = NULL;
@@ -304,7 +304,7 @@ namespace aatc {
 			asGetActiveContext()->SetException(msg);
 		#endif
 		}
-		void aatc_errorprint_container_access_bounds(aatc_type_sizetype index, aatc_type_sizetype size, const char* name_container, const char* name_content, const char* name_operation){
+		void aatc_errorprint_container_access_bounds(config::t::sizetype index, config::t::sizetype size, const char* name_container, const char* name_content, const char* name_operation){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
 			char msg[1000];
 			//sprintf_s(msg, 1000, aatc_errormessage_container_missing_method_formatting, name_content, name_container, name_operation);
@@ -322,18 +322,18 @@ namespace aatc {
 
 		void aatc_errorprint_iterator_container_modified(){
 			#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
-				asGetActiveContext()->SetException(aatc_errormessage_iterator_container_modified);
+				asGetActiveContext()->SetException(config::errormessage::iterator::container_modified);
 			#endif
 		}
 		void aatc_errorprint_container_iterator_invalid(){
 			#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
-				asGetActiveContext()->SetException(aatc_errormessage_container_iterator_invalid);
+				asGetActiveContext()->SetException(config::errormessage::iterator::is_invalid);
 			#endif
 		}
 
 
 
-		DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(asIScriptEngine* engine,aatc_type_uint32 astypeid){
+		DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(asIScriptEngine* engine,config::t::uint32 astypeid){
 			if(astypeid == engine->GetStringFactoryReturnTypeId()){
 				return DATAHANDLINGTYPE::STRING;
 			}
@@ -347,7 +347,7 @@ namespace aatc {
 				return DATAHANDLINGTYPE::PRIMITIVE;
 			}
 		}
-		PRIMITIVE_TYPE aatc_Determine_Primitivetype(aatc_type_uint32 astypeid){
+		PRIMITIVE_TYPE aatc_Determine_Primitivetype(config::t::uint32 astypeid){
 			switch(astypeid){
 				case asTYPEID_BOOL:{return PRIMITIVE_TYPE::INT8; }
 				case asTYPEID_INT8:{return PRIMITIVE_TYPE::INT8; }
@@ -364,31 +364,6 @@ namespace aatc {
 			};
 		}
 
-		//container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions_base(int CONTAINER_ID, template_specific_storage* tss){
-		//	switch(CONTAINER_ID){
-		//		case aatc_CONTAINERTYPE::VECTOR: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::VECTOR>(tss);
-		//		case aatc_CONTAINERTYPE::LIST: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::LIST>(tss);
-		//		case aatc_CONTAINERTYPE::SET: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::SET>(tss);
-		//		case aatc_CONTAINERTYPE::UNORDERED_SET: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::UNORDERED_SET>(tss);
-		//		case aatc_CONTAINERTYPE::MAP: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::MAP>(tss);
-		//		case aatc_CONTAINERTYPE::UNORDERED_MAP: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::UNORDERED_MAP>(tss);
-		//	};
-		//	return 0;
-		//}
-
-
-
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<bool>(bool* input){ return asTYPEID_BOOL; }
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int8>(aatc_type_int8* input){ return asTYPEID_INT8; }
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int16>(aatc_type_int16* input){ return asTYPEID_INT16; }
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int32>(aatc_type_int32* input){ return asTYPEID_INT32; }
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int64>(aatc_type_int64* input){ return asTYPEID_INT64; }
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint8>(aatc_type_uint8* input){ return asTYPEID_UINT8; }
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint16>(aatc_type_uint16* input){ return asTYPEID_UINT16; }
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint32>(aatc_type_uint32* input){ return asTYPEID_UINT32; }
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint64>(aatc_type_uint64* input){ return asTYPEID_UINT64; }
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float32>(aatc_type_float32* input){ return asTYPEID_FLOAT; }
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float64>(aatc_type_float64* input){ return asTYPEID_DOUBLE; }
 
 
 		iterator_base::iterator_base():

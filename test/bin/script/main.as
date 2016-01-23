@@ -115,6 +115,18 @@ void scriptmain(){
 			Print(""+ it.key +" , " + it.value);
 		}
 	}
+	Print("");
+	{
+		unordered_map<Material,int> cont;
+		
+		cont.insert(Material("1s",1),111);
+		cont.insert(Material("2s",2),222);
+		cont.insert(Material("3s",3),333);
+		
+		for(auto it = cont.begin(); it++;){
+			Print(""+ it.key.name +" , " + it.value);
+		}
+	}
 	
 	Print("");
 	Print("");

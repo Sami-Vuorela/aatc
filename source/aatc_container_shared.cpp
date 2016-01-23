@@ -128,7 +128,7 @@ namespace aatc {
 				Hash::Hash(asIScriptEngine* _engine, Settings* settings) :
 					Base(_engine, settings)
 				{}
-				aatc_hash_type Hash::operator()(const void* ptr) const {
+				config::t::hash Hash::operator()(const void* ptr) const {
 					if (need_init) {
 						//need_init = 0;
 						//func_hash = host_settings->func_hash;
@@ -138,11 +138,11 @@ namespace aatc {
 						(const_cast<Hash*>(this))->func_hash = host_settings->func_hash;
 					}
 					if (handlemode_directcomp) {
-						return (aatc_hash_type)ptr;
+						return (config::t::hash)ptr;
 						//return reinterpret_cast<std::size_t>(ptr);
 					}
 
-					aatc_hash_type result;
+					config::t::hash result;
 
 					asIScriptContext* cc = els->contextcache_Get();
 					cc->Prepare(func_hash);
@@ -194,7 +194,7 @@ namespace aatc {
 						};
 					}
 					if (datahandlingid_key == aatc::common::DATAHANDLINGTYPE::STRING) {
-						return (*((aatc_type_string*)lhs.ptr)) < (*((aatc_type_string*)rhs.ptr));
+						return (*((config::t::string*)lhs.ptr)) < (*((config::t::string*)rhs.ptr));
 					}
 					if (handlemode_directcomp) {
 						return lhs.ptr < rhs.ptr;
@@ -242,7 +242,7 @@ namespace aatc {
 						};
 					}
 					if (datahandlingid_key == aatc::common::DATAHANDLINGTYPE::STRING) {
-						return (*((aatc_type_string*)lhs.ptr)) == (*((aatc_type_string*)rhs.ptr));
+						return (*((config::t::string*)lhs.ptr)) == (*((config::t::string*)rhs.ptr));
 					}
 					if (handlemode_directcomp) {
 						return lhs.ptr == rhs.ptr;
@@ -265,7 +265,7 @@ namespace aatc {
 				Hash::Hash(asIScriptEngine* _engine, Settings* settings) :
 					Base(_engine, settings)
 				{}
-				aatc_hash_type Hash::operator()(const aatc::common::primunion& pu) const {
+				config::t::hash Hash::operator()(const aatc::common::primunion& pu) const {
 					if (need_init) {
 						//need_init = 0;
 						//func_hash = host_settings->func_hash;
@@ -278,27 +278,27 @@ namespace aatc {
 					}
 					if (datahandlingid_key == aatc::common::DATAHANDLINGTYPE::PRIMITIVE) {
 						switch (primitiveid_key) {
-						case aatc::common::PRIMITIVE_TYPE::INT8: { return (aatc_hash_type)pu.i8; }
-						case aatc::common::PRIMITIVE_TYPE::INT16: { return (aatc_hash_type)pu.i16; }
-						case aatc::common::PRIMITIVE_TYPE::INT32: { return (aatc_hash_type)pu.i32; }
-						case aatc::common::PRIMITIVE_TYPE::INT64: { return (aatc_hash_type)pu.i64; }
-						case aatc::common::PRIMITIVE_TYPE::UINT8: { return (aatc_hash_type)pu.ui8; }
-						case aatc::common::PRIMITIVE_TYPE::UINT16: { return (aatc_hash_type)pu.ui16; }
-						case aatc::common::PRIMITIVE_TYPE::UINT32: { return (aatc_hash_type)pu.ui32; }
-						case aatc::common::PRIMITIVE_TYPE::UINT64: { return (aatc_hash_type)pu.ui64; }
-						case aatc::common::PRIMITIVE_TYPE::FLOAT32: { return (aatc_hash_type)pu.f32; }
-						case aatc::common::PRIMITIVE_TYPE::FLOAT64: { return (aatc_hash_type)pu.f64; }
+						case aatc::common::PRIMITIVE_TYPE::INT8: { return (config::t::hash)pu.i8; }
+						case aatc::common::PRIMITIVE_TYPE::INT16: { return (config::t::hash)pu.i16; }
+						case aatc::common::PRIMITIVE_TYPE::INT32: { return (config::t::hash)pu.i32; }
+						case aatc::common::PRIMITIVE_TYPE::INT64: { return (config::t::hash)pu.i64; }
+						case aatc::common::PRIMITIVE_TYPE::UINT8: { return (config::t::hash)pu.ui8; }
+						case aatc::common::PRIMITIVE_TYPE::UINT16: { return (config::t::hash)pu.ui16; }
+						case aatc::common::PRIMITIVE_TYPE::UINT32: { return (config::t::hash)pu.ui32; }
+						case aatc::common::PRIMITIVE_TYPE::UINT64: { return (config::t::hash)pu.ui64; }
+						case aatc::common::PRIMITIVE_TYPE::FLOAT32: { return (config::t::hash)pu.f32; }
+						case aatc::common::PRIMITIVE_TYPE::FLOAT64: { return (config::t::hash)pu.f64; }
 						};
 					}
 					if (datahandlingid_key == aatc::common::DATAHANDLINGTYPE::STRING) {
-						return aatc::hash::hashfunctor<aatc_type_string>()(*((aatc_type_string*)pu.ptr));
+						return aatc::hash::hashfunctor<config::t::string>()(*((config::t::string*)pu.ptr));
 					}
 					if (handlemode_directcomp) {
-						return (aatc_hash_type)pu.ptr;
+						return (config::t::hash)pu.ptr;
 						//return reinterpret_cast<std::size_t>(ptr);
 					}
 
-					aatc_hash_type result;
+					config::t::hash result;
 
 					asIScriptContext* cc = els->contextcache_Get();
 					cc->Prepare(func_hash);

@@ -96,16 +96,16 @@ namespace aatc {
 								case common::DATAHANDLINGTYPE::PRIMITIVE:
 								{
 									switch (t->primitiveid_key) {
-									case common::PRIMITIVE_TYPE::INT8: { insertpair.first.i8 = *((aatc_type_int8*)newkey); break; }
-									case common::PRIMITIVE_TYPE::INT16: { insertpair.first.i16 = *((aatc_type_int16*)newkey); break; }
-									case common::PRIMITIVE_TYPE::INT32: { insertpair.first.i32 = *((aatc_type_int32*)newkey); break; }
-									case common::PRIMITIVE_TYPE::INT64: { insertpair.first.i64 = *((aatc_type_int64*)newkey); break; }
-									case common::PRIMITIVE_TYPE::UINT8: { insertpair.first.ui8 = *((aatc_type_uint8*)newkey); break; }
-									case common::PRIMITIVE_TYPE::UINT16: { insertpair.first.ui16 = *((aatc_type_uint16*)newkey); break; }
-									case common::PRIMITIVE_TYPE::UINT32: { insertpair.first.ui32 = *((aatc_type_uint32*)newkey); break; }
-									case common::PRIMITIVE_TYPE::UINT64: { insertpair.first.ui64 = *((aatc_type_uint64*)newkey); break; }
-									case common::PRIMITIVE_TYPE::FLOAT32: { insertpair.first.f32 = *((aatc_type_float32*)newkey); break; }
-									case common::PRIMITIVE_TYPE::FLOAT64: { insertpair.first.f64 = *((aatc_type_float64*)newkey); break; }
+									case common::PRIMITIVE_TYPE::INT8: { insertpair.first.i8 = *((config::t::int8*)newkey); break; }
+									case common::PRIMITIVE_TYPE::INT16: { insertpair.first.i16 = *((config::t::int16*)newkey); break; }
+									case common::PRIMITIVE_TYPE::INT32: { insertpair.first.i32 = *((config::t::int32*)newkey); break; }
+									case common::PRIMITIVE_TYPE::INT64: { insertpair.first.i64 = *((config::t::int64*)newkey); break; }
+									case common::PRIMITIVE_TYPE::UINT8: { insertpair.first.ui8 = *((config::t::uint8*)newkey); break; }
+									case common::PRIMITIVE_TYPE::UINT16: { insertpair.first.ui16 = *((config::t::uint16*)newkey); break; }
+									case common::PRIMITIVE_TYPE::UINT32: { insertpair.first.ui32 = *((config::t::uint32*)newkey); break; }
+									case common::PRIMITIVE_TYPE::UINT64: { insertpair.first.ui64 = *((config::t::uint64*)newkey); break; }
+									case common::PRIMITIVE_TYPE::FLOAT32: { insertpair.first.f32 = *((config::t::float32*)newkey); break; }
+									case common::PRIMITIVE_TYPE::FLOAT64: { insertpair.first.f64 = *((config::t::float64*)newkey); break; }
 									};
 									break;
 								}
@@ -131,16 +131,16 @@ namespace aatc {
 								case common::DATAHANDLINGTYPE::PRIMITIVE:
 								{
 									switch (t->primitiveid_value) {
-									case common::PRIMITIVE_TYPE::INT8: { insertpair.second.i8 = *((aatc_type_int8*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::INT16: { insertpair.second.i16 = *((aatc_type_int16*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::INT32: { insertpair.second.i32 = *((aatc_type_int32*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::INT64: { insertpair.second.i64 = *((aatc_type_int64*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::UINT8: { insertpair.second.ui8 = *((aatc_type_uint8*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::UINT16: { insertpair.second.ui16 = *((aatc_type_uint16*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::UINT32: { insertpair.second.ui32 = *((aatc_type_uint32*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::UINT64: { insertpair.second.ui64 = *((aatc_type_uint64*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::FLOAT32: { insertpair.second.f32 = *((aatc_type_float32*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::FLOAT64: { insertpair.second.f64 = *((aatc_type_float64*)newvalue); break; }
+									case common::PRIMITIVE_TYPE::INT8: { insertpair.second.i8 = *((config::t::int8*)newvalue); break; }
+									case common::PRIMITIVE_TYPE::INT16: { insertpair.second.i16 = *((config::t::int16*)newvalue); break; }
+									case common::PRIMITIVE_TYPE::INT32: { insertpair.second.i32 = *((config::t::int32*)newvalue); break; }
+									case common::PRIMITIVE_TYPE::INT64: { insertpair.second.i64 = *((config::t::int64*)newvalue); break; }
+									case common::PRIMITIVE_TYPE::UINT8: { insertpair.second.ui8 = *((config::t::uint8*)newvalue); break; }
+									case common::PRIMITIVE_TYPE::UINT16: { insertpair.second.ui16 = *((config::t::uint16*)newvalue); break; }
+									case common::PRIMITIVE_TYPE::UINT32: { insertpair.second.ui32 = *((config::t::uint32*)newvalue); break; }
+									case common::PRIMITIVE_TYPE::UINT64: { insertpair.second.ui64 = *((config::t::uint64*)newvalue); break; }
+									case common::PRIMITIVE_TYPE::FLOAT32: { insertpair.second.f32 = *((config::t::float32*)newvalue); break; }
+									case common::PRIMITIVE_TYPE::FLOAT64: { insertpair.second.f64 = *((config::t::float64*)newvalue); break; }
 									};
 									break;
 								}

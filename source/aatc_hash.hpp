@@ -48,34 +48,34 @@ namespace aatc {
 		*/
 		template<class T> class hashfunctor {
 		public:
-			aatc_hash_type operator()(const T& a) const {
-				return (aatc_hash_type)a;
+			config::t::hash operator()(const T& a) const {
+				return (config::t::hash)a;
 			}
 		};
-		template<> class hashfunctor<aatc_type_float32> {
+		template<> class hashfunctor<config::t::float32> {
 		public:
-			aatc_hash_type operator()(const aatc_type_float32& a) const;
+			config::t::hash operator()(const config::t::float32& a) const;
 		};
-		template<> class hashfunctor<aatc_type_float64> {
+		template<> class hashfunctor<config::t::float64> {
 		public:
-			aatc_hash_type operator()(const aatc_type_float64& a) const;
+			config::t::hash operator()(const config::t::float64& a) const;
 		};
-		template<> class hashfunctor<aatc_type_string> {
+		template<> class hashfunctor<config::t::string> {
 		public:
-			aatc_hash_type operator()(const aatc_type_string& a) const;
+			config::t::hash operator()(const config::t::string& a) const;
 		};
 
 
 
 		namespace detail {
-			template<typename T> aatc_hash_type function_wrapping_a_functor(const T& me) {
+			template<typename T> config::t::hash function_wrapping_a_functor(const T& me) {
 				hashfunctor<T> functor;
 				return functor(me);
 			}
 		};
 
 		namespace hashfunc {
-			aatc_hash_type djb2(const aatc_type_string& a);
+			config::t::hash djb2(const config::t::string& a);
 		};
 
 
@@ -87,7 +87,7 @@ namespace aatc {
 
 		template<typename T_your_cpp_type> void Register_aatc_func_hash_value(asIScriptEngine* engine, const char* name_your_type_in_script) {
 			char textbuf[1000];
-			sprintf_s(textbuf, 1000, "%s %s()", aatc_hash_type_scriptname_actual, config::scriptname::method::content::hash);
+			sprintf_s(textbuf, 1000, "%s %s()", config::scriptname::t::hash_actual, config::scriptname::method::content::hash);
 			int error = engine->RegisterObjectMethod(name_your_type_in_script, textbuf, asFUNCTION(detail::function_wrapping_a_functor<T_your_cpp_type>), asCALL_CDECL_OBJLAST); assert(error >= 0);
 		}
 

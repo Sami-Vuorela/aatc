@@ -147,7 +147,7 @@ template<
 	//sprintf_s(textbuf, 1000, "%s %s()", n_iterator, config::scriptname::method::container::begin);
 	//r = engine->RegisterObjectMethod(n_containerTcontentT, textbuf, asFunctionPtr(aatc_reghelp_construct_hosted<aect_iterator_shared_tempspec<dt_container, dt_content>, dt_container*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
-	//sprintf_s(textbuf, 1000, "void erase(%s)", aatc_name_script_sizetype);
+	//sprintf_s(textbuf, 1000, "void erase(%s)", config::scriptname::t::size);
 	//r = engine->RegisterObjectMethod(n_containerTcontentT, textbuf, asMETHOD(dt_container, Erase_generic_index<aatc_Y>), asCALL_THISCALL); assert(r >= 0);
 }
 

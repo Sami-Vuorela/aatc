@@ -67,9 +67,6 @@ namespace aatc {
 
 	private:
 		asIScriptEngine* engine;
-
-		void RegisterTempspecs();
-		void RegisterTempspecs2();
 	};
 
 

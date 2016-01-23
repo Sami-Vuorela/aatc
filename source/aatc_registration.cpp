@@ -78,7 +78,7 @@ namespace aatc {
 		engine->SetEngineUserDataCleanupCallback(common::aatc_engine_cleanup, config::engine_userdata_id);
 
 		#if aatc_ENABLE_REGISTER_TYPEDEF_HASH_TYPE
-			engine->RegisterTypedef(aatc_hash_type_scriptname, aatc_hash_type_scriptname_actual);
+			engine->RegisterTypedef(config::scriptname::t::hash, config::scriptname::t::hash_actual);
 		#endif
 
 		{
@@ -101,12 +101,12 @@ namespace aatc {
 				r = engine->RegisterObjectProperty(n_funcpointer, "bool is_thiscall", asOFFSET(aatc_script_Funcpointer, is_thiscall)); assert(r >= 0);
 				r = engine->RegisterObjectProperty(n_funcpointer, "string funcname", asOFFSET(aatc_script_Funcpointer, funcname)); assert(r >= 0);
 
-				r = engine->RegisterObjectMethod(n_funcpointer, "bool Set(string)", asMETHODPR(aatc_script_Funcpointer, Set, (aatc_type_string), bool), asCALL_THISCALL); assert(r >= 0);
-				r = engine->RegisterObjectMethod(n_funcpointer, "bool Set(string,?&in)", asMETHODPR(aatc_script_Funcpointer, Set, (aatc_type_string, void*, int), bool), asCALL_THISCALL); assert(r >= 0);
+				r = engine->RegisterObjectMethod(n_funcpointer, "bool Set(string)", asMETHODPR(aatc_script_Funcpointer, Set, (config::t::string), bool), asCALL_THISCALL); assert(r >= 0);
+				r = engine->RegisterObjectMethod(n_funcpointer, "bool Set(string,?&in)", asMETHODPR(aatc_script_Funcpointer, Set, (config::t::string, void*, int), bool), asCALL_THISCALL); assert(r >= 0);
 				r = engine->RegisterObjectMethod(n_funcpointer, "void Call()", asMETHOD(aatc_script_Funcpointer, scriptsidecall_CallVoid), asCALL_THISCALL); assert(r >= 0);
 			}
 			{//register hash functions
-				sprintf_s(textbuf, 1000, "%s aatc_Hashfunc_djb2(string &in)", aatc_hash_type_scriptname_actual);
+				sprintf_s(textbuf, 1000, "%s aatc_Hashfunc_djb2(string &in)", config::scriptname::t::hash_actual);
 				r = engine->RegisterGlobalFunction(textbuf, asFUNCTION(hash::hashfunc::djb2), asCALL_CDECL); assert(r >= 0);
 			}
 		}

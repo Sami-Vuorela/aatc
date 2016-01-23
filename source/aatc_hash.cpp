@@ -40,23 +40,23 @@ namespace aatc {
 
 
 
-		aatc_hash_type hashfunctor<aatc_type_float32>::operator()(const aatc_type_float32& a) const {
+		config::t::hash hashfunctor<config::t::float32>::operator()(const config::t::float32& a) const {
 			aatc::common::primunion pu;
 			pu.f32 = a;
 			return pu.ui64;
 		}
-		aatc_hash_type hashfunctor<aatc_type_float64>::operator()(const aatc_type_float64& a) const {
+		config::t::hash hashfunctor<config::t::float64>::operator()(const config::t::float64& a) const {
 			aatc::common::primunion pu;
 			pu.f64 = a;
 			return pu.ui64;
 		}
-		aatc_hash_type hashfunctor<aatc_type_string>::operator()(const aatc_type_string& a) const {
+		config::t::hash hashfunctor<config::t::string>::operator()(const config::t::string& a) const {
 			return hashfunc::djb2(a);
 		}
 
 		namespace hashfunc {
-			aatc_hash_type djb2(const aatc_type_string& a) {
-				aatc_hash_type hash = 5381;
+			config::t::hash djb2(const config::t::string& a) {
+				config::t::hash hash = 5381;
 				for (int i = 0; i < a.size(); i++) {
 					hash = ((hash << 5) + hash) + a[i];
 				}

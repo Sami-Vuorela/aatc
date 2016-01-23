@@ -118,7 +118,7 @@ namespace aatc {
 			ERASE_GENERIC_VALUE = 128
 		};
 
-		typedef aatc_type_uint32 container_operations_bitmask_type;
+		typedef config::t::uint32 container_operations_bitmask_type;
 
 		//doxygen skip
 		#ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -239,7 +239,7 @@ namespace aatc {
 			//asIScriptContext* ctx;
 
 			asIScriptFunction* func;
-			aatc_type_string funcname;
+			config::t::string funcname;
 
 			bool is_thiscall;
 			asIScriptObject* so;
@@ -251,8 +251,8 @@ namespace aatc {
 
 			static aatc_script_Funcpointer* Factory();
 
-			bool Set(aatc_type_string funcname);//global function
-			bool Set(aatc_type_string funcname, void* ref, int tid);//class method
+			bool Set(config::t::string funcname);//global function
+			bool Set(config::t::string funcname, void* ref, int tid);//class method
 			void Clear();
 
 			void Prepare(asIScriptContext* context);
@@ -282,24 +282,24 @@ namespace aatc {
 			FLOAT64
 		};
 
-		DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(asIScriptEngine* engine,aatc_type_uint32 astypeid);
-		PRIMITIVE_TYPE aatc_Determine_Primitivetype(aatc_type_uint32 astypeid);
+		DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(asIScriptEngine* engine,config::t::uint32 astypeid);
+		PRIMITIVE_TYPE aatc_Determine_Primitivetype(config::t::uint32 astypeid);
 
 		/*!\brief This monstrosity is used to store any primitive or handle using the same allocation code.*/
 		struct primunion{
 			union{
-				aatc_type_int8 i8;
-				aatc_type_int16 i16;
-				aatc_type_int32 i32;
-				aatc_type_int64 i64;
+				config::t::int8 i8;
+				config::t::int16 i16;
+				config::t::int32 i32;
+				config::t::int64 i64;
 
-				aatc_type_uint8 ui8;
-				aatc_type_uint16 ui16;
-				aatc_type_uint32 ui32;
-				aatc_type_uint64 ui64;
+				config::t::uint8 ui8;
+				config::t::uint16 ui16;
+				config::t::uint32 ui32;
+				config::t::uint64 ui64;
 
-				aatc_type_float32 f32;
-				aatc_type_float64 f64;
+				config::t::float32 f32;
+				config::t::float64 f64;
 
 				void* ptr;
 			};
@@ -350,7 +350,7 @@ namespace aatc {
 		}
 		#define aatc_errorcheck_container_access_bounds_retdefault(index,size,n_container,n_content,n_operation)		\
 		if((index>size)){																	\
-			aatc_errorprint_container_access_bounds(aatc_type_sizetype(index), aatc_type_sizetype(size), n_container, n_content, n_operation);					\
+			aatc_errorprint_container_access_bounds(config::t::sizetype(index), config::t::sizetype(size), n_container, n_content, n_operation);					\
 			return defaultvalue;																						\
 		}
 
@@ -383,7 +383,7 @@ namespace aatc {
 		/*!\brief Internal error printing function.*/
 		void aatc_errorprint_container_access_empty(const char* name_container, const char* name_content, const char* name_operation);
 		/*!\brief Internal error printing function.*/
-		void aatc_errorprint_container_access_bounds(aatc_type_sizetype index, aatc_type_sizetype size, const char* name_container, const char* name_content, const char* name_operation);
+		void aatc_errorprint_container_access_bounds(config::t::sizetype index, config::t::sizetype size, const char* name_container, const char* name_content, const char* name_operation);
 		/*!\brief Internal error printing function.*/
 		void aatc_errorprint_iterator_container_modified();
 		/*!\brief Internal error printing function.*/
@@ -391,32 +391,6 @@ namespace aatc {
 
 		//check for missing functions, return bitmask of missing functions
 		container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions_base(int CONTAINER_ID, enginestorage::template_specific_storage* tss);
-
-
-
-
-
-
-		//template<typename T> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype(T* input){ return asTYPEID_INT32; }
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<bool>(bool* input);
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int8>(aatc_type_int8* input);
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int16>(aatc_type_int16* input);
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int32>(aatc_type_int32* input);
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int64>(aatc_type_int64* input);
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint8>(aatc_type_uint8* input);
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint16>(aatc_type_uint16* input);
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint32>(aatc_type_uint32* input);
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint64>(aatc_type_uint64* input);
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float32>(aatc_type_float32* input);
-		//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float64>(aatc_type_float64* input);
-
-
-		//#if aatc_CONFIG_USE_ASADDON_SERIALIZER
-		//template<typename T> void register_tempspec_helper(engine_level_storage* els, std::string container_content_name){}
-		//template<typename T> void register_tempspec_helper(engine_level_storage* els, std::string container_content_name){}
-		//#endif
-
-
 
 
 

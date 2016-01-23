@@ -129,8 +129,8 @@ namespace aatc {
 						asIObjectType* objtype_key;
 						asIObjectType* objtype_value;
 
-						aatc_type_astypeid astypeid_key;
-						aatc_type_astypeid astypeid_value;
+						config::t::astypeid astypeid_key;
+						config::t::astypeid astypeid_value;
 
 						bool objectmode_key;
 						bool objectmode_value;
@@ -476,16 +476,16 @@ namespace aatc {
 							case common::DATAHANDLINGTYPE::PRIMITIVE:
 							{
 								switch (pt) {
-								case common::PRIMITIVE_TYPE::INT8: { pu.i8 = *((aatc_type_int8*)inputvalue); break; }
-								case common::PRIMITIVE_TYPE::INT16: { pu.i16 = *((aatc_type_int16*)inputvalue); break; }
-								case common::PRIMITIVE_TYPE::INT32: { pu.i32 = *((aatc_type_int32*)inputvalue); break; }
-								case common::PRIMITIVE_TYPE::INT64: { pu.i64 = *((aatc_type_int64*)inputvalue); break; }
-								case common::PRIMITIVE_TYPE::UINT8: { pu.ui8 = *((aatc_type_uint8*)inputvalue); break; }
-								case common::PRIMITIVE_TYPE::UINT16: { pu.ui16 = *((aatc_type_uint16*)inputvalue); break; }
-								case common::PRIMITIVE_TYPE::UINT32: { pu.ui32 = *((aatc_type_uint32*)inputvalue); break; }
-								case common::PRIMITIVE_TYPE::UINT64: { pu.ui64 = *((aatc_type_uint64*)inputvalue); break; }
-								case common::PRIMITIVE_TYPE::FLOAT32: { pu.f32 = *((aatc_type_float32*)inputvalue); break; }
-								case common::PRIMITIVE_TYPE::FLOAT64: { pu.f64 = *((aatc_type_float64*)inputvalue); break; }
+								case common::PRIMITIVE_TYPE::INT8: { pu.i8 = *((config::t::int8*)inputvalue); break; }
+								case common::PRIMITIVE_TYPE::INT16: { pu.i16 = *((config::t::int16*)inputvalue); break; }
+								case common::PRIMITIVE_TYPE::INT32: { pu.i32 = *((config::t::int32*)inputvalue); break; }
+								case common::PRIMITIVE_TYPE::INT64: { pu.i64 = *((config::t::int64*)inputvalue); break; }
+								case common::PRIMITIVE_TYPE::UINT8: { pu.ui8 = *((config::t::uint8*)inputvalue); break; }
+								case common::PRIMITIVE_TYPE::UINT16: { pu.ui16 = *((config::t::uint16*)inputvalue); break; }
+								case common::PRIMITIVE_TYPE::UINT32: { pu.ui32 = *((config::t::uint32*)inputvalue); break; }
+								case common::PRIMITIVE_TYPE::UINT64: { pu.ui64 = *((config::t::uint64*)inputvalue); break; }
+								case common::PRIMITIVE_TYPE::FLOAT32: { pu.f32 = *((config::t::float32*)inputvalue); break; }
+								case common::PRIMITIVE_TYPE::FLOAT64: { pu.f64 = *((config::t::float64*)inputvalue); break; }
 								};
 								break;
 							}
@@ -557,7 +557,7 @@ namespace aatc {
 							container.clear();
 						}
 						bool empty() { return container.empty(); }
-						aatc_type_sizetype size() { return (aatc_type_sizetype)(container.size()); }
+						config::t::sizetype size() { return (config::t::sizetype)(container.size()); }
 
 
 
@@ -780,18 +780,18 @@ namespace aatc {
 								case common::DATAHANDLINGTYPE::PRIMITIVE:
 								{
 									switch (primitiveid_value) {
-									case common::PRIMITIVE_TYPE::INT8: { ((*it).second.i8) = *((aatc_type_int8*)value); break; }
-									case common::PRIMITIVE_TYPE::INT16: { ((*it).second.i16) = *((aatc_type_int16*)value); break; }
-									case common::PRIMITIVE_TYPE::INT32: { ((*it).second.i32) = *((aatc_type_int32*)value); break; }
-									case common::PRIMITIVE_TYPE::INT64: { ((*it).second.i64) = *((aatc_type_int64*)value); break; }
+									case common::PRIMITIVE_TYPE::INT8: { ((*it).second.i8) = *((config::t::int8*)value); break; }
+									case common::PRIMITIVE_TYPE::INT16: { ((*it).second.i16) = *((config::t::int16*)value); break; }
+									case common::PRIMITIVE_TYPE::INT32: { ((*it).second.i32) = *((config::t::int32*)value); break; }
+									case common::PRIMITIVE_TYPE::INT64: { ((*it).second.i64) = *((config::t::int64*)value); break; }
 
-									case common::PRIMITIVE_TYPE::UINT8: { ((*it).second.ui8) = *((aatc_type_uint8*)value); break; }
-									case common::PRIMITIVE_TYPE::UINT16: { ((*it).second.ui16) = *((aatc_type_uint16*)value); break; }
-									case common::PRIMITIVE_TYPE::UINT32: { ((*it).second.ui32) = *((aatc_type_uint32*)value); break; }
-									case common::PRIMITIVE_TYPE::UINT64: { ((*it).second.ui64) = *((aatc_type_uint64*)value); break; }
+									case common::PRIMITIVE_TYPE::UINT8: { ((*it).second.ui8) = *((config::t::uint8*)value); break; }
+									case common::PRIMITIVE_TYPE::UINT16: { ((*it).second.ui16) = *((config::t::uint16*)value); break; }
+									case common::PRIMITIVE_TYPE::UINT32: { ((*it).second.ui32) = *((config::t::uint32*)value); break; }
+									case common::PRIMITIVE_TYPE::UINT64: { ((*it).second.ui64) = *((config::t::uint64*)value); break; }
 
-									case common::PRIMITIVE_TYPE::FLOAT32: { ((*it).second.f32) = *((aatc_type_float32*)value); break; }
-									case common::PRIMITIVE_TYPE::FLOAT64: { ((*it).second.f64) = *((aatc_type_float64*)value); break; }
+									case common::PRIMITIVE_TYPE::FLOAT32: { ((*it).second.f32) = *((config::t::float32*)value); break; }
+									case common::PRIMITIVE_TYPE::FLOAT64: { ((*it).second.f64) = *((config::t::float64*)value); break; }
 									};
 									break;
 								}
@@ -985,7 +985,7 @@ namespace aatc {
 						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, clear), asCALL_THISCALL); assert(rs.error >= 0);
 						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s()", config::scriptname::method::container::empty);
 						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, empty), asCALL_THISCALL); assert(rs.error >= 0);
-						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s()", aatc_name_script_sizetype, config::scriptname::method::container::size);
+						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s()", config::scriptname::t::size, config::scriptname::method::container::size);
 						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, size), asCALL_THISCALL); assert(rs.error >= 0);
 
 						T_container::Iterator::Register(rs);

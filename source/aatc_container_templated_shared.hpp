@@ -121,8 +121,8 @@ namespace aatc {
 
 					asIObjectType* objtype_container;
 					asIObjectType* objtype_content;
-					aatc_type_astypeid astypeid_container;
-					aatc_type_astypeid astypeid_content;
+					config::t::astypeid astypeid_container;
+					config::t::astypeid astypeid_content;
 					asDWORD typeflags_container;
 					asDWORD typeflags_content;
 
@@ -261,7 +261,7 @@ namespace aatc {
 					}
 
 					bool empty() {return container.empty();}
-					aatc_type_sizetype size() { return (aatc_type_sizetype)(container.size()); }
+					config::t::sizetype size() { return (config::t::sizetype)(container.size()); }
 
 					void clear() {
 						safety_iteratorversion_Increment();
@@ -280,9 +280,9 @@ namespace aatc {
 						container.clear();
 					}
 
-					aatc_type_sizetype count(void* value) {
+					config::t::sizetype count(void* value) {
 						if (handlemode_directcomp) {
-							return (aatc_type_sizetype)(std::count(container.begin(), container.end(), *(void**)value));
+							return (config::t::sizetype)(std::count(container.begin(), container.end(), *(void**)value));
 						} else {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (missing_functions & aatc::common::aatc_CONTAINER_OPERATION::COUNT) {
@@ -296,7 +296,7 @@ namespace aatc {
 
 							asIScriptContext* cc = els->contextcache_Get();
 
-							aatc_type_sizetype count = 0;
+							config::t::sizetype count = 0;
 							iteratortype it = container.begin();
 							iteratortype itend = container.end();
 
@@ -508,7 +508,7 @@ namespace aatc {
 						static void static_constructor_copy(asIObjectType* objtype, Iterator* other, void *memory) {
 							new(memory)Iterator(*other);
 						}
-						//static void static_constructor_parentcontainer(asIObjectType* objtype, void *ref, aatc_type_astypeid typeId, void *memory) {
+						//static void static_constructor_parentcontainer(asIObjectType* objtype, void *ref, config::t::astypeid typeId, void *memory) {
 						//	new(memory)Iterator(ref, typeId);
 						//}
 						static void static_constructor_parentcontainer(asIObjectType* objtype, Containerbase* host, void *memory) {
@@ -643,14 +643,14 @@ namespace aatc {
 					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool)", config::scriptname::method::container::set_directcomp);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, SetDirectcomp), asCALL_THISCALL); assert(rs.error >= 0);
 
-					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s(const T &in)", aatc_name_script_sizetype, config::scriptname::method::container::count);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s(const T &in)", config::scriptname::t::size, config::scriptname::method::container::count);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, count), asCALL_THISCALL); assert(rs.error >= 0);
 
 					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s()", config::scriptname::method::container::clear);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, clear), asCALL_THISCALL); assert(rs.error >= 0);
 					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s()", config::scriptname::method::container::empty);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, empty), asCALL_THISCALL); assert(rs.error >= 0);
-					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s()", aatc_name_script_sizetype, config::scriptname::method::container::size);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s()", config::scriptname::t::size, config::scriptname::method::container::size);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, size), asCALL_THISCALL); assert(rs.error >= 0);
 
 					T_container::Iterator::Register(rs);
