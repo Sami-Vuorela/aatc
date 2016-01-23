@@ -74,8 +74,8 @@ namespace aatc {
 		common::primunion_defaultvalue.ui64 = 0;
 		common::primunion_defaultvalue.ptr = nullptr;
 
-		engine->SetUserData(new enginestorage::engine_level_storage(engine), aatc_engine_userdata_id);
-		engine->SetEngineUserDataCleanupCallback(common::aatc_engine_cleanup, aatc_engine_userdata_id);
+		engine->SetUserData(new enginestorage::engine_level_storage(engine), config::engine_userdata_id);
+		engine->SetEngineUserDataCleanupCallback(common::aatc_engine_cleanup, config::engine_userdata_id);
 
 		#if aatc_ENABLE_REGISTER_TYPEDEF_HASH_TYPE
 			engine->RegisterTypedef(aatc_hash_type_scriptname, aatc_hash_type_scriptname_actual);

@@ -54,19 +54,29 @@ namespace aatc {
 				//we need a wrapper around the base container so that we can
 				//feed the constructor a fancy functor to handle internal functions that require script functions to be called
 				namespace base_container_wrapper {
-					template<class T_container> class Basic : public T_container {
+					template<
+						typename T_container
+					> class Basic : public T_container {
 					public:
 						Basic(asIScriptEngine* engine, aatc::container::shared::containerfunctor::Settings* settings) {}
 					};
 
-					template<class T_container, class T_param1> class Singleparam : public T_container {
+					template<
+						typename T_container,
+						typename T_param1
+					> class Singleparam : public T_container {
 					public:
 						Singleparam(asIScriptEngine* _engine, aatc::container::shared::containerfunctor::Settings* settings) :
 							T_container(T_param1(_engine, settings))
 						{}
 					};
 
-					template<class T_container, class T_param1, class T_param2, std::size_t default_bucket_count> class Hashed : public T_container {
+					template<
+						typename T_container,
+						typename T_param1,
+						typename T_param2,
+						std::size_t default_bucket_count = config::DEFAULT_CONTAINER_UNORDERED_SET_DEFAULTBUCKETCOUNT
+					> class Hashed : public T_container {
 					public:
 						Hashed(asIScriptEngine* _engine, aatc::container::shared::containerfunctor::Settings* settings) :
 							T_container(default_bucket_count, T_param1(_engine, settings), T_param2(_engine, settings))

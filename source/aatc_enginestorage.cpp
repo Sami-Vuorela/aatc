@@ -181,7 +181,7 @@ namespace aatc {
 
 
 		engine_level_storage* Get_ELS(asIScriptEngine* engine){
-			return (engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
+			return (engine_level_storage*)engine->GetUserData(config::engine_userdata_id);
 		}
 		asIScriptContext* contextcache_Get(){
 			engine_level_storage* els = Get_ELS(asGetActiveContext()->GetEngine());

@@ -28,8 +28,8 @@ samivuorela@gmail.com
 */
 
 
-#ifndef _includedh_aatc_container_map
-#define _includedh_aatc_container_map
+#ifndef _includedh_aatc_container_unordered_map
+#define _includedh_aatc_container_unordered_map
 
 
 
@@ -45,7 +45,7 @@ namespace aatc {
 
 		namespace detail {
 			namespace tags_of_container {
-				class map : public shared::tagbase {
+				class unordered_map : public shared::tagbase {
 				public:
 					typedef shared::tag::iterator_access_is_const iterator_access;
 				};
@@ -58,33 +58,36 @@ namespace aatc {
 			namespace mapped {
 
 
+
 				namespace detail {
 					namespace container_native_with_functors {
-						typedef aatc_acit_map<
+						typedef aatc_acit_unordered_map<
 							common::primunion,
 							common::primunion,
-							container::shared::containerfunctor_map::Comp
-						> map;
+							container::shared::containerfunctor_map::Hash,
+							container::shared::containerfunctor_map::Equals
+						> unordered_map;
 					};
 				};
 
-				class map : public shared::Containerbase <
-					detail::container_native_with_functors::map,
-					aatc::container::listing::CONTAINER::MAP,
-					container::detail::tags_of_container::map ,
-					shared::base_container_wrapper::Singleparam<
-						detail::container_native_with_functors::map,
-						container::shared::containerfunctor_map::Comp
+				class unordered_map : public shared::Containerbase <
+					detail::container_native_with_functors::unordered_map,
+					aatc::container::listing::CONTAINER::UNORDERED_MAP,
+					container::detail::tags_of_container::unordered_map ,
+					shared::base_container_wrapper::Hashed<
+						detail::container_native_with_functors::unordered_map,
+						container::shared::containerfunctor_map::Hash,
+						container::shared::containerfunctor_map::Equals
 					>
 				> {
 				public:
-					map(asIObjectType* objtype);
-					map(const map& other);
-					map& operator=(const map& other);
+					unordered_map(asIObjectType* objtype);
+					unordered_map(const unordered_map& other);
+					unordered_map& operator=(const unordered_map& other);
 
 
 
-					map& swap(map& other);
+					unordered_map& swap(unordered_map& other);
 
 					void insert(void* key, void* value);
 				};

@@ -35,7 +35,7 @@ void main_contents(){
 
 	auto ot = engine->GetObjectTypeByDecl("map<int,int>");
 
-	aatc::container::templated::map::map* cont_map = new aatc::container::templated::map::map(ot);
+	aatc::container::templated::mapped::map* cont_map = new aatc::container::templated::mapped::map(ot);
 	{
 		{
 			int key = 1;

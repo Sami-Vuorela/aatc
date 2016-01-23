@@ -64,7 +64,7 @@ namespace aatc {
 					host_settings(settings),
 					need_init(1)
 				{
-					els = (enginestorage::engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
+					els = enginestorage::Get_ELS(engine);
 				}
 
 				Comp::Comp(asIScriptEngine* _engine, Settings* settings) :
@@ -165,7 +165,7 @@ namespace aatc {
 					host_settings(settings),
 					need_init(1)
 				{
-					els = (enginestorage::engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
+					els = enginestorage::Get_ELS(engine);
 				}
 
 				Comp::Comp(asIScriptEngine* _engine, Settings* settings) :

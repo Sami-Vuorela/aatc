@@ -103,6 +103,18 @@ void scriptmain(){
 			Print(""+ it.key +" , " + it.value);
 		}
 	}
+	Print("");
+	{
+		unordered_map<int,int> cont;
+		
+		cont.insert(1,111);
+		cont.insert(3,333);
+		cont.insert(2,222);
+		
+		for(auto it = cont.begin(); it++;){
+			Print(""+ it.key +" , " + it.value);
+		}
+	}
 	
 	Print("");
 	Print("");

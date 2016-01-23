@@ -110,13 +110,22 @@ namespace aatc {
 
 
 
-/*
-	Random magical optimization numbers ahead.
-*/
-//this number was used by boost, so it must be legit ... right?
-#define aatc_CONFIG_DEFAULT_CONTAINER_UNORDERED_SET_DEFAULTBUCKETCOUNT 11
-#define aatc_CONFIG_DEFAULT_CONTAINER_UNORDERED_MAP_DEFAULTBUCKETCOUNT 11
-#define aatc_engine_userdata_id 8899
+//#define aatc_CONFIG_DEFAULT_CONTAINER_UNORDERED_SET_DEFAULTBUCKETCOUNT 11
+//#define aatc_CONFIG_DEFAULT_CONTAINER_UNORDERED_MAP_DEFAULTBUCKETCOUNT 11
+//#define aatc_engine_userdata_id 8899
+//static const std::size_t CONFIG_DEFAULT_CONTAINER_UNORDERED_SET_DEFAULTBUCKETCOUNT = 11;
+//static const std::size_t CONFIG_DEFAULT_CONTAINER_UNORDERED_MAP_DEFAULTBUCKETCOUNT = 11;
+
+namespace config {
+	static const int engine_userdata_id = 8899;
+
+	/*
+		Random magical optimization numbers ahead.
+	*/
+	//this number was used by boost, so it must be legit ... right?
+	static const int DEFAULT_CONTAINER_UNORDERED_SET_DEFAULTBUCKETCOUNT = 11;
+	static const int DEFAULT_CONTAINER_UNORDERED_MAP_DEFAULTBUCKETCOUNT = 11;
+};
 
 
 

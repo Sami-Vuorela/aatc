@@ -98,10 +98,10 @@ namespace aatc {
 
 
 		void aatc_engine_cleanup(asIScriptEngine* engine){
-			enginestorage::engine_level_storage* ss = (enginestorage::engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
+			enginestorage::engine_level_storage* els = enginestorage::Get_ELS(engine);
 
-			ss->Clean();
-			delete ss;
+			els->Clean();
+			delete els;
 		}
 
 		bool aatc_templatecallback_1tp(asIObjectType *ot, bool &dontGarbageCollect){
@@ -276,7 +276,7 @@ namespace aatc {
 		}
 
 		void aatc_script_Funcpointer::scriptsidecall_CallVoid(){
-			enginestorage::engine_level_storage* els = (enginestorage::engine_level_storage*)asGetActiveContext()->GetEngine()->GetUserData(aatc_engine_userdata_id);
+			enginestorage::engine_level_storage* els = enginestorage::Get_ELS(asGetActiveContext()->GetEngine());
 			asIScriptContext* c = els->contextcache_Get();
 				Prepare(c);
 				Execute(c);

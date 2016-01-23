@@ -29,7 +29,7 @@ samivuorela@gmail.com
 
 
 
-#include "aatc_container_map.hpp"
+#include "aatc_container_unordered_map.hpp"
 
 #include "aatc_container_listing.hpp"
 #include "aatc_container_templated_mapped_shared_method.hpp"
@@ -44,22 +44,22 @@ namespace aatc {
 
 
 
-				map::map(asIObjectType* _objtype) :
+				unordered_map::unordered_map(asIObjectType* _objtype) :
 					Containerbase(_objtype->GetEngine(), _objtype)
 				{}
-				map::map(const map& other) :
+				unordered_map::unordered_map(const unordered_map& other) :
 					Containerbase(other.engine, other.objtype_container)
 				{
 					(*this) = other;
 				}
-				map& map::operator=(const map& other) { Containerbase::operator=(other); return *this; }
+				unordered_map& unordered_map::operator=(const unordered_map& other) { Containerbase::operator=(other); return *this; }
 
-				map& map::swap(map& other) {
+				unordered_map& unordered_map::swap(unordered_map& other) {
 					shared::method::swap(this, other);
 					return *this;
 				}
 
-				void map::insert(void* key, void* value) {
+				void unordered_map::insert(void* key, void* value) {
 					shared::method::insert(this, key, value);
 				}
 
@@ -71,26 +71,26 @@ namespace aatc {
 
 
 
-			template<> void register_container<CONTAINER::MAP>(asIScriptEngine* engine) {
+			template<> void register_container<CONTAINER::UNORDERED_MAP>(asIScriptEngine* engine) {
 				common::RegistrationState rs(engine);
 
 				{
-					using templated::mapped::map;
+					using templated::mapped::unordered_map;
 					using namespace templated::mapped::shared;
 
-					register_containerbase<map>(rs, "map");
+					register_containerbase<unordered_map>(rs, "unordered_map");
 
 
 
-					register_method::swap<map>(rs);
+					register_method::swap<unordered_map>(rs);
 
-					register_method::insert<map>(rs);
+					register_method::insert<unordered_map>(rs);
 				}
 			}
-			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::MAP>(enginestorage::template_specific_storage* tss) {
+			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::UNORDERED_MAP>(enginestorage::template_specific_storage* tss) {
 				common::container_operations_bitmask_type mask = 0;
 
-				if (!tss->func_cmp) {
+				if ((!tss->func_hash) || (!tss->func_equals)) {
 					mask |= common::aatc_CONTAINER_OPERATION::ERASE_VALUE;
 					mask |= common::aatc_CONTAINER_OPERATION::INSERT;
 					mask |= common::aatc_CONTAINER_OPERATION::CONTAINS_NATIVE;

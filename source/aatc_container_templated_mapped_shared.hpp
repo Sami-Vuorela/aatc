@@ -28,8 +28,8 @@ samivuorela@gmail.com
 */
 
 
-#ifndef _includedh_aatc_container_templated_map_shared
-#define _includedh_aatc_container_templated_map_shared
+#ifndef _includedh_aatc_container_templated_mapped_shared
+#define _includedh_aatc_container_templated_mapped_shared
 
 
 
@@ -44,7 +44,7 @@ BEGIN_AS_NAMESPACE
 namespace aatc {
 	namespace container {
 		namespace templated {
-			namespace map {
+			namespace mapped {
 				namespace shared {
 
 
@@ -55,19 +55,29 @@ namespace aatc {
 					//we need a wrapper around the base container so that we can
 					//feed the constructor a fancy functor to handle internal functions that require script functions to be called
 					namespace base_container_wrapper {
-						template<typename T_container> class Basic : public T_container {
+						template<
+							typename T_container
+						> class Basic : public T_container {
 						public:
 							Basic(asIScriptEngine* engine, container::shared::containerfunctor_map::Settings* settings) {}
 						};
 
-						template<typename T_container, class T_param1> class Singleparam : public T_container {
+						template<
+							typename T_container,
+							typename T_param1
+						> class Singleparam : public T_container {
 						public:
 							Singleparam(asIScriptEngine* _engine, container::shared::containerfunctor_map::Settings* settings) :
 								T_container(T_param1(_engine, settings))
 							{}
 						};
 
-						template<typename T_container, class T_param1, class T_param2, std::size_t default_bucket_count> class Hashed : public T_container {
+						template<
+							typename T_container,
+							typename T_param1,
+							typename T_param2,
+							std::size_t default_bucket_count = config::DEFAULT_CONTAINER_UNORDERED_MAP_DEFAULTBUCKETCOUNT
+						> class Hashed : public T_container {
 						public:
 							Hashed(asIScriptEngine* _engine, container::shared::containerfunctor_map::Settings* settings) :
 								T_container(default_bucket_count, T_param1(_engine, settings), T_param2(_engine, settings))
@@ -950,9 +960,9 @@ namespace aatc {
 						rs.error = rs.engine->RegisterObjectType(rs.n_container_class_T, 0, asOBJ_REF | asOBJ_GC | asOBJ_TEMPLATE); assert(rs.error >= 0);
 
 						sprintf_s(rs.textbuf, aatc::common::RegistrationState::bufsize, "%s@ f(int&in)", rs.n_container_T);
-						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(container::templated::map::shared::Factory<T_container>, (asIObjectType*), T_container*), asCALL_CDECL); assert(rs.error >= 0);
+						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(container::templated::mapped::shared::Factory<T_container>, (asIObjectType*), T_container*), asCALL_CDECL); assert(rs.error >= 0);
 						sprintf_s(rs.textbuf, aatc::common::RegistrationState::bufsize, "%s@ f(int&in,const %s &in)", rs.n_container_T, rs.n_container_T);
-						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(container::templated::map::shared::Factory_copy<T_container>, (asIObjectType*, const T_container&), T_container*), asCALL_CDECL); assert(rs.error >= 0);
+						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(container::templated::mapped::shared::Factory_copy<T_container>, (asIObjectType*, const T_container&), T_container*), asCALL_CDECL); assert(rs.error >= 0);
 						sprintf_s(rs.textbuf, aatc::common::RegistrationState::bufsize, "%s& opAssign(const %s &in)", rs.n_container_T, rs.n_container_T);
 						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, operator=), asCALL_THISCALL); assert(rs.error >= 0);
 
@@ -992,7 +1002,7 @@ namespace aatc {
 
 
 				};//namespace shared
-			};//namespace map
+			};//namespace mapped
 		};//namespace templated
 	};//namespace container
 };//namespace aatc
