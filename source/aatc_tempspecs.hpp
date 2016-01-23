@@ -135,7 +135,7 @@ template<
 	char n_containerTcontentT[1000];
 	char n_iterator[1000];
 	sprintf_s(n_containerTcontentT, 1000, "%s<%s>", aatc_name_script_container_vector, n_content);
-	sprintf_s(n_iterator, 1000, "%s%s<%s>", aatc_name_script_container_vector, aatc_name_script_iterator, n_content);
+	sprintf_s(n_iterator, 1000, "%s%s<%s>", aatc_name_script_container_vector, config::scriptname::iterator_suffix, n_content);
 
 	dt_container::staticname_container = aatc_name_script_container_vector;
 	dt_container::staticname_content = n_content;
@@ -144,7 +144,7 @@ template<
 
 	//aect_iterator_shared_tempspec<dt_container, dt_content>::Register<aatc_Y, aatc_N>(engine, n_iterator, n_content, n_containerTcontentT);
 
-	//sprintf_s(textbuf, 1000, "%s %s()", n_iterator, aatc_name_script_container_method_begin);
+	//sprintf_s(textbuf, 1000, "%s %s()", n_iterator, config::scriptname::method::container::begin);
 	//r = engine->RegisterObjectMethod(n_containerTcontentT, textbuf, asFunctionPtr(aatc_reghelp_construct_hosted<aect_iterator_shared_tempspec<dt_container, dt_content>, dt_container*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
 	//sprintf_s(textbuf, 1000, "void erase(%s)", aatc_name_script_sizetype);
@@ -167,7 +167,7 @@ template<class dt_content, bool GOTFUNC_EQUALS = 1, bool GOTFUNC_LESS = 1, bool 
 	char n_containerTcontentT[1000];
 	char n_iterator[1000];
 	sprintf_s(n_containerTcontentT, 1000, "%s<%s>", aatc_name_script_container_list, n_content);
-	sprintf_s(n_iterator, 1000, "%s%s<%s>", aatc_name_script_container_list, aatc_name_script_iterator, n_content);
+	sprintf_s(n_iterator, 1000, "%s%s<%s>", aatc_name_script_container_list, config::scriptname::iterator_suffix, n_content);
 
 	dt_container::staticname_container = aatc_name_script_container_list;
 	dt_container::staticname_content = n_content;
@@ -181,7 +181,7 @@ template<class dt_content, bool GOTFUNC_EQUALS = 1, bool GOTFUNC_LESS = 1, bool 
 
 	//aect_iterator_shared_tempspec<dt_container, dt_content>::Register<aatc_Y, aatc_N>(engine, n_iterator, n_content, n_containerTcontentT);
 
-	//sprintf_s(textbuf, 1000, "%s %s()", n_iterator, aatc_name_script_container_method_begin);
+	//sprintf_s(textbuf, 1000, "%s %s()", n_iterator, config::scriptname::method::container::begin);
 	//r = engine->RegisterObjectMethod(n_containerTcontentT, textbuf, asFunctionPtr(aatc_reghelp_construct_hosted<aect_iterator_shared_tempspec<dt_container, dt_content>, dt_container*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 }
 
@@ -198,7 +198,7 @@ template<class dt_content, bool GOTFUNC_EQUALS = 1, bool GOTFUNC_LESS = 1, bool 
 	char n_containerTcontentT[1000];
 	char n_iterator[1000];
 	sprintf_s(n_containerTcontentT, 1000, "%s<%s>", aatc_name_script_container_set, n_content);
-	sprintf_s(n_iterator, 1000, "%s%s<%s>", aatc_name_script_container_set, aatc_name_script_iterator, n_content);
+	sprintf_s(n_iterator, 1000, "%s%s<%s>", aatc_name_script_container_set, config::scriptname::iterator_suffix, n_content);
 
 	dt_container::staticname_container = aatc_name_script_container_set;
 	dt_container::staticname_content = n_content;
@@ -208,7 +208,7 @@ template<class dt_content, bool GOTFUNC_EQUALS = 1, bool GOTFUNC_LESS = 1, bool 
 
 	//aect_iterator_shared_tempspec<dt_container, dt_content>::Register<aatc_N, aatc_Y>(engine, n_iterator, n_content, n_containerTcontentT);
 
-	//sprintf_s(textbuf, 1000, "%s %s()", n_iterator, aatc_name_script_container_method_begin);
+	//sprintf_s(textbuf, 1000, "%s %s()", n_iterator, config::scriptname::method::container::begin);
 	//r = engine->RegisterObjectMethod(n_containerTcontentT, textbuf, asFunctionPtr(aatc_reghelp_construct_hosted<aect_iterator_shared_tempspec<dt_container, dt_content>, dt_container*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 }
 
@@ -225,7 +225,7 @@ template<class dt_content, bool GOTFUNC_EQUALS = 1, bool GOTFUNC_LESS = 1, bool 
 	char n_containerTcontentT[1000];
 	char n_iterator[1000];
 	sprintf_s(n_containerTcontentT, 1000, "%s<%s>", aatc_name_script_container_unordered_set, n_content);
-	sprintf_s(n_iterator, 1000, "%s%s<%s>", aatc_name_script_container_unordered_set, aatc_name_script_iterator, n_content);
+	sprintf_s(n_iterator, 1000, "%s%s<%s>", aatc_name_script_container_unordered_set, config::scriptname::iterator_suffix, n_content);
 
 	dt_container::staticname_container = aatc_name_script_container_unordered_set;
 	dt_container::staticname_content = n_content;
@@ -235,7 +235,7 @@ template<class dt_content, bool GOTFUNC_EQUALS = 1, bool GOTFUNC_LESS = 1, bool 
 
 	//aect_iterator_shared_tempspec<dt_container, dt_content>::Register<aatc_N, aatc_Y>(engine, n_iterator, n_content, n_containerTcontentT);
 
-	//sprintf_s(textbuf, 1000, "%s %s()", n_iterator, aatc_name_script_container_method_begin);
+	//sprintf_s(textbuf, 1000, "%s %s()", n_iterator, config::scriptname::method::container::begin);
 	//r = engine->RegisterObjectMethod(n_containerTcontentT, textbuf, asFunctionPtr(aatc_reghelp_construct_hosted<aect_iterator_shared_tempspec<dt_container, dt_content>, dt_container*>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 }
 

@@ -99,7 +99,7 @@ namespace aatc {
 					int returnTypeId = func->GetReturnTypeId(&flags);
 
 					if(func->GetParamCount() == 0){
-						if(strcmp(func->GetName(), aatc_name_script_requiredmethod_hash) == 0){
+						if(strcmp(func->GetName(), config::scriptname::method::content::hash) == 0){
 							if((returnTypeId == asTYPEID_UINT64) || (returnTypeId == asTYPEID_UINT32) || (returnTypeId == asTYPEID_UINT16) || (returnTypeId == asTYPEID_UINT8)){
 								func_hash = func;
 							}

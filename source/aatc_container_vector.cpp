@@ -79,7 +79,7 @@ namespace aatc {
 					using templated::vector;
 					using namespace templated::shared;
 
-					register_containerbase<vector>(rs, "vector");
+					register_containerbase<vector>(rs, config::scriptname::container::vector);
 
 
 

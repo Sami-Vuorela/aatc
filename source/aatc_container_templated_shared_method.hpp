@@ -67,7 +67,7 @@ namespace aatc {
 					template<typename T_container> void* back(T_container* t) {
 						#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->empty()) {
-								aatc::common::aatc_errorprint_container_access_empty(t->objtype_container->GetName(), t->objtype_content->GetName(), aatc_name_script_container_method_back);
+								aatc::common::aatc_errorprint_container_access_empty(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::back);
 								return nullptr;
 							}
 						#endif
@@ -85,21 +85,21 @@ namespace aatc {
 				namespace register_method {
 
 					template<typename T_container> static void swap(aatc::common::RegistrationState& rs) {
-						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& %s(%s@)", rs.n_container_T, aatc_name_script_container_method_swap, rs.n_container_T);
+						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& %s(%s@)", rs.n_container_T, config::scriptname::method::container::swap, rs.n_container_T);
 						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::swap<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 					}
 
 					template<typename T_container> static void push_back(aatc::common::RegistrationState& rs) {
-						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const T&in)", aatc_name_script_container_method_push_back);
+						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const T&in)", config::scriptname::method::container::push_back);
 						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::push_back<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 					}
 					template<typename T_container> static void pop_back(aatc::common::RegistrationState& rs) {
-						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s()", aatc_name_script_container_method_pop_back);
+						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s()", config::scriptname::method::container::pop_back);
 						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::pop_back<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 					}
 
 					template<typename T_container> static void back(aatc::common::RegistrationState& rs) {
-						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "T& %s()", aatc_name_script_container_method_back);
+						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "T& %s()", config::scriptname::method::container::back);
 						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::back<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 					}
 

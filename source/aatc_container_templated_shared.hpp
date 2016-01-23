@@ -138,7 +138,7 @@ namespace aatc {
 						objtype_container(_objtype),
 						directcomp_forced(0)
 					{
-						handlemode_directcomp = aatc_CONFIG_DEFAULT_HANDLEMODE_DIRECTCOMP;
+						handlemode_directcomp = config::DEFAULT_HANDLEMODE_DIRECTCOMP;
 
 						objtype_content = objtype_container->GetSubType();
 
@@ -544,19 +544,19 @@ namespace aatc {
 
 						template<class T_tag_need_const> static void Register_func_current(common::RegistrationState& rs) {}
 						template<> static void Register_func_current<container::shared::tag::iterator_access_is_mutable>(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, 1000, "T& %s()", aatc_name_script_iterator_access_function);
+							sprintf_s(rs.textbuf, 1000, "T& %s()", config::scriptname::method::iterator::access_function);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, Current<int>), asCALL_THISCALL); assert(rs.error >= 0);
 
-							sprintf_s(rs.textbuf, 1000, "T& get_%s()", aatc_name_script_iterator_access_property);
+							sprintf_s(rs.textbuf, 1000, "T& get_%s()", config::scriptname::method::iterator::access_property);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, Current_get<int>), asCALL_THISCALL); assert(rs.error >= 0);
-							sprintf_s(rs.textbuf, 1000, "void set_%s(const T &in)", aatc_name_script_iterator_access_property);
+							sprintf_s(rs.textbuf, 1000, "void set_%s(const T &in)", config::scriptname::method::iterator::access_property);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, Current_set<int>), asCALL_THISCALL); assert(rs.error >= 0);
 						}
 						template<> static void Register_func_current<container::shared::tag::iterator_access_is_const>(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, 1000, "const T& %s()", aatc_name_script_iterator_access_function);
+							sprintf_s(rs.textbuf, 1000, "const T& %s()", config::scriptname::method::iterator::access_function);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, Current_const<int>), asCALL_THISCALL); assert(rs.error >= 0);
 
-							sprintf_s(rs.textbuf, 1000, "const T& get_%s()", aatc_name_script_iterator_access_property);
+							sprintf_s(rs.textbuf, 1000, "const T& get_%s()", config::scriptname::method::iterator::access_property);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, Current_get<int>), asCALL_THISCALL); assert(rs.error >= 0);
 						}
 
@@ -585,10 +585,10 @@ namespace aatc {
 							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool opEquals(const %s &in)", rs.n_iterator_T);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, operator==), asCALL_THISCALL); assert(rs.error >= 0);
 
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s()", aatc_name_script_iterator_method_is_end);
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s()", config::scriptname::method::iterator::is_end);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, IsEnd), asCALL_THISCALL); assert(rs.error >= 0);
 
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s()", aatc_name_script_iterator_method_is_valid);
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s()", config::scriptname::method::iterator::is_valid);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, IsValid), asCALL_THISCALL); assert(rs.error >= 0);
 						}
 					};
@@ -616,7 +616,7 @@ namespace aatc {
 					sprintf_s(rs.n_container, aatc::common::RegistrationState::bufsize, "%s", n_container);
 					sprintf_s(rs.n_container_T, aatc::common::RegistrationState::bufsize, "%s<T>", n_container);
 					sprintf_s(rs.n_container_class_T, aatc::common::RegistrationState::bufsize, "%s<class T>", n_container);
-					sprintf_s(rs.n_iterator, aatc::common::RegistrationState::bufsize, "%s%s", n_container, aatc_name_script_iterator);
+					sprintf_s(rs.n_iterator, aatc::common::RegistrationState::bufsize, "%s%s", n_container, config::scriptname::iterator_suffix);
 					sprintf_s(rs.n_iterator_T, aatc::common::RegistrationState::bufsize, "%s<T>", rs.n_iterator);
 					sprintf_s(rs.n_iterator_class_T, aatc::common::RegistrationState::bufsize, "%s<class T>", rs.n_iterator);
 
@@ -640,25 +640,25 @@ namespace aatc {
 
 					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_TEMPLATE_CALLBACK, "bool f(int&in, bool&out)", asFUNCTION(aatc::common::aatc_templatecallback_1tp), asCALL_CDECL); assert(rs.error >= 0);
 
-					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool)", aatc_name_script_container_method_set_directcomp);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool)", config::scriptname::method::container::set_directcomp);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, SetDirectcomp), asCALL_THISCALL); assert(rs.error >= 0);
 
-					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s(const T &in)", aatc_name_script_sizetype, aatc_name_script_container_method_count);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s(const T &in)", aatc_name_script_sizetype, config::scriptname::method::container::count);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, count), asCALL_THISCALL); assert(rs.error >= 0);
 
-					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s()", aatc_name_script_container_method_clear);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s()", config::scriptname::method::container::clear);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, clear), asCALL_THISCALL); assert(rs.error >= 0);
-					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s()", aatc_name_script_container_method_empty);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s()", config::scriptname::method::container::empty);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, empty), asCALL_THISCALL); assert(rs.error >= 0);
-					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s()", aatc_name_script_sizetype, aatc_name_script_container_method_size);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s()", aatc_name_script_sizetype, config::scriptname::method::container::size);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, size), asCALL_THISCALL); assert(rs.error >= 0);
 
 					T_container::Iterator::Register(rs);
 
-					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s()", rs.n_iterator_T, aatc_name_script_container_method_begin);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s()", rs.n_iterator_T, config::scriptname::method::container::begin);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, begin), asCALL_THISCALL); assert(rs.error >= 0);
 
-					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s()", rs.n_iterator_T, aatc_name_script_container_method_end);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s()", rs.n_iterator_T, config::scriptname::method::container::end);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, end), asCALL_THISCALL); assert(rs.error >= 0);
 				};
 

@@ -51,7 +51,6 @@ namespace aatc {
 					typedef shared::tag::iterator_access_is_const iterator_access;
 				};
 			};
-
 			namespace container_native_with_functors {
 				typedef aatc_acit_map<
 					common::primunion,

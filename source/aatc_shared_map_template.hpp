@@ -144,7 +144,7 @@ public:
 				objectmode_key = 1;
 
 				if(datahandlingid_key == aatc_DATAHANDLINGTYPE::HANDLE){
-					handlemode_directcomp = aatc_CONFIG_DEFAULT_HANDLEMODE_DIRECTCOMP;
+					handlemode_directcomp = config::DEFAULT_HANDLEMODE_DIRECTCOMP;
 				}
 
 				if(handlemode_directcomp){
@@ -1056,17 +1056,17 @@ public:
 			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_CONSTRUCT, "void f(int&in,?&in)", asFunctionPtr(static_constructor_parentcontainer), asCALL_CDECL_OBJLAST); assert(r >= 0);
 			r = engine->RegisterObjectBehaviour(n_iterator_T, asBEHAVE_DESTRUCT, "void f()", asFUNCTION(aatc_reghelp_generic_destructor<aatc_iterator>), asCALL_CDECL_OBJLAST); assert(r >= 0);
 
-			sprintf_s(textbuf, 1000, "const T_key& %s()", aatc_name_script_iterator_access_function_key);
+			sprintf_s(textbuf, 1000, "const T_key& %s()", config::scriptname::method::iterator::access_function_key);
 			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current_key_const), asCALL_THISCALL); assert(r >= 0);
-			sprintf_s(textbuf, 1000, "T_value& %s()", aatc_name_script_iterator_access_function_value);
+			sprintf_s(textbuf, 1000, "T_value& %s()", config::scriptname::method::iterator::access_function_value);
 			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current_value), asCALL_THISCALL); assert(r >= 0);
 
-			sprintf_s(textbuf, 1000, "const T_key& get_%s()", aatc_name_script_iterator_access_property_key);
+			sprintf_s(textbuf, 1000, "const T_key& get_%s()", config::scriptname::method::iterator::access_property_key);
 			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current_key_get), asCALL_THISCALL); assert(r >= 0);
 
-			sprintf_s(textbuf, 1000, "T_value& get_%s()", aatc_name_script_iterator_access_property_value);
+			sprintf_s(textbuf, 1000, "T_value& get_%s()", config::scriptname::method::iterator::access_property_value);
 			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current_value_get), asCALL_THISCALL); assert(r >= 0);
-			sprintf_s(textbuf, 1000, "void set_%s(const T_value &in)", aatc_name_script_iterator_access_property_value);
+			sprintf_s(textbuf, 1000, "void set_%s(const T_value &in)", config::scriptname::method::iterator::access_property_value);
 			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, Current_value_set), asCALL_THISCALL); assert(r >= 0);
 
 			r = engine->RegisterObjectMethod(n_iterator_T, "bool next()", asMETHOD(aatc_iterator, Next), asCALL_THISCALL); assert(r >= 0);
@@ -1079,10 +1079,10 @@ public:
 			sprintf_s(textbuf, 1000, "bool opEquals(const %s &in)", n_iterator_T);
 			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, operator==), asCALL_THISCALL); assert(r >= 0);
 
-			sprintf_s(textbuf, 1000, "bool %s()", aatc_name_script_iterator_method_is_end);
+			sprintf_s(textbuf, 1000, "bool %s()", config::scriptname::method::iterator::is_end);
 			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, IsEnd), asCALL_THISCALL); assert(r >= 0);
 
-			sprintf_s(textbuf, 1000, "bool %s()", aatc_name_script_iterator_method_is_valid);
+			sprintf_s(textbuf, 1000, "bool %s()", config::scriptname::method::iterator::is_valid);
 			r = engine->RegisterObjectMethod(n_iterator_T, textbuf, asMETHOD(aatc_iterator, IsValid), asCALL_THISCALL); assert(r >= 0);
 		}
 	};
@@ -1265,7 +1265,7 @@ template<class T_container> void aatc_container_shared_map_template_Register(asI
 	sprintf_s(n_container_class_T, 1000, "%s<class T_key,class T_value>", n_container);
 
 	char n_iterator[1000];
-	sprintf_s(n_iterator, 1000, "%s%s", n_container, aatc_name_script_iterator);
+	sprintf_s(n_iterator, 1000, "%s%s", n_container, config::scriptname::iterator_suffix);
 
 	char n_iterator_TT[1000];
 	sprintf_s(n_iterator_TT, 1000, "%s<T_key,T_value>", n_iterator);
@@ -1281,7 +1281,7 @@ template<class T_container> void aatc_container_shared_map_template_Register(asI
 	sprintf_s(textbuf, 1000, "%s& opAssign(const %s &in)", n_container_T, n_container_T);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, operator=), asCALL_THISCALL); assert(r >= 0);
 
-	sprintf_s(textbuf, 1000, "%s& %s(%s@)", n_container_T, aatc_name_script_container_method_swap, n_container_T);
+	sprintf_s(textbuf, 1000, "%s& %s(%s@)", n_container_T, config::scriptname::method::container::swap, n_container_T);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Swap), asCALL_THISCALL); assert(r >= 0);
 
 	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_ADDREF, "void f()", asMETHOD(T_container, refcount_Add), asCALL_THISCALL); assert(r >= 0);
@@ -1295,26 +1295,26 @@ template<class T_container> void aatc_container_shared_map_template_Register(asI
 	r = engine->RegisterObjectBehaviour(n_container_T, asBEHAVE_TEMPLATE_CALLBACK, "bool f(int&in, bool&out)", asFUNCTION(aatc_templatecallback_map), asCALL_CDECL); assert(r >= 0);
 
 
-	sprintf_s(textbuf, 1000, "void %s(bool)", aatc_name_script_container_method_set_directcomp);
+	sprintf_s(textbuf, 1000, "void %s(bool)", config::scriptname::method::container::set_directcomp);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, SetDirectcomp), asCALL_THISCALL); assert(r >= 0);
 
-	sprintf_s(textbuf, 1000, "void %s()", aatc_name_script_container_method_clear);
+	sprintf_s(textbuf, 1000, "void %s()", config::scriptname::method::container::clear);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Clear), asCALL_THISCALL); assert(r >= 0);
-	sprintf_s(textbuf, 1000, "bool %s()", aatc_name_script_container_method_empty);
+	sprintf_s(textbuf, 1000, "bool %s()", config::scriptname::method::container::empty);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Empty), asCALL_THISCALL); assert(r >= 0);
-	sprintf_s(textbuf, 1000, "%s %s()", aatc_name_script_sizetype, aatc_name_script_container_method_size);
+	sprintf_s(textbuf, 1000, "%s %s()", aatc_name_script_sizetype, config::scriptname::method::container::size);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Size), asCALL_THISCALL); assert(r >= 0);
 
-	sprintf_s(textbuf, 1000, "void %s(const T_key&in,const T_value&in)", aatc_name_script_container_method_insert);
+	sprintf_s(textbuf, 1000, "void %s(const T_key&in,const T_value&in)", config::scriptname::method::container::insert);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Insert), asCALL_THISCALL); assert(r >= 0);
-	sprintf_s(textbuf, 1000, "void %s(const T_key&in)", aatc_name_script_container_method_erase);
+	sprintf_s(textbuf, 1000, "void %s(const T_key&in)", config::scriptname::method::container::erase);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Erase_value), asCALL_THISCALL); assert(r >= 0);
-	sprintf_s(textbuf, 1000, "bool %s(const T_key&in)", aatc_name_script_container_method_contains);
+	sprintf_s(textbuf, 1000, "bool %s(const T_key&in)", config::scriptname::method::container::contains);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Contains_native), asCALL_THISCALL); assert(r >= 0);
 
-	sprintf_s(textbuf, 1000, "T_value& %s(const T_key &in)", aatc_name_script_container_method_find);
+	sprintf_s(textbuf, 1000, "T_value& %s(const T_key &in)", config::scriptname::method::container::find);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHODPR(T_container, Find, (void*), const void*), asCALL_THISCALL); assert(r >= 0);
-	sprintf_s(textbuf, 1000, "T_value& %s(const T_key &in,bool &out)", aatc_name_script_container_method_find);
+	sprintf_s(textbuf, 1000, "T_value& %s(const T_key &in,bool &out)", config::scriptname::method::container::find);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHODPR(T_container, Find, (void*, bool&), const void*), asCALL_THISCALL); assert(r >= 0);
 
 	r = engine->RegisterObjectMethod(n_container_T, "const T_value& get_opIndex(const T_key &in) const", asMETHODPR(T_container, Find, (void*), const void*), asCALL_THISCALL); assert(r >= 0);
@@ -1326,19 +1326,19 @@ template<class T_container> void aatc_container_shared_map_template_Register(asI
 
 
 
-	sprintf_s(textbuf, 1000, "%s %s()", n_iterator_TT, aatc_name_script_container_method_begin);
+	sprintf_s(textbuf, 1000, "%s %s()", n_iterator_TT, config::scriptname::method::container::begin);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Begin), asCALL_THISCALL); assert(r >= 0);
 
-	sprintf_s(textbuf, 1000, "%s %s()", n_iterator_TT, aatc_name_script_container_method_end);
+	sprintf_s(textbuf, 1000, "%s %s()", n_iterator_TT, config::scriptname::method::container::end);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, End), asCALL_THISCALL); assert(r >= 0);
 
-	sprintf_s(textbuf, 1000, "%s %s(const T_key &in)", n_iterator_TT, aatc_name_script_container_method_find_iterator);
+	sprintf_s(textbuf, 1000, "%s %s(const T_key &in)", n_iterator_TT, config::scriptname::method::container::find_iterator);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Find_iterator), asCALL_THISCALL); assert(r >= 0);
 
-	sprintf_s(textbuf, 1000, "bool %s(const %s &in)", aatc_name_script_container_method_erase_iterator, n_iterator_TT);
+	sprintf_s(textbuf, 1000, "bool %s(const %s &in)", config::scriptname::method::container::erase_iterator, n_iterator_TT);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Erase_iterator), asCALL_THISCALL); assert(r >= 0);
 
-	sprintf_s(textbuf, 1000, "%s %s(const %s &in,const %s &in)", aatc_name_script_sizetype, aatc_name_script_container_method_erase_iterator, n_iterator_TT, n_iterator_TT);
+	sprintf_s(textbuf, 1000, "%s %s(const %s &in,const %s &in)", aatc_name_script_sizetype, config::scriptname::method::container::erase_iterator, n_iterator_TT, n_iterator_TT);
 	r = engine->RegisterObjectMethod(n_container_T, textbuf, asMETHOD(T_container, Erase_iterator_range), asCALL_THISCALL); assert(r >= 0);
 }
 

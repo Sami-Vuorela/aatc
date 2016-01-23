@@ -109,7 +109,7 @@ namespace aatc {
 				static void Register(common::RegistrationState& rs, const char* n_content) {
 					using namespace tempspec::shared;
 
-					register_containerbase<vector>(rs, "vector", n_content);
+					register_containerbase<vector>(rs, config::scriptname::container::vector, n_content);
 
 
 

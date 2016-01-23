@@ -78,7 +78,7 @@ namespace aatc {
 					using mapped::templated::map;
 					using namespace mapped::templated::shared;
 
-					register_containerbase<map>(rs, "map");
+					register_containerbase<map>(rs, config::scriptname::container::map);
 
 
 

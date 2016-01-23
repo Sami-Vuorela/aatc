@@ -87,7 +87,7 @@ namespace aatc {
 			{//register aatc_script_Funcpointer
 				using common::aatc_script_Funcpointer;
 
-				const char* n_funcpointer = aatc_name_script_funcpointer;
+				const char* n_funcpointer = config::scriptname::funcpointer;
 
 				r = engine->RegisterObjectType(n_funcpointer, 0, asOBJ_REF); assert(r >= 0);
 

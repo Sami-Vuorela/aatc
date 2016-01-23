@@ -78,7 +78,7 @@ namespace aatc {
 					using mapped::templated::unordered_map;
 					using namespace mapped::templated::shared;
 
-					register_containerbase<unordered_map>(rs, "unordered_map");
+					register_containerbase<unordered_map>(rs, config::scriptname::container::unordered_map);
 
 
 
