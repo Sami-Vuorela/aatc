@@ -496,7 +496,7 @@ namespace aatc {
 							};
 						}
 
-						void Scriptany_to_Primunion(void* scriptvalue, common::primunion& pu, const common::DATAHANDLINGTYPE& dht, const common::PRIMITIVE_TYPE& pt, asIObjectType* ot) {
+						void store_Scriptany_to_Primunion(void* scriptvalue, common::primunion& pu, const common::DATAHANDLINGTYPE& dht, const common::PRIMITIVE_TYPE& pt, asIObjectType* ot) {
 							switch (dht) {
 								case common::DATAHANDLINGTYPE::STRING:
 								{
@@ -522,7 +522,7 @@ namespace aatc {
 							};
 						}
 
-						static void* Primunion_to_Scriptany(common::primunion& pu, const common::DATAHANDLINGTYPE& dht, const common::PRIMITIVE_TYPE& pt) {
+						static void* Scriptany_ref_from_Primunion(common::primunion& pu, const common::DATAHANDLINGTYPE& dht, const common::PRIMITIVE_TYPE& pt) {
 							switch (dht) {
 								case common::DATAHANDLINGTYPE::HANDLE: { return &(pu.ptr); }
 								case common::DATAHANDLINGTYPE::OBJECT: { return pu.ptr; }
@@ -567,16 +567,16 @@ namespace aatc {
 								case common::DATAHANDLINGTYPE::PRIMITIVE:
 								{
 									switch (pt) {
-									case common::PRIMITIVE_TYPE::INT8: { pu.i8 = *((config::t::int8*)inputvalue); break; }
-									case common::PRIMITIVE_TYPE::INT16: { pu.i16 = *((config::t::int16*)inputvalue); break; }
-									case common::PRIMITIVE_TYPE::INT32: { pu.i32 = *((config::t::int32*)inputvalue); break; }
-									case common::PRIMITIVE_TYPE::INT64: { pu.i64 = *((config::t::int64*)inputvalue); break; }
-									case common::PRIMITIVE_TYPE::UINT8: { pu.ui8 = *((config::t::uint8*)inputvalue); break; }
-									case common::PRIMITIVE_TYPE::UINT16: { pu.ui16 = *((config::t::uint16*)inputvalue); break; }
-									case common::PRIMITIVE_TYPE::UINT32: { pu.ui32 = *((config::t::uint32*)inputvalue); break; }
-									case common::PRIMITIVE_TYPE::UINT64: { pu.ui64 = *((config::t::uint64*)inputvalue); break; }
-									case common::PRIMITIVE_TYPE::FLOAT32: { pu.f32 = *((config::t::float32*)inputvalue); break; }
-									case common::PRIMITIVE_TYPE::FLOAT64: { pu.f64 = *((config::t::float64*)inputvalue); break; }
+										case common::PRIMITIVE_TYPE::INT8: { pu.i8 = common::primunion_defaultvalue.i8; break; }
+										case common::PRIMITIVE_TYPE::INT16: { pu.i16 = common::primunion_defaultvalue.i16; break; }
+										case common::PRIMITIVE_TYPE::INT32: { pu.i32 = common::primunion_defaultvalue.i32; break; }
+										case common::PRIMITIVE_TYPE::INT64: { pu.i64 = common::primunion_defaultvalue.i64; break; }
+										case common::PRIMITIVE_TYPE::UINT8: { pu.ui8 = common::primunion_defaultvalue.ui8; break; }
+										case common::PRIMITIVE_TYPE::UINT16: { pu.ui16 = common::primunion_defaultvalue.ui16; break; }
+										case common::PRIMITIVE_TYPE::UINT32: { pu.ui32 = common::primunion_defaultvalue.ui32; break; }
+										case common::PRIMITIVE_TYPE::UINT64: { pu.ui64 = common::primunion_defaultvalue.ui64; break; }
+										case common::PRIMITIVE_TYPE::FLOAT32: { pu.f32 = common::primunion_defaultvalue.f32; break; }
+										case common::PRIMITIVE_TYPE::FLOAT64: { pu.f64 = common::primunion_defaultvalue.f64; break; }
 									};
 									break;
 								}
@@ -610,64 +610,20 @@ namespace aatc {
 						void clear() {
 							safety_iteratorversion_Increment();
 
-							switch (datahandlingid_key) {
-							case common::DATAHANDLINGTYPE::STRING:
-							{
+							if (datahandlingid_key != common::DATAHANDLINGTYPE::PRIMITIVE) {
 								auto it = container.begin();
 								auto itend = container.end();
 								for (; it != itend; it++) {
 									engine->ReleaseScriptObject((*it).first.ptr, objtype_key);
 								}
-								break;
 							}
-							case common::DATAHANDLINGTYPE::HANDLE:
-							{
-								auto it = container.begin();
-								auto itend = container.end();
-								for (; it != itend; it++) {
-									engine->ReleaseScriptObject((*it).first.ptr, objtype_key);
-								}
-								break;
-							}
-							case common::DATAHANDLINGTYPE::OBJECT:
-							{
-								auto it = container.begin();
-								auto itend = container.end();
-								for (; it != itend; it++) {
-									engine->ReleaseScriptObject((*it).first.ptr, objtype_key);
-								}
-								break;
-							}
-							};
-							switch (datahandlingid_value) {
-							case common::DATAHANDLINGTYPE::STRING:
-							{
+							if (datahandlingid_value != common::DATAHANDLINGTYPE::PRIMITIVE) {
 								auto it = container.begin();
 								auto itend = container.end();
 								for (; it != itend; it++) {
 									engine->ReleaseScriptObject((*it).second.ptr, objtype_value);
 								}
-								break;
 							}
-							case common::DATAHANDLINGTYPE::HANDLE:
-							{
-								auto it = container.begin();
-								auto itend = container.end();
-								for (; it != itend; it++) {
-									engine->ReleaseScriptObject((*it).second.ptr, objtype_value);
-								}
-								break;
-							}
-							case common::DATAHANDLINGTYPE::OBJECT:
-							{
-								auto it = container.begin();
-								auto itend = container.end();
-								for (; it != itend; it++) {
-									engine->ReleaseScriptObject((*it).second.ptr, objtype_value);
-								}
-								break;
-							}
-							};
 
 							container.clear();
 						}

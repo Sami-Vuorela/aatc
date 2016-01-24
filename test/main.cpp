@@ -39,15 +39,17 @@ void main_contents(){
 	{
 		{
 			int key = 1;
-			int value = 11;
+			int value = 11111;
 
 			cont_map->insert(&key, &value);
 		}
 		{
 			int key = 2;
-			int value = 22;
+			int value = 22222;
 
 			cont_map->insert(&key, &value);
+
+			*((int*)cont_map->operator[](&key)) = value;
 		}
 	}
 

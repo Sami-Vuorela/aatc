@@ -55,7 +55,7 @@ namespace aatc {
 						}
 
 
-						template<typename T_container> void insert(T_container* t, void* newkey, void* newvalue) {
+						template<typename T_container> void insert(T_container* t, void* key, void* value) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (t->need_errorcheck_missing_functions) {
 									if (t->missing_functions & common::CONTAINER_OPERATION::INSERT) {
@@ -69,82 +69,14 @@ namespace aatc {
 
 							common::primunion findkey;
 
-							t->BuildPrimunion(findkey, newkey, t->datahandlingid_key, t->primitiveid_key);
+							t->BuildPrimunion(findkey, key, t->datahandlingid_key, t->primitiveid_key);
 
 							T_container::T_iterator_native it = t->container.find(findkey);
 							if (it == t->container.end()) {
-
 								common::primunion_pair insertpair;
 
-								switch (t->datahandlingid_key) {
-								case common::DATAHANDLINGTYPE::STRING:
-								{
-									insertpair.first.ptr = t->engine->CreateScriptObjectCopy(newkey, t->objtype_key);
-									break;
-								}
-								case common::DATAHANDLINGTYPE::HANDLE:
-								{
-									newkey = *(void**)newkey;
-									t->StoreHandle(&(insertpair.first.ptr), newkey, t->objtype_key);
-									break;
-								}
-								case common::DATAHANDLINGTYPE::OBJECT:
-								{
-									insertpair.first.ptr = t->engine->CreateScriptObjectCopy(newkey, t->objtype_key);
-									break;
-								}
-								case common::DATAHANDLINGTYPE::PRIMITIVE:
-								{
-									switch (t->primitiveid_key) {
-									case common::PRIMITIVE_TYPE::INT8: { insertpair.first.i8 = *((config::t::int8*)newkey); break; }
-									case common::PRIMITIVE_TYPE::INT16: { insertpair.first.i16 = *((config::t::int16*)newkey); break; }
-									case common::PRIMITIVE_TYPE::INT32: { insertpair.first.i32 = *((config::t::int32*)newkey); break; }
-									case common::PRIMITIVE_TYPE::INT64: { insertpair.first.i64 = *((config::t::int64*)newkey); break; }
-									case common::PRIMITIVE_TYPE::UINT8: { insertpair.first.ui8 = *((config::t::uint8*)newkey); break; }
-									case common::PRIMITIVE_TYPE::UINT16: { insertpair.first.ui16 = *((config::t::uint16*)newkey); break; }
-									case common::PRIMITIVE_TYPE::UINT32: { insertpair.first.ui32 = *((config::t::uint32*)newkey); break; }
-									case common::PRIMITIVE_TYPE::UINT64: { insertpair.first.ui64 = *((config::t::uint64*)newkey); break; }
-									case common::PRIMITIVE_TYPE::FLOAT32: { insertpair.first.f32 = *((config::t::float32*)newkey); break; }
-									case common::PRIMITIVE_TYPE::FLOAT64: { insertpair.first.f64 = *((config::t::float64*)newkey); break; }
-									};
-									break;
-								}
-								};
-
-								switch (t->datahandlingid_value) {
-								case common::DATAHANDLINGTYPE::STRING:
-								{
-									insertpair.second.ptr = t->engine->CreateScriptObjectCopy(newvalue, t->objtype_value);
-									break;
-								}
-								case common::DATAHANDLINGTYPE::HANDLE:
-								{
-									newvalue = *(void**)newvalue;
-									t->StoreHandle(&(insertpair.second.ptr), newvalue, t->objtype_value);
-									break;
-								}
-								case common::DATAHANDLINGTYPE::OBJECT:
-								{
-									insertpair.second.ptr = t->engine->CreateScriptObjectCopy(newvalue, t->objtype_value);
-									break;
-								}
-								case common::DATAHANDLINGTYPE::PRIMITIVE:
-								{
-									switch (t->primitiveid_value) {
-									case common::PRIMITIVE_TYPE::INT8: { insertpair.second.i8 = *((config::t::int8*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::INT16: { insertpair.second.i16 = *((config::t::int16*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::INT32: { insertpair.second.i32 = *((config::t::int32*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::INT64: { insertpair.second.i64 = *((config::t::int64*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::UINT8: { insertpair.second.ui8 = *((config::t::uint8*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::UINT16: { insertpair.second.ui16 = *((config::t::uint16*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::UINT32: { insertpair.second.ui32 = *((config::t::uint32*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::UINT64: { insertpair.second.ui64 = *((config::t::uint64*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::FLOAT32: { insertpair.second.f32 = *((config::t::float32*)newvalue); break; }
-									case common::PRIMITIVE_TYPE::FLOAT64: { insertpair.second.f64 = *((config::t::float64*)newvalue); break; }
-									};
-									break;
-								}
-								};
+								t->store_Scriptany_to_Primunion(key, insertpair.first, t->datahandlingid_key, t->primitiveid_key, t->objtype_key);
+								t->store_Scriptany_to_Primunion(value, insertpair.second, t->datahandlingid_value, t->primitiveid_value, t->objtype_value);
 
 								t->container.insert(insertpair);
 							}
@@ -174,39 +106,17 @@ namespace aatc {
 								common::primunion old_key;
 								common::primunion old_value;
 
-								if (t->datahandlingid_key != common::DATAHANDLINGTYPE::PRIMITIVE) { old_key.ptr = (*it).first.ptr; }
-								if (t->datahandlingid_value != common::DATAHANDLINGTYPE::PRIMITIVE) { old_value.ptr = (*it).second.ptr; }
+								old_key.ptr = (*it).first.ptr;
+								old_value.ptr = (*it).second.ptr;
 
 								t->container.erase(it);
 
-								switch (t->datahandlingid_key) {
-								case common::DATAHANDLINGTYPE::PRIMITIVE: { break; }
-								case common::DATAHANDLINGTYPE::STRING:
-								{
-									//delete ((config::t::string*)old_key.ptr);
+								if (t->datahandlingid_key != common::DATAHANDLINGTYPE::PRIMITIVE) {
 									t->engine->ReleaseScriptObject(old_key.ptr, t->objtype_key);
-									break;
 								}
-								default:
-								{
-									t->engine->ReleaseScriptObject(old_key.ptr, t->objtype_key);
-									break;
-								}
-								};
-								switch (t->datahandlingid_value) {
-								case common::DATAHANDLINGTYPE::PRIMITIVE: { break; }
-								case common::DATAHANDLINGTYPE::STRING:
-								{
-									//delete ((config::t::string*)old_value.ptr);
+								if (t->datahandlingid_value != common::DATAHANDLINGTYPE::PRIMITIVE) {
 									t->engine->ReleaseScriptObject(old_value.ptr, t->objtype_value);
-									break;
 								}
-								default:
-								{
-									t->engine->ReleaseScriptObject(old_value.ptr, t->objtype_value);
-									break;
-								}
-								};
 							}
 						}
 
@@ -235,7 +145,7 @@ namespace aatc {
 								const common::primunion& found_value_const = it->second;
 								common::primunion& found_value = const_cast<common::primunion&>(found_value_const);
 
-								return T_container::Primunion_to_Scriptany(found_value, t->datahandlingid_value, t->primitiveid_value);
+								return T_container::Scriptany_ref_from_Primunion(found_value, t->datahandlingid_value, t->primitiveid_value);
 							}
 						}
 
@@ -417,17 +327,17 @@ namespace aatc {
 								bool find_success = 0;
 								void* find_result = find_value(t, key, find_success);
 
-								if (success) {
+								if (find_success) {
 									return find_result;
 								} else {
 									common::primunion_pair insertpair;
 
-									t->Scriptany_to_Primunion(key, insertpair.first, t->datahandlingid_key, t->primitiveid_key, t->objtype_key);
+									t->store_Scriptany_to_Primunion(key, insertpair.first, t->datahandlingid_key, t->primitiveid_key, t->objtype_key);
 									t->DefaultConstructPrimunion(insertpair.second, t->datahandlingid_value, t->primitiveid_value, t->objtype_value);
 
-									std::pair<T_container::T_iterator_native,bool> insertpair = t->container.insert(insertpair);
+									std::pair<T_container::T_iterator_native,bool> insert_result = t->container.insert(insertpair);
 
-									return T_container::Primunion_to_Scriptany(insertpair.first->second, t->datahandlingid_value, t->primitiveid_value);
+									return T_container::Scriptany_ref_from_Primunion(insert_result.first->second, t->datahandlingid_value, t->primitiveid_value);
 								}
 							}
 						};

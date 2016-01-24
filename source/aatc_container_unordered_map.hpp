@@ -92,6 +92,12 @@ namespace aatc {
 					void* find_value(void* key);
 					void* find_value(void* key, bool& success);
 					bool contains(void* key);
+
+					Iterator find_iterator(void* key);
+					bool erase_iterator(const Iterator& it);
+					config::t::sizetype erase_iterator(const Iterator& it_range_begin, const Iterator& it_range_end);
+
+					void* operator[](void* key);
 				};
 
 

@@ -69,6 +69,8 @@ namespace aatc {
 				bool map::erase_iterator(const Iterator& it) { return shared::method::erase_iterator(this, it); }
 				config::t::sizetype map::erase_iterator(const Iterator& it_range_begin, const Iterator& it_range_end) { return shared::method::erase_iterator_range(this, it_range_begin, it_range_end); }
 
+				void* map::operator[](void* key){ return shared::method::cpp_interface::operator_index(this, key); }
+
 
 
 			};//namespace templated

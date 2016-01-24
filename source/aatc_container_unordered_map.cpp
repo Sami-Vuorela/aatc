@@ -63,6 +63,12 @@ namespace aatc {
 				void* unordered_map::find_value(void* key, bool& success) { return shared::method::find_value(this, key, success); }
 				bool unordered_map::contains(void* key) { return shared::method::contains(this, key); }
 
+				unordered_map::Iterator unordered_map::find_iterator(void* key) { return shared::method::find_iterator(this, key); }
+				bool unordered_map::erase_iterator(const Iterator& it) { return shared::method::erase_iterator(this, it); }
+				config::t::sizetype unordered_map::erase_iterator(const Iterator& it_range_begin, const Iterator& it_range_end) { return shared::method::erase_iterator_range(this, it_range_begin, it_range_end); }
+
+				void* unordered_map::operator[](void* key) { return shared::method::cpp_interface::operator_index(this, key); }
+
 
 
 			};//namespace mapped
@@ -88,6 +94,12 @@ namespace aatc {
 					register_method::erase<unordered_map>(rs);
 
 					register_method::find<unordered_map>(rs);
+					register_method::find_iterator<unordered_map>(rs);
+
+					register_method::erase_iterator<unordered_map>(rs);
+					register_method::erase_iterator_range<unordered_map>(rs);
+
+					register_method::operator_index<unordered_map>(rs);
 				}
 			}
 			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::UNORDERED_MAP>(enginestorage::template_specific_storage* tss) {
