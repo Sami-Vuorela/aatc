@@ -688,7 +688,7 @@ public:
 	template<class T> bool Contains_native(void* value){}
 	template<> bool Contains_native<aatc_Y>(void* value){
 		if(!handlemode_directcomp){
-			aatc_errorcheck_container_missingfunctions_operation_retnull(CONTAINER_OPERATION::CONTAINS_NATIVE, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::contains)
+			aatc_errorcheck_container_missingfunctions_operation_retnull(CONTAINER_OPERATION::CONTAINS, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::contains)
 		}
 		if(handlemode){ value = *(void**)value; }
 

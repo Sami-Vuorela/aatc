@@ -75,7 +75,23 @@ namespace aatc {
 				vector& swap(vector& other);
 
 				void push_back(void* value);
+				void pop_back();
+
 				void* back();
+				void* front();
+
+				void* operator[](config::t::sizetype position);
+
+				void sort(bool ascending = true);
+				void sort_funcptr(common::aatc_script_Funcpointer* funcptr, bool ascending = true);
+
+				void erase(config::t::sizetype position);
+				void erase(const Iterator& position);
+				config::t::sizetype erase(config::t::sizetype range_begin, config::t::sizetype range_end);
+				config::t::sizetype erase(const Iterator& range_begin, const Iterator& range_end);
+
+				Iterator find(void* value);
+				void insert(const Iterator& position, void* value);
 			};
 
 

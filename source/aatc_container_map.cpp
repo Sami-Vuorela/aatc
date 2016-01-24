@@ -111,7 +111,7 @@ namespace aatc {
 				if (!tss->func_cmp) {
 					mask |= common::CONTAINER_OPERATION::ERASE_VALUE;
 					mask |= common::CONTAINER_OPERATION::INSERT;
-					mask |= common::CONTAINER_OPERATION::CONTAINS_NATIVE;
+					mask |= common::CONTAINER_OPERATION::CONTAINS;
 					mask |= common::CONTAINER_OPERATION::FIND;
 				}
 				

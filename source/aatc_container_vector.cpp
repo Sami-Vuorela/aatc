@@ -58,12 +58,24 @@ namespace aatc {
 				return *this;
 			}
 
-			void vector::push_back(void* value) {
-				shared::method::push_back(this, value);
-			}
-			void* vector::back() {
-				return shared::method::back(this);
-			}
+			void vector::push_back(void* value) { shared::method::native::push_back(this, value); }
+			void vector::pop_back() { shared::method::native::pop_back(this); }
+			void* vector::back() { return shared::method::native::back(this); }
+			void* vector::front() { return shared::method::native::front(this); }
+
+			void* vector::operator[](config::t::sizetype position) { return shared::method::native::operator_index_position(this, position); }
+
+			void vector::sort(bool ascending) { shared::method::genericcc::sort(this, ascending); }
+			void vector::sort_funcptr(common::aatc_script_Funcpointer* funcptr, bool ascending) { shared::method::genericcc::sort_funcptr(this,funcptr, ascending); }
+
+			void vector::erase(config::t::sizetype position) { shared::method::genericcc::erase_position_constant(this, position); }
+			void vector::erase(const Iterator& position) { shared::method::native::erase_iterator(this, position); }
+			config::t::sizetype vector::erase(config::t::sizetype range_begin, config::t::sizetype range_end) { return shared::method::genericcc::erase_position_range_constant(this, range_begin, range_end); }
+			config::t::sizetype vector::erase(const Iterator& range_begin, const Iterator& range_end) { return shared::method::native::erase_iterator_range(this, range_begin, range_end); }
+
+			vector::Iterator vector::find(void* value) { return shared::method::genericcc::find_iterator(this, value); }
+
+			void vector::insert(const Iterator& position, void* value) { shared::method::native::insert_iterator(this, position, value); }
 
 
 
@@ -84,25 +96,28 @@ namespace aatc {
 
 
 					register_method::swap<vector>(rs);
-					register_method::push_back<vector>(rs);
-					register_method::back<vector>(rs);
+
+					register_method::native::push_back<vector>(rs);
+					register_method::native::pop_back<vector>(rs);
+
+					register_method::native::back<vector>(rs);
+					register_method::native::front<vector>(rs);
+
+					register_method::native::operator_index_position<vector>(rs);
+
+					register_method::genericcc::sort<vector>(rs);
+
+					register_method::native::erase_iterator<vector>(rs);
+					register_method::genericcc::erase_position_constant<vector>(rs);
+					register_method::native::erase_iterator_range<vector>(rs);
+					register_method::genericcc::erase_position_range_constant<vector>(rs);
+
+					register_method::genericcc::find_iterator<vector>(rs);
+
+					register_method::native::insert_iterator<vector>(rs);
 				}
 
 				container::shared::autoregister::register_all_tempspec_basics_for_container<tempspec::vector>(engine);
-
-				//tempspec::vector<int>::Register(rs,"int");
-
-				//{
-				//	using namespace tempspec::shared;
-
-				//	register_containerbase<tempspec::vector<int>>(rs, "vector","int");
-
-
-
-				//	register_method::swap<tempspec::vector<int>>(rs);
-				//	register_method::push_back<tempspec::vector<int>>(rs);
-				//	register_method::back<tempspec::vector<int>>(rs);
-				//}
 			}
 			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::VECTOR>(enginestorage::template_specific_storage* tss) {
 				common::container_operations_bitmask_type mask = 0;

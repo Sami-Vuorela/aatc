@@ -112,8 +112,9 @@ namespace aatc {
 					public container::shared::containerfunctor::Settings
 				{
 				public:
-					typename typedef T_container T_actual_container;
-					typename typedef T_actual_container::iterator iteratortype;
+					typename typedef T_container T_container_native;
+					typename typedef T_container_native::iterator T_iterator_native;
+					typename typedef T_container_native::const_iterator T_iterator_native_const;
 
 					typename bcw container;
 
@@ -224,9 +225,9 @@ namespace aatc {
 								insert to the new container after copy.
 								*/
 
-							iteratortype it = container.begin();
-							iteratortype it_other = const_cast<Containerbase&>(other).container.begin();
-							iteratortype it_end = container.end();
+							T_iterator_native it = container.begin();
+							T_iterator_native it_other = const_cast<Containerbase&>(other).container.begin();
+							T_iterator_native it_end = container.end();
 
 							for (; it != it_end;) {
 								void*& iii = const_cast<void*&>(*it);
@@ -266,8 +267,8 @@ namespace aatc {
 					void clear() {
 						safety_iteratorversion_Increment();
 
-						iteratortype it = container.begin();
-						iteratortype itend = container.end();
+						T_iterator_native it = container.begin();
+						T_iterator_native itend = container.end();
 						if (handlemode) {
 							for (; it != itend; it++) {
 								ReleaseHandle(*it);
@@ -297,8 +298,8 @@ namespace aatc {
 							asIScriptContext* cc = els->contextcache_Get();
 
 							config::t::sizetype count = 0;
-							iteratortype it = container.begin();
-							iteratortype itend = container.end();
+							T_iterator_native it = container.begin();
+							T_iterator_native itend = container.end();
 
 							asIScriptFunction* func = func_cmp;
 							if (func_equals) { func = func_equals; }
@@ -328,8 +329,8 @@ namespace aatc {
 
 					void EnumReferences(asIScriptEngine* engine) {
 						if (astypeid_content & asTYPEID_MASK_OBJECT) {//dont do this for primitives
-							iteratortype it = container.begin();
-							iteratortype itend = container.end();
+							T_iterator_native it = container.begin();
+							T_iterator_native itend = container.end();
 							for (; it != itend; it++) {
 								engine->GCEnumCallback(*it);
 							}
@@ -347,8 +348,8 @@ namespace aatc {
 					public:
 						Containerbase* host;
 
-						typename Containerbase::T_actual_container::iterator it;
-						typename Containerbase::T_actual_container::iterator it_end;
+						typename Containerbase::T_container_native::iterator it;
+						typename Containerbase::T_container_native::iterator it_end;
 
 						bool handlemode;
 
@@ -612,21 +613,21 @@ namespace aatc {
 
 
 
-				template<typename T_container> void register_containerbase(aatc::common::RegistrationState& rs, const char* n_container) {
-					sprintf_s(rs.n_container, aatc::common::RegistrationState::bufsize, "%s", n_container);
-					sprintf_s(rs.n_container_T, aatc::common::RegistrationState::bufsize, "%s<T>", n_container);
-					sprintf_s(rs.n_container_class_T, aatc::common::RegistrationState::bufsize, "%s<class T>", n_container);
-					sprintf_s(rs.n_iterator, aatc::common::RegistrationState::bufsize, "%s%s", n_container, config::scriptname::iterator_suffix);
-					sprintf_s(rs.n_iterator_T, aatc::common::RegistrationState::bufsize, "%s<T>", rs.n_iterator);
-					sprintf_s(rs.n_iterator_class_T, aatc::common::RegistrationState::bufsize, "%s<class T>", rs.n_iterator);
+				template<typename T_container> void register_containerbase(common::RegistrationState& rs, const char* n_container) {
+					sprintf_s(rs.n_container, common::RegistrationState::bufsize, "%s", n_container);
+					sprintf_s(rs.n_container_T, common::RegistrationState::bufsize, "%s<T>", n_container);
+					sprintf_s(rs.n_container_class_T, common::RegistrationState::bufsize, "%s<class T>", n_container);
+					sprintf_s(rs.n_iterator, common::RegistrationState::bufsize, "%s%s", n_container, config::scriptname::iterator_suffix);
+					sprintf_s(rs.n_iterator_T, common::RegistrationState::bufsize, "%s<T>", rs.n_iterator);
+					sprintf_s(rs.n_iterator_class_T, common::RegistrationState::bufsize, "%s<class T>", rs.n_iterator);
 
 					rs.error = rs.engine->RegisterObjectType(rs.n_container_class_T, 0, asOBJ_REF | asOBJ_GC | asOBJ_TEMPLATE); assert(rs.error >= 0);
 
-					sprintf_s(rs.textbuf, aatc::common::RegistrationState::bufsize, "%s@ f(int&in)", rs.n_container_T);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s@ f(int&in)", rs.n_container_T);
 					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(aatc::container::templated::shared::Factory<T_container>, (asIObjectType*), T_container*), asCALL_CDECL); assert(rs.error >= 0);
-					sprintf_s(rs.textbuf, aatc::common::RegistrationState::bufsize, "%s@ f(int&in,const %s &in)", rs.n_container_T, rs.n_container_T);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s@ f(int&in,const %s &in)", rs.n_container_T, rs.n_container_T);
 					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(aatc::container::templated::shared::Factory_copy<T_container>, (asIObjectType*, const T_container&), T_container*), asCALL_CDECL); assert(rs.error >= 0);
-					sprintf_s(rs.textbuf, aatc::common::RegistrationState::bufsize, "%s& opAssign(const %s &in)", rs.n_container_T, rs.n_container_T);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& opAssign(const %s &in)", rs.n_container_T, rs.n_container_T);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, operator=), asCALL_THISCALL); assert(rs.error >= 0);
 
 					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_ADDREF, "void f()", asMETHOD(T_container, refcount_Add), asCALL_THISCALL); assert(rs.error >= 0);

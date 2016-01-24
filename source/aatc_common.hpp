@@ -112,10 +112,9 @@ namespace aatc {
 			ERASE_VALUE = 2,
 			INSERT = 4,
 			SORT = 8,
-			CONTAINS_NATIVE = 16,
+			CONTAINS = 16,
 			REMOVE = 32,
-			FIND = 64,
-			ERASE_GENERIC_VALUE = 128
+			FIND = 64
 		};
 
 		typedef config::t::uint32 container_operations_bitmask_type;

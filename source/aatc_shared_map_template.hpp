@@ -639,7 +639,7 @@ public:
 	bool Contains_native(void* value){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 			if(need_errorcheck_missing_functions){
-				aatc_errorcheck_container_missingfunctions_operation_retnull(CONTAINER_OPERATION::CONTAINS_NATIVE, objtype_container->GetName(), objtype_key->GetName(), "contains")
+				aatc_errorcheck_container_missingfunctions_operation_retnull(CONTAINER_OPERATION::CONTAINS, objtype_container->GetName(), objtype_key->GetName(), "contains")
 			}
 		#endif
 

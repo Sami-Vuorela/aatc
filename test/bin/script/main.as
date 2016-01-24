@@ -3,7 +3,7 @@ bool test_enable_print_success = false;
 bool test_enable_print_failure = true;
 
 #include "basics.as"
-//#include "test_container_vector.as"
+#include "test_container_vector.as"
 //#include "test_container_list.as"
 //#include "test_container_set.as"
 //#include "test_container_unordered_set.as"
@@ -14,7 +14,7 @@ bool test_enable_print_failure = true;
 
 
 void scriptmain(){
-	//TestContainer_vector();
+	TestContainer_vector();
 	//TestContainer_list();
 	//TestContainer_set();
 	//TestContainer_unordered_set();

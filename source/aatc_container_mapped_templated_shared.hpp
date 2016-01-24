@@ -1018,23 +1018,23 @@ namespace aatc {
 
 
 
-					template<typename T_container> void register_containerbase(aatc::common::RegistrationState& rs, const char* n_container) {
-						sprintf_s(rs.n_container, aatc::common::RegistrationState::bufsize, "%s", n_container);
-						sprintf_s(rs.n_container_T, aatc::common::RegistrationState::bufsize, "%s<T_key, T_value>", n_container);
-						sprintf_s(rs.n_container_class_T, aatc::common::RegistrationState::bufsize, "%s<class T_key,class T_value>", n_container);
-						sprintf_s(rs.n_iterator, aatc::common::RegistrationState::bufsize, "%s%s", n_container, config::scriptname::iterator_suffix);
-						sprintf_s(rs.n_iterator_T, aatc::common::RegistrationState::bufsize, "%s<T_key, T_value>", rs.n_iterator);
-						sprintf_s(rs.n_iterator_class_T, aatc::common::RegistrationState::bufsize, "%s<class T_key,class T_value>", rs.n_iterator);
+					template<typename T_container> void register_containerbase(common::RegistrationState& rs, const char* n_container) {
+						sprintf_s(rs.n_container, common::RegistrationState::bufsize, "%s", n_container);
+						sprintf_s(rs.n_container_T, common::RegistrationState::bufsize, "%s<T_key, T_value>", n_container);
+						sprintf_s(rs.n_container_class_T, common::RegistrationState::bufsize, "%s<class T_key,class T_value>", n_container);
+						sprintf_s(rs.n_iterator, common::RegistrationState::bufsize, "%s%s", n_container, config::scriptname::iterator_suffix);
+						sprintf_s(rs.n_iterator_T, common::RegistrationState::bufsize, "%s<T_key, T_value>", rs.n_iterator);
+						sprintf_s(rs.n_iterator_class_T, common::RegistrationState::bufsize, "%s<class T_key,class T_value>", rs.n_iterator);
 
 
 
 						rs.error = rs.engine->RegisterObjectType(rs.n_container_class_T, 0, asOBJ_REF | asOBJ_GC | asOBJ_TEMPLATE); assert(rs.error >= 0);
 
-						sprintf_s(rs.textbuf, aatc::common::RegistrationState::bufsize, "%s@ f(int&in)", rs.n_container_T);
+						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s@ f(int&in)", rs.n_container_T);
 						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(container::mapped::templated::shared::Factory<T_container>, (asIObjectType*), T_container*), asCALL_CDECL); assert(rs.error >= 0);
-						sprintf_s(rs.textbuf, aatc::common::RegistrationState::bufsize, "%s@ f(int&in,const %s &in)", rs.n_container_T, rs.n_container_T);
+						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s@ f(int&in,const %s &in)", rs.n_container_T, rs.n_container_T);
 						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(container::mapped::templated::shared::Factory_copy<T_container>, (asIObjectType*, const T_container&), T_container*), asCALL_CDECL); assert(rs.error >= 0);
-						sprintf_s(rs.textbuf, aatc::common::RegistrationState::bufsize, "%s& opAssign(const %s &in)", rs.n_container_T, rs.n_container_T);
+						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& opAssign(const %s &in)", rs.n_container_T, rs.n_container_T);
 						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, operator=), asCALL_THISCALL); assert(rs.error >= 0);
 
 						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_TEMPLATE_CALLBACK, "bool f(int&in, bool&out)", asFUNCTION(aatc::common::aatc_templatecallback_map), asCALL_CDECL); assert(rs.error >= 0);

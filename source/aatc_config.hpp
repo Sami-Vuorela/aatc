@@ -209,8 +209,9 @@ namespace config {
 				static const char* insert = "insert";
 				static const char* erase = "erase";
 				static const char* sort = "sort";
+				static const char* sort_funcptr = sort;
 				static const char* contains = "contains";
-				static const char* find_value = "find";
+				static const char* find = "find";
 				static const char* erase_position = erase;
 				static const char* erase_position_range = erase_position;
 				static const char* erase_value = "erase_value";

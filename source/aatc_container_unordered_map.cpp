@@ -108,7 +108,7 @@ namespace aatc {
 				if ((!tss->func_hash) || (!tss->func_equals)) {
 					mask |= common::CONTAINER_OPERATION::ERASE_VALUE;
 					mask |= common::CONTAINER_OPERATION::INSERT;
-					mask |= common::CONTAINER_OPERATION::CONTAINS_NATIVE;
+					mask |= common::CONTAINER_OPERATION::CONTAINS;
 					mask |= common::CONTAINER_OPERATION::FIND;
 				}
 				
