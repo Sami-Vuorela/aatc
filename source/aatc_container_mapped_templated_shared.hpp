@@ -115,6 +115,7 @@ namespace aatc {
 					public:
 						typename typedef T_container T_container_native;
 						typename typedef T_container_native::iterator T_iterator_native;
+						typename typedef T_container_native::const_iterator T_iterator_native_const;
 
 						typename bcw container;
 
@@ -247,6 +248,7 @@ namespace aatc {
 								}
 #endif
 							}
+
 
 							engine->NotifyGarbageCollectorOfNewObject(this, objtype_container);
 						}
@@ -492,6 +494,30 @@ namespace aatc {
 							};
 						}
 
+						static void* DefaultPrimunion(const common::DATAHANDLINGTYPE& dht, const common::PRIMITIVE_TYPE& pt) {
+							switch (dht) {
+								case common::DATAHANDLINGTYPE::HANDLE: { return &(common::primunion_defaultvalue.ptr); }
+								case common::DATAHANDLINGTYPE::OBJECT: { return common::primunion_defaultvalue.ptr; }
+								case common::DATAHANDLINGTYPE::STRING: { return common::primunion_defaultvalue.ptr; }
+								case common::DATAHANDLINGTYPE::PRIMITIVE:{
+									switch (pt) {
+										case common::PRIMITIVE_TYPE::INT8: { return &(common::primunion_defaultvalue.i8); }
+										case common::PRIMITIVE_TYPE::INT16: { return &(common::primunion_defaultvalue.i16); }
+										case common::PRIMITIVE_TYPE::INT32: { return &(common::primunion_defaultvalue.i32); }
+										case common::PRIMITIVE_TYPE::INT64: { return &(common::primunion_defaultvalue.i64); }
+										case common::PRIMITIVE_TYPE::UINT8: { return &(common::primunion_defaultvalue.ui8); }
+										case common::PRIMITIVE_TYPE::UINT16: { return &(common::primunion_defaultvalue.ui16); }
+										case common::PRIMITIVE_TYPE::UINT32: { return &(common::primunion_defaultvalue.ui32); }
+										case common::PRIMITIVE_TYPE::UINT64: { return &(common::primunion_defaultvalue.ui64); }
+										case common::PRIMITIVE_TYPE::FLOAT32: { return &(common::primunion_defaultvalue.f32); }
+										case common::PRIMITIVE_TYPE::FLOAT64: { return &(common::primunion_defaultvalue.f64); }
+									};
+									break;
+								}
+							};
+							return &common::primunion_defaultvalue.ptr;
+						}
+
 						void clear() {
 							safety_iteratorversion_Increment();
 
@@ -661,7 +687,7 @@ namespace aatc {
 							bool Next() {
 #if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 								if (safety_iteratorversion != host->safety_iteratorversion) {
-									common::aatc_errorprint_iterator_container_modified();
+									common::errorprint::iterator::container_modified();
 									return 0;
 								}
 #endif
@@ -688,7 +714,7 @@ namespace aatc {
 							const void* Current_key_get() {
 #if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 								if (safety_iteratorversion != host->safety_iteratorversion) {
-									common::aatc_errorprint_iterator_container_modified();
+									common::errorprint::iterator::container_modified();
 									return nullptr;
 								}
 #endif
@@ -719,7 +745,7 @@ namespace aatc {
 							const void* Current_value_get() {
 #if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 								if (safety_iteratorversion != host->safety_iteratorversion) {
-									common::aatc_errorprint_iterator_container_modified();
+									common::errorprint::iterator::container_modified();
 									return nullptr;
 								}
 #endif
@@ -749,7 +775,7 @@ namespace aatc {
 							void Current_value_set(void* value) {
 #if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 								if (safety_iteratorversion != host->safety_iteratorversion) {
-									common::aatc_errorprint_iterator_container_modified();
+									common::errorprint::iterator::container_modified();
 									return;
 								}
 #endif
@@ -802,7 +828,7 @@ namespace aatc {
 							const void* Current_key_const() {
 #if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 								if (safety_iteratorversion != host->safety_iteratorversion) {
-									common::aatc_errorprint_iterator_container_modified();
+									common::errorprint::iterator::container_modified();
 									return nullptr;
 								}
 #endif
@@ -833,7 +859,7 @@ namespace aatc {
 							void* Current_value() {
 #if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 								if (safety_iteratorversion != host->safety_iteratorversion) {
-									common::aatc_errorprint_iterator_container_modified();
+									common::errorprint::iterator::container_modified();
 									return nullptr;
 								}
 #endif

@@ -270,7 +270,7 @@ public:
 		if(handlemode_directcomp){
 			return (config::t::sizetype)(std::count(T_container::begin(), T_container::end(), *(void**)value));
 		}else{
-			aatc_errorcheck_container_missingfunctions_operation_retnull(aatc_CONTAINER_OPERATION::COUNT, objtype_container->GetName(), objtype_content->GetName(), "count")
+			aatc_errorcheck_container_missingfunctions_operation_retnull(CONTAINER_OPERATION::COUNT, objtype_container->GetName(), objtype_content->GetName(), "count")
 
 			if (handlemode){value = *(void**)value;}
 
@@ -462,7 +462,7 @@ public:
 
 		if (handlemode){
 			if(!handlemode_directcomp){
-				aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::ERASE_VALUE, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::erase)
+				aatc_errorcheck_container_missingfunctions_operation_retvoid(CONTAINER_OPERATION::ERASE_VALUE, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::erase)
 			}
 			T_container::iterator it = T_container::find(*(void**)value);
 			if (it != T_container::end()){
@@ -470,7 +470,7 @@ public:
 				T_container::erase(it);
 			}
 		} else{
-			aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::ERASE_VALUE, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::erase)
+			aatc_errorcheck_container_missingfunctions_operation_retvoid(CONTAINER_OPERATION::ERASE_VALUE, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::erase)
 
 			T_container::iterator it = T_container::find(value);
 			if (it != T_container::end()){
@@ -519,14 +519,14 @@ public:
 
 		if (handlemode){
 			if(!handlemode_directcomp){
-				aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::INSERT, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::insert)
+				aatc_errorcheck_container_missingfunctions_operation_retvoid(CONTAINER_OPERATION::INSERT, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::insert)
 			}
 			std::pair<T_container::iterator, bool> rr = T_container::insert(*(void**)value);
 			if (rr.second){
 				StoreHandle((void**)&(*rr.first), value);
 			}
 		}else{
-			aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::INSERT, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::insert)
+			aatc_errorcheck_container_missingfunctions_operation_retvoid(CONTAINER_OPERATION::INSERT, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::insert)
 
 			T_container::iterator it = T_container::find(value);
 			if (it == T_container::end()){
@@ -602,7 +602,7 @@ private:
 	//		return;
 	//	}
 
-	//	aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::SORT, objtype_container->GetName(), objtype_content->GetName(), "sort")
+	//	aatc_errorcheck_container_missingfunctions_operation_retvoid(CONTAINER_OPERATION::SORT, objtype_container->GetName(), objtype_content->GetName(), "sort")
 	//}
 public:
 
@@ -622,7 +622,7 @@ public:
 			return;
 		}
 
-		aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::SORT, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::sort)
+		aatc_errorcheck_container_missingfunctions_operation_retvoid(CONTAINER_OPERATION::SORT, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::sort)
 
 		//_Sort_shared<T_is_native>(ascending);
 
@@ -651,7 +651,7 @@ public:
 			return;
 		}
 
-		aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::SORT, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::sort)
+		aatc_errorcheck_container_missingfunctions_operation_retvoid(CONTAINER_OPERATION::SORT, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::sort)
 
 		//_Sort_shared<T_is_native>(ascending);
 
@@ -688,7 +688,7 @@ public:
 	template<class T> bool Contains_native(void* value){}
 	template<> bool Contains_native<aatc_Y>(void* value){
 		if(!handlemode_directcomp){
-			aatc_errorcheck_container_missingfunctions_operation_retnull(aatc_CONTAINER_OPERATION::CONTAINS_NATIVE, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::contains)
+			aatc_errorcheck_container_missingfunctions_operation_retnull(CONTAINER_OPERATION::CONTAINS_NATIVE, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::contains)
 		}
 		if(handlemode){ value = *(void**)value; }
 
@@ -833,7 +833,7 @@ public:
 				if(found && all){ continuu = 1; }
 			}
 		} else{
-			aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::ERASE_GENERIC_VALUE, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::erase_value)
+			aatc_errorcheck_container_missingfunctions_operation_retvoid(CONTAINER_OPERATION::ERASE_GENERIC_VALUE, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::erase_value)
 
 			asIScriptContext* cc = els->contextcache_Get();
 
@@ -1180,7 +1180,7 @@ public:
 	template<> bool Erase_iterator<aatc_Y>(const aatc_iterator& aatc_it){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 			if(iterator_safety_version != aatc_it.iterator_safety_version){
-				aatc_errorprint_container_iterator_invalid();
+				common::errorprint::container::iterator_invalid();
 				return 0;
 			}
 		#endif
@@ -1214,7 +1214,7 @@ public:
 	template<> config::t::sizetype Erase_range_iterator<aatc_Y>(const aatc_iterator& aatc_it_range_begin, const aatc_iterator& aatc_it_range_end){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 			if((iterator_safety_version != aatc_it_range_begin.iterator_safety_version) || (iterator_safety_version != aatc_it_range_end.iterator_safety_version)){
-				aatc_errorprint_container_iterator_invalid();
+				common::errorprint::container::iterator_invalid();
 				return 0;
 			}
 		#endif
@@ -1266,7 +1266,7 @@ public:
 	template<class T> aatc_iterator Find_iterator(void* value){}
 	template<> aatc_iterator Find_iterator<aatc_Y>(void* value){
 		if(!handlemode_directcomp){
-			aatc_errorcheck_container_missingfunctions_operation_noret(aatc_CONTAINER_OPERATION::FIND, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::find)
+			aatc_errorcheck_container_missingfunctions_operation_noret(CONTAINER_OPERATION::FIND, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::find)
 				void* vthis = this;
 				aatc_iterator result(&vthis, 0);
 				result.SetToEnd();
@@ -1289,7 +1289,7 @@ public:
 	template<class T> aatc_iterator Find_iterator_generic(void* value){}
 	template<> aatc_iterator Find_iterator_generic<aatc_Y>(void* value){
 		if(!handlemode_directcomp){
-			aatc_errorcheck_container_missingfunctions_operation_noret(aatc_CONTAINER_OPERATION::FIND, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::find)
+			aatc_errorcheck_container_missingfunctions_operation_noret(CONTAINER_OPERATION::FIND, objtype_container->GetName(), objtype_content->GetName(), config::scriptname::method::container::find)
 				void* vthis = this;
 				aatc_iterator result(&vthis, 0);
 				result.SetToEnd();
@@ -1331,7 +1331,7 @@ public:
 	template<> void Insert_iterator<aatc_Y>(const aatc_iterator& aatc_it, void* value){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 			if(iterator_safety_version != aatc_it.iterator_safety_version){
-				aatc_errorprint_container_iterator_invalid();
+				common::errorprint::container::iterator_invalid();
 				return;
 			}
 		#endif

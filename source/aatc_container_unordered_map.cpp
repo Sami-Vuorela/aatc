@@ -54,14 +54,14 @@ namespace aatc {
 				}
 				unordered_map& unordered_map::operator=(const unordered_map& other) { Containerbase::operator=(other); return *this; }
 
-				unordered_map& unordered_map::swap(unordered_map& other) {
-					shared::method::swap(this, other);
-					return *this;
-				}
+				unordered_map& unordered_map::swap(unordered_map& other) { shared::method::swap(this, other); return *this; }
 
-				void unordered_map::insert(void* key, void* value) {
-					shared::method::insert(this, key, value);
-				}
+				void unordered_map::insert(void* key, void* value) {shared::method::insert(this, key, value);}
+				void unordered_map::erase(void* key) { shared::method::erase(this, key); }
+
+				void* unordered_map::find_value(void* key) { return shared::method::find_value(this, key); }
+				void* unordered_map::find_value(void* key, bool& success) { return shared::method::find_value(this, key, success); }
+				bool unordered_map::contains(void* key) { return shared::method::contains(this, key); }
 
 
 
@@ -85,16 +85,19 @@ namespace aatc {
 					register_method::swap<unordered_map>(rs);
 
 					register_method::insert<unordered_map>(rs);
+					register_method::erase<unordered_map>(rs);
+
+					register_method::find<unordered_map>(rs);
 				}
 			}
 			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::UNORDERED_MAP>(enginestorage::template_specific_storage* tss) {
 				common::container_operations_bitmask_type mask = 0;
 
 				if ((!tss->func_hash) || (!tss->func_equals)) {
-					mask |= common::aatc_CONTAINER_OPERATION::ERASE_VALUE;
-					mask |= common::aatc_CONTAINER_OPERATION::INSERT;
-					mask |= common::aatc_CONTAINER_OPERATION::CONTAINS_NATIVE;
-					mask |= common::aatc_CONTAINER_OPERATION::FIND;
+					mask |= common::CONTAINER_OPERATION::ERASE_VALUE;
+					mask |= common::CONTAINER_OPERATION::INSERT;
+					mask |= common::CONTAINER_OPERATION::CONTAINS_NATIVE;
+					mask |= common::CONTAINER_OPERATION::FIND;
 				}
 				
 				return mask;

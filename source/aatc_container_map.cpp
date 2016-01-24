@@ -54,14 +54,16 @@ namespace aatc {
 				}
 				map& map::operator=(const map& other) { Containerbase::operator=(other); return *this; }
 
-				map& map::swap(map& other) {
-					shared::method::swap(this, other);
-					return *this;
-				}
 
-				void map::insert(void* key, void* value) {
-					shared::method::insert(this, key, value);
-				}
+
+				map& map::swap(map& other) { shared::method::swap(this, other); return *this; }
+
+				void map::insert(void* key, void* value) {shared::method::insert(this, key, value);}
+				void map::erase(void* key) {shared::method::erase(this, key);}
+
+				void* map::find_value(void* key) { return shared::method::find_value(this, key); }
+				void* map::find_value(void* key, bool& success) { return shared::method::find_value(this, key, success); }
+				bool map::contains(void* key) { return shared::method::contains(this, key); }
 
 
 
@@ -85,16 +87,19 @@ namespace aatc {
 					register_method::swap<map>(rs);
 
 					register_method::insert<map>(rs);
+					register_method::erase<map>(rs);
+
+					register_method::find<map>(rs);
 				}
 			}
 			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::MAP>(enginestorage::template_specific_storage* tss) {
 				common::container_operations_bitmask_type mask = 0;
 
 				if (!tss->func_cmp) {
-					mask |= common::aatc_CONTAINER_OPERATION::ERASE_VALUE;
-					mask |= common::aatc_CONTAINER_OPERATION::INSERT;
-					mask |= common::aatc_CONTAINER_OPERATION::CONTAINS_NATIVE;
-					mask |= common::aatc_CONTAINER_OPERATION::FIND;
+					mask |= common::CONTAINER_OPERATION::ERASE_VALUE;
+					mask |= common::CONTAINER_OPERATION::INSERT;
+					mask |= common::CONTAINER_OPERATION::CONTAINS_NATIVE;
+					mask |= common::CONTAINER_OPERATION::FIND;
 				}
 				
 				return mask;

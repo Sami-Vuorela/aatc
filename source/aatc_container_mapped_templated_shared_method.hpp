@@ -58,8 +58,8 @@ namespace aatc {
 						template<typename T_container> void insert(T_container* t, void* newkey, void* newvalue) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (t->need_errorcheck_missing_functions) {
-									if (t->missing_functions & common::aatc_CONTAINER_OPERATION::INSERT) {
-										common::aatc_errorprint_container_missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_key->GetName(), "insert");
+									if (t->missing_functions & common::CONTAINER_OPERATION::INSERT) {
+										common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_key->GetName(), "insert");
 										return;
 									}
 								}
@@ -150,6 +150,130 @@ namespace aatc {
 							}
 						}
 
+
+
+						template<typename T_container> void erase(T_container* t, void* key) {
+							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
+								if (t->need_errorcheck_missing_functions) {
+									if (t->missing_functions & common::CONTAINER_OPERATION::ERASE_VALUE) {
+										common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_key->GetName(), "erase");
+										return;
+									}
+								}
+							#endif
+
+							t->safety_iteratorversion_Increment();
+
+							common::primunion findkey;
+
+							t->BuildPrimunion(findkey, key, t->datahandlingid_key, t->primitiveid_key);
+
+							T_container::T_iterator_native it = t->container.find(findkey);
+
+							if (it != t->container.end()) {
+								common::primunion old_key;
+								common::primunion old_value;
+
+								if (t->datahandlingid_key != common::DATAHANDLINGTYPE::PRIMITIVE) { old_key.ptr = (*it).first.ptr; }
+								if (t->datahandlingid_value != common::DATAHANDLINGTYPE::PRIMITIVE) { old_value.ptr = (*it).second.ptr; }
+
+								t->container.erase(it);
+
+								switch (t->datahandlingid_key) {
+								case common::DATAHANDLINGTYPE::PRIMITIVE: { break; }
+								case common::DATAHANDLINGTYPE::STRING:
+								{
+									//delete ((config::t::string*)old_key.ptr);
+									t->engine->ReleaseScriptObject(old_key.ptr, t->objtype_key);
+									break;
+								}
+								default:
+								{
+									t->engine->ReleaseScriptObject(old_key.ptr, t->objtype_key);
+									break;
+								}
+								};
+								switch (t->datahandlingid_value) {
+								case common::DATAHANDLINGTYPE::PRIMITIVE: { break; }
+								case common::DATAHANDLINGTYPE::STRING:
+								{
+									//delete ((config::t::string*)old_value.ptr);
+									t->engine->ReleaseScriptObject(old_value.ptr, t->objtype_value);
+									break;
+								}
+								default:
+								{
+									t->engine->ReleaseScriptObject(old_value.ptr, t->objtype_value);
+									break;
+								}
+								};
+							}
+						}
+
+
+						template<typename T_container> void* find_value(T_container* t, void* key, bool& success) {
+							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
+								if (t->need_errorcheck_missing_functions) {
+									if (t->missing_functions & common::CONTAINER_OPERATION::FIND) {
+										common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_key->GetName(), "find");
+										return T_container::DefaultPrimunion(t->datahandlingid_value, t->primitiveid_value);
+									}
+								}
+							#endif
+
+							common::primunion findkey;
+							t->BuildPrimunion(findkey, key, t->datahandlingid_key, t->primitiveid_key);
+
+							T_container::T_iterator_native_const it = t->container.find(findkey);
+							if (it == t->container.end()) {
+								success = 0;
+
+								return T_container::DefaultPrimunion(t->datahandlingid_value, t->primitiveid_value);
+							} else {
+								success = 1;
+
+								const common::primunion& found_value_const = it->second;
+								common::primunion& found_value = const_cast<common::primunion&>(found_value_const);
+
+								switch (t->datahandlingid_value) {
+								case common::DATAHANDLINGTYPE::HANDLE: { return &(found_value.ptr); }
+								case common::DATAHANDLINGTYPE::OBJECT: { return found_value.ptr; }
+								case common::DATAHANDLINGTYPE::STRING: { return found_value.ptr; }
+								case common::DATAHANDLINGTYPE::PRIMITIVE:
+								{
+									switch (t->primitiveid_value) {
+									case common::PRIMITIVE_TYPE::INT8: { return &(found_value.i8); }
+									case common::PRIMITIVE_TYPE::INT16: { return &(found_value.i16); }
+									case common::PRIMITIVE_TYPE::INT32: { return &(found_value.i32); }
+									case common::PRIMITIVE_TYPE::INT64: { return &(found_value.i64); }
+									case common::PRIMITIVE_TYPE::UINT8: { return &(found_value.ui8); }
+									case common::PRIMITIVE_TYPE::UINT16: { return &(found_value.ui16); }
+									case common::PRIMITIVE_TYPE::UINT32: { return &(found_value.ui32); }
+									case common::PRIMITIVE_TYPE::UINT64: { return &(found_value.ui64); }
+									case common::PRIMITIVE_TYPE::FLOAT32: { return &(found_value.f32); }
+									case common::PRIMITIVE_TYPE::FLOAT64: { return &(found_value.f64); }
+									};
+									break;
+								}
+								};
+								return &common::primunion_defaultvalue.ptr;
+							}
+						}
+
+						template<typename T_container> void* find_value(T_container* t, void* key) {
+							bool success;
+							return find_value(t, key, success);
+						}
+
+						template<typename T_container> bool contains(T_container* t, void* key) {
+							bool find_success = 0;
+							find_value(t, key, find_success);
+							return find_success;
+						}
+
+
+
+
 					};
 
 
@@ -164,6 +288,22 @@ namespace aatc {
 						template<typename T_container> static void insert(common::RegistrationState& rs) {
 							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const T_key&in,const T_value&in)", config::scriptname::method::container::insert);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::insert<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+						}
+
+						template<typename T_container> static void erase(common::RegistrationState& rs) {
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const T_key&in)", config::scriptname::method::container::erase);
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::erase<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+						}
+
+						template<typename T_container> static void find(common::RegistrationState& rs) {
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "T_value& %s(const T_key &in)", config::scriptname::method::container::find_value);
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTIONPR(method::find_value<T_container>,(T_container*, void*),void*), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "T_value& %s(const T_key &in,bool &out)", config::scriptname::method::container::find_value);
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTIONPR(method::find_value<T_container>, (T_container*, void*, bool&), void*), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s(const T_key&in)", config::scriptname::method::container::contains);
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::contains<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 
 

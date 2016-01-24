@@ -285,8 +285,8 @@ namespace aatc {
 							return (config::t::sizetype)(std::count(container.begin(), container.end(), *(void**)value));
 						} else {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
-								if (missing_functions & aatc::common::aatc_CONTAINER_OPERATION::COUNT) {
-									aatc::common::aatc_errorprint_container_missingfunctions_operation_missing(objtype_container->GetName(), objtype_content->GetName(), "count");
+								if (missing_functions & aatc::common::CONTAINER_OPERATION::COUNT) {
+									aatc::common::errorprint::container::missingfunctions_operation_missing(objtype_container->GetName(), objtype_content->GetName(), "count");
 									return NULL;
 								}
 							#endif
@@ -417,7 +417,7 @@ namespace aatc {
 						//combine end check and continuation into one monster
 						bool Next() {
 							if (!IsValid()) {
-								aatc::common::aatc_errorprint_iterator_container_modified();
+								common::errorprint::iterator::container_modified();
 								return 0;
 							}
 
@@ -443,7 +443,7 @@ namespace aatc {
 
 						template<typename T_dummy> const void* Current_get() {
 							if (!IsValid()) {
-								aatc::common::aatc_errorprint_iterator_container_modified();
+								common::errorprint::iterator::container_modified();
 								return nullptr;
 							}
 
@@ -455,7 +455,7 @@ namespace aatc {
 						}
 						template<typename T_dummy> void Current_set(void* value) {
 							if (!IsValid()) {
-								aatc::common::aatc_errorprint_iterator_container_modified();
+								common::errorprint::iterator::container_modified();
 								return;
 							}
 
@@ -476,7 +476,7 @@ namespace aatc {
 
 						template<typename T_dummy> void* Current() {
 							if (!IsValid()) {
-								aatc::common::aatc_errorprint_iterator_container_modified();
+								common::errorprint::iterator::container_modified();
 								return nullptr;
 							}
 
@@ -489,7 +489,7 @@ namespace aatc {
 
 						template<typename T_dummy> const void* Current_const() {
 							if (!IsValid()) {
-								aatc::common::aatc_errorprint_iterator_container_modified();
+								common::errorprint::iterator::container_modified();
 								return nullptr;
 							}
 

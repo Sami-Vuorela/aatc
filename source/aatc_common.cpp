@@ -283,53 +283,56 @@ namespace aatc {
 			els->contextcache_Return(c);
 		}
 
-		//void aatc_script_Funcpointer::ReleaseRef(){
-		//	ref.Set(NULL, NULL);
-		//}
 
 
-		void aatc_errorprint_container_missingfunctions_operation_missing(const char* name_container, const char* name_content, const char* name_operation){
-		#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
-			char msg[1000];
-			//sprintf_s(msg, 1000, aatc_errormessage_container_missing_method_formatting, name_content, name_container, name_operation);
-			sprintf_s(msg, 1000, aatc_errormessage_container_missingfunctions_formatting, aatc_errormessage_container_missingfunctions_formatting_param1, aatc_errormessage_container_missingfunctions_formatting_param2, aatc_errormessage_container_missingfunctions_formatting_param3);
-			asGetActiveContext()->SetException(msg);
-		#endif
-		}
-		void aatc_errorprint_container_access_empty(const char* name_container, const char* name_content, const char* name_operation){
-		#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
-			char msg[1000];
-			//sprintf_s(msg, 1000, aatc_errormessage_container_missing_method_formatting, name_content, name_container, name_operation);
-			sprintf_s(msg, 1000, aatc_errormessage_container_access_empty_formatting, aatc_errormessage_container_access_empty_formatting_param1, aatc_errormessage_container_access_empty_formatting_param2, aatc_errormessage_container_access_empty_formatting_param3);
-			asGetActiveContext()->SetException(msg);
-		#endif
-		}
-		void aatc_errorprint_container_access_bounds(config::t::sizetype index, config::t::sizetype size, const char* name_container, const char* name_content, const char* name_operation){
-		#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
-			char msg[1000];
-			//sprintf_s(msg, 1000, aatc_errormessage_container_missing_method_formatting, name_content, name_container, name_operation);
-			sprintf_s(msg, 1000,
-				aatc_errormessage_container_access_bounds_formatting,
-				aatc_errormessage_container_access_bounds_formatting_param1,
-				aatc_errormessage_container_access_bounds_formatting_param2,
-				aatc_errormessage_container_access_bounds_formatting_param3,
-				aatc_errormessage_container_access_bounds_formatting_param4,
-				aatc_errormessage_container_access_bounds_formatting_param5
-			);
-			asGetActiveContext()->SetException(msg);
-		#endif
-		}
+		namespace errorprint {
+			namespace container {
+				void missingfunctions_operation_missing(const char* name_container, const char* name_content, const char* name_operation) {
+					#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+						char msg[1000];
+						//sprintf_s(msg, 1000, aatc_errormessage_container_missing_method_formatting, name_content, name_container, name_operation);
+						sprintf_s(msg, 1000, aatc_errormessage_container_missingfunctions_formatting, aatc_errormessage_container_missingfunctions_formatting_param1, aatc_errormessage_container_missingfunctions_formatting_param2, aatc_errormessage_container_missingfunctions_formatting_param3);
+						asGetActiveContext()->SetException(msg);
+					#endif
+				}
+				void access_empty(const char* name_container, const char* name_content, const char* name_operation) {
+					#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+						char msg[1000];
+						//sprintf_s(msg, 1000, aatc_errormessage_container_missing_method_formatting, name_content, name_container, name_operation);
+						sprintf_s(msg, 1000, aatc_errormessage_container_access_empty_formatting, aatc_errormessage_container_access_empty_formatting_param1, aatc_errormessage_container_access_empty_formatting_param2, aatc_errormessage_container_access_empty_formatting_param3);
+						asGetActiveContext()->SetException(msg);
+					#endif
+				}
+				void access_bounds(config::t::sizetype index, config::t::sizetype size, const char* name_container, const char* name_content, const char* name_operation) {
+					#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+						char msg[1000];
+						//sprintf_s(msg, 1000, aatc_errormessage_container_missing_method_formatting, name_content, name_container, name_operation);
+						sprintf_s(msg, 1000,
+							aatc_errormessage_container_access_bounds_formatting,
+							aatc_errormessage_container_access_bounds_formatting_param1,
+							aatc_errormessage_container_access_bounds_formatting_param2,
+							aatc_errormessage_container_access_bounds_formatting_param3,
+							aatc_errormessage_container_access_bounds_formatting_param4,
+							aatc_errormessage_container_access_bounds_formatting_param5
+							);
+						asGetActiveContext()->SetException(msg);
+					#endif
+				}
+				void iterator_invalid() {
+					#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+						asGetActiveContext()->SetException(config::errormessage::iterator::is_invalid);
+					#endif
+				}
+			};
+			namespace iterator {
+				void container_modified() {
+					#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+						asGetActiveContext()->SetException(config::errormessage::iterator::container_modified);
+					#endif
+				}
+			};
+		};
 
-		void aatc_errorprint_iterator_container_modified(){
-			#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
-				asGetActiveContext()->SetException(config::errormessage::iterator::container_modified);
-			#endif
-		}
-		void aatc_errorprint_container_iterator_invalid(){
-			#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
-				asGetActiveContext()->SetException(config::errormessage::iterator::is_invalid);
-			#endif
-		}
 
 
 

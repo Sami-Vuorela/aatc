@@ -93,18 +93,6 @@ void scriptmain(){
 	}
 	Print("");
 	{
-		map<int,int> cont;
-		
-		cont.insert(1,11);
-		cont.insert(3,33);
-		cont.insert(2,22);
-		
-		for(auto it = cont.begin(); it++;){
-			Print(""+ it.key +" , " + it.value);
-		}
-	}
-	Print("");
-	{
 		unordered_map<int,int> cont;
 		
 		cont.insert(1,111);
@@ -123,8 +111,24 @@ void scriptmain(){
 		cont.insert(Material("2s",2),222);
 		cont.insert(Material("3s",3),333);
 		
+		cont.erase(Material("2s",2));
+		
 		for(auto it = cont.begin(); it++;){
 			Print(""+ it.key.name +" , " + it.value);
+		}
+	}
+	Print("");
+	{
+		map<int,int> cont;
+		
+		cont.insert(1,11);
+		cont.insert(3,33);
+		cont.insert(2,22);
+		
+		cont.erase(3);
+		
+		for(auto it = cont.begin(); it++;){
+			Print(""+ it.key +" , " + it.value);
 		}
 	}
 	

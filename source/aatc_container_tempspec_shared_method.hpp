@@ -63,7 +63,7 @@ namespace aatc {
 					template<typename T_container> typename T_container::T_content& back(T_container* t) {
 						#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->empty()) {
-								aatc::common::aatc_errorprint_container_access_empty(T_container::staticname_container.c_str(), T_container::staticname_content.c_str(), config::scriptname::method::container::back);
+								aatc::common::errorprint::container::access_empty(T_container::staticname_container.c_str(), T_container::staticname_content.c_str(), config::scriptname::method::container::back);
 								return T_container::defaultvalue;
 							}
 						#endif

@@ -108,10 +108,10 @@ namespace aatc {
 				common::container_operations_bitmask_type mask = 0;
 				
 				if (!tss->func_cmp) {
-					mask |= common::aatc_CONTAINER_OPERATION::SORT;
+					mask |= common::CONTAINER_OPERATION::SORT;
 				}
 				if (!tss->func_equals) {
-					mask |= common::aatc_CONTAINER_OPERATION::COUNT;
+					mask |= common::CONTAINER_OPERATION::COUNT;
 				}
 				
 				return mask;

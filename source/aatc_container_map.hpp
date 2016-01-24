@@ -86,6 +86,11 @@ namespace aatc {
 					map& swap(map& other);
 
 					void insert(void* key, void* value);
+					void erase(void* key);
+
+					void* find_value(void* key);
+					void* find_value(void* key, bool& success);
+					bool contains(void* key);
 				};
 
 

@@ -107,7 +107,7 @@ namespace aatc {
 			that require script functions to be called.
 			Used mostly for error checking.
 		*/
-		enum aatc_CONTAINER_OPERATION{
+		enum CONTAINER_OPERATION{
 			COUNT = 1,
 			ERASE_VALUE = 2,
 			INSERT = 4,
@@ -319,38 +319,38 @@ namespace aatc {
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 		#define aatc_errorcheck_container_missingfunctions_operation_retvoid(ID_OP,n_container,n_content,n_operation)	\
 		if(missing_functions & ID_OP){																					\
-			aatc_errorprint_container_missingfunctions_operation_missing(n_container, n_content, n_operation);			\
+			common::errorprint::container::missingfunctions_operation_missing(n_container, n_content, n_operation);			\
 			return;																										\
 		}
 
 		#define aatc_errorcheck_container_missingfunctions_operation_retnull(ID_OP,n_container,n_content,n_operation)	\
 		if(missing_functions & ID_OP){																					\
-			aatc_errorprint_container_missingfunctions_operation_missing(n_container, n_content, n_operation);			\
+			common::errorprint::container::missingfunctions_operation_missing(n_container, n_content, n_operation);			\
 			return NULL;																								\
 		}
 
 		#define aatc_errorcheck_container_missingfunctions_operation_noret(ID_OP,n_container,n_content,n_operation)	 	\
 		if(missing_functions & ID_OP){																					\
-			aatc_errorprint_container_missingfunctions_operation_missing(n_container, n_content, n_operation);
+			common::errorprint::container::missingfunctions_operation_missing(n_container, n_content, n_operation);
 
 		#define aatc_errorcheck_container_access_empty_retvoid(n_container,n_content,n_operation)						\
 		if(T_container::empty()){																						\
-			aatc_errorprint_container_access_empty(n_container, n_content, n_operation);								\
+			common::errorprint::container::access_empty(n_container, n_content, n_operation);								\
 			return;																										\
 		}
 		#define aatc_errorcheck_container_access_empty_retnull(n_container,n_content,n_operation)						\
 		if(t->container.empty()){																						\
-			aatc::common::aatc_errorprint_container_access_empty(n_container, n_content, n_operation);								\
+			aatc::common::errorprint::container::access_empty(n_container, n_content, n_operation);								\
 			return NULL;																								\
 		}
 		#define aatc_errorcheck_container_access_empty_retdefault(n_container,n_content,n_operation)					\
 		if(t->container.empty()){																						\
-			aatc::common::aatc_errorprint_container_access_empty(n_container, n_content, n_operation);								\
+			aatc::common::errorprint::container::access_empty(n_container, n_content, n_operation);								\
 			return defaultvalue;																						\
 		}
 		#define aatc_errorcheck_container_access_bounds_retdefault(index,size,n_container,n_content,n_operation)		\
 		if((index>size)){																	\
-			aatc_errorprint_container_access_bounds(config::t::sizetype(index), config::t::sizetype(size), n_container, n_content, n_operation);					\
+			common::errorprint::container::access_bounds(config::t::sizetype(index), config::t::sizetype(size), n_container, n_content, n_operation);					\
 			return defaultvalue;																						\
 		}
 
@@ -372,25 +372,32 @@ namespace aatc {
 
 
 
-		/*
-			These do nothing if
-			aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
-			is set to 0
-		*/
 
-		/*!\brief Internal error printing function.*/
-		void aatc_errorprint_container_missingfunctions_operation_missing(const char* name_container, const char* name_content, const char* name_operation);
-		/*!\brief Internal error printing function.*/
-		void aatc_errorprint_container_access_empty(const char* name_container, const char* name_content, const char* name_operation);
-		/*!\brief Internal error printing function.*/
-		void aatc_errorprint_container_access_bounds(config::t::sizetype index, config::t::sizetype size, const char* name_container, const char* name_content, const char* name_operation);
-		/*!\brief Internal error printing function.*/
-		void aatc_errorprint_iterator_container_modified();
-		/*!\brief Internal error printing function.*/
-		void aatc_errorprint_container_iterator_invalid();
+		namespace errorprint {
+			namespace container {
+				void missingfunctions_operation_missing(const char* name_container, const char* name_content, const char* name_operation);
+				void access_empty(const char* name_container, const char* name_content, const char* name_operation);
+				void access_bounds(config::t::sizetype index, config::t::sizetype size, const char* name_container, const char* name_content, const char* name_operation);
+				void iterator_invalid();
+			};
+			namespace iterator {
+				void container_modified();
+			};
+		};
+
+		///*!\brief Internal error printing function.*/
+		//void common::errorprint::container::missingfunctions_operation_missing(const char* name_container, const char* name_content, const char* name_operation);
+		///*!\brief Internal error printing function.*/
+		//void common::errorprint::container::access_empty(const char* name_container, const char* name_content, const char* name_operation);
+		///*!\brief Internal error printing function.*/
+		//void common::errorprint::container::access_bounds(config::t::sizetype index, config::t::sizetype size, const char* name_container, const char* name_content, const char* name_operation);
+		///*!\brief Internal error printing function.*/
+		//void aatc_errorprint_iterator_container_modified();
+		///*!\brief Internal error printing function.*/
+		//void common::errorprint::container::iterator_invalid();
 
 		//check for missing functions, return bitmask of missing functions
-		container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions_base(int CONTAINER_ID, enginestorage::template_specific_storage* tss);
+		//container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions_base(int CONTAINER_ID, enginestorage::template_specific_storage* tss);
 
 
 

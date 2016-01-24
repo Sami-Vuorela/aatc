@@ -67,7 +67,7 @@ namespace aatc {
 					template<typename T_container> void* back(T_container* t) {
 						#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->empty()) {
-								aatc::common::aatc_errorprint_container_access_empty(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::back);
+								aatc::common::errorprint::container::access_empty(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::back);
 								return nullptr;
 							}
 						#endif

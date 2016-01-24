@@ -210,7 +210,7 @@ namespace config {
 				static const char* erase = "erase";
 				static const char* sort = "sort";
 				static const char* contains = "contains";
-				static const char* find = "find";
+				static const char* find_value = "find";
 				static const char* erase_index = "erase_index";
 				static const char* erase_value = "erase_value";
 				static const char* insert_index_before = "insert_index_before";

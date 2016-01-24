@@ -603,7 +603,7 @@ public:
 	template<> bool Erase_iterator<aatc_Y>(const aatc_iterator& aatc_it){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 				if(iterator_safety_version != aatc_it.iterator_safety_version){
-					aatc_errorprint_container_iterator_invalid();
+					common::errorprint::container::iterator_invalid();
 					return 0;
 				}
 		#endif
@@ -634,7 +634,7 @@ public:
 	template<> config::t::sizetype Erase_iterator_range<aatc_Y>(const aatc_iterator& aatc_it_range_begin, const aatc_iterator& aatc_it_range_end){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 			if((iterator_safety_version != aatc_it_range_begin.iterator_safety_version) || (iterator_safety_version != aatc_it_range_end.iterator_safety_version)){
-				aatc_errorprint_container_iterator_invalid();
+				common::errorprint::container::iterator_invalid();
 				return 0;
 			}
 		#endif
@@ -701,7 +701,7 @@ public:
 	template<> void Insert_iterator<aatc_Y>(const aatc_iterator& aatc_it, const T_content& value){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 				if(iterator_safety_version != aatc_it.iterator_safety_version){
-					aatc_errorprint_container_iterator_invalid();
+					common::errorprint::container::iterator_invalid();
 					return;
 				}
 		#endif

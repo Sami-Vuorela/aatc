@@ -501,7 +501,7 @@ public:
 	void Insert(void* newkey, void* newvalue){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 			if(need_errorcheck_missing_functions){
-				aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::INSERT, objtype_container->GetName(), objtype_key->GetName(), "insert")
+				aatc_errorcheck_container_missingfunctions_operation_retvoid(CONTAINER_OPERATION::INSERT, objtype_container->GetName(), objtype_key->GetName(), "insert")
 			}
 		#endif
 
@@ -585,7 +585,7 @@ public:
 	void Erase_value(void* value){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 			if(need_errorcheck_missing_functions){
-				aatc_errorcheck_container_missingfunctions_operation_retvoid(aatc_CONTAINER_OPERATION::ERASE_VALUE, objtype_container->GetName(), objtype_key->GetName(), "erase")
+				aatc_errorcheck_container_missingfunctions_operation_retvoid(CONTAINER_OPERATION::ERASE_VALUE, objtype_container->GetName(), objtype_key->GetName(), "erase")
 			}
 		#endif
 
@@ -639,7 +639,7 @@ public:
 	bool Contains_native(void* value){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 			if(need_errorcheck_missing_functions){
-				aatc_errorcheck_container_missingfunctions_operation_retnull(aatc_CONTAINER_OPERATION::CONTAINS_NATIVE, objtype_container->GetName(), objtype_key->GetName(), "contains")
+				aatc_errorcheck_container_missingfunctions_operation_retnull(CONTAINER_OPERATION::CONTAINS_NATIVE, objtype_container->GetName(), objtype_key->GetName(), "contains")
 			}
 		#endif
 
@@ -664,7 +664,7 @@ public:
 	const void* Find(void* value, bool& success){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 			if(need_errorcheck_missing_functions){
-				aatc_errorcheck_container_missingfunctions_operation_noret(aatc_CONTAINER_OPERATION::FIND, objtype_container->GetName(), objtype_key->GetName(), "find")
+				aatc_errorcheck_container_missingfunctions_operation_noret(CONTAINER_OPERATION::FIND, objtype_container->GetName(), objtype_key->GetName(), "find")
 					return &aatc_primunion_defaultvalue.ptr;
 				}
 			}
@@ -1104,7 +1104,7 @@ public:
 	aatc_iterator Find_iterator(void* value, bool& success){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 				if(need_errorcheck_missing_functions){
-					aatc_errorcheck_container_missingfunctions_operation_noret(aatc_CONTAINER_OPERATION::FIND, objtype_container->GetName(), objtype_key->GetName(), "find")
+					aatc_errorcheck_container_missingfunctions_operation_noret(CONTAINER_OPERATION::FIND, objtype_container->GetName(), objtype_key->GetName(), "find")
 						return End();
 				}
 			}
@@ -1132,7 +1132,7 @@ public:
 	bool Erase_iterator(const aatc_iterator& aatc_it){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 				if(iterator_safety_version != aatc_it.iterator_safety_version){
-					aatc_errorprint_container_iterator_invalid();
+					common::errorprint::container::iterator_invalid();
 					return 0;
 				}
 		#endif
@@ -1180,7 +1180,7 @@ public:
 	config::t::sizetype Erase_iterator_range(const aatc_iterator& aatc_it_range_begin, const aatc_iterator& aatc_it_range_end){
 		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 			if((iterator_safety_version != aatc_it_range_begin.iterator_safety_version) || (iterator_safety_version != aatc_it_range_end.iterator_safety_version)){
-				aatc_errorprint_container_iterator_invalid();
+				common::errorprint::container::iterator_invalid();
 				return 0;
 			}
 		#endif

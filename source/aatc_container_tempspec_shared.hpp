@@ -176,7 +176,7 @@ namespace aatc {
 						//combine end check and continuation into one monster
 						bool Next() {
 							if (!IsValid()) {
-								aatc::common::aatc_errorprint_iterator_container_modified();
+								common::errorprint::iterator::container_modified();
 								return 0;
 							}
 
@@ -202,7 +202,7 @@ namespace aatc {
 
 						template<typename T_dummy> const T_content& Current_get() {
 							if (!IsValid()) {
-								aatc::common::aatc_errorprint_iterator_container_modified();
+								common::errorprint::iterator::container_modified();
 								return defaultvalue;
 							}
 
@@ -210,7 +210,7 @@ namespace aatc {
 						}
 						template<typename T_dummy> void Current_set(const T_content& newval) {
 							if (!IsValid()) {
-								aatc::common::aatc_errorprint_iterator_container_modified();
+								common::errorprint::iterator::container_modified();
 								return;
 							}
 
@@ -219,7 +219,7 @@ namespace aatc {
 
 						template<typename T_dummy> T_content& Current() {
 							if (!IsValid()) {
-								aatc::common::aatc_errorprint_iterator_container_modified();
+								common::errorprint::iterator::container_modified();
 								return defaultvalue;
 							}
 
@@ -228,7 +228,7 @@ namespace aatc {
 
 						template<typename T_dummy> const T_content& Current_const() {
 							if (!IsValid()) {
-								aatc::common::aatc_errorprint_iterator_container_modified();
+								common::errorprint::iterator::container_modified();
 								return defaultvalue;
 							}
 
