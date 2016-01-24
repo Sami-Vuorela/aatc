@@ -399,6 +399,21 @@ namespace aatc {
 			//return const_cast<void*>(Get_Ptr_To_Primitive_Type(primtype));
 		}
 
+		void primunion::From_voidptr_to_primitive(void* target, PRIMITIVE_TYPE primtype) {
+			switch (primtype) {
+				case common::PRIMITIVE_TYPE::INT8: { i8 = *((config::t::int8*)target); break; }
+				case common::PRIMITIVE_TYPE::INT16: { i16 = *((config::t::int16*)target); break; }
+				case common::PRIMITIVE_TYPE::INT32: { i32 = *((config::t::int32*)target); break; }
+				case common::PRIMITIVE_TYPE::INT64: { i64 = *((config::t::int64*)target); break; }
+				case common::PRIMITIVE_TYPE::UINT8: { ui8 = *((config::t::uint8*)target); break; }
+				case common::PRIMITIVE_TYPE::UINT16: { ui16 = *((config::t::uint16*)target); break; }
+				case common::PRIMITIVE_TYPE::UINT32: { ui32 = *((config::t::uint32*)target); break; }
+				case common::PRIMITIVE_TYPE::UINT64: { ui64 = *((config::t::uint64*)target); break; }
+				case common::PRIMITIVE_TYPE::FLOAT32: { f32 = *((config::t::float32*)target); break; }
+				case common::PRIMITIVE_TYPE::FLOAT64: { f64 = *((config::t::float64*)target); break; }
+			};
+		}
+
 		void primunion::Init(){
 			ui32 = 0;
 			ptr = nullptr;

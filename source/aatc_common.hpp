@@ -306,6 +306,8 @@ namespace aatc {
 			void* Get_Ptr_To_Primitive_Type(PRIMITIVE_TYPE primtype);
 			const void* Get_Ptr_To_Primitive_Type_const(PRIMITIVE_TYPE primtype)const;
 
+			void From_voidptr_to_primitive(void* target, PRIMITIVE_TYPE primtype);
+
 			void Init();
 		};
 		extern primunion primunion_defaultvalue;

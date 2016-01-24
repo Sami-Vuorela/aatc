@@ -7,7 +7,7 @@ bool test_enable_print_failure = true;
 //#include "test_container_list.as"
 //#include "test_container_set.as"
 //#include "test_container_unordered_set.as"
-//#include "test_container_map.as"
+#include "test_container_map.as"
 //#include "test_container_unordered_map.as"
 // #include "00 auto iterator tests.as"
 // #include "00 serializer tests.as"
@@ -18,7 +18,7 @@ void scriptmain(){
 	//TestContainer_list();
 	//TestContainer_set();
 	//TestContainer_unordered_set();
-	//TestContainer_map();
+	TestContainer_map();
 	//TestContainer_unordered_map();
 	
 	{

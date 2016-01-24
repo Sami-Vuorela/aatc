@@ -151,7 +151,9 @@ namespace aatc {
 							needref_key(1),
 							needref_value(1),
 							directcomp_forced(0),
-							need_errorcheck_missing_functions(1)
+							need_errorcheck_missing_functions(1),
+							objtype_key(nullptr),
+							objtype_value(nullptr)
 						{
 							engine = _engine;
 
@@ -491,6 +493,93 @@ namespace aatc {
 								};
 								break;
 							}
+							};
+						}
+
+						void Scriptany_to_Primunion(void* scriptvalue, common::primunion& pu, const common::DATAHANDLINGTYPE& dht, const common::PRIMITIVE_TYPE& pt, asIObjectType* ot) {
+							switch (dht) {
+								case common::DATAHANDLINGTYPE::STRING:
+								{
+									pu.ptr = engine->CreateScriptObjectCopy(scriptvalue, ot);
+									break;
+								}
+								case common::DATAHANDLINGTYPE::HANDLE:
+								{
+									scriptvalue = *(void**)scriptvalue;
+									StoreHandle(&(pu.ptr), scriptvalue, ot);
+									break;
+								}
+								case common::DATAHANDLINGTYPE::OBJECT:
+								{
+									pu.ptr = engine->CreateScriptObjectCopy(scriptvalue, ot);
+									break;
+								}
+								case common::DATAHANDLINGTYPE::PRIMITIVE:
+								{
+									pu.From_voidptr_to_primitive(scriptvalue, pt);
+									break;
+								}
+							};
+						}
+
+						static void* Primunion_to_Scriptany(common::primunion& pu, const common::DATAHANDLINGTYPE& dht, const common::PRIMITIVE_TYPE& pt) {
+							switch (dht) {
+								case common::DATAHANDLINGTYPE::HANDLE: { return &(pu.ptr); }
+								case common::DATAHANDLINGTYPE::OBJECT: { return pu.ptr; }
+								case common::DATAHANDLINGTYPE::STRING: { return pu.ptr; }
+								case common::DATAHANDLINGTYPE::PRIMITIVE:
+								{
+									switch (pt) {
+										case common::PRIMITIVE_TYPE::INT8: { return &(pu.i8); }
+										case common::PRIMITIVE_TYPE::INT16: { return &(pu.i16); }
+										case common::PRIMITIVE_TYPE::INT32: { return &(pu.i32); }
+										case common::PRIMITIVE_TYPE::INT64: { return &(pu.i64); }
+										case common::PRIMITIVE_TYPE::UINT8: { return &(pu.ui8); }
+										case common::PRIMITIVE_TYPE::UINT16: { return &(pu.ui16); }
+										case common::PRIMITIVE_TYPE::UINT32: { return &(pu.ui32); }
+										case common::PRIMITIVE_TYPE::UINT64: { return &(pu.ui64); }
+										case common::PRIMITIVE_TYPE::FLOAT32: { return &(pu.f32); }
+										case common::PRIMITIVE_TYPE::FLOAT64: { return &(pu.f64); }
+									};
+									break;
+								}
+							};
+							return pu.ptr;
+						}
+
+						void DefaultConstructPrimunion(common::primunion& pu, const common::DATAHANDLINGTYPE& dht, const common::PRIMITIVE_TYPE& pt, asIObjectType* ot) {
+							switch (dht) {
+								case common::DATAHANDLINGTYPE::HANDLE:
+								{
+									pu.ptr = nullptr;
+									break;
+								}
+								case common::DATAHANDLINGTYPE::OBJECT:
+								{
+									pu.ptr = engine->CreateScriptObject(ot);
+									break;
+								}
+								case common::DATAHANDLINGTYPE::STRING:
+								{
+									pu.ptr = engine->CreateScriptObject(ot);
+									break;
+								}
+								case common::DATAHANDLINGTYPE::PRIMITIVE:
+								{
+									switch (pt) {
+									case common::PRIMITIVE_TYPE::INT8: { pu.i8 = *((config::t::int8*)inputvalue); break; }
+									case common::PRIMITIVE_TYPE::INT16: { pu.i16 = *((config::t::int16*)inputvalue); break; }
+									case common::PRIMITIVE_TYPE::INT32: { pu.i32 = *((config::t::int32*)inputvalue); break; }
+									case common::PRIMITIVE_TYPE::INT64: { pu.i64 = *((config::t::int64*)inputvalue); break; }
+									case common::PRIMITIVE_TYPE::UINT8: { pu.ui8 = *((config::t::uint8*)inputvalue); break; }
+									case common::PRIMITIVE_TYPE::UINT16: { pu.ui16 = *((config::t::uint16*)inputvalue); break; }
+									case common::PRIMITIVE_TYPE::UINT32: { pu.ui32 = *((config::t::uint32*)inputvalue); break; }
+									case common::PRIMITIVE_TYPE::UINT64: { pu.ui64 = *((config::t::uint64*)inputvalue); break; }
+									case common::PRIMITIVE_TYPE::FLOAT32: { pu.f32 = *((config::t::float32*)inputvalue); break; }
+									case common::PRIMITIVE_TYPE::FLOAT64: { pu.f64 = *((config::t::float64*)inputvalue); break; }
+									};
+									break;
+								}
 							};
 						}
 

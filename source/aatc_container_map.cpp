@@ -65,6 +65,10 @@ namespace aatc {
 				void* map::find_value(void* key, bool& success) { return shared::method::find_value(this, key, success); }
 				bool map::contains(void* key) { return shared::method::contains(this, key); }
 
+				map::Iterator map::find_iterator(void* key){ return shared::method::find_iterator(this, key); }
+				bool map::erase_iterator(const Iterator& it) { return shared::method::erase_iterator(this, it); }
+				config::t::sizetype map::erase_iterator(const Iterator& it_range_begin, const Iterator& it_range_end) { return shared::method::erase_iterator_range(this, it_range_begin, it_range_end); }
+
 
 
 			};//namespace templated
@@ -90,6 +94,13 @@ namespace aatc {
 					register_method::erase<map>(rs);
 
 					register_method::find<map>(rs);
+
+					register_method::find_iterator<map>(rs);
+
+					register_method::erase_iterator<map>(rs);
+					register_method::erase_iterator_range<map>(rs);
+
+					register_method::operator_index<map>(rs);
 				}
 			}
 			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::MAP>(enginestorage::template_specific_storage* tss) {
