@@ -62,13 +62,13 @@ namespace aatc {
 		#ifndef DOXYGEN_SHOULD_SKIP_THIS
 
 			//this beautiful creation makes std::list<int>::sort cry salty compiler tears in debug mode for some reason
-			template<class T,class T_other_functor> class aatc_functor_notcmp{
+			template<typename T, typename T_other_functor> class aatc_functor_notcmp{
 			public:
 				bool operator()(const T& lhs, const T& rhs) const{
 					return !(T_other_functor()(lhs, rhs));
 				}
 			};
-			template<class T, class T_other_functor> class aatc_functor_notcmp_persistent_noconst : public T_other_functor{
+			template<typename T, typename T_other_functor> class aatc_functor_notcmp_persistent_noconst : public T_other_functor{
 			public:
 				aatc_functor_notcmp_persistent_noconst(const T_other_functor& base) :
 					T_other_functor(base)

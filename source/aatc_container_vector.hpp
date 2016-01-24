@@ -74,7 +74,7 @@ namespace aatc {
 
 				vector& swap(vector& other);
 
-				void push_back(void* a);
+				void push_back(void* value);
 				void* back();
 			};
 
@@ -96,13 +96,29 @@ namespace aatc {
 					Containerbase(other)
 				{}
 				vector& vector::operator=(const vector& other) { Containerbase::operator=(other); return *this; }
-
-
-
 				vector& swap(vector& other) { shared::method::swap(this, other); return *this; }
 
-				void push_back(const T_content& a) { shared::method::push_back(this, a); }
-				T_content back() { return shared::method::back(this); }
+
+
+				void push_back(const T_content& value) { shared::method::native::push_back(this, value); }
+				void pop_back() { shared::method::native::pop_back(this); }
+
+				T_content& back() { return shared::method::native::back(this); }
+				T_content& front() { return shared::method::native::front(this); }
+
+				void insert(config::t::sizetype position, const T_content& value) { shared::method::genericcc::insert_position_before_constant(this, position, value); }
+				void insert(const Iterator& position, const T_content& value){ shared::method::native::insert_iterator(this, position, value); }
+
+				void erase(config::t::sizetype position) { shared::method::genericcc::erase_position_constant(this, position); }
+				void erase(const Iterator& position) { shared::method::native::erase_iterator(this, position); }
+				config::t::sizetype erase(const Iterator& range_begin, const Iterator& range_end) { return shared::method::native::erase_iterator_range(this, range_begin, range_end); }
+				config::t::sizetype erase(config::t::sizetype position_range_begin, config::t::sizetype position_range_end) { return shared::method::genericcc::erase_position_range_constant(this, position_range_begin, position_range_end); }
+
+				T_content& operator[](config::t::sizetype position) { return shared::method::native::operator_index_position(this,position); }
+
+				Iterator find(const T_content& value) { return shared::method::genericcc::find_iterator(this, value); }
+
+				void sort(bool ascending = true) { shared::method::genericcc::sort(this, ascending); }
 
 
 
@@ -114,8 +130,26 @@ namespace aatc {
 
 
 					register_method::swap<vector>(rs);
-					register_method::push_back<vector>(rs);
-					register_method::back<vector>(rs);
+
+					register_method::native::push_back<vector>(rs);
+					register_method::native::pop_back<vector>(rs);
+
+					register_method::native::back<vector>(rs);
+					register_method::native::front<vector>(rs);
+
+					register_method::genericcc::insert_position_before_constant<vector>(rs);
+					register_method::native::insert_iterator<vector>(rs);
+
+					register_method::genericcc::erase_position_constant<vector>(rs);
+					register_method::native::erase_iterator<vector>(rs);
+					register_method::native::erase_iterator_range<vector>(rs);
+					register_method::genericcc::erase_position_range_constant<vector>(rs);
+
+					register_method::native::operator_index_position<vector>(rs);
+
+					register_method::genericcc::sort<vector>(rs);
+
+					register_method::genericcc::find_iterator<vector>(rs);
 				}
 			};
 

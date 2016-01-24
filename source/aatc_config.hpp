@@ -211,15 +211,19 @@ namespace config {
 				static const char* sort = "sort";
 				static const char* contains = "contains";
 				static const char* find_value = "find";
-				static const char* erase_index = "erase_index";
+				static const char* erase_position = erase;
+				static const char* erase_position_range = erase_position;
 				static const char* erase_value = "erase_value";
-				static const char* insert_index_before = "insert_index_before";
-				static const char* insert_index_after = "insert_index_after";
+				static const char* insert_position_before = insert;
+				static const char* insert_position_after = insert;
+
+				static const char* operator_index = "opIndex";
 
 				static const char* begin = "begin";
 				static const char* end = "end";
 				static const char* find_iterator = "find_iterator";
 				static const char* erase_iterator = erase;
+				static const char* erase_iterator_range = erase_iterator;
 				static const char* insert_iterator = insert;
 			};
 			namespace iterator {
@@ -310,7 +314,7 @@ namespace config {
 #define aatc_errormessage_container_access_bounds_formatting_param3 name_operation
 #define aatc_errormessage_container_access_bounds_formatting_param4 index
 #define aatc_errormessage_container_access_bounds_formatting_param5 size
-#define aatc_errormessage_container_access_bounds_formatting "%s<%s>::%s[%i] is out of bounds. Size = %i."
+#define aatc_errormessage_container_access_bounds_formatting "%s<%s>::%s(%i) is out of bounds. Size = %i."
 
 
 

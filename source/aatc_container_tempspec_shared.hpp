@@ -67,7 +67,7 @@ namespace aatc {
 				public:
 					typename typedef _T_container T_container;
 					typename typedef _T_content T_content;
-					typename typedef T_container::iterator iteratortype;
+					typename typedef T_container::iterator T_iterator_native;
 
 					typename T_container container;
 
@@ -114,8 +114,8 @@ namespace aatc {
 					public:
 						Containerbase* host;
 
-						typename iteratortype it;
-						typename iteratortype it_end;
+						T_iterator_native it;
+						T_iterator_native it_end;
 
 						Iterator() :
 							it(),

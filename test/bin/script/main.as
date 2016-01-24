@@ -57,24 +57,6 @@ void scriptmain(){
 	}
 	Print("");
 	{
-		vector<float> cont;
-		
-		cont.push_back(1.11);
-		cont.push_back(2.22);
-		cont.push_back(3.33);
-		
-		for(auto it = cont.begin(); it++;){
-			Print(""+it.value);
-		}
-		
-		for(vector_iterator<float> it(cont); it++;){
-			Print(""+it.value);
-		}
-		
-		Print(""+cont.back());
-	}
-	Print("");
-	{
 		vector<string> cont;
 		
 		cont.push_back("1.11s");
@@ -129,6 +111,53 @@ void scriptmain(){
 		
 		for(auto it = cont.begin(); it++;){
 			Print(""+ it.key +" , " + it.value);
+		}
+	}
+	Print("");
+	{
+		vector<float> cont;
+		
+		cont.push_back(1.11);
+		cont.push_back(3.33);
+		cont.push_back(2.22);
+		
+		cont.sort();
+		
+		cont.insert(3,999);
+		
+		{
+			auto it = cont.find_iterator(3.33);
+			cont.insert(it,9000);
+		}
+		
+		for(auto it = cont.begin(); it++;){
+			Print(""+it.value);
+		}
+		
+		for(vector_iterator<float> it(cont); it++;){
+			Print(""+it.value);
+		}
+		
+		Print("");
+		Print(""+cont[1]);
+		
+		cont.erase(2);
+		
+		Print("");
+		Print(""+cont.back());
+	}
+	Print("");
+	{
+		vector<float> cont;
+		
+		for(int i=0; i<10; i++){
+			cont.push_back(i);
+		}
+		
+		cont.erase(3,6);
+		
+		for(auto it = cont.begin(); it++;){
+			Print(""+it.value);
 		}
 	}
 	

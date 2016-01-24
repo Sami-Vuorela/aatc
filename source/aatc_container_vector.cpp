@@ -58,8 +58,8 @@ namespace aatc {
 				return *this;
 			}
 
-			void vector::push_back(void* a) {
-				shared::method::push_back(this, a);
+			void vector::push_back(void* value) {
+				shared::method::push_back(this, value);
 			}
 			void* vector::back() {
 				return shared::method::back(this);
