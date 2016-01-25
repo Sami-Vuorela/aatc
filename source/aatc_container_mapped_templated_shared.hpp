@@ -104,7 +104,7 @@ namespace aatc {
 					*/
 					template<
 						typename T_container,
-						int T_CONTAINERTYPEID,
+						int _containertype_id,
 						typename T_container_tags = aatc::container::shared::tagbase,
 						typename bcw = base_container_wrapper::Basic<T_container>
 					>class Containerbase :
@@ -117,9 +117,12 @@ namespace aatc {
 						typename typedef T_container_native::iterator T_iterator_native;
 						typename typedef T_container_native::const_iterator T_iterator_native_const;
 
+						static const int containertype_id = _containertype_id;
+						typename typedef T_container_tags container_tags;
+
+
+
 						typename bcw container;
-
-
 
 						enginestorage::engine_level_storage* els;
 
@@ -220,7 +223,7 @@ namespace aatc {
 							};
 
 							els = enginestorage::Get_ELS(engine);
-							enginestorage::containertype_specific_storage* ctss = els->GetContainerTypeSpecificStorage(T_CONTAINERTYPEID);
+							enginestorage::containertype_specific_storage* ctss = els->GetContainerTypeSpecificStorage(containertype_id);
 
 							enginestorage::template_specific_storage* tss = ctss->GetTemplateSpecificStorage(astypeid_key);
 							func_equals = tss->func_equals;

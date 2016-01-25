@@ -45,17 +45,6 @@ namespace aatc {
 
 
 
-		namespace detail {
-			namespace tags_of_container {
-				class set : public shared::tagbase {
-				public:
-					typedef shared::tag::iterator_access_is_const iterator_access;
-				};
-			};
-		};
-
-
-
 		namespace templated {
 
 
@@ -67,14 +56,14 @@ namespace aatc {
 						container::shared::containerfunctor::Comp
 					> set;
 				};
-			};
+			};//namespace detail
 
 
 
 			class set : public shared::Containerbase <
 				detail::container_native_with_functors::set,
-				aatc::container::listing::CONTAINER::SET,
-				container::detail::tags_of_container::set,
+				container::listing::CONTAINER::SET,
+				container::listing::tags_of_container::set,
 				shared::base_container_wrapper::Singleparam<
 					detail::container_native_with_functors::set,
 					container::shared::containerfunctor::Comp
@@ -108,7 +97,8 @@ namespace aatc {
 			template<typename T_content> class set : public shared::Containerbase <
 				aatc_acit_set<T_content>,
 				T_content,
-				container::detail::tags_of_container::set
+				container::listing::CONTAINER::SET,
+				container::listing::tags_of_container::set
 			> {
 			public:
 				set() {}

@@ -45,17 +45,6 @@ namespace aatc {
 
 
 
-		namespace detail {
-			namespace tags_of_container {
-				class unordered_set : public shared::tagbase {
-				public:
-					typedef shared::tag::iterator_access_is_const iterator_access;
-				};
-			};
-		};
-
-
-
 		namespace templated {
 
 
@@ -68,14 +57,14 @@ namespace aatc {
 						container::shared::containerfunctor::Equals
 					> unordered_set;
 				};
-			};
+			};//namespace detail
 
 
 
 			class unordered_set : public shared::Containerbase <
 				detail::container_native_with_functors::unordered_set,
-				aatc::container::listing::CONTAINER::UNORDERED_SET,
-				container::detail::tags_of_container::unordered_set,
+				container::listing::CONTAINER::UNORDERED_SET,
+				container::listing::tags_of_container::unordered_set,
 				shared::base_container_wrapper::Hashed<
 					detail::container_native_with_functors::unordered_set,
 					container::shared::containerfunctor::Hash,
@@ -110,7 +99,8 @@ namespace aatc {
 			template<typename T_content> class unordered_set : public shared::Containerbase <
 				aatc_acit_unordered_set<T_content>,
 				T_content,
-				container::detail::tags_of_container::unordered_set
+				container::listing::CONTAINER::UNORDERED_SET,
+				container::listing::tags_of_container::unordered_set
 			> {
 			public:
 				unordered_set() {}

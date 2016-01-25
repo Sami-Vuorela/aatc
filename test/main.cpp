@@ -3,10 +3,12 @@
 
 #include "serializer\serializer.h"
 
+#include "../source/aatc.hpp"
 
 
 
-#define TEST_SERIALIZER 0
+
+#define TEST_SERIALIZER 1
 
 
 
@@ -43,13 +45,13 @@ void main_contents(){
 
 
 					CSerializer backup;
-					aatc_serializer_register(engine, &backup);
+					aatc::serializer::Register(engine, &backup);
 					backup.Store(module);
 
 					cc->Prepare(module->GetFunctionByName("serializer_test_2")); cc->Execute();
 
 					backup.Restore(module);
-					aatc_serializer_cleanup(engine, &backup);
+					aatc::serializer::Cleanup(engine, &backup);
 
 					cc->Prepare(module->GetFunctionByName("serializer_test_3")); cc->Execute();
 				}

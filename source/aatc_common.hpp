@@ -36,13 +36,32 @@
 
 
 BEGIN_AS_NAMESPACE
+
+#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+	class CSerializer;
+	class CSerializedValue;
+#endif
+
 namespace aatc {
+
+	namespace container {
+		namespace shared {
+			class container_basicbase;
+		};
+	};
 
 	namespace enginestorage {
 		class template_specific_storage;
 		class containertype_specific_storage;
 		class engine_level_storage;
 	};//namespace enginestorage
+
+	#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+		namespace serializer {
+			typedef bool(*funcptr_t_container_basicbase_is_thistype)(container::shared::container_basicbase* base);
+			typedef void(*funcptr_t_container_basicbase_process)(container::shared::container_basicbase* base, CSerializedValue* val);
+		};//namespace serializer
+	#endif
 
 	namespace common {
 
@@ -95,12 +114,6 @@ namespace aatc {
 			iterator_base();
 			iterator_base(const iterator_base& other);
 		};
-
-		#if aatc_CONFIG_USE_ASADDON_SERIALIZER
-			class CSerializedValue;
-			typedef bool(*aatc_funcptr_serializer_containerbase_is_thistype)(aatc_container_base* base);
-			typedef void(*aatc_funcptr_serializer_containerbase_process)(aatc_container_base* base, CSerializedValue* val);
-		#endif
 
 		/*
 			Enum listing the different container operations

@@ -44,17 +44,6 @@ namespace aatc {
 
 
 
-		namespace detail {
-			namespace tags_of_container {
-				class unordered_map : public shared::tagbase {
-				public:
-					typedef shared::tag::iterator_access_is_const iterator_access;
-				};
-			};
-		};
-
-
-
 		namespace mapped {
 			namespace templated {
 
@@ -69,14 +58,14 @@ namespace aatc {
 							container::shared::containerfunctor_map::Equals
 						> unordered_map;
 					};
-				};
+				};//namespace detail
 
 
 
 				class unordered_map : public shared::Containerbase <
 					detail::container_native_with_functors::unordered_map,
-					aatc::container::listing::CONTAINER::UNORDERED_MAP,
-					container::detail::tags_of_container::unordered_map ,
+					container::listing::CONTAINER::UNORDERED_MAP,
+					container::listing::tags_of_container::unordered_map ,
 					shared::base_container_wrapper::Hashed<
 						detail::container_native_with_functors::unordered_map,
 						container::shared::containerfunctor_map::Hash,

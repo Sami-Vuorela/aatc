@@ -45,25 +45,14 @@ namespace aatc {
 
 
 
-		namespace detail {
-			namespace tags_of_container {
-				class vector : public shared::tagbase {
-				public:
-					typedef shared::tag::iterator_access_is_mutable iterator_access;
-				};
-			};
-		};
-
-
-
 		namespace templated {
 
 
 
 			class vector : public shared::Containerbase <
 				aatc_acit_vector<void*>,
-				aatc::container::listing::CONTAINER::VECTOR,
-				container::detail::tags_of_container::vector
+				container::listing::CONTAINER::VECTOR,
+				container::listing::tags_of_container::vector
 			> {
 			public:
 				vector(asIObjectType* objtype);
@@ -106,7 +95,8 @@ namespace aatc {
 			template<typename T_content> class vector : public shared::Containerbase <
 				aatc_acit_vector<T_content>,
 				T_content,
-				container::detail::tags_of_container::vector
+				container::listing::CONTAINER::VECTOR,
+				container::listing::tags_of_container::vector
 			> {
 			public:
 				vector() {}

@@ -45,13 +45,29 @@ namespace aatc {
 
 
 			namespace tag {
-				struct iterator_access_is_const {};
-				struct iterator_access_is_mutable {};
+				namespace iterator_access {
+					struct access_is_const {};
+					struct access_is_mutable {};
+				};
+				namespace serializer_insert_value_func {
+					struct push_back {};
+					struct insert {};
+				};
+				namespace is_map {
+					struct is_map {};
+					struct is_not_map {};
+				};
+				namespace is_associative {
+					struct is_associative {};
+					struct is_not_associative {};
+				};
 			};
 
-			class tagbase {
-			public:
-				typedef tag::iterator_access_is_mutable iterator_access;
+			struct tagbase {
+				typedef tag::iterator_access::access_is_mutable iterator_access;
+				typedef tag::serializer_insert_value_func::push_back serializer_insert_value_func;
+				typedef tag::is_map::is_not_map is_map;
+				typedef tag::is_associative::is_not_associative is_associative;
 			};
 
 

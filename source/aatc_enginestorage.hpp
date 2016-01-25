@@ -92,24 +92,24 @@ namespace aatc {
 			#if aatc_CONFIG_USE_ASADDON_SERIALIZER
 				class serializer_helper{
 				public:
-					aatc_funcptr_serializer_containerbase_is_thistype funcptr_is_thistype;
+					serializer::funcptr_t_container_basicbase_is_thistype funcptr_is_thistype;
 					std::string container_content_name;
-					aatc_funcptr_serializer_containerbase_process funcptr_process_store;
-					aatc_funcptr_serializer_containerbase_process funcptr_process_restore;
-					aatc_funcptr_serializer_containerbase_process funcptr_process_cleanup;
+					serializer::funcptr_t_container_basicbase_process funcptr_process_store;
+					serializer::funcptr_t_container_basicbase_process funcptr_process_restore;
+					serializer::funcptr_t_container_basicbase_process funcptr_process_cleanup;
 				};
 			#endif
 
 			asIScriptEngine* engine;
 
-			containertype_specific_storage containertype_specific_storages[123];
+			containertype_specific_storage containertype_specific_storages[container::listing::CONTAINER::_COUNT];
 
 			std::vector<asIScriptContext*> context_cache;
 			config::ait_fastlock context_cache_lock;
 
-		#if aatc_CONFIG_USE_ASADDON_SERIALIZER
-			std::vector<serializer_helper> serializer_tempspec_helpers[aatc_CONTAINERTYPE::_COUNT];
-		#endif
+			#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+				std::vector<serializer_helper> serializer_tempspec_helpers[container::listing::CONTAINER::_COUNT];
+			#endif
 
 
 			engine_level_storage(asIScriptEngine* engine);

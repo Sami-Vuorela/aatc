@@ -34,6 +34,7 @@ samivuorela@gmail.com
 
 
 #include "aatc_common.hpp"
+#include "aatc_container_shared.hpp"
 
 
 
@@ -53,6 +54,50 @@ namespace aatc {
 				UNORDERED_MAP,
 
 				_COUNT
+			};
+
+
+
+			namespace tags_of_container {
+				struct vector : public shared::tagbase {
+					typedef shared::tag::iterator_access::access_is_mutable iterator_access;
+					typedef shared::tag::serializer_insert_value_func::push_back serializer_insert_value_func;
+					typedef shared::tag::is_map::is_not_map is_map;
+					typedef shared::tag::is_associative::is_not_associative is_associative;
+				};
+
+				struct list : public shared::tagbase {
+					typedef shared::tag::iterator_access::access_is_mutable iterator_access;
+					typedef shared::tag::serializer_insert_value_func::push_back serializer_insert_value_func;
+					typedef shared::tag::is_map::is_not_map is_map;
+					typedef shared::tag::is_associative::is_not_associative is_associative;
+				};
+
+				struct set : public shared::tagbase {
+					typedef shared::tag::iterator_access::access_is_const iterator_access;
+					typedef shared::tag::serializer_insert_value_func::insert serializer_insert_value_func;
+					typedef shared::tag::is_map::is_not_map is_map;
+					typedef shared::tag::is_associative::is_associative is_associative;
+				};
+				struct unordered_set : public shared::tagbase {
+					typedef shared::tag::iterator_access::access_is_const iterator_access;
+					typedef shared::tag::serializer_insert_value_func::insert serializer_insert_value_func;
+					typedef shared::tag::is_map::is_not_map is_map;
+					typedef shared::tag::is_associative::is_associative is_associative;
+				};
+
+				struct map : public shared::tagbase {
+					typedef shared::tag::iterator_access::access_is_const iterator_access;
+					typedef shared::tag::serializer_insert_value_func::insert serializer_insert_value_func;
+					typedef shared::tag::is_map::is_map is_map;
+					typedef shared::tag::is_associative::is_associative is_associative;
+				};
+				struct unordered_map : public shared::tagbase {
+					typedef shared::tag::iterator_access::access_is_const iterator_access;
+					typedef shared::tag::serializer_insert_value_func::insert serializer_insert_value_func;
+					typedef shared::tag::is_map::is_map is_map;
+					typedef shared::tag::is_associative::is_associative is_associative;
+				};
 			};
 
 

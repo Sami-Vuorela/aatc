@@ -103,7 +103,7 @@ namespace aatc {
 				*/
 				template<
 					typename T_container,
-					int T_CONTAINERTYPEID,
+					int _containertype_id,
 					typename T_container_tags = aatc::container::shared::tagbase,
 					typename bcw = base_container_wrapper::Basic<T_container>>
 				class Containerbase :
@@ -115,6 +115,11 @@ namespace aatc {
 					typename typedef T_container T_container_native;
 					typename typedef T_container_native::iterator T_iterator_native;
 					typename typedef T_container_native::const_iterator T_iterator_native_const;
+
+					static const int containertype_id = _containertype_id;
+					typename typedef T_container_tags container_tags;
+
+
 
 					typename bcw container;
 
@@ -153,7 +158,7 @@ namespace aatc {
 						//problem_nofunc_cmp = 0;
 
 						els = enginestorage::Get_ELS(engine);
-						enginestorage::containertype_specific_storage* ctss = els->GetContainerTypeSpecificStorage(T_CONTAINERTYPEID);
+						enginestorage::containertype_specific_storage* ctss = els->GetContainerTypeSpecificStorage(containertype_id);
 
 						if (astypeid_content & asTYPEID_OBJHANDLE) {
 							handlemode = 1;
@@ -544,7 +549,7 @@ namespace aatc {
 						}
 
 						template<class T_tag_need_const> static void Register_func_current(common::RegistrationState& rs) {}
-						template<> static void Register_func_current<container::shared::tag::iterator_access_is_mutable>(common::RegistrationState& rs) {
+						template<> static void Register_func_current<container::shared::tag::iterator_access::access_is_mutable>(common::RegistrationState& rs) {
 							sprintf_s(rs.textbuf, 1000, "T& %s()", config::scriptname::method::iterator::access_function);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, Current<int>), asCALL_THISCALL); assert(rs.error >= 0);
 
@@ -553,7 +558,7 @@ namespace aatc {
 							sprintf_s(rs.textbuf, 1000, "void set_%s(const T &in)", config::scriptname::method::iterator::access_property);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, Current_set<int>), asCALL_THISCALL); assert(rs.error >= 0);
 						}
-						template<> static void Register_func_current<container::shared::tag::iterator_access_is_const>(common::RegistrationState& rs) {
+						template<> static void Register_func_current<container::shared::tag::iterator_access::access_is_const>(common::RegistrationState& rs) {
 							sprintf_s(rs.textbuf, 1000, "const T& %s()", config::scriptname::method::iterator::access_function);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, Current_const<int>), asCALL_THISCALL); assert(rs.error >= 0);
 

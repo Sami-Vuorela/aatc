@@ -38,6 +38,8 @@ samivuorela@gmail.com
 #include "aatc_container_shared.hpp"
 #include "aatc_container_listing.hpp"
 
+#include "aatc_serializer.hpp"
+
 
 
 BEGIN_AS_NAMESPACE
@@ -60,6 +62,7 @@ namespace aatc {
 				template<
 					typename _T_container,
 					typename _T_content,
+					int _containertype_id,
 					typename T_container_tags = aatc::container::shared::tagbase>
 				class Containerbase :
 					public container::shared::container_basicbase,
@@ -68,6 +71,11 @@ namespace aatc {
 					typename typedef _T_container T_container;
 					typename typedef _T_content T_content;
 					typename typedef T_container::iterator T_iterator_native;
+
+					static const int containertype_id = _containertype_id;
+					typename typedef T_container_tags container_tags;
+
+
 
 					typename T_container container;
 
@@ -263,7 +271,7 @@ namespace aatc {
 
 
 						template<class T_tag_need_const> static void Register_func_current(common::RegistrationState& rs) {}
-						template<> static void Register_func_current<container::shared::tag::iterator_access_is_mutable>(common::RegistrationState& rs) {
+						template<> static void Register_func_current<container::shared::tag::iterator_access::access_is_mutable>(common::RegistrationState& rs) {
 							sprintf_s(rs.textbuf, 1000, "%s& %s()", rs.n_content, config::scriptname::method::iterator::access_function);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, Current<int>), asCALL_THISCALL); assert(rs.error >= 0);
 
@@ -272,7 +280,7 @@ namespace aatc {
 							sprintf_s(rs.textbuf, 1000, "void set_%s(const %s &in)", config::scriptname::method::iterator::access_property, rs.n_content);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, Current_set<int>), asCALL_THISCALL); assert(rs.error >= 0);
 						}
-						template<> static void Register_func_current<container::shared::tag::iterator_access_is_const>(common::RegistrationState& rs) {
+						template<> static void Register_func_current<container::shared::tag::iterator_access::access_is_const>(common::RegistrationState& rs) {
 							sprintf_s(rs.textbuf, 1000, "const %s& %s()", rs.n_content, config::scriptname::method::iterator::access_function);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, Current_const<int>), asCALL_THISCALL); assert(rs.error >= 0);
 
@@ -333,9 +341,9 @@ namespace aatc {
 
 
 
-				template<typename T_container, typename T_content, typename T_container_tags> T_content Containerbase<T_container, T_content, T_container_tags>::defaultvalue = T_content();
-				template<typename T_container, typename T_content, typename T_container_tags> std::string Containerbase<T_container, T_content, T_container_tags>::staticname_container = "test_container";
-				template<typename T_container, typename T_content, typename T_container_tags> std::string Containerbase<T_container, T_content, T_container_tags>::staticname_content = "test_content";
+				template<typename T_container, typename T_content, int _containertype_id, typename T_container_tags> T_content Containerbase<T_container, T_content, _containertype_id, T_container_tags>::defaultvalue = T_content();
+				template<typename T_container, typename T_content, int _containertype_id, typename T_container_tags> std::string Containerbase<T_container, T_content, _containertype_id, T_container_tags>::staticname_container = "test_container";
+				template<typename T_container, typename T_content, int _containertype_id, typename T_container_tags> std::string Containerbase<T_container, T_content, _containertype_id, T_container_tags>::staticname_content = "test_content";
 
 
 				
@@ -377,6 +385,12 @@ namespace aatc {
 
 					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s()", rs.n_iterator_T, config::scriptname::method::container::end);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, end), asCALL_THISCALL); assert(rs.error >= 0);
+
+
+					#if aatc_CONFIG_USE_ASADDON_SERIALIZER
+						serializer::engine_registration::Register_els_helpers_for_tempspec<T_container, T_container::containertype_id>(enginestorage::Get_ELS(rs.engine), rs.n_content);
+					#endif
+
 				};
 
 

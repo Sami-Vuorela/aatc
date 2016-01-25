@@ -37,6 +37,7 @@
 
 
 BEGIN_AS_NAMESPACE
+
 namespace aatc {
 
 
@@ -72,9 +73,10 @@ namespace aatc {
 
 
 	#if aatc_CONFIG_USE_ASADDON_SERIALIZER
-		class ::CSerializer;
-		void aatc_serializer_register(asIScriptEngine* engine, CSerializer* serializer);
-		void aatc_serializer_cleanup(asIScriptEngine* engine, CSerializer* serializer);
+		namespace serializer {
+			void Register(asIScriptEngine* engine, CSerializer* serializer);
+			void Cleanup(asIScriptEngine* engine, CSerializer* serializer);
+		};
 	#endif
 
 

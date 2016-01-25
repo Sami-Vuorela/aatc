@@ -44,17 +44,6 @@ namespace aatc {
 
 
 
-		namespace detail {
-			namespace tags_of_container {
-				class map : public shared::tagbase {
-				public:
-					typedef shared::tag::iterator_access_is_const iterator_access;
-				};
-			};
-		};
-
-
-
 		namespace mapped {
 			namespace templated {
 
@@ -68,14 +57,14 @@ namespace aatc {
 							container::shared::containerfunctor_map::Comp
 						> map;
 					};
-				};
+				};//namespace detail
 
 
 
 				class map : public shared::Containerbase <
 					detail::container_native_with_functors::map,
-					aatc::container::listing::CONTAINER::MAP,
-					container::detail::tags_of_container::map ,
+					container::listing::CONTAINER::MAP,
+					container::listing::tags_of_container::map ,
 					shared::base_container_wrapper::Singleparam<
 						detail::container_native_with_functors::map,
 						container::shared::containerfunctor_map::Comp

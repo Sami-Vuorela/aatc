@@ -45,6 +45,8 @@ BEGIN_AS_NAMESPACE
 namespace aatc {
 
 
+
+	//used with templatemagic::iterator_functor_1arg to iterate in runtime, over a list of all container types defined in compile time
 	template<int i, typename TT> class Initializer_tm_iterate_all_containers {
 	public:
 		void operator()(TT& tup) {
@@ -106,7 +108,7 @@ namespace aatc {
 			}
 		}
 
-		aatc_tm_iterator_1arg_functor<
+		templatemagic::iterator_functor_1arg<
 			0,
 			container::listing::CONTAINER::_COUNT - 1,
 			Initializer_tm_iterate_all_containers,
