@@ -116,14 +116,14 @@ namespace aatc {
 						}
 
 						template<typename T_container> bool erase_value(T_container* t, typename const T_container::T_content& value) {
-							config::t::sizetype oldsize = t->container.size();
+							config::t::sizetype oldsize = config::t::sizetype(t->container.size());
 
 							t->container.erase(value);
 							t->safety_iteratorversion_Increment();
 
 							return oldsize != t->container.size();
 						}
-						template<typename T_container> void insert(T_container* t, typename const T_container::T_content& value) {
+						template<typename T_container> void insert_value(T_container* t, typename const T_container::T_content& value) {
 							t->container.insert(value);
 							t->safety_iteratorversion_Increment();
 						}
@@ -326,15 +326,15 @@ namespace aatc {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->empty()) {
 								aatc::common::errorprint::container::access_empty(T_container::staticname_container.c_str(), T_container::staticname_content.c_str(), config::scriptname::method::container::erase);
-								return;
+								return 0;
 							}
 							if (range_begin >= t->container.size()) {
 								aatc::common::errorprint::container::access_bounds(range_begin, (config::t::sizetype)t->container.size(), T_container::staticname_container.c_str(), T_container::staticname_content.c_str(), config::scriptname::method::container::erase);
-								return;
+								return 0;
 							}
 							if (range_end >= t->container.size()) {
 								aatc::common::errorprint::container::access_bounds(range_end, (config::t::sizetype)t->container.size(), T_container::staticname_container.c_str(), T_container::staticname_content.c_str(), config::scriptname::method::container::erase);
-								return;
+								return 0;
 							}
 							#endif
 
@@ -349,7 +349,7 @@ namespace aatc {
 
 							t->container.erase(it_begin, it_end);
 
-							return oldsize - t->container.size();
+							return config::t::sizetype(oldsize - t->container.size());
 						}
 
 						template<typename T_container> void sort(T_container* t, bool ascending) {
@@ -489,13 +489,13 @@ namespace aatc {
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::front<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 
-						template<typename T_container> static bool erase_value(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s(const %s &in)", config::scriptname::method::container::erase_value, rs.n_content);
+						template<typename T_container> static void erase_value(common::RegistrationState& rs) {
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s(const %s &in)", config::scriptname::method::container::erase, rs.n_content);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::erase_value<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
-						template<typename T_container> static void insert(common::RegistrationState& rs) {
+						template<typename T_container> static void insert_value(common::RegistrationState& rs) {
 							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const %s &in)", config::scriptname::method::container::insert, rs.n_content);
-							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::insert<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::insert_value<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 						template<typename T_container> static void operator_index_position(common::RegistrationState& rs) {
 							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& %s(%s)", rs.n_content, config::scriptname::method::container::operator_index, config::scriptname::t::size);

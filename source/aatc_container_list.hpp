@@ -28,8 +28,8 @@ samivuorela@gmail.com
 */
 
 
-#ifndef _includedh_aatc_container_vector
-#define _includedh_aatc_container_vector
+#ifndef _includedh_aatc_container_list
+#define _includedh_aatc_container_list
 
 
 
@@ -47,7 +47,7 @@ namespace aatc {
 
 		namespace detail {
 			namespace tags_of_container {
-				class vector : public shared::tagbase {
+				class list : public shared::tagbase {
 				public:
 					typedef shared::tag::iterator_access_is_mutable iterator_access;
 				};
@@ -60,27 +60,28 @@ namespace aatc {
 
 
 
-			class vector : public shared::Containerbase <
-				aatc_acit_vector<void*>,
-				aatc::container::listing::CONTAINER::VECTOR,
-				container::detail::tags_of_container::vector
+			class list : public shared::Containerbase <
+				aatc_acit_list<void*>,
+				aatc::container::listing::CONTAINER::LIST,
+				container::detail::tags_of_container::list
 			> {
 			public:
-				vector(asIObjectType* objtype);
-				vector(const vector& other);
-				vector& operator=(const vector& other);
+				list(asIObjectType* objtype);
+				list(const list& other);
+				list& operator=(const list& other);
 
 
 
-				vector& swap(vector& other);
+				list& swap(list& other);
 
 				void push_back(void* value);
 				void pop_back();
 
+				void push_front(void* value);
+				void pop_front();
+
 				void* back();
 				void* front();
-
-				void* operator[](config::t::sizetype position);
 
 				void sort(bool ascending = true);
 				void sort_funcptr(common::aatc_script_Funcpointer* funcptr, bool ascending = true);
@@ -103,38 +104,39 @@ namespace aatc {
 
 
 
-			template<typename T_content> class vector : public shared::Containerbase <
-				aatc_acit_vector<T_content>,
+			template<typename T_content> class list : public shared::Containerbase <
+				aatc_acit_list<T_content>,
 				T_content,
-				container::detail::tags_of_container::vector
+				container::detail::tags_of_container::list
 			> {
 			public:
-				vector() {}
-				vector(const vector& other):
+				list() {}
+				list(const list& other):
 					Containerbase(other)
 				{}
-				vector& vector::operator=(const vector& other) { Containerbase::operator=(other); return *this; }
-				vector& swap(vector& other) { shared::method::swap(this, other); return *this; }
+				list& list::operator=(const list& other) { Containerbase::operator=(other); return *this; }
+				list& swap(list& other) { shared::method::swap(this, other); return *this; }
 
 
 
 				void push_back(const T_content& value) { shared::method::native::push_back(this, value); }
 				void pop_back() { shared::method::native::pop_back(this); }
 
+				void push_front(const T_content& value) { shared::method::native::push_front(this, value); }
+				void pop_front() { shared::method::native::pop_front(this); }
+
 				T_content& back() { return shared::method::native::back(this); }
 				T_content& front() { return shared::method::native::front(this); }
 
-				void insert(config::t::sizetype position, const T_content& value) { shared::method::genericcc::insert_position_before_constant(this, position, value); }
+				void insert(config::t::sizetype position, const T_content& value) { shared::method::genericcc::insert_position_before_linear(this, position, value); }
 				void insert(const Iterator& position, const T_content& value){ shared::method::native::insert_iterator(this, position, value); }
 
-				void erase(config::t::sizetype position) { shared::method::genericcc::erase_position_constant(this, position); }
+				void erase(config::t::sizetype position) { shared::method::genericcc::erase_position_linear(this, position); }
 				void erase(const Iterator& position) { shared::method::native::erase_iterator(this, position); }
 				config::t::sizetype erase(const Iterator& range_begin, const Iterator& range_end) { return shared::method::native::erase_iterator_range(this, range_begin, range_end); }
-				config::t::sizetype erase(config::t::sizetype position_range_begin, config::t::sizetype position_range_end) { return shared::method::genericcc::erase_position_range_constant(this, position_range_begin, position_range_end); }
+				config::t::sizetype erase(config::t::sizetype position_range_begin, config::t::sizetype position_range_end) { return shared::method::genericcc::erase_position_range_linear(this, position_range_begin, position_range_end); }
 
 				config::t::sizetype erase_value(const T_content& value, bool all = false) { shared::method::genericcc::erase_value(this, value, all); }
-
-				T_content& operator[](config::t::sizetype position) { return shared::method::native::operator_index_position(this,position); }
 
 				Iterator find(const T_content& value) { return shared::method::genericcc::find_iterator(this, value); }
 
@@ -145,33 +147,34 @@ namespace aatc {
 				static void Register(common::RegistrationState& rs, const char* n_content) {
 					using namespace tempspec::shared;
 
-					register_containerbase<vector>(rs, config::scriptname::container::vector, n_content);
+					register_containerbase<list>(rs, config::scriptname::container::list, n_content);
 
 
 
-					register_method::swap<vector>(rs);
+					register_method::swap<list>(rs);
 
-					register_method::native::push_back<vector>(rs);
-					register_method::native::pop_back<vector>(rs);
+					register_method::native::push_back<list>(rs);
+					register_method::native::pop_back<list>(rs);
 
-					register_method::native::back<vector>(rs);
-					register_method::native::front<vector>(rs);
+					register_method::native::push_front<list>(rs);
+					register_method::native::pop_front<list>(rs);
 
-					register_method::genericcc::insert_position_before_constant<vector>(rs);
-					register_method::native::insert_iterator<vector>(rs);
+					register_method::native::back<list>(rs);
+					register_method::native::front<list>(rs);
 
-					register_method::genericcc::erase_position_constant<vector>(rs);
-					register_method::native::erase_iterator<vector>(rs);
-					register_method::native::erase_iterator_range<vector>(rs);
-					register_method::genericcc::erase_position_range_constant<vector>(rs);
+					register_method::genericcc::insert_position_before_linear<list>(rs);
+					register_method::native::insert_iterator<list>(rs);
 
-					register_method::genericcc::erase_value<vector>(rs);
+					register_method::genericcc::erase_position_linear<list>(rs);
+					register_method::native::erase_iterator<list>(rs);
+					register_method::native::erase_iterator_range<list>(rs);
+					register_method::genericcc::erase_position_range_linear<list>(rs);
 
-					register_method::native::operator_index_position<vector>(rs);
+					register_method::genericcc::erase_value<list>(rs);
 
-					register_method::genericcc::sort<vector>(rs);
+					register_method::native::sort<list>(rs);
 
-					register_method::genericcc::find_iterator<vector>(rs);
+					register_method::genericcc::find_iterator<list>(rs);
 				}
 			};
 

@@ -65,14 +65,14 @@ namespace aatc {
 			template<> void register_container<CONTAINER::VECTOR>(asIScriptEngine* engine);
 			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::VECTOR>(enginestorage::template_specific_storage* tss);
 
-			//template<> void register_container<CONTAINER::LIST>(asIScriptEngine* engine);
-			//template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::LIST>(enginestorage::template_specific_storage* tss);
+			template<> void register_container<CONTAINER::LIST>(asIScriptEngine* engine);
+			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::LIST>(enginestorage::template_specific_storage* tss);
 
-			//template<> void register_container<CONTAINER::SET>(asIScriptEngine* engine);
-			//template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::SET>(enginestorage::template_specific_storage* tss);
+			template<> void register_container<CONTAINER::SET>(asIScriptEngine* engine);
+			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::SET>(enginestorage::template_specific_storage* tss);
 
-			//template<> void register_container<CONTAINER::UNORDERED_SET>(asIScriptEngine* engine);
-			//template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::UNORDERED_SET>(enginestorage::template_specific_storage* tss);
+			template<> void register_container<CONTAINER::UNORDERED_SET>(asIScriptEngine* engine);
+			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::UNORDERED_SET>(enginestorage::template_specific_storage* tss);
 
 			template<> void register_container<CONTAINER::MAP>(asIScriptEngine* engine);
 			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::MAP>(enginestorage::template_specific_storage* tss);

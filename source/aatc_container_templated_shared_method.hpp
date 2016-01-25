@@ -121,7 +121,7 @@ namespace aatc {
 
 							if (t->handlemode) {
 								t->container.push_front(nullptr);
-								t->StoreHandle(&(t->container.back()), value);
+								t->StoreHandle(&(t->container.front()), value);
 							} else {
 								t->container.push_front(t->engine->CreateScriptObjectCopy(value, t->objtype_content));
 							}
@@ -169,7 +169,7 @@ namespace aatc {
 
 						template<typename T_container> bool erase_value(T_container* t, void* value) {
 							if (t->handlemode) {
-								if (!handlemode_directcomp) {
+								if (!t->handlemode_directcomp) {
 									#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 										if (t->missing_functions & common::CONTAINER_OPERATION::ERASE_VALUE) {
 											common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase_value);
@@ -238,11 +238,11 @@ namespace aatc {
 							t->safety_iteratorversion_Increment();
 
 							if (t->handlemode) {
-								if (!handlemode_directcomp) {
+								if (!t->handlemode_directcomp) {
 									#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 										if (t->missing_functions & common::CONTAINER_OPERATION::INSERT) {
 											common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::insert);
-											return 0;
+											return;
 										}
 									#endif
 								}
@@ -254,7 +254,7 @@ namespace aatc {
 								#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 									if (t->missing_functions & common::CONTAINER_OPERATION::INSERT) {
 										common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::insert);
-										return 0;
+										return;
 									}
 								#endif
 
@@ -689,7 +689,7 @@ namespace aatc {
 
 							std::size_t oldsize = t->container.size();
 							t->container.erase(ii_begin, ii_end);
-							return oldsize - t->container.size();
+							return config::t::sizetype(oldsize - t->container.size());
 						}
 
 						template<typename T_container> config::t::sizetype erase_value(T_container* t, void* value, bool all) {
@@ -767,7 +767,7 @@ namespace aatc {
 
 							std::size_t sizediff = oldsize - t->container.size();
 							if (sizediff) { t->safety_iteratorversion_Increment(); }
-							return sizediff;
+							return config::t::sizetype(sizediff);
 						}
 
 						template<typename T_container> typename T_container::Iterator find_iterator(T_container* t, void* value) {
@@ -850,7 +850,7 @@ namespace aatc {
 						}
 
 						template<typename T_container> static void erase_value(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s(const T&in)", config::scriptname::method::container::erase_value);
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s(const T&in)", config::scriptname::method::container::erase);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::erase_value<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 

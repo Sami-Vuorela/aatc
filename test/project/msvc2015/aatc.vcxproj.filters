@@ -62,6 +62,15 @@
     <ClCompile Include="..\..\..\source\aatc_container_unordered_map.cpp">
       <Filter>as addons\aatc</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_container_list.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_container_set.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\source\aatc_container_unordered_set.cpp">
+      <Filter>as addons\aatc</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\as_engine.hpp">
@@ -76,46 +85,10 @@
     <ClInclude Include="..\..\..\source\aatc_config.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_list.hpp">
-      <Filter>as addons\aatc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_set.hpp">
-      <Filter>as addons\aatc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_shared_map_template.hpp">
-      <Filter>as addons\aatc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_shared_template.hpp">
-      <Filter>as addons\aatc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_shared_tempspec.hpp">
-      <Filter>as addons\aatc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_unordered_set.hpp">
-      <Filter>as addons\aatc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_vector.hpp">
-      <Filter>as addons\aatc</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\source\aatc_serializer.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\aatc_templatemagic.hpp">
-      <Filter>as addons\aatc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_internal_lists.hpp">
-      <Filter>as addons\aatc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_map.hpp">
-      <Filter>as addons\aatc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_unordered_map.hpp">
-      <Filter>as addons\aatc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_tempspecs.hpp">
-      <Filter>as addons\aatc</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\source\aatc_container_traits.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\aatc_container_shared.hpp">
@@ -155,6 +128,15 @@
       <Filter>as addons\aatc</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\source\aatc_container_mapped_templated_shared_method.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_list.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_set.hpp">
+      <Filter>as addons\aatc</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\source\aatc_container_unordered_set.hpp">
       <Filter>as addons\aatc</Filter>
     </ClInclude>
   </ItemGroup>

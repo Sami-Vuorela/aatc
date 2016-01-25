@@ -73,6 +73,8 @@ namespace aatc {
 			config::t::sizetype vector::erase(config::t::sizetype range_begin, config::t::sizetype range_end) { return shared::method::genericcc::erase_position_range_constant(this, range_begin, range_end); }
 			config::t::sizetype vector::erase(const Iterator& range_begin, const Iterator& range_end) { return shared::method::native::erase_iterator_range(this, range_begin, range_end); }
 
+			config::t::sizetype vector::erase_value(void* value, bool all) { return shared::method::genericcc::erase_value(this, value, all); }
+
 			vector::Iterator vector::find(void* value) { return shared::method::genericcc::find_iterator(this, value); }
 
 			void vector::insert(const Iterator& position, void* value) { shared::method::native::insert_iterator(this, position, value); }
@@ -111,6 +113,8 @@ namespace aatc {
 					register_method::genericcc::erase_position_constant<vector>(rs);
 					register_method::native::erase_iterator_range<vector>(rs);
 					register_method::genericcc::erase_position_range_constant<vector>(rs);
+
+					register_method::genericcc::erase_value<vector>(rs);
 
 					register_method::genericcc::find_iterator<vector>(rs);
 

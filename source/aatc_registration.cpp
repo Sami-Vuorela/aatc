@@ -60,17 +60,11 @@ namespace aatc {
 				container::listing::register_container<i>(std::get<1>(tup));
 			}
 		}
-
-		//static const int id = std::tuple_element<i, aatc_infos_all_tuple>::type::container_id;
-		//void operator()(TT& tup) {
-		//	if (std::get<0>(tup)->include_container[id]) { aatc_register_container<id>(std::get<1>(tup), std::get<0>(tup)); }
-		//}
 	};
 
 
 
 	void Initializer::Go() {
-		//init this guy here
 		common::primunion_defaultvalue.ui64 = 0;
 		common::primunion_defaultvalue.ptr = nullptr;
 
@@ -105,18 +99,20 @@ namespace aatc {
 				r = engine->RegisterObjectMethod(n_funcpointer, "bool Set(string,?&in)", asMETHODPR(aatc_script_Funcpointer, Set, (config::t::string, void*, int), bool), asCALL_THISCALL); assert(r >= 0);
 				r = engine->RegisterObjectMethod(n_funcpointer, "void Call()", asMETHOD(aatc_script_Funcpointer, scriptsidecall_CallVoid), asCALL_THISCALL); assert(r >= 0);
 			}
+
 			{//register hash functions
 				sprintf_s(textbuf, 1000, "%s aatc_Hashfunc_djb2(string &in)", config::scriptname::t::hash_actual);
 				r = engine->RegisterGlobalFunction(textbuf, asFUNCTION(hash::hashfunc::djb2), asCALL_CDECL); assert(r >= 0);
 			}
 		}
 
-		aatc_tm_iterator_1arg_functor<0, container::listing::CONTAINER::_COUNT - 1, Initializer_tm_iterate_all_containers, std::tuple< Initializer*, asIScriptEngine*>> f; f(std::make_tuple(this, engine));
-
-
-
-		//RegisterTempspecs();
-		//RegisterTempspecs2();
+		aatc_tm_iterator_1arg_functor<
+			0,
+			container::listing::CONTAINER::_COUNT - 1,
+			Initializer_tm_iterate_all_containers,
+			std::tuple< Initializer*, asIScriptEngine*>
+		> f; 
+		f(std::make_tuple(this, engine));
 	}
 
 
