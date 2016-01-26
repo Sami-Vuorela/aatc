@@ -75,7 +75,7 @@ namespace aatc {
 						class scriptfunctor_cmp_customscript {
 						public:
 							asIScriptContext* cc;
-							common::aatc_script_Funcpointer* funcptr;
+							common::script_Funcpointer* funcptr;
 
 							bool operator()(void*& lhs, void*& rhs) {
 								funcptr->Prepare(cc);
@@ -284,13 +284,13 @@ namespace aatc {
 							if (ascending) {
 								t->container.sort(functor);
 							} else {
-								t->container.sort(common::aatc_functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp>(functor));
+								t->container.sort(common::functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp>(functor));
 							}
 
 							t->els->contextcache_Return(functor.cc);
 						}
 
-						template<typename T_container> void sort_funcptr(T_container* t, common::aatc_script_Funcpointer* funcptr, bool ascending) {
+						template<typename T_container> void sort_funcptr(T_container* t, common::script_Funcpointer* funcptr, bool ascending) {
 							if (t->handlemode_directcomp) { return; }
 
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
@@ -309,7 +309,7 @@ namespace aatc {
 							if (ascending) {
 								t->container.sort(functor);
 							} else {
-								t->container.sort(common::aatc_functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp_customscript>(functor));
+								t->container.sort(common::functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp_customscript>(functor));
 							}
 
 							t->els->contextcache_Return(functor.cc);
@@ -472,13 +472,13 @@ namespace aatc {
 							if (ascending) {
 								std::sort(t->container.begin(), t->container.end(), functor);
 							} else {
-								std::sort(t->container.begin(), t->container.end(), common::aatc_functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp>(functor));
+								std::sort(t->container.begin(), t->container.end(), common::functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp>(functor));
 							}
 
 							t->els->contextcache_Return(functor.cc);
 						}
 
-						template<typename T_container> void sort_funcptr(T_container* t, common::aatc_script_Funcpointer* funcptr, bool ascending) {
+						template<typename T_container> void sort_funcptr(T_container* t, common::script_Funcpointer* funcptr, bool ascending) {
 							if (t->handlemode_directcomp) { return; }
 
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
@@ -497,7 +497,7 @@ namespace aatc {
 							if (ascending) {
 								std::sort(t->container.begin(), t->container.end(), functor);
 							} else {
-								std::sort(t->container.begin(), t->container.end(), common::aatc_functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp_customscript>(functor));
+								std::sort(t->container.begin(), t->container.end(), common::functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp_customscript>(functor));
 							}
 
 							t->els->contextcache_Return(functor.cc);

@@ -79,7 +79,7 @@ namespace aatc {
 			void* vector::operator[](config::t::sizetype position) { return shared::method::native::operator_index_position(this, position); }
 
 			void vector::sort(bool ascending) { shared::method::genericcc::sort(this, ascending); }
-			void vector::sort_funcptr(common::aatc_script_Funcpointer* funcptr, bool ascending) { shared::method::genericcc::sort_funcptr(this,funcptr, ascending); }
+			void vector::sort_funcptr(common::script_Funcpointer* funcptr, bool ascending) { shared::method::genericcc::sort_funcptr(this,funcptr, ascending); }
 
 			void vector::erase(config::t::sizetype position) { shared::method::genericcc::erase_position_constant(this, position); }
 			void vector::erase(const Iterator& position) { shared::method::native::erase_iterator(this, position); }

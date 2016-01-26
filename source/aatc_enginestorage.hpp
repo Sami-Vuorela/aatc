@@ -128,6 +128,11 @@ namespace aatc {
 		void contextcache_Return(asIScriptContext* c);
 		engine_level_storage* Get_ELS(asIScriptEngine* engine);
 
+		//call before engine destruction, as engine is supposed to automatically call this
+		//because of SetEngineUserDataCleanupCallback(this function),
+		//but that didnt work during testing
+		void engine_cleanup(asIScriptEngine* engine);
+
 
 
 	};//namespace enginestorage

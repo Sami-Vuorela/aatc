@@ -77,19 +77,20 @@ namespace aatc {
 			void unlock();
 		};
 
+
+
 		//doxygen skip
 		#ifndef DOXYGEN_SHOULD_SKIP_THIS
 
-			//this beautiful creation makes std::list<int>::sort cry salty compiler tears in debug mode for some reason
-			template<typename T, typename T_other_functor> class aatc_functor_notcmp{
+			template<typename T, typename T_other_functor> class functor_notcmp{
 			public:
 				bool operator()(const T& lhs, const T& rhs) const{
 					return !(T_other_functor()(lhs, rhs));
 				}
 			};
-			template<typename T, typename T_other_functor> class aatc_functor_notcmp_persistent_noconst : public T_other_functor{
+			template<typename T, typename T_other_functor> class functor_notcmp_persistent_noconst : public T_other_functor{
 			public:
-				aatc_functor_notcmp_persistent_noconst(const T_other_functor& base) :
+				functor_notcmp_persistent_noconst(const T_other_functor& base) :
 					T_other_functor(base)
 				{}
 				bool operator()(T& lhs, T& rhs){
@@ -115,6 +116,8 @@ namespace aatc {
 			iterator_base(const iterator_base& other);
 		};
 
+
+
 		/*
 			Enum listing the different container operations
 			that require script functions to be called.
@@ -131,6 +134,8 @@ namespace aatc {
 		};
 
 		typedef config::t::uint32 container_operations_bitmask_type;
+
+
 
 		//doxygen skip
 		#ifndef DOXYGEN_SHOULD_SKIP_THIS
@@ -154,29 +159,26 @@ namespace aatc {
 
 
 
-		//refcounted and gc basetype
-		//refcounted and gc basetype
-
 		/*!\brief Basetype for script refcounted c++ objects to derive from.*/
-		class aatc_refcounted{
+		class basetype_refcounted{
 		public:
 			mutable int refcount;
 
-			aatc_refcounted();
-			virtual ~aatc_refcounted();
+			basetype_refcounted();
+			virtual ~basetype_refcounted();
 
 			void refcount_Add();
 			void refcount_Release();
 		};
 
 		/*!\brief Basetype for script refcounted and GCd c++ objects to derive from.*/
-		class aatc_refcounted_GC{
+		class basetype_refcounted_GC{
 		public:
 			mutable int refCount;
 			mutable bool gcFlag;
 
-			aatc_refcounted_GC();
-			virtual ~aatc_refcounted_GC();
+			basetype_refcounted_GC();
+			virtual ~basetype_refcounted_GC();
 
 			void refcount_Add();
 			void refcount_Release();
@@ -187,21 +189,15 @@ namespace aatc {
 			virtual void EnumReferences(asIScriptEngine* engine);
 			virtual void ReleaseAllReferences(asIScriptEngine* engine);
 		};
-		//refcounted and gc basetype
-		//refcounted and gc basetype
 
 
-		bool aatc_templatecallback_1tp(asIObjectType *ot, bool &dontGarbageCollect);
-		bool aatc_templatecallback_map(asIObjectType *ot, bool &dontGarbageCollect);
-		bool aatc_templatecallback_typeid(asIObjectType *ot, int typeId, bool &dontGarbageCollect);
 
-		//call before engine destruction, as engine is supposed to automatically call this
-		//because of SetEngineUserDataCleanupCallback(this function),
-		//but that didnt work during testing
-		void aatc_engine_cleanup(asIScriptEngine* engine);
+		namespace templatecallback_func {
+			bool templated_singleparam(asIObjectType *ot, bool &dontGarbageCollect);
+			bool map(asIObjectType *ot, bool &dontGarbageCollect);
+			bool typeidd(asIObjectType *ot, int typeId, bool &dontGarbageCollect);
+		};//namespace templatecallback_func
 
-
-		void aect_iterator_template_generic_constructor_dummydefault(asIObjectType* objtype, void *memory);
 
 
 		class RegistrationState {
@@ -229,23 +225,8 @@ namespace aatc {
 
 
 
-
-
-
-
-
-
-		/*!\brief Dummy class. Only the name is used for template black majicks*/
-		class aatc_Y{};
-		/*!\brief Dummy class. Only the name is used for template black majicks*/
-		class aatc_N{};
-		/*!\brief Dummy class. Only the name is used for template black majicks*/
-		class aatc_NULLCLASS{};
-
-
-
 		/*!\brief Used to pass function names from script to host. See manual page \ref page_manual_usage_si_funcpointer.*/
-		class aatc_script_Funcpointer : public aatc_refcounted{
+		class script_Funcpointer : public basetype_refcounted{
 		public:
 			asIScriptEngine* engine;
 			//asIScriptContext* ctx;
@@ -258,10 +239,10 @@ namespace aatc {
 
 			bool ready;
 
-			aatc_script_Funcpointer();
-			~aatc_script_Funcpointer();
+			script_Funcpointer();
+			~script_Funcpointer();
 
-			static aatc_script_Funcpointer* Factory();
+			static script_Funcpointer* Factory();
 
 			bool Set(config::t::string funcname);//global function
 			bool Set(config::t::string funcname, void* ref, int tid);//class method
@@ -274,6 +255,8 @@ namespace aatc {
 
 			//void ReleaseRef();
 		};
+
+
 
 		enum class DATAHANDLINGTYPE : int_fast8_t{
 			PRIMITIVE,
@@ -294,8 +277,10 @@ namespace aatc {
 			FLOAT64
 		};
 
-		DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(asIScriptEngine* engine,config::t::uint32 astypeid);
-		PRIMITIVE_TYPE aatc_Determine_Primitivetype(config::t::uint32 astypeid);
+		DATAHANDLINGTYPE Determine_Datahandlingtype(asIScriptEngine* engine,config::t::uint32 astypeid);
+		PRIMITIVE_TYPE Determine_Primitivetype(config::t::uint32 astypeid);
+
+
 
 		/*!\brief This monstrosity is used to store any primitive or handle using the same allocation code.*/
 		struct primunion{
@@ -327,66 +312,6 @@ namespace aatc {
 
 
 
-		/*
-			errorchecking macros
-		*/
-		#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
-		#define aatc_errorcheck_container_missingfunctions_operation_retvoid(ID_OP,n_container,n_content,n_operation)	\
-		if(missing_functions & ID_OP){																					\
-			common::errorprint::container::missingfunctions_operation_missing(n_container, n_content, n_operation);			\
-			return;																										\
-		}
-
-		#define aatc_errorcheck_container_missingfunctions_operation_retnull(ID_OP,n_container,n_content,n_operation)	\
-		if(missing_functions & ID_OP){																					\
-			common::errorprint::container::missingfunctions_operation_missing(n_container, n_content, n_operation);			\
-			return NULL;																								\
-		}
-
-		#define aatc_errorcheck_container_missingfunctions_operation_noret(ID_OP,n_container,n_content,n_operation)	 	\
-		if(missing_functions & ID_OP){																					\
-			common::errorprint::container::missingfunctions_operation_missing(n_container, n_content, n_operation);
-
-		#define aatc_errorcheck_container_access_empty_retvoid(n_container,n_content,n_operation)						\
-		if(T_container::empty()){																						\
-			common::errorprint::container::access_empty(n_container, n_content, n_operation);								\
-			return;																										\
-		}
-		#define aatc_errorcheck_container_access_empty_retnull(n_container,n_content,n_operation)						\
-		if(t->container.empty()){																						\
-			aatc::common::errorprint::container::access_empty(n_container, n_content, n_operation);								\
-			return NULL;																								\
-		}
-		#define aatc_errorcheck_container_access_empty_retdefault(n_container,n_content,n_operation)					\
-		if(t->container.empty()){																						\
-			aatc::common::errorprint::container::access_empty(n_container, n_content, n_operation);								\
-			return defaultvalue;																						\
-		}
-		#define aatc_errorcheck_container_access_bounds_retdefault(index,size,n_container,n_content,n_operation)		\
-		if((index>size)){																	\
-			common::errorprint::container::access_bounds(config::t::sizetype(index), config::t::sizetype(size), n_container, n_content, n_operation);					\
-			return defaultvalue;																						\
-		}
-
-		#else
-		#define aatc_errorcheck_container_missingfunctions_operation_retvoid(ID_OP,n_container,n_content,n_operation) {}
-		#define aatc_errorcheck_container_missingfunctions_operation_retnull(ID_OP,n_container,n_content,n_operation) {}
-		#define aatc_errorcheck_container_missingfunctions_operation_noret(ID_OP,n_container,n_content,n_operation) if(0){
-		#define aatc_errorcheck_container_access_empty_retvoid(n_container,n_content,n_operation) {}
-		#define aatc_errorcheck_container_access_empty_retnull(n_container,n_content,n_operation) {}
-		#define aatc_errorcheck_container_access_empty_retdefaultn_container,n_content,n_operation) {}
-		#define aatc_errorcheck_container_access_bounds_retdefault(index,size,n_container,n_content,n_operation) {}
-		#endif
-
-		#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
-			#define aatc_errorcheck_container_iterator_safety_version_Increment() iterator_safety_version++;
-		#else
-			#define aatc_errorcheck_container_iterator_safety_version_Increment()
-		#endif
-
-
-
-
 		namespace errorprint {
 			namespace container {
 				void missingfunctions_operation_missing(const char* name_container, const char* name_content, const char* name_operation);
@@ -398,20 +323,6 @@ namespace aatc {
 				void container_modified();
 			};
 		};
-
-		///*!\brief Internal error printing function.*/
-		//void common::errorprint::container::missingfunctions_operation_missing(const char* name_container, const char* name_content, const char* name_operation);
-		///*!\brief Internal error printing function.*/
-		//void common::errorprint::container::access_empty(const char* name_container, const char* name_content, const char* name_operation);
-		///*!\brief Internal error printing function.*/
-		//void common::errorprint::container::access_bounds(config::t::sizetype index, config::t::sizetype size, const char* name_container, const char* name_content, const char* name_operation);
-		///*!\brief Internal error printing function.*/
-		//void aatc_errorprint_iterator_container_modified();
-		///*!\brief Internal error printing function.*/
-		//void common::errorprint::container::iterator_invalid();
-
-		//check for missing functions, return bitmask of missing functions
-		//container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions_base(int CONTAINER_ID, enginestorage::template_specific_storage* tss);
 
 
 

@@ -153,16 +153,16 @@ namespace aatc {
 							if (ascending) {
 								t->container.sort(std::less<T_container::T_content>());
 							} else {
-								t->container.sort(common::aatc_functor_notcmp<T_container::T_content, std::less<T_container::T_content>>());
+								t->container.sort(common::functor_notcmp<T_container::T_content, std::less<T_container::T_content>>());
 
 								///*
-								//std::list didn't like common::aatc_functor_notcmp with primitives in debug mode for some reason
+								//std::list didn't like common::functor_notcmp with primitives in debug mode for some reason
 								//so we'll have to use some black majicks
 								//*/
 								//t->container.sort(
 								//	std::conditional<
 								//	std::is_class<T_content>::value,
-								//	common::aatc_functor_notcmp<T_content, std::less<T_content>>,
+								//	common::functor_notcmp<T_content, std::less<T_content>>,
 								//	std::greater<T_content>
 								//	>::type()
 								//);
@@ -358,7 +358,7 @@ namespace aatc {
 							if (ascending) {
 								std::sort(t->container.begin(), t->container.end(), std::less<T_container::T_content>());
 							} else {
-								std::sort(t->container.begin(), t->container.end(), common::aatc_functor_notcmp<T_container::T_content, std::less<T_container::T_content>>());
+								std::sort(t->container.begin(), t->container.end(), common::functor_notcmp<T_container::T_content, std::less<T_container::T_content>>());
 							}
 						}
 

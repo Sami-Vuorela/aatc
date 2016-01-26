@@ -109,7 +109,7 @@ namespace aatc {
 						typename bcw = base_container_wrapper::Basic<T_container>
 					>class Containerbase :
 						public container::shared::container_basicbase,
-						public common::aatc_refcounted_GC,
+						public common::basetype_refcounted_GC,
 						public container::shared::containerfunctor_map::Settings
 					{
 					public:
@@ -149,7 +149,7 @@ namespace aatc {
 						Containerbase(asIScriptEngine* _engine, asIObjectType* _objtype) :
 							container::shared::container_basicbase(_engine),
 							container(_engine, this),
-							aatc_refcounted_GC(),
+							basetype_refcounted_GC(),
 							objtype_container(_objtype),
 							needref_key(1),
 							needref_value(1),
@@ -163,15 +163,15 @@ namespace aatc {
 							astypeid_key = objtype_container->GetSubTypeId(0);
 							astypeid_value = objtype_container->GetSubTypeId(1);
 
-							datahandlingid_key = common::aatc_Determine_Datahandlingtype(engine, astypeid_key);
-							datahandlingid_value = common::aatc_Determine_Datahandlingtype(engine, astypeid_value);
+							datahandlingid_key = common::Determine_Datahandlingtype(engine, astypeid_key);
+							datahandlingid_value = common::Determine_Datahandlingtype(engine, astypeid_value);
 
 							handlemode_directcomp = 0;
 
 							switch (datahandlingid_key) {
 							case common::DATAHANDLINGTYPE::PRIMITIVE:
 							{
-								primitiveid_key = common::aatc_Determine_Primitivetype(astypeid_key);
+								primitiveid_key = common::Determine_Primitivetype(astypeid_key);
 								need_errorcheck_missing_functions = 0;
 								objectmode_key = 0;
 								break;
@@ -204,7 +204,7 @@ namespace aatc {
 							case common::DATAHANDLINGTYPE::PRIMITIVE:
 							{
 								objectmode_value = 0;
-								primitiveid_value = common::aatc_Determine_Primitivetype(astypeid_value);
+								primitiveid_value = common::Determine_Primitivetype(astypeid_value);
 								break;
 							}
 							case common::DATAHANDLINGTYPE::STRING:
@@ -1040,7 +1040,7 @@ namespace aatc {
 						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& opAssign(const %s &in)", rs.n_container_T, rs.n_container_T);
 						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, operator=), asCALL_THISCALL); assert(rs.error >= 0);
 
-						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_TEMPLATE_CALLBACK, "bool f(int&in, bool&out)", asFUNCTION(aatc::common::aatc_templatecallback_map), asCALL_CDECL); assert(rs.error >= 0);
+						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_TEMPLATE_CALLBACK, "bool f(int&in, bool&out)", asFUNCTION(aatc::common::templatecallback_func::map), asCALL_CDECL); assert(rs.error >= 0);
 
 						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_ADDREF, "void f()", asMETHOD(T_container, refcount_Add), asCALL_THISCALL); assert(rs.error >= 0);
 						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_RELEASE, "void f()", asMETHOD(T_container, refcount_Release), asCALL_THISCALL); assert(rs.error >= 0);

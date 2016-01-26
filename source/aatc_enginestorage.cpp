@@ -191,6 +191,13 @@ namespace aatc {
 			els->contextcache_Return(c);
 		}
 
+		void engine_cleanup(asIScriptEngine* engine) {
+			enginestorage::engine_level_storage* els = enginestorage::Get_ELS(engine);
+
+			els->Clean();
+			delete els;
+		}
+
 
 
 	};//namespace enginestorage

@@ -86,8 +86,8 @@ namespace aatc {
 		*/
 
 		template<typename T_your_cpp_type> void Register_aatc_func_hash_value(asIScriptEngine* engine, const char* name_your_type_in_script) {
-			char textbuf[1000];
-			sprintf_s(textbuf, 1000, "%s %s()", config::scriptname::t::hash_actual, config::scriptname::method::content::hash);
+			char textbuf[common::RegistrationState::bufsize];
+			sprintf_s(textbuf, common::RegistrationState::bufsize, "%s %s()", config::scriptname::t::hash_actual, config::scriptname::method::content::hash);
 			int error = engine->RegisterObjectMethod(name_your_type_in_script, textbuf, asFUNCTION(detail::function_wrapping_a_functor<T_your_cpp_type>), asCALL_CDECL_OBJLAST); assert(error >= 0);
 		}
 

@@ -108,7 +108,7 @@ namespace aatc {
 					typename bcw = base_container_wrapper::Basic<T_container>>
 				class Containerbase :
 					public container::shared::container_basicbase,
-					public common::aatc_refcounted_GC,
+					public common::basetype_refcounted_GC,
 					public container::shared::containerfunctor::Settings
 				{
 				public:
@@ -598,7 +598,7 @@ namespace aatc {
 					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_RELEASEREFS, "void f(int&in)", asMETHODPR(T_container, ReleaseAllReferences, (asIScriptEngine*), void), asCALL_THISCALL); assert(rs.error >= 0);
 
 
-					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_TEMPLATE_CALLBACK, "bool f(int&in, bool&out)", asFUNCTION(aatc::common::aatc_templatecallback_1tp), asCALL_CDECL); assert(rs.error >= 0);
+					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_TEMPLATE_CALLBACK, "bool f(int&in, bool&out)", asFUNCTION(aatc::common::templatecallback_func::templated_singleparam), asCALL_CDECL); assert(rs.error >= 0);
 
 					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool)", config::scriptname::method::container::set_directcomp);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, SetDirectcomp), asCALL_THISCALL); assert(rs.error >= 0);

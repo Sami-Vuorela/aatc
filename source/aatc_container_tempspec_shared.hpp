@@ -66,7 +66,7 @@ namespace aatc {
 					typename T_container_tags = aatc::container::shared::tagbase>
 				class Containerbase :
 					public container::shared::container_basicbase,
-					public common::aatc_refcounted {
+					public common::basetype_refcounted {
 				public:
 					typename typedef _T_container T_container_native;
 					typename typedef _T_content T_content;

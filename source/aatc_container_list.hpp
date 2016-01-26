@@ -73,7 +73,7 @@ namespace aatc {
 				void* front();
 
 				void sort(bool ascending = true);
-				void sort_funcptr(common::aatc_script_Funcpointer* funcptr, bool ascending = true);
+				void sort_funcptr(common::script_Funcpointer* funcptr, bool ascending = true);
 
 				void erase(config::t::sizetype position);
 				void erase(const Iterator& position);

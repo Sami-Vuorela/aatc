@@ -8,7 +8,7 @@
 
 
 
-#define TEST_SERIALIZER 1
+#define TEST_SERIALIZER 0
 
 
 

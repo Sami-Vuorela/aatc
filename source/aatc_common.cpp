@@ -58,69 +58,62 @@ namespace aatc {
 
 		//refcounted and gc basetype
 		//refcounted and gc basetype
-		aatc_refcounted::aatc_refcounted() :
+		basetype_refcounted::basetype_refcounted() :
 			refcount(1)
 		{}
-		aatc_refcounted::~aatc_refcounted(){}
-		void aatc_refcounted::refcount_Add(){
+		basetype_refcounted::~basetype_refcounted(){}
+		void basetype_refcounted::refcount_Add(){
 			asAtomicInc(refcount);
 		}
-		void aatc_refcounted::refcount_Release(){
+		void basetype_refcounted::refcount_Release(){
 			if (asAtomicDec(refcount) == 0){
 				delete this;
 			}
 		}
 
-		aatc_refcounted_GC::aatc_refcounted_GC():
+		basetype_refcounted_GC::basetype_refcounted_GC():
 			refCount(1),
 			gcFlag(0)
 		{}
-		aatc_refcounted_GC::~aatc_refcounted_GC(){}
+		basetype_refcounted_GC::~basetype_refcounted_GC(){}
 
-		void aatc_refcounted_GC::refcount_Add(){
+		void basetype_refcounted_GC::refcount_Add(){
 			gcFlag = false;
 			asAtomicInc(refCount);
 		}
-		void aatc_refcounted_GC::refcount_Release(){
+		void basetype_refcounted_GC::refcount_Release(){
 			gcFlag = false;
 			if (asAtomicDec(refCount) == 0){
 				delete this;
 			}
 		}
-		int aatc_refcounted_GC::GetRefCount(){return refCount;}
-		void aatc_refcounted_GC::SetGCFlag(){gcFlag = true;}
-		bool aatc_refcounted_GC::GetGCFlag(){return gcFlag;}
-		void aatc_refcounted_GC::EnumReferences(asIScriptEngine *engine){}
-		void aatc_refcounted_GC::ReleaseAllReferences(asIScriptEngine* engine){}
+		int basetype_refcounted_GC::GetRefCount(){return refCount;}
+		void basetype_refcounted_GC::SetGCFlag(){gcFlag = true;}
+		bool basetype_refcounted_GC::GetGCFlag(){return gcFlag;}
+		void basetype_refcounted_GC::EnumReferences(asIScriptEngine *engine){}
+		void basetype_refcounted_GC::ReleaseAllReferences(asIScriptEngine* engine){}
 		//refcounted and gc basetype
 		//refcounted and gc basetype
 
 
 
-		void aatc_engine_cleanup(asIScriptEngine* engine){
-			enginestorage::engine_level_storage* els = enginestorage::Get_ELS(engine);
-
-			els->Clean();
-			delete els;
+		bool templatecallback_func::templated_singleparam(asIObjectType *ot, bool &dontGarbageCollect){
+			return templatecallback_func::typeidd(ot, ot->GetSubTypeId(), dontGarbageCollect);
 		}
-
-		bool aatc_templatecallback_1tp(asIObjectType *ot, bool &dontGarbageCollect){
-			return aatc_templatecallback_typeid(ot, ot->GetSubTypeId(), dontGarbageCollect);
-		}
-		bool aatc_templatecallback_map(asIObjectType *ot, bool &dontGarbageCollect){
+		bool templatecallback_func::map(asIObjectType *ot, bool &dontGarbageCollect){
 			int typeId_key = ot->GetSubTypeId(0);
 			int typeId_value = ot->GetSubTypeId(1);
 
 			bool dont_gc_key = 0;
 			bool dont_gc_value = 0;
-			bool result_key = aatc_templatecallback_typeid(ot, typeId_key, dont_gc_key);
-			bool result_value = aatc_templatecallback_typeid(ot, typeId_value, dont_gc_value);
+			bool result_key = templatecallback_func::typeidd(ot, typeId_key, dont_gc_key);
+			bool result_value = templatecallback_func::typeidd(ot, typeId_value, dont_gc_value);
 
 			dontGarbageCollect = dont_gc_key && dont_gc_value;
 
 			return result_key && result_value;
 		}
-		bool aatc_templatecallback_typeid(asIObjectType *ot, int typeId, bool &dontGarbageCollect){
+		bool templatecallback_func::typeidd(asIObjectType *ot, int typeId, bool &dontGarbageCollect){
 			if ((typeId & asTYPEID_MASK_OBJECT) && !(typeId & asTYPEID_OBJHANDLE)){
 				asIObjectType *subtype = ot->GetEngine()->GetObjectTypeById(typeId);
 				asDWORD flags = subtype->GetFlags();
@@ -181,32 +174,23 @@ namespace aatc {
 			return 1;
 		}
 
-		//do nothing
-		void aect_iterator_template_generic_constructor_dummydefault(asIObjectType* objtype, void *memory){}
 
 
-
-
-
-
-
-
-
-		aatc_script_Funcpointer::aatc_script_Funcpointer() :
+		script_Funcpointer::script_Funcpointer() :
 			//dedicated_context(NULL),
 			ready(0),
 			func(NULL)
 		{
 		}
-		aatc_script_Funcpointer::~aatc_script_Funcpointer(){
+		script_Funcpointer::~script_Funcpointer(){
 			//ReleaseRef();
 		}
 
-		aatc_script_Funcpointer* aatc_script_Funcpointer::Factory(){
-			return new aatc_script_Funcpointer();
+		script_Funcpointer* script_Funcpointer::Factory(){
+			return new script_Funcpointer();
 		}
 
-		bool aatc_script_Funcpointer::Set(config::t::string _funcname){
+		bool script_Funcpointer::Set(config::t::string _funcname){
 			asIScriptContext* ctx = asGetActiveContext();
 			engine = ctx->GetEngine();
 
@@ -232,7 +216,7 @@ namespace aatc {
 			}
 			return ready;
 		}
-		bool aatc_script_Funcpointer::Set(config::t::string _funcname, void* ref, int tid){
+		bool script_Funcpointer::Set(config::t::string _funcname, void* ref, int tid){
 			funcname = _funcname;
 			ready = 0;
 			func = NULL;
@@ -259,23 +243,23 @@ namespace aatc {
 			}
 			return ready;
 		}
-		void aatc_script_Funcpointer::Clear(){
+		void script_Funcpointer::Clear(){
 			ready = 0;
 		}
 
-		void aatc_script_Funcpointer::Prepare(asIScriptContext* context){
+		void script_Funcpointer::Prepare(asIScriptContext* context){
 			if (ready){
 				context->Prepare(func);
 				if (is_thiscall){context->SetObject(so);}
 			}
 		}
-		void aatc_script_Funcpointer::Execute(asIScriptContext* context){
+		void script_Funcpointer::Execute(asIScriptContext* context){
 			if (ready){
 				context->Execute();
 			}
 		}
 
-		void aatc_script_Funcpointer::scriptsidecall_CallVoid(){
+		void script_Funcpointer::scriptsidecall_CallVoid(){
 			enginestorage::engine_level_storage* els = enginestorage::Get_ELS(asGetActiveContext()->GetEngine());
 			asIScriptContext* c = els->contextcache_Get();
 				Prepare(c);
@@ -336,7 +320,7 @@ namespace aatc {
 
 
 
-		DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(asIScriptEngine* engine,config::t::uint32 astypeid){
+		DATAHANDLINGTYPE Determine_Datahandlingtype(asIScriptEngine* engine,config::t::uint32 astypeid){
 			if(astypeid == engine->GetStringFactoryReturnTypeId()){
 				return DATAHANDLINGTYPE::STRING;
 			}
@@ -350,7 +334,7 @@ namespace aatc {
 				return DATAHANDLINGTYPE::PRIMITIVE;
 			}
 		}
-		PRIMITIVE_TYPE aatc_Determine_Primitivetype(config::t::uint32 astypeid){
+		PRIMITIVE_TYPE Determine_Primitivetype(config::t::uint32 astypeid){
 			switch(astypeid){
 				case asTYPEID_BOOL:{return PRIMITIVE_TYPE::INT8; }
 				case asTYPEID_INT8:{return PRIMITIVE_TYPE::INT8; }
