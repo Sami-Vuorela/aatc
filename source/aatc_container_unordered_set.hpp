@@ -37,6 +37,8 @@ samivuorela@gmail.com
 #include "aatc_container_templated_shared.hpp"
 #include "aatc_container_tempspec_shared_method.hpp"
 
+#include "aatc_hash.hpp"
+
 
 
 BEGIN_AS_NAMESPACE
@@ -97,7 +99,7 @@ namespace aatc {
 
 
 			template<typename T_content> class unordered_set : public shared::Containerbase <
-				aatc_acit_unordered_set<T_content>,
+				aatc_acit_unordered_set<T_content, hash::hashfunctor<T_content>>,
 				T_content,
 				container::listing::CONTAINER::UNORDERED_SET,
 				container::listing::tags_of_container::unordered_set

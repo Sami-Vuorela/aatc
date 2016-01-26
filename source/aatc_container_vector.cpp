@@ -67,6 +67,10 @@ namespace aatc {
 				return *this;
 			}
 
+
+
+			void vector::reserve(config::t::sizetype size) { shared::method::native::reserve(this, size); }
+
 			void vector::push_back(void* value) { shared::method::native::push_back(this, value); }
 			void vector::pop_back() { shared::method::native::pop_back(this); }
 			void* vector::back() { return shared::method::native::back(this); }
@@ -107,6 +111,8 @@ namespace aatc {
 
 
 					register_method::swap<vector>(rs);
+
+					register_method::native::reserve<vector>(rs);
 
 					register_method::native::push_back<vector>(rs);
 					register_method::native::pop_back<vector>(rs);

@@ -58,10 +58,11 @@ namespace aatc {
 				vector(asIObjectType* objtype);
 				vector(const vector& other);
 				vector& operator=(const vector& other);
-
-
-
 				vector& swap(vector& other);
+
+
+
+				void reserve(config::t::sizetype size);
 
 				void push_back(void* value);
 				void pop_back();
@@ -108,6 +109,8 @@ namespace aatc {
 
 
 
+				void reserve(config::t::sizetype size) { shared::method::native::reserve(this, size); }
+
 				void push_back(const T_content& value) { shared::method::native::push_back(this, value); }
 				void pop_back() { shared::method::native::pop_back(this); }
 
@@ -140,6 +143,8 @@ namespace aatc {
 
 
 					register_method::swap<vector>(rs);
+
+					register_method::native::reserve<vector>(rs);
 
 					register_method::native::push_back<vector>(rs);
 					register_method::native::pop_back<vector>(rs);

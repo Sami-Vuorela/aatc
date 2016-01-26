@@ -65,6 +65,22 @@ namespace aatc {
 
 			};//namespace heavy
 		};//namespace listing
+		namespace tempspec {
+
+
+
+			template<typename T_content> void RegisterAll_for_type(asIScriptEngine* engine, const char* scriptname_content) {
+				common::RegistrationState rs(engine);
+
+				container::tempspec::vector<T_content>::Register(rs, scriptname_content);
+				container::tempspec::list<T_content>::Register(rs, scriptname_content);
+				container::tempspec::set<T_content>::Register(rs, scriptname_content);
+				container::tempspec::unordered_set<T_content>::Register(rs, scriptname_content);
+			}
+
+
+
+		};//namespace tempspec
 	};//namespace container
 };//namespace aatc
 END_AS_NAMESPACE
