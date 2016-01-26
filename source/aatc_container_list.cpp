@@ -88,6 +88,9 @@ namespace aatc {
 
 			void list::insert(const Iterator& position, void* value) { shared::method::native::insert_iterator(this, position, value); }
 
+			bool list::contains(void* value) { return shared::method::genericcc::contains(this, value); }
+			config::t::sizetype list::count(void* value) { return shared::method::genericcc::count(this, value); }
+
 
 
 		};//namespace templated
@@ -129,6 +132,9 @@ namespace aatc {
 					register_method::genericcc::find_iterator<list>(rs);
 
 					register_method::native::insert_iterator<list>(rs);
+
+					register_method::genericcc::contains<list>(rs);
+					register_method::genericcc::count<list>(rs);
 				}
 
 				container::shared::autoregister::register_all_tempspec_basics_for_container<tempspec::list>(engine);

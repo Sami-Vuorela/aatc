@@ -439,6 +439,19 @@ namespace aatc {
 							return result;
 						}
 
+						template<typename T_container> bool contains(T_container* t, typename const T_container::T_content& value) {
+							for (T_container::T_iterator_native_const it = t->container.begin(); it != t->container.end(); it++) {
+								if (*it == value) {
+									return 1;
+								}
+							}
+							return 0;
+						}
+
+						template<typename T_container> config::t::sizetype count(T_container* t, typename const T_container::T_content& value) {
+							return (config::t::sizetype)(std::count(t->container.begin(), t->container.end(), value));
+						}
+
 
 
 					};//namespace genericcc
@@ -584,6 +597,16 @@ namespace aatc {
 						template<typename T_container> static void find_iterator(common::RegistrationState& rs) {
 							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s(const %s &in)", rs.n_iterator_T, config::scriptname::method::container::find_iterator, rs.n_content);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::find_iterator<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+						}
+
+						template<typename T_container> static void contains(common::RegistrationState& rs) {
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s(const %s &in)", config::scriptname::method::container::contains, rs.n_content);
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::contains<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+						}
+
+						template<typename T_container> static void count(common::RegistrationState& rs) {
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s(const %s &in)", config::scriptname::t::size, config::scriptname::method::container::count, rs.n_content);
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::count<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 
 

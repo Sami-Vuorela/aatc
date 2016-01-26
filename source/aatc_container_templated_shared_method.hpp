@@ -802,6 +802,58 @@ namespace aatc {
 							return result;
 						}
 
+						template<typename T_container> config::t::sizetype count(T_container* t, void* value) {
+							if (t->handlemode_directcomp) {
+								return (config::t::sizetype)(std::count(t->container.begin(), t->container.end(), *(void**)value));
+							} else {
+								#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
+								if (t->missing_functions & common::CONTAINER_OPERATION::COUNT) {
+									common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::count);
+
+									T_container::Iterator result(t);
+									result.SetToEnd();
+									return 0;
+								}
+								#endif
+
+								if (t->handlemode) { value = *(void**)value; }
+
+								asIScriptContext* cc = t->els->contextcache_Get();
+
+								config::t::sizetype count = 0;
+								T_container::T_iterator_native it = t->container.begin();
+								T_container::T_iterator_native itend = t->container.end();
+
+								asIScriptFunction* func = t->func_cmp;
+								if (t->func_equals) { func = t->func_equals; }
+
+								if (t->func_equals) {
+									for (; it != itend; it++) {
+										cc->Prepare(func);
+										cc->SetObject(value);
+										cc->SetArgObject(0, *it);
+										cc->Execute();
+										count += (cc->GetReturnByte());
+									}
+								} else {//func cmp
+									for (; it != itend; it++) {
+										cc->Prepare(func);
+										cc->SetObject(value);
+										cc->SetArgObject(0, *it);
+										cc->Execute();
+										count += (cc->GetReturnDWord() == 0);
+									}
+								}
+								t->els->contextcache_Return(cc);
+
+								return count;
+							}
+						}
+
+						template<typename T_container> bool contains(T_container* t, void* value) {
+							return count(t, value) > 0;
+						}
+
 
 
 					};//namespace genericcc
@@ -951,6 +1003,16 @@ namespace aatc {
 						template<typename T_container> static void find_iterator(common::RegistrationState& rs) {
 							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s(const T&in)", rs.n_iterator_T, config::scriptname::method::container::find_iterator);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::find_iterator<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+						}
+
+						template<typename T_container> static void contains(common::RegistrationState& rs) {
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s(const T&in)", config::scriptname::method::container::contains);
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::contains<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+						}
+
+						template<typename T_container> static void count(common::RegistrationState& rs) {
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s(const T&in)", config::scriptname::t::size, config::scriptname::method::container::count);
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::count<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 
 

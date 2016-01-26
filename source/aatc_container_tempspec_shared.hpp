@@ -68,16 +68,17 @@ namespace aatc {
 					public container::shared::container_basicbase,
 					public common::aatc_refcounted {
 				public:
-					typename typedef _T_container T_container;
+					typename typedef _T_container T_container_native;
 					typename typedef _T_content T_content;
-					typename typedef T_container::iterator T_iterator_native;
+					typename typedef T_container_native::iterator T_iterator_native;
+					typename typedef T_container_native::const_iterator T_iterator_native_const;
 
 					static const int containertype_id = _containertype_id;
 					typename typedef T_container_tags container_tags;
 
 
 
-					typename T_container container;
+					typename T_container_native container;
 
 					//used to return something when script exceptions happen and the proper result cannot be returned
 					static T_content defaultvalue;
@@ -106,7 +107,6 @@ namespace aatc {
 						safety_iteratorversion_Increment();
 					}
 
-					config::t::sizetype count(const T_content& value) { return (config::t::sizetype)(std::count(container.begin(), container.end(), value)); }
 					void clear() {
 						container.clear();
 						safety_iteratorversion_Increment();

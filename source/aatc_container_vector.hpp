@@ -84,6 +84,9 @@ namespace aatc {
 
 				Iterator find(void* value);
 				void insert(const Iterator& position, void* value);
+
+				bool contains(void* value);
+				config::t::sizetype count(void* value);
 			};
 
 
@@ -133,6 +136,9 @@ namespace aatc {
 
 				void sort(bool ascending = true) { shared::method::genericcc::sort(this, ascending); }
 
+				bool contains(const T_content& value) { return shared::method::genericcc::contains(this, value); }
+				config::t::sizetype count(const T_content& value) { return shared::method::genericcc::count(this, value); }
+
 
 
 				static void Register(common::RegistrationState& rs, const char* n_content) {
@@ -167,6 +173,9 @@ namespace aatc {
 					register_method::genericcc::sort<vector>(rs);
 
 					register_method::genericcc::find_iterator<vector>(rs);
+
+					register_method::genericcc::contains<vector>(rs);
+					register_method::genericcc::count<vector>(rs);
 				}
 			};
 

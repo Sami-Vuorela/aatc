@@ -286,52 +286,6 @@ namespace aatc {
 						container.clear();
 					}
 
-					config::t::sizetype count(void* value) {
-						if (handlemode_directcomp) {
-							return (config::t::sizetype)(std::count(container.begin(), container.end(), *(void**)value));
-						} else {
-							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
-								if (missing_functions & aatc::common::CONTAINER_OPERATION::COUNT) {
-									aatc::common::errorprint::container::missingfunctions_operation_missing(objtype_container->GetName(), objtype_content->GetName(), "count");
-									return NULL;
-								}
-							#endif
-
-
-							if (handlemode) { value = *(void**)value; }
-
-							asIScriptContext* cc = els->contextcache_Get();
-
-							config::t::sizetype count = 0;
-							T_iterator_native it = container.begin();
-							T_iterator_native itend = container.end();
-
-							asIScriptFunction* func = func_cmp;
-							if (func_equals) { func = func_equals; }
-
-							if (func_equals) {
-								for (; it != itend; it++) {
-									cc->Prepare(func);
-									cc->SetObject(value);
-									cc->SetArgObject(0, *it);
-									cc->Execute();
-									count += (cc->GetReturnByte());
-								}
-							} else {//func cmp
-								for (; it != itend; it++) {
-									cc->Prepare(func);
-									cc->SetObject(value);
-									cc->SetArgObject(0, *it);
-									cc->Execute();
-									count += (cc->GetReturnDWord() == 0);
-								}
-							}
-							els->contextcache_Return(cc);
-
-							return count;
-						}
-					}
-
 					void EnumReferences(asIScriptEngine* engine) {
 						if (astypeid_content & asTYPEID_MASK_OBJECT) {//dont do this for primitives
 							T_iterator_native it = container.begin();
@@ -648,9 +602,6 @@ namespace aatc {
 
 					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool)", config::scriptname::method::container::set_directcomp);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, SetDirectcomp), asCALL_THISCALL); assert(rs.error >= 0);
-
-					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s(const T &in)", config::scriptname::t::size, config::scriptname::method::container::count);
-					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, count), asCALL_THISCALL); assert(rs.error >= 0);
 
 					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s()", config::scriptname::method::container::clear);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, clear), asCALL_THISCALL); assert(rs.error >= 0);
