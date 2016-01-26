@@ -144,7 +144,7 @@ namespace aatc {
 						}
 						template<typename T_container> void reserve(T_container* t, config::t::sizetype size) {
 							t->safety_iteratorversion_Increment();
-							return t->reserve(size);
+							return t->container.reserve(size);
 						}
 
 						template<typename T_container> void sort(T_container* t, bool ascending) {
