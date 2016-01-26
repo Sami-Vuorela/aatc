@@ -137,7 +137,7 @@ namespace aatc {
 				static void Register(common::RegistrationState& rs, const char* n_content) {
 					using namespace tempspec::shared;
 
-					register_containerbase<list>(rs, config::scriptname::container::list, n_content);
+					register_containerbase<list>(rs, n_content);
 
 
 

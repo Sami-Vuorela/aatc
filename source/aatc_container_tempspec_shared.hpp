@@ -349,10 +349,10 @@ namespace aatc {
 				
 
 
-				template<typename T_container> void register_containerbase(common::RegistrationState& rs, const char* n_container, const char* n_content) {
+				template<typename T_container> void register_containerbase(common::RegistrationState& rs, const char* n_content) {
 					sprintf_s(rs.n_content, common::RegistrationState::bufsize, "%s", n_content);
-					sprintf_s(rs.n_container_T, common::RegistrationState::bufsize, "%s<%s>", n_container, n_content);
-					sprintf_s(rs.n_iterator, common::RegistrationState::bufsize, "%s%s", n_container, config::scriptname::iterator_suffix);
+					sprintf_s(rs.n_container_T, common::RegistrationState::bufsize, "%s<%s>", T_container::container_tags::scriptname_container, n_content);
+					sprintf_s(rs.n_iterator, common::RegistrationState::bufsize, "%s%s", T_container::container_tags::scriptname_container, config::scriptname::iterator_suffix);
 					sprintf_s(rs.n_iterator_T, common::RegistrationState::bufsize, "%s<%s>", rs.n_iterator, n_content);
 
 

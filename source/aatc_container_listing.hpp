@@ -64,6 +64,8 @@ namespace aatc {
 					typedef shared::tag::serializer_insert_value_func::push_back serializer_insert_value_func;
 					typedef shared::tag::is_map::is_not_map is_map;
 					typedef shared::tag::is_associative::is_not_associative is_associative;
+
+					static const char* scriptname_container;
 				};
 
 				struct list : public shared::tagbase {
@@ -71,6 +73,8 @@ namespace aatc {
 					typedef shared::tag::serializer_insert_value_func::push_back serializer_insert_value_func;
 					typedef shared::tag::is_map::is_not_map is_map;
 					typedef shared::tag::is_associative::is_not_associative is_associative;
+
+					static const char* scriptname_container;
 				};
 
 				struct set : public shared::tagbase {
@@ -78,12 +82,16 @@ namespace aatc {
 					typedef shared::tag::serializer_insert_value_func::insert serializer_insert_value_func;
 					typedef shared::tag::is_map::is_not_map is_map;
 					typedef shared::tag::is_associative::is_associative is_associative;
+
+					static const char* scriptname_container;
 				};
 				struct unordered_set : public shared::tagbase {
 					typedef shared::tag::iterator_access::access_is_const iterator_access;
 					typedef shared::tag::serializer_insert_value_func::insert serializer_insert_value_func;
 					typedef shared::tag::is_map::is_not_map is_map;
 					typedef shared::tag::is_associative::is_associative is_associative;
+
+					static const char* scriptname_container;
 				};
 
 				struct map : public shared::tagbase {
@@ -91,12 +99,16 @@ namespace aatc {
 					typedef shared::tag::serializer_insert_value_func::insert serializer_insert_value_func;
 					typedef shared::tag::is_map::is_map is_map;
 					typedef shared::tag::is_associative::is_associative is_associative;
+
+					static const char* scriptname_container;
 				};
 				struct unordered_map : public shared::tagbase {
 					typedef shared::tag::iterator_access::access_is_const iterator_access;
 					typedef shared::tag::serializer_insert_value_func::insert serializer_insert_value_func;
 					typedef shared::tag::is_map::is_map is_map;
 					typedef shared::tag::is_associative::is_associative is_associative;
+
+					static const char* scriptname_container;
 				};
 			};
 

@@ -39,6 +39,15 @@ samivuorela@gmail.com
 BEGIN_AS_NAMESPACE
 namespace aatc {
 	namespace container {
+		namespace listing {
+
+
+
+			const char* container::listing::tags_of_container::unordered_map::scriptname_container = config::scriptname::container::unordered_map;
+
+
+
+		}//namespace listing
 		namespace mapped {
 			namespace templated {
 
@@ -84,7 +93,7 @@ namespace aatc {
 					using mapped::templated::unordered_map;
 					using namespace mapped::templated::shared;
 
-					register_containerbase<unordered_map>(rs, config::scriptname::container::unordered_map);
+					register_containerbase<unordered_map>(rs);
 
 
 

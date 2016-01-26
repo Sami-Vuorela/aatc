@@ -50,55 +50,72 @@ namespace aatc {
 
 
 
-
-		template<int i, typename TT> class staticiterator_op_init_serializer_storage_container_metadata {
-		public:
-			typename typedef std::tuple_element<i, container::listing::heavy::tuple_templated_container_types>::type T_container;
-			typename typedef T_container::container_tags T_tags;
-
-			void operator()(TT& storage) {
-				tagselect_is_map<T_container,T_tags::serializer_insert_value_func, T_tags::is_map> f;  f(storage);
-			}
+		namespace detail {
+			namespace staticiterate {
 
 
-			template<typename T_container, typename tag_insertfunc, typename tag_is_map> class tagselect_is_map {};
-			template<typename T_container, typename tag_insertfunc> class tagselect_is_map<T_container, tag_insertfunc, container::shared::tag::is_map::is_map> {
-			public:
-				void operator()(serializer_specific_storage* storage)const {
-					storage->containertype_metadatas[T_container::containertype_id].store_handle_in_container_map = final_static_wrapper;
-				}
 
-				static void final_static_wrapper(container::shared::container_basicbase* container, common::primunion_pair& item) {
-					static_cast<T_container*>(container)->container.insert(item);
-				}
-			};
-			template<typename T_container, typename tag_insertfunc> class tagselect_is_map<T_container, tag_insertfunc, container::shared::tag::is_map::is_not_map> {
-			public:
-				void operator()(serializer_specific_storage* storage)const {
-					is_1tp_tagselect_insertfunc<T_container, tag_insertfunc> f;  f(storage);
-				}
-			};
+				template<int i> struct actual_serializer_AddUserType {
+					typename typedef std::tuple_element<i, container::listing::heavy::tuple_templated_container_types>::type T_container;
 
-			template<typename T_container, typename tag_insertfunc> class is_1tp_tagselect_insertfunc {};
-			template<typename T_container> struct is_1tp_tagselect_insertfunc<T_container, container::shared::tag::serializer_insert_value_func::insert> {
-				void operator()(serializer_specific_storage* storage)const {
-					storage->containertype_metadatas[T_container::containertype_id].store_handle_in_container_1tp = final_static_wrapper;
-				}
+					void operator()(asIScriptEngine* engine, CSerializer* serializer) {
+						serializer->AddUserType(new usertype::Container<T_container>(engine), T_container::container_tags::scriptname_container);
+					}
+				};
 
-				static void final_static_wrapper(container::shared::container_basicbase* container, void* item) {
-					static_cast<T_container*>(container)->container.insert(item);
-				}
-			};
-			template<typename T_container> struct is_1tp_tagselect_insertfunc<T_container, container::shared::tag::serializer_insert_value_func::push_back> {
-				void operator()(serializer_specific_storage* storage)const {
-					storage->containertype_metadatas[T_container::containertype_id].store_handle_in_container_1tp = final_static_wrapper;
-				}
+				template<int i> class init_serializer_storage_container_metadata {
+				public:
+					typename typedef std::tuple_element<i, container::listing::heavy::tuple_templated_container_types>::type T_container;
+					typename typedef T_container::container_tags T_tags;
 
-				static void final_static_wrapper(container::shared::container_basicbase* container, void* item) {
-					static_cast<T_container*>(container)->container.push_back(item);
-				}
-			};
-		};
+					void operator()(serializer_specific_storage* storage) {
+						tagselect_is_map<T_container, T_tags::serializer_insert_value_func, T_tags::is_map> f;  f(storage);
+					}
+
+
+					template<typename T_container, typename tag_insertfunc, typename tag_is_map> class tagselect_is_map {};
+					template<typename T_container, typename tag_insertfunc> class tagselect_is_map<T_container, tag_insertfunc, container::shared::tag::is_map::is_map> {
+					public:
+						void operator()(serializer_specific_storage* storage)const {
+							storage->containertype_metadatas[T_container::containertype_id].store_handle_in_container_map = final_static_wrapper;
+						}
+
+						static void final_static_wrapper(container::shared::container_basicbase* container, common::primunion_pair& item) {
+							static_cast<T_container*>(container)->container.insert(item);
+						}
+					};
+					template<typename T_container, typename tag_insertfunc> class tagselect_is_map<T_container, tag_insertfunc, container::shared::tag::is_map::is_not_map> {
+					public:
+						void operator()(serializer_specific_storage* storage)const {
+							is_1tp_tagselect_insertfunc<T_container, tag_insertfunc> f;  f(storage);
+						}
+					};
+
+					template<typename T_container, typename tag_insertfunc> class is_1tp_tagselect_insertfunc {};
+					template<typename T_container> struct is_1tp_tagselect_insertfunc<T_container, container::shared::tag::serializer_insert_value_func::insert> {
+						void operator()(serializer_specific_storage* storage)const {
+							storage->containertype_metadatas[T_container::containertype_id].store_handle_in_container_1tp = final_static_wrapper;
+						}
+
+						static void final_static_wrapper(container::shared::container_basicbase* container, void* item) {
+							static_cast<T_container*>(container)->container.insert(item);
+						}
+					};
+					template<typename T_container> struct is_1tp_tagselect_insertfunc<T_container, container::shared::tag::serializer_insert_value_func::push_back> {
+						void operator()(serializer_specific_storage* storage)const {
+							storage->containertype_metadatas[T_container::containertype_id].store_handle_in_container_1tp = final_static_wrapper;
+						}
+
+						static void final_static_wrapper(container::shared::container_basicbase* container, void* item) {
+							static_cast<T_container*>(container)->container.push_back(item);
+						}
+					};
+				};
+
+
+
+			};//namespace staticiterate
+		};//namespace detail
 
 
 
@@ -381,14 +398,29 @@ namespace aatc {
 				serializer->AddUserType(new usertype::String(), "string");
 			#endif
 
-			serializer->AddUserType(new usertype::Container<container::templated::vector>(engine), config::scriptname::container::vector);
-			serializer->AddUserType(new usertype::Container<container::templated::list>(engine), config::scriptname::container::list);
-			serializer->AddUserType(new usertype::Container<container::templated::set>(engine), config::scriptname::container::set);
-			serializer->AddUserType(new usertype::Container<container::templated::unordered_set>(engine), config::scriptname::container::unordered_set);
-			serializer->AddUserType(new usertype::Container<container::mapped::templated::map>(engine), config::scriptname::container::map);
-			serializer->AddUserType(new usertype::Container<container::mapped::templated::unordered_map>(engine), config::scriptname::container::unordered_map);
+			//serializer->AddUserType(new usertype::Container<container::templated::vector>(engine), config::scriptname::container::vector);
+			//serializer->AddUserType(new usertype::Container<container::templated::list>(engine), config::scriptname::container::list);
+			//serializer->AddUserType(new usertype::Container<container::templated::set>(engine), config::scriptname::container::set);
+			//serializer->AddUserType(new usertype::Container<container::templated::unordered_set>(engine), config::scriptname::container::unordered_set);
+			//serializer->AddUserType(new usertype::Container<container::mapped::templated::map>(engine), config::scriptname::container::map);
+			//serializer->AddUserType(new usertype::Container<container::mapped::templated::unordered_map>(engine), config::scriptname::container::unordered_map);
 
-			{ templatemagic::iterator_functor_1arg<0, container::listing::heavy::tuple_templated_container_types_size - 1, staticiterator_op_init_serializer_storage_container_metadata, serializer_specific_storage*> f; f(storage); }
+			{ templatemagic::staticiterate_1arg<
+				0,
+				container::listing::heavy::tuple_templated_container_types_size - 1,
+				detail::staticiterate::init_serializer_storage_container_metadata,
+
+				serializer_specific_storage*
+			> f; f(storage); }
+
+			{ templatemagic::staticiterate_2arg<
+				0,
+				container::listing::heavy::tuple_templated_container_types_size - 1,
+				detail::staticiterate::actual_serializer_AddUserType,
+
+				asIScriptEngine*,
+				CSerializer*
+			> f; f(engine, serializer); }
 		}
 
 		void Cleanup(asIScriptEngine* engine, CSerializer* serializer){

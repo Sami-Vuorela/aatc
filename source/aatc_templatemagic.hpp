@@ -53,35 +53,37 @@ namespace aatc {
 			int iteration_start,
 			int iteration_end,
 			template<int> typename functor_operate
-		> class iterator_functor{
+		> class staticiterate {
 		public:
 			void operator()()const{
-				detail::iterator_functor_actual<iteration_start, iteration_end, iteration_end - iteration_start, functor_operate> f; f();
+				internal_functor<iteration_start, iteration_end, iteration_end - iteration_start, functor_operate> f; f();
 			}
-		};
 
-		namespace detail {
+
+
 			template<
 				int iteration_start,
 				int iteration_end,
 				int iteration_current,
 				template<int> typename functor_operate
-			> class iterator_functor_actual {
+			> class internal_functor {
 			public:
 				void operator()()const {
 					functor_operate<iteration_end - iteration_current> f_operate; f_operate();
-					iterator_functor_actual<iteration_start, iteration_end, iteration_current - 1, functor_operate> f; f();
+					internal_functor<iteration_start, iteration_end, iteration_current - 1, functor_operate> f; f();
 				}
 			};
+
 			template<
 				int iteration_start,
 				int iteration_end,
 				template<int> typename functor_operate
-			> class iterator_functor_actual<iteration_start, iteration_end, -1, functor_operate> {
+			> class internal_functor<iteration_start, iteration_end, -1, functor_operate> {
 			public:
 				void operator()()const {}
 			};
-		};//namespace detail
+		};
+
 
 
 		/*
@@ -90,40 +92,83 @@ namespace aatc {
 		template<
 			int iteration_start,
 			int iteration_end,
-			template<int, typename> typename functor_operate,
-			typename tup_t
-		> class iterator_functor_1arg{
+			template<int iteration_current> typename functor_operate,
+			typename T_arg1
+		> class staticiterate_1arg{
 		public:
-			void operator()(tup_t& inputs)const{
-				detail::iterator_functor_1arg_actual<iteration_start, iteration_end, iteration_end - iteration_start, functor_operate, tup_t> f; f((inputs));
+			void operator()(T_arg1& arg1)const{
+				internal_functor<iteration_start, iteration_end, iteration_end - iteration_start, functor_operate, T_arg1> f; f((arg1));
 			}
-		};
 
 
-		namespace detail {
+
 			template<
 				int iteration_start,
 				int iteration_end,
 				int iteration_current,
-				template<int, typename> typename functor_operate,
-				typename tup_t
-			> class iterator_functor_1arg_actual {
+				template<int iteration_current> typename functor_operate,
+				typename T_arg1
+			> class internal_functor {
 			public:
-				void operator()(tup_t& inputs)const {
-					functor_operate<iteration_end - iteration_current, tup_t> f_operate; f_operate((inputs));
-					iterator_functor_1arg_actual<iteration_start, iteration_end, iteration_current - 1, functor_operate, tup_t> f; f((inputs));
+				void operator()(T_arg1& arg1)const {
+					functor_operate<iteration_end - iteration_current> f_operate; f_operate((arg1));
+					internal_functor<iteration_start, iteration_end, iteration_current - 1, functor_operate, T_arg1> f; f((arg1));
 				}
 			};
+
 			template<
 				int iteration_start,
 				int iteration_end,
-				template<int, typename> typename functor_operate,
-				typename tup_t
-			> class iterator_functor_1arg_actual<iteration_start, iteration_end, -1, functor_operate, tup_t> {
+				template<int iteration_current> typename functor_operate,
+				typename T_arg1
+			> class internal_functor<iteration_start, iteration_end, -1, functor_operate, T_arg1> {
 			public:
-				void operator()(tup_t& inputs)const {}
+				void operator()(T_arg1& arg1)const {}
 			};
-		};//namespace detail
+		};
+
+
+
+		/*
+			Same as the basic iterator but this thing forwards an argument to the functor, use a tuple for multiple arguments
+		*/
+		template<
+			int iteration_start,
+			int iteration_end,
+			template<int iteration_current> typename functor_operate,
+			typename T_arg1,
+			typename T_arg2
+		> struct staticiterate_2arg{
+			void operator()(T_arg1& arg1, T_arg2& arg2)const{
+				internal_functor<iteration_start, iteration_end, iteration_end - iteration_start, functor_operate, T_arg1, T_arg2> f; f(arg1, arg2);
+			}
+
+
+
+			template<
+				int iteration_start,
+				int iteration_end,
+				int iteration_current,
+				template<int iteration_current> typename functor_operate,
+				typename T_arg1,
+				typename T_arg2
+			> struct internal_functor {
+				void operator()(T_arg1& arg1, T_arg2& arg2)const {
+					functor_operate<iteration_end - iteration_current> f_operate; f_operate(arg1, arg2);
+					internal_functor<iteration_start, iteration_end, iteration_current - 1, functor_operate, T_arg1, T_arg2> f; f(arg1, arg2);
+				}
+			};
+
+			template<
+				int iteration_start,
+				int iteration_end,
+				template<int iteration_current> typename functor_operate,
+				typename T_arg1,
+				typename T_arg2
+			> struct internal_functor<iteration_start, iteration_end, -1, functor_operate, T_arg1, T_arg2> {
+				void operator()(T_arg1& arg1, T_arg2& arg2)const {}
+			};
+		};
 
 
 

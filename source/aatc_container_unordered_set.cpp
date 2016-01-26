@@ -39,6 +39,15 @@ samivuorela@gmail.com
 BEGIN_AS_NAMESPACE
 namespace aatc {
 	namespace container {
+		namespace listing {
+
+
+
+			const char* container::listing::tags_of_container::unordered_set::scriptname_container = config::scriptname::container::unordered_set;
+
+
+
+		}//namespace listing
 		namespace templated {
 
 
@@ -78,7 +87,7 @@ namespace aatc {
 					using templated::unordered_set;
 					using namespace templated::shared;
 
-					register_containerbase<unordered_set>(rs, config::scriptname::container::unordered_set);
+					register_containerbase<unordered_set>(rs);
 					register_method::swap<unordered_set>(rs);
 
 

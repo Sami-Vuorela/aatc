@@ -47,9 +47,9 @@ namespace aatc {
 
 
 	//used with templatemagic::iterator_functor_1arg to iterate in runtime, over a list of all container types defined in compile time
-	template<int i, typename TT> class Initializer_tm_iterate_all_containers {
+	template<int i> class staticiterate_initializer_register_all_containers {
 	public:
-		void operator()(TT& tup) {
+		void operator()(std::tuple< Initializer*, asIScriptEngine*>& tup) {
 			if (std::get<0>(tup)->include_container[i]) {
 				asIScriptEngine* engine = std::get<1>(tup);
 				enginestorage::engine_level_storage* els = enginestorage::Get_ELS(engine);
@@ -108,10 +108,10 @@ namespace aatc {
 			}
 		}
 
-		templatemagic::iterator_functor_1arg<
+		templatemagic::staticiterate_1arg<
 			0,
 			container::listing::CONTAINER::_COUNT - 1,
-			Initializer_tm_iterate_all_containers,
+			staticiterate_initializer_register_all_containers,
 			std::tuple< Initializer*, asIScriptEngine*>
 		> f; 
 		f(std::make_tuple(this, engine));

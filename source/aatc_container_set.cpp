@@ -39,6 +39,15 @@ samivuorela@gmail.com
 BEGIN_AS_NAMESPACE
 namespace aatc {
 	namespace container {
+		namespace listing {
+
+
+
+			const char* container::listing::tags_of_container::set::scriptname_container = config::scriptname::container::set;
+
+
+
+		}//namespace listing
 		namespace templated {
 
 
@@ -78,7 +87,7 @@ namespace aatc {
 					using templated::set;
 					using namespace templated::shared;
 
-					register_containerbase<set>(rs, config::scriptname::container::set);
+					register_containerbase<set>(rs);
 					register_method::swap<set>(rs);
 
 

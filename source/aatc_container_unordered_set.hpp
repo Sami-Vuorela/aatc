@@ -126,7 +126,7 @@ namespace aatc {
 				static void Register(common::RegistrationState& rs, const char* n_content) {
 					using namespace tempspec::shared;
 
-					register_containerbase<unordered_set>(rs, config::scriptname::container::unordered_set, n_content);
+					register_containerbase<unordered_set>(rs, n_content);
 					register_method::swap<unordered_set>(rs);
 
 

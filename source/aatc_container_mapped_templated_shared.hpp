@@ -1021,11 +1021,11 @@ namespace aatc {
 
 
 
-					template<typename T_container> void register_containerbase(common::RegistrationState& rs, const char* n_container) {
-						sprintf_s(rs.n_container, common::RegistrationState::bufsize, "%s", n_container);
-						sprintf_s(rs.n_container_T, common::RegistrationState::bufsize, "%s<T_key, T_value>", n_container);
-						sprintf_s(rs.n_container_class_T, common::RegistrationState::bufsize, "%s<class T_key,class T_value>", n_container);
-						sprintf_s(rs.n_iterator, common::RegistrationState::bufsize, "%s%s", n_container, config::scriptname::iterator_suffix);
+					template<typename T_container> void register_containerbase(common::RegistrationState& rs) {
+						sprintf_s(rs.n_container, common::RegistrationState::bufsize, "%s", T_container::container_tags::scriptname_container);
+						sprintf_s(rs.n_container_T, common::RegistrationState::bufsize, "%s<T_key, T_value>", T_container::container_tags::scriptname_container);
+						sprintf_s(rs.n_container_class_T, common::RegistrationState::bufsize, "%s<class T_key,class T_value>", T_container::container_tags::scriptname_container);
+						sprintf_s(rs.n_iterator, common::RegistrationState::bufsize, "%s%s", T_container::container_tags::scriptname_container, config::scriptname::iterator_suffix);
 						sprintf_s(rs.n_iterator_T, common::RegistrationState::bufsize, "%s<T_key, T_value>", rs.n_iterator);
 						sprintf_s(rs.n_iterator_class_T, common::RegistrationState::bufsize, "%s<class T_key,class T_value>", rs.n_iterator);
 

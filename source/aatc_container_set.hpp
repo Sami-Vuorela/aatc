@@ -124,7 +124,7 @@ namespace aatc {
 				static void Register(common::RegistrationState& rs, const char* n_content) {
 					using namespace tempspec::shared;
 
-					register_containerbase<set>(rs, config::scriptname::container::set, n_content);
+					register_containerbase<set>(rs, n_content);
 					register_method::swap<set>(rs);
 
 

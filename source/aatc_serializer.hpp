@@ -34,7 +34,6 @@ samivuorela@gmail.com
 #include "aatc_config.hpp"
 #if aatc_CONFIG_USE_ASADDON_SERIALIZER
 
-#include <functional>
 #include "aatc.hpp"
 #include "aatc_common.hpp"
 #include "aatc_container_shared.hpp"
