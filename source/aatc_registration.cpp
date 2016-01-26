@@ -49,9 +49,8 @@ namespace aatc {
 	//used with templatemagic::iterator_functor_1arg to iterate in runtime, over a list of all container types defined in compile time
 	template<int i> class staticiterate_initializer_register_all_containers {
 	public:
-		void operator()(std::tuple< Initializer*, asIScriptEngine*>& tup) {
-			if (std::get<0>(tup)->include_container[i]) {
-				asIScriptEngine* engine = std::get<1>(tup);
+		void operator()(Initializer* initializer, asIScriptEngine* engine) {
+			if (initializer->include_container[i]) {
 				enginestorage::engine_level_storage* els = enginestorage::Get_ELS(engine);
 				enginestorage::containertype_specific_storage& ctss = els->containertype_specific_storages[i];
 
@@ -59,7 +58,7 @@ namespace aatc {
 				ctss.container_id = i;
 				ctss.func_errorcheck_missing_functions_make_bitfield_for_template = container::listing::errorcheck_missing_functions_make_bitfield_for_template<i>;
 
-				container::listing::register_container<i>(std::get<1>(tup));
+				container::listing::register_container<i>(engine);
 			}
 		}
 	};
@@ -108,13 +107,15 @@ namespace aatc {
 			}
 		}
 
-		templatemagic::staticiterate_1arg<
+		templatemagic::staticiterate_2arg<
 			0,
 			container::listing::CONTAINER::_COUNT - 1,
 			staticiterate_initializer_register_all_containers,
-			std::tuple< Initializer*, asIScriptEngine*>
+
+			Initializer*,
+			asIScriptEngine*
 		> f; 
-		f(std::make_tuple(this, engine));
+		f(this, engine);
 	}
 
 

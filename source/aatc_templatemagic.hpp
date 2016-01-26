@@ -96,8 +96,8 @@ namespace aatc {
 			typename T_arg1
 		> class staticiterate_1arg{
 		public:
-			void operator()(T_arg1& arg1)const{
-				internal_functor<iteration_start, iteration_end, iteration_end - iteration_start, functor_operate, T_arg1> f; f((arg1));
+			void operator()(T_arg1 arg1)const{
+				internal_functor<iteration_start, iteration_end, iteration_end - iteration_start, functor_operate, T_arg1> f; f(arg1);
 			}
 
 
@@ -110,9 +110,9 @@ namespace aatc {
 				typename T_arg1
 			> class internal_functor {
 			public:
-				void operator()(T_arg1& arg1)const {
-					functor_operate<iteration_end - iteration_current> f_operate; f_operate((arg1));
-					internal_functor<iteration_start, iteration_end, iteration_current - 1, functor_operate, T_arg1> f; f((arg1));
+				void operator()(T_arg1 arg1)const {
+					functor_operate<iteration_end - iteration_current> f_operate; f_operate(arg1);
+					internal_functor<iteration_start, iteration_end, iteration_current - 1, functor_operate, T_arg1> f; f(arg1);
 				}
 			};
 
@@ -123,7 +123,7 @@ namespace aatc {
 				typename T_arg1
 			> class internal_functor<iteration_start, iteration_end, -1, functor_operate, T_arg1> {
 			public:
-				void operator()(T_arg1& arg1)const {}
+				void operator()(T_arg1 arg1)const {}
 			};
 		};
 
@@ -139,7 +139,7 @@ namespace aatc {
 			typename T_arg1,
 			typename T_arg2
 		> struct staticiterate_2arg{
-			void operator()(T_arg1& arg1, T_arg2& arg2)const{
+			void operator()(T_arg1 arg1, T_arg2 arg2)const{
 				internal_functor<iteration_start, iteration_end, iteration_end - iteration_start, functor_operate, T_arg1, T_arg2> f; f(arg1, arg2);
 			}
 
@@ -153,7 +153,7 @@ namespace aatc {
 				typename T_arg1,
 				typename T_arg2
 			> struct internal_functor {
-				void operator()(T_arg1& arg1, T_arg2& arg2)const {
+				void operator()(T_arg1 arg1, T_arg2 arg2)const {
 					functor_operate<iteration_end - iteration_current> f_operate; f_operate(arg1, arg2);
 					internal_functor<iteration_start, iteration_end, iteration_current - 1, functor_operate, T_arg1, T_arg2> f; f(arg1, arg2);
 				}
@@ -166,7 +166,7 @@ namespace aatc {
 				typename T_arg1,
 				typename T_arg2
 			> struct internal_functor<iteration_start, iteration_end, -1, functor_operate, T_arg1, T_arg2> {
-				void operator()(T_arg1& arg1, T_arg2& arg2)const {}
+				void operator()(T_arg1 arg1, T_arg2 arg2)const {}
 			};
 		};
 

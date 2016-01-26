@@ -67,18 +67,18 @@ namespace aatc {
 
 
 
+		namespace hashfunc {
+			config::t::hash djb2(const config::t::string& a);
+		};
+
+
+
 		namespace detail {
 			template<typename T> config::t::hash function_wrapping_a_functor(const T& me) {
 				hashfunctor<T> functor;
 				return functor(me);
 			}
 		};
-
-		namespace hashfunc {
-			config::t::hash djb2(const config::t::string& a);
-		};
-
-
 
 		/*
 			Use this to register your c++ classes for hashing in containers that don't have a tempspec available.
