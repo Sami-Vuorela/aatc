@@ -52,7 +52,7 @@ namespace aatc {
 
 
 
-			unordered_set::unordered_set(asIObjectType* _objtype) :
+			unordered_set::unordered_set(asITypeInfo* _objtype) :
 				Containerbase(_objtype->GetEngine(), _objtype)
 			{}
 			unordered_set::unordered_set(const unordered_set& other) :

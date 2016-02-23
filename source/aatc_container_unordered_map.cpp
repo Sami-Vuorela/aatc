@@ -53,7 +53,7 @@ namespace aatc {
 
 
 
-				unordered_map::unordered_map(asIObjectType* _objtype) :
+				unordered_map::unordered_map(asITypeInfo* _objtype) :
 					Containerbase(_objtype->GetEngine(), _objtype)
 				{}
 				unordered_map::unordered_map(const unordered_map& other) :

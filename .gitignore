@@ -247,3 +247,7 @@ AS_DEBUG/
 .lib
 *.lib
 *.exe
+
+#msvc things
+*.db
+*.opendb

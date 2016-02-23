@@ -52,7 +52,7 @@ namespace aatc {
 
 
 
-			list::list(asIObjectType* _objtype) :
+			list::list(asITypeInfo* _objtype) :
 				Containerbase(_objtype->GetEngine(), _objtype)
 			{}
 			list::list(const list& other) :

@@ -147,7 +147,7 @@ namespace aatc {
 			template<typename T_out, typename T_host> T_out construct_hosted(T_host cont) {
 				return T_out(cont);
 			}
-			template<class T> void constructor_template_default(asIObjectType* objtype, void *memory) { new(memory)T(); }
+			template<class T> void constructor_template_default(asITypeInfo* objtype, void *memory) { new(memory)T(); }
 
 			template<class T> void generic_destructor(void *memory) {
 				((T*)memory)->~T();
@@ -193,9 +193,9 @@ namespace aatc {
 
 
 		namespace templatecallback_func {
-			bool templated_singleparam(asIObjectType *ot, bool &dontGarbageCollect);
-			bool map(asIObjectType *ot, bool &dontGarbageCollect);
-			bool typeidd(asIObjectType *ot, int typeId, bool &dontGarbageCollect);
+			bool templated_singleparam(asITypeInfo *ot, bool &dontGarbageCollect);
+			bool map(asITypeInfo *ot, bool &dontGarbageCollect);
+			bool typeidd(asITypeInfo *ot, int typeId, bool &dontGarbageCollect);
 		};//namespace templatecallback_func
 
 

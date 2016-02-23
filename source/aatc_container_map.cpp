@@ -53,7 +53,7 @@ namespace aatc {
 
 
 
-				map::map(asIObjectType* _objtype) :
+				map::map(asITypeInfo* _objtype) :
 					Containerbase(_objtype->GetEngine(), _objtype)
 				{}
 				map::map(const map& other) :

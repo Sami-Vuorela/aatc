@@ -89,10 +89,10 @@ namespace aatc {
 
 
 
-				template<typename T_container> T_container* Factory(asIObjectType* objtype) {
+				template<typename T_container> T_container* Factory(asITypeInfo* objtype) {
 					return new T_container(objtype);
 				}
-				template<typename T_container> T_container* Factory_copy(asIObjectType* objtype, const T_container& other) {
+				template<typename T_container> T_container* Factory_copy(asITypeInfo* objtype, const T_container& other) {
 					return new T_container(other);
 				}
 
@@ -125,8 +125,8 @@ namespace aatc {
 
 					enginestorage::engine_level_storage* els;
 
-					asIObjectType* objtype_container;
-					asIObjectType* objtype_content;
+					asITypeInfo* objtype_container;
+					asITypeInfo* objtype_content;
 					config::t::astypeid astypeid_container;
 					config::t::astypeid astypeid_content;
 					asDWORD typeflags_container;
@@ -138,7 +138,7 @@ namespace aatc {
 
 					bool directcomp_forced;
 					
-					Containerbase(asIScriptEngine* _engine, asIObjectType* _objtype) :
+					Containerbase(asIScriptEngine* _engine, asITypeInfo* _objtype) :
 						aatc::container::shared::container_basicbase(_engine),
 						container(_engine, this),
 						objtype_container(_objtype),
@@ -462,20 +462,20 @@ namespace aatc {
 
 
 
-						static void static_constructor_default(asIObjectType* objtype, void *memory) {
+						static void static_constructor_default(asITypeInfo* objtype, void *memory) {
 							new(memory)Iterator();
 						}
-						static void static_constructor_copy(asIObjectType* objtype, Iterator* other, void *memory) {
+						static void static_constructor_copy(asITypeInfo* objtype, Iterator* other, void *memory) {
 							new(memory)Iterator(*other);
 						}
-						//static void static_constructor_parentcontainer(asIObjectType* objtype, void *ref, config::t::astypeid typeId, void *memory) {
+						//static void static_constructor_parentcontainer(asITypeInfo* objtype, void *ref, config::t::astypeid typeId, void *memory) {
 						//	new(memory)Iterator(ref, typeId);
 						//}
-						static void static_constructor_parentcontainer(asIObjectType* objtype, Containerbase* host, void *memory) {
+						static void static_constructor_parentcontainer(asITypeInfo* objtype, Containerbase* host, void *memory) {
 							new(memory)Iterator(host);
 							host->refcount_Release();
 						}
-						//static void static_constructor_copy(asIObjectType* objtype, const aatc_iterator& other, void *memory){
+						//static void static_constructor_copy(asITypeInfo* objtype, const aatc_iterator& other, void *memory){
 						//	new(memory)aatc_iterator(other);
 						//}
 
@@ -583,9 +583,9 @@ namespace aatc {
 					rs.error = rs.engine->RegisterObjectType(rs.n_container_class_T, 0, asOBJ_REF | asOBJ_GC | asOBJ_TEMPLATE); assert(rs.error >= 0);
 
 					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s@ f(int&in)", rs.n_container_T);
-					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(aatc::container::templated::shared::Factory<T_container>, (asIObjectType*), T_container*), asCALL_CDECL); assert(rs.error >= 0);
+					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(aatc::container::templated::shared::Factory<T_container>, (asITypeInfo*), T_container*), asCALL_CDECL); assert(rs.error >= 0);
 					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s@ f(int&in,const %s &in)", rs.n_container_T, rs.n_container_T);
-					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(aatc::container::templated::shared::Factory_copy<T_container>, (asIObjectType*, const T_container&), T_container*), asCALL_CDECL); assert(rs.error >= 0);
+					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTIONPR(aatc::container::templated::shared::Factory_copy<T_container>, (asITypeInfo*, const T_container&), T_container*), asCALL_CDECL); assert(rs.error >= 0);
 					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& opAssign(const %s &in)", rs.n_container_T, rs.n_container_T);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container, operator=), asCALL_THISCALL); assert(rs.error >= 0);
 

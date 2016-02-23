@@ -70,7 +70,7 @@ namespace aatc {
 				>
 			> {
 			public:
-				set(asIObjectType* objtype);
+				set(asITypeInfo* objtype);
 				set(const set& other);
 				set& operator=(const set& other);
 				set& swap(set& other);

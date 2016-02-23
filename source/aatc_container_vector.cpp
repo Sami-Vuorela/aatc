@@ -52,7 +52,7 @@ namespace aatc {
 
 
 
-			vector::vector(asIObjectType* _objtype) :
+			vector::vector(asITypeInfo* _objtype) :
 				Containerbase(_objtype->GetEngine(), _objtype)
 			{}
 			vector::vector(const vector& other) :

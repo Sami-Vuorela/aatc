@@ -97,10 +97,10 @@ namespace aatc {
 
 
 
-		bool templatecallback_func::templated_singleparam(asIObjectType *ot, bool &dontGarbageCollect){
+		bool templatecallback_func::templated_singleparam(asITypeInfo *ot, bool &dontGarbageCollect){
 			return templatecallback_func::typeidd(ot, ot->GetSubTypeId(), dontGarbageCollect);
 		}
-		bool templatecallback_func::map(asIObjectType *ot, bool &dontGarbageCollect){
+		bool templatecallback_func::map(asITypeInfo *ot, bool &dontGarbageCollect){
 			int typeId_key = ot->GetSubTypeId(0);
 			int typeId_value = ot->GetSubTypeId(1);
 
@@ -113,9 +113,9 @@ namespace aatc {
 
 			return result_key && result_value;
 		}
-		bool templatecallback_func::typeidd(asIObjectType *ot, int typeId, bool &dontGarbageCollect){
+		bool templatecallback_func::typeidd(asITypeInfo *ot, int typeId, bool &dontGarbageCollect){
 			if ((typeId & asTYPEID_MASK_OBJECT) && !(typeId & asTYPEID_OBJHANDLE)){
-				asIObjectType *subtype = ot->GetEngine()->GetObjectTypeById(typeId);
+				asITypeInfo *subtype = ot->GetEngine()->GetTypeInfoById(typeId);
 				asDWORD flags = subtype->GetFlags();
 				if ((flags & asOBJ_VALUE) && !(flags & asOBJ_POD)){
 					// Verify that there is a default constructor
@@ -237,7 +237,7 @@ namespace aatc {
 					engine = ctx->GetEngine();
 
 					char textbuf[1024];
-					sprintf_s(textbuf,1024, aatc_errormessage_funcpointer_nothandle,engine->GetObjectTypeById(tid)->GetName());
+					sprintf_s(textbuf,1024, aatc_errormessage_funcpointer_nothandle,engine->GetTypeInfoById(tid)->GetName());
 					ctx->SetException(textbuf);
 				}
 			}

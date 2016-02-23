@@ -55,7 +55,7 @@ namespace aatc {
 				container::listing::tags_of_container::list
 			> {
 			public:
-				list(asIObjectType* objtype);
+				list(asITypeInfo* objtype);
 				list(const list& other);
 				list& operator=(const list& other);
 

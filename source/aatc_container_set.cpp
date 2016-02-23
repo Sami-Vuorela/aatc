@@ -52,7 +52,7 @@ namespace aatc {
 
 
 
-			set::set(asIObjectType* _objtype) :
+			set::set(asITypeInfo* _objtype) :
 				Containerbase(_objtype->GetEngine(), _objtype)
 			{}
 			set::set(const set& other) :

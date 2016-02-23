@@ -85,7 +85,7 @@ namespace aatc {
 			func_hash(NULL)
 		{
 			asIScriptEngine* engine = ctss->els->engine;
-			asIObjectType* objtype = engine->GetObjectTypeById(subtypeid);
+			asITypeInfo* objtype = engine->GetTypeInfoById(subtypeid);
 
 			//get opEquals or opCmp function for this type to be stored
 
