@@ -104,6 +104,7 @@
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalDependencies>angelscript64d.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -132,13 +133,14 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>angelscript64.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\dev\angelscript\svn\sdk\add_on\scriptarray\scriptarray.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\dev\angelscript\svn\sdk\add_on\scriptbuilder\scriptbuilder.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\dev\angelscript\svn\sdk\add_on\scriptstdstring\scriptstdstring.cpp" />
-    <ClCompile Include="..\..\..\..\..\..\..\..\..\dev\angelscript\svn\sdk\add_on\serializer\serializer.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\dev\angelscript\2_31_0\sdk\add_on\scriptarray\scriptarray.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\dev\angelscript\2_31_0\sdk\add_on\scriptbuilder\scriptbuilder.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\dev\angelscript\2_31_0\sdk\add_on\scriptstdstring\scriptstdstring.cpp" />
+    <ClCompile Include="..\..\..\..\..\..\..\..\..\dev\angelscript\2_31_0\sdk\add_on\serializer\serializer.cpp" />
     <ClCompile Include="..\..\..\source\aatc.cpp" />
     <ClCompile Include="..\..\..\source\aatc_common.cpp" />
     <ClCompile Include="..\..\..\source\aatc_container_list.cpp" />
