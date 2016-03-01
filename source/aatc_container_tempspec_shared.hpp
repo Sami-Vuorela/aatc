@@ -288,7 +288,10 @@ namespace aatc {
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(Iterator, Current_get<int>), asCALL_THISCALL); assert(rs.error >= 0);
 						}
 
-
+						static void static_constructor_parentcontainer(Containerbase* host, void *memory) {
+							new(memory)Iterator(host);
+							host->refcount_Release();
+						}
 
 						static void Register(common::RegistrationState& rs) {
 							rs.error = rs.engine->RegisterObjectType(rs.n_iterator_T, sizeof(Iterator), asOBJ_VALUE | asGetTypeTraits<Iterator>()); assert(rs.error >= 0);
@@ -296,7 +299,7 @@ namespace aatc {
 							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void f()");
 							rs.error = rs.engine->RegisterObjectBehaviour(rs.n_iterator_T, asBEHAVE_CONSTRUCT, rs.textbuf, asFunctionPtr(common::reghelp::constructor<Iterator>), asCALL_CDECL_OBJLAST); assert(rs.error >= 0);
 							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void f(%s@)", rs.n_container_T);
-							rs.error = rs.engine->RegisterObjectBehaviour(rs.n_iterator_T, asBEHAVE_CONSTRUCT, rs.textbuf, asFunctionPtr(common::reghelp::constructor_1_param<Iterator, Containerbase*>), asCALL_CDECL_OBJLAST); assert(rs.error >= 0);
+							rs.error = rs.engine->RegisterObjectBehaviour(rs.n_iterator_T, asBEHAVE_CONSTRUCT, rs.textbuf, asFunctionPtr(static_constructor_parentcontainer), asCALL_CDECL_OBJLAST); assert(rs.error >= 0);
 							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void f(const %s &in)", rs.n_iterator_T);
 							rs.error = rs.engine->RegisterObjectBehaviour(rs.n_iterator_T, asBEHAVE_CONSTRUCT, rs.textbuf, asFunctionPtr(common::reghelp::constructor_copy<Iterator, Iterator>), asCALL_CDECL_OBJLAST); assert(rs.error >= 0);
 							
