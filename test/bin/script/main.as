@@ -57,6 +57,31 @@ void scriptmain(){
 	}
 	{
 	
+		vector<string> cont;
+		
+		for(int i=10; i>0; i--){
+			cont.push_back("" +i + "s");
+		}
+		
+		cont.sort_scriptfunc(function(l,r){
+			if(l < r){
+				return -1;
+			}
+			if(l > r){
+				return 1;
+			}
+			return 0;
+		});
+		
+		
+		
+		Print("------------");
+		for(auto it = cont.begin();it++;){
+			Print("it.value = " + it.value);
+		}
+	}
+	{
+	
 		vector<Material> cont;
 		
 		for(int i=10; i>0; i--){
