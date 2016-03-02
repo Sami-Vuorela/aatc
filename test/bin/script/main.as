@@ -22,6 +22,65 @@ void scriptmain(){
 	TestContainer_unordered_map();
 	
 	
+	{
+	
+		vector<int> cont;
+		
+		
+		
+		for(int i=10; i>0; i--){
+			cont.push_back(i);
+		}
+		
+		
+		
+		for(int i=10; i>0; i--){
+			cont.push_back(i);
+		}
+		
+		cont.sort_scriptfunc(function(l,r){
+			if(l < r){
+				return -1;
+			}
+			if(l > r){
+				return 1;
+			}
+			return 0;
+		});
+		
+		
+		
+		Print("------------");
+		for(auto it = cont.begin();it++;){
+			Print("it.value = " + it.value);
+		}
+	}
+	{
+	
+		vector<Material> cont;
+		
+		for(int i=10; i>0; i--){
+			cont.push_back(Material("" + i + "s",i));
+		}
+		
+		// cont.sort_scriptfunc(function(l,r){
+			// if(l.id < r.id){
+				// return -1;
+			// }
+			// if(l.id > r.id){
+				// return 1;
+			// }
+			// return 0;
+		// });
+		
+		
+		
+		Print("------------");
+		for(auto it = cont.begin();it++;){
+			Print("it.value.id = " + it.value.id);
+		}
+	}
+	
 	
 	Print("");
 	Print("");

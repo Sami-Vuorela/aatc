@@ -168,6 +168,59 @@ namespace aatc {
 								//);
 							}
 						}
+						template<typename T_container> void sort_scriptfunc(T_container* t, asIScriptFunction* scriptfunc, bool ascending) {
+							t->safety_iteratorversion_Increment();
+
+							asIScriptContext* context = NULL;
+							asIScriptEngine* engine = t->engine;
+							asIScriptContext* old_context = asGetActiveContext();
+
+							if (old_context) {
+								if (old_context->PushState() > -1) {
+									context = old_context;
+								} else {
+									context = engine->RequestContext();
+								}
+							} else {
+								context = engine->RequestContext();
+							}
+
+
+
+							int reverse_multiplier = -1;
+							if (ascending) {
+								reverse_multiplier = 1;
+							}
+
+							void* aux_object = scriptfunc->GetAuxiliary();
+							if (aux_object) {
+								typename container::shared::scriptcmpfunctor_method<T_container::T_content> functor;
+								functor.context = context;
+								functor.func = scriptfunc;
+								functor.reverse_multiplier = reverse_multiplier;
+
+								functor.aux_object = aux_object;
+
+								t->container.sort(functor);
+							} else {
+								typename container::shared::scriptcmpfunctor_globalfunction<T_container::T_content> functor;
+								functor.context = context;
+								functor.func = scriptfunc;
+								functor.reverse_multiplier = reverse_multiplier;
+
+								t->container.sort(functor);
+							}
+
+
+
+							if (context == old_context) {
+								old_context->PopState();
+							} else {
+								engine->ReturnContext(context);
+							}
+						}
+
+
 						template<typename T_container> bool contains(T_container* t, typename const T_container::T_content& value) {
 							return t->container.find(value) != t->container.end();
 						}
@@ -362,6 +415,58 @@ namespace aatc {
 							}
 						}
 
+						template<typename T_container> void sort_scriptfunc(T_container* t, asIScriptFunction* scriptfunc,bool ascending) {
+							t->safety_iteratorversion_Increment();
+
+							asIScriptContext* context = NULL;
+							asIScriptEngine* engine = t->engine;
+							asIScriptContext* old_context = asGetActiveContext();
+
+							if (old_context) {
+								if (old_context->PushState() > -1) {
+									context = old_context;
+								} else {
+									context = engine->RequestContext();
+								}
+							} else {
+								context = engine->RequestContext();
+							}
+
+
+
+							int reverse_multiplier = -1;
+							if (ascending) {
+								reverse_multiplier = 1;
+							}
+
+							void* aux_object = scriptfunc->GetAuxiliary();
+							if (aux_object) {
+								typename container::shared::scriptcmpfunctor_method<T_container::T_content> functor;
+								functor.context = context;
+								functor.func = scriptfunc;
+								functor.reverse_multiplier = reverse_multiplier;
+
+								functor.aux_object = aux_object;
+
+								std::sort(t->container.begin(), t->container.end(), functor);
+							} else {
+								typename container::shared::scriptcmpfunctor_globalfunction<T_container::T_content> functor;
+								functor.context = context;
+								functor.func = scriptfunc;
+								functor.reverse_multiplier = reverse_multiplier;
+
+								std::sort(t->container.begin(), t->container.end(), functor);
+							}
+
+
+
+							if (context == old_context) {
+								old_context->PopState();
+							} else {
+								engine->ReturnContext(context);
+							}
+						}
+
 
 						template<typename T_container> void insert_position_before_constant(T_container* t, config::t::sizetype position, typename const T_container::T_content& value) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
@@ -465,7 +570,7 @@ namespace aatc {
 
 					template<typename T_container> static void swap(common::RegistrationState& rs) {
 						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& %s(%s@)", rs.n_container_T, config::scriptname::method::container::swap, rs.n_container_T);
-						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::swap<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container,swap), asCALL_THISCALL); assert(rs.error >= 0);
 					}
 
 
@@ -522,6 +627,19 @@ namespace aatc {
 						template<typename T_container> static void sort(common::RegistrationState& rs) {
 							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool ascending = true)", config::scriptname::method::container::sort);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::sort<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+
+
+
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s%s", config::scriptname::funcdef_cmp_prefix, rs.n_content);
+							std::string this_funcdef_name(rs.textbuf);
+
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "int %s(%s,%s)", this_funcdef_name.c_str(), rs.n_content, rs.n_content);
+							std::string this_funcdef_def(rs.textbuf);
+
+							enginestorage::Get_ELS(rs.engine)->RegisterFuncdefIfNeeded(this_funcdef_def);
+
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(%s@, bool ascending = true)", config::scriptname::method::container::sort_scriptfunc, this_funcdef_name.c_str());
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::sort_scriptfunc<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 
 						template<typename T_container> static void contains(common::RegistrationState& rs) {
@@ -578,6 +696,17 @@ namespace aatc {
 						template<typename T_container> static void sort(common::RegistrationState& rs) {
 							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool ascending = true)", config::scriptname::method::container::sort);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::sort<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s%s", config::scriptname::funcdef_cmp_prefix, rs.n_content);
+							std::string this_funcdef_name(rs.textbuf);
+
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "int %s(%s,%s)", this_funcdef_name.c_str(), rs.n_content, rs.n_content);
+							std::string this_funcdef_def(rs.textbuf);
+
+							enginestorage::Get_ELS(rs.engine)->RegisterFuncdefIfNeeded(this_funcdef_def);
+
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(%s@, bool ascending = true)", config::scriptname::method::container::sort_scriptfunc, this_funcdef_name.c_str());
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::sort_scriptfunc<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 
 						template<typename T_container> static void insert_position_before_constant(common::RegistrationState& rs) {

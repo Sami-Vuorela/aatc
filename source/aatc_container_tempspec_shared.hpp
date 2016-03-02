@@ -357,7 +357,7 @@ namespace aatc {
 					sprintf_s(rs.n_container_T, common::RegistrationState::bufsize, "%s<%s>", T_container::container_tags::scriptname_container, n_content);
 					sprintf_s(rs.n_iterator, common::RegistrationState::bufsize, "%s%s", T_container::container_tags::scriptname_container, config::scriptname::iterator_suffix);
 					sprintf_s(rs.n_iterator_T, common::RegistrationState::bufsize, "%s<%s>", rs.n_iterator, n_content);
-
+					
 
 
 					rs.error = rs.engine->RegisterObjectType(rs.n_container_T, 0, asOBJ_REF); assert(rs.error >= 0);

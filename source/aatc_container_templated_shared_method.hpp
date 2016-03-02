@@ -314,6 +314,78 @@ namespace aatc {
 
 							t->els->contextcache_Return(functor.cc);
 						}
+						template<typename T_container> void sort_scriptfunc(T_container* t, asIScriptFunction* scriptfunc, bool ascending) {
+							if (t->handlemode_directcomp) { return; }
+
+							t->safety_iteratorversion_Increment();
+
+							asIScriptContext* context = NULL;
+							asIScriptEngine* engine = t->engine;
+							asIScriptContext* old_context = asGetActiveContext();
+
+							if (old_context) {
+								if (old_context->PushState() > -1) {
+									context = old_context;
+								} else {
+									context = engine->RequestContext();
+								}
+							} else {
+								context = engine->RequestContext();
+							}
+
+
+
+							int reverse_multiplier = -1;
+							if (ascending) {
+								reverse_multiplier = 1;
+							}
+
+							if (t->handlemode) {
+								void* aux_object = scriptfunc->GetAuxiliary();
+								if (aux_object) {
+									container::shared::scriptcmpfunctor_method<container::shared::scriptcmpfunctor_internal::dummytype_handle> functor;
+									functor.context = context;
+									functor.func = scriptfunc;
+									functor.reverse_multiplier = reverse_multiplier;
+
+									functor.aux_object = aux_object;
+
+									t->container.sort(functor);
+								} else {
+									container::shared::scriptcmpfunctor_globalfunction<container::shared::scriptcmpfunctor_internal::dummytype_handle> functor;
+									functor.context = context;
+									functor.func = scriptfunc;
+									functor.reverse_multiplier = reverse_multiplier;
+
+									t->container.sort(functor);
+								}
+							} else {
+								void* aux_object = scriptfunc->GetAuxiliary();
+								if (aux_object) {
+									container::shared::scriptcmpfunctor_method<container::shared::scriptcmpfunctor_internal::dummytype_object> functor;
+									functor.context = context;
+									functor.func = scriptfunc;
+									functor.reverse_multiplier = reverse_multiplier;
+
+									functor.aux_object = aux_object;
+
+									t->container.sort(functor);
+								} else {
+									container::shared::scriptcmpfunctor_globalfunction<container::shared::scriptcmpfunctor_internal::dummytype_object> functor;
+									functor.context = context;
+									functor.func = scriptfunc;
+									functor.reverse_multiplier = reverse_multiplier;
+
+									t->container.sort(functor);
+								}
+							}
+
+							if (context == old_context) {
+								old_context->PopState();
+							} else {
+								engine->ReturnContext(context);
+							}
+						}
 
 						template<typename T_container> bool contains(T_container* t, void* value) {
 							if (!t->handlemode_directcomp) {
@@ -481,13 +553,6 @@ namespace aatc {
 						template<typename T_container> void sort_funcptr(T_container* t, common::script_Funcpointer* funcptr, bool ascending) {
 							if (t->handlemode_directcomp) { return; }
 
-							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
-							if (t->missing_functions & common::CONTAINER_OPERATION::SORT) {
-								common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::sort);
-								return;
-							}
-							#endif
-
 							t->safety_iteratorversion_Increment();
 
 							detail::scriptfunctor_cmp_customscript functor;
@@ -501,6 +566,78 @@ namespace aatc {
 							}
 
 							t->els->contextcache_Return(functor.cc);
+						}
+						template<typename T_container> void sort_scriptfunc(T_container* t, asIScriptFunction* scriptfunc, bool ascending) {
+							if (t->handlemode_directcomp) { return; }
+
+							t->safety_iteratorversion_Increment();
+
+							asIScriptContext* context = NULL;
+							asIScriptEngine* engine = t->engine;
+							asIScriptContext* old_context = asGetActiveContext();
+
+							if (old_context) {
+								if (old_context->PushState() > -1) {
+									context = old_context;
+								} else {
+									context = engine->RequestContext();
+								}
+							} else {
+								context = engine->RequestContext();
+							}
+
+
+
+							int reverse_multiplier = -1;
+							if (ascending) {
+								reverse_multiplier = 1;
+							}
+
+							if (t->handlemode) {
+								void* aux_object = scriptfunc->GetAuxiliary();
+								if (aux_object) {
+									container::shared::scriptcmpfunctor_method<container::shared::scriptcmpfunctor_internal::dummytype_handle> functor;
+									functor.context = context;
+									functor.func = scriptfunc;
+									functor.reverse_multiplier = reverse_multiplier;
+
+									functor.aux_object = aux_object;
+
+									std::sort(t->container.begin(), t->container.end(), functor);
+								} else {
+									container::shared::scriptcmpfunctor_globalfunction<container::shared::scriptcmpfunctor_internal::dummytype_handle> functor;
+									functor.context = context;
+									functor.func = scriptfunc;
+									functor.reverse_multiplier = reverse_multiplier;
+
+									std::sort(t->container.begin(), t->container.end(), functor);
+								}
+							} else {
+								void* aux_object = scriptfunc->GetAuxiliary();
+								if (aux_object) {
+									container::shared::scriptcmpfunctor_method<container::shared::scriptcmpfunctor_internal::dummytype_object> functor;
+									functor.context = context;
+									functor.func = scriptfunc;
+									functor.reverse_multiplier = reverse_multiplier;
+
+									functor.aux_object = aux_object;
+
+									std::sort(t->container.begin(), t->container.end(), functor);
+								} else {
+									container::shared::scriptcmpfunctor_globalfunction<container::shared::scriptcmpfunctor_internal::dummytype_object> functor;
+									functor.context = context;
+									functor.func = scriptfunc;
+									functor.reverse_multiplier = reverse_multiplier;
+
+									std::sort(t->container.begin(), t->container.end(), functor);
+								}
+							}
+
+							if (context == old_context) {
+								old_context->PopState();
+							} else {
+								engine->ReturnContext(context);
+							}
 						}
 
 						template<typename T_container> void insert_position_before_constant(T_container* t, config::t::sizetype position, void* value) {
@@ -867,7 +1004,7 @@ namespace aatc {
 
 					template<typename T_container> static void swap(common::RegistrationState& rs) {
 						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& %s(%s@)", rs.n_container_T, config::scriptname::method::container::swap, rs.n_container_T);
-						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::swap<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container,swap), asCALL_THISCALL); assert(rs.error >= 0);
 					}
 
 					namespace native{

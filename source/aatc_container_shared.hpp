@@ -173,6 +173,155 @@ namespace aatc {
 
 
 
+			namespace scriptcmpfunctor_internal {
+				struct dummytype_object {};
+				struct dummytype_handle {};
+
+				template<typename T> struct functor_SetArgs {
+					void operator()(asIScriptContext* context, T const& l, T const& r) const {
+						context->SetArgObject(0, (void*)(&l));
+						context->SetArgObject(1, (void*)(&r));
+					}
+				};
+
+				template<> struct functor_SetArgs<config::t::int8> {
+					void operator()(asIScriptContext* context, config::t::int8 l, config::t::int8 r)const;
+				};
+				template<> struct functor_SetArgs<config::t::uint8> {
+					void operator()(asIScriptContext* context, config::t::uint8 l, config::t::uint8 r)const;
+				};
+
+				template<> struct functor_SetArgs<config::t::int16> {
+					void operator()(asIScriptContext* context, config::t::int16 l, config::t::int16 r)const;
+				};
+				template<> struct functor_SetArgs<config::t::uint16> {
+					void operator()(asIScriptContext* context, config::t::uint16 l, config::t::uint16 r)const;
+				};
+
+				template<> struct functor_SetArgs<config::t::int32> {
+					void operator()(asIScriptContext* context, config::t::int32 l, config::t::int32 r)const;
+				};
+				template<> struct functor_SetArgs<config::t::uint32> {
+					void operator()(asIScriptContext* context, config::t::uint32 l, config::t::uint32 r)const;
+				};
+
+				template<> struct functor_SetArgs<config::t::int64> {
+					void operator()(asIScriptContext* context, config::t::int64 l, config::t::int64 r)const;
+				};
+				template<> struct functor_SetArgs<config::t::uint64> {
+					void operator()(asIScriptContext* context, config::t::uint64 l, config::t::uint64 r)const;
+				};
+
+				template<> struct functor_SetArgs<config::t::float32> {
+					void operator()(asIScriptContext* context, config::t::float32 l, config::t::float32 r)const;
+				};
+				template<> struct functor_SetArgs<config::t::float64> {
+					void operator()(asIScriptContext* context, config::t::float64 l, config::t::float64 r)const;
+				};
+
+				template<> struct functor_SetArgs<dummytype_object> {
+					void operator()(asIScriptContext* context, void* l, void* r)const;
+				};
+				template<> struct functor_SetArgs<dummytype_handle> {
+					void operator()(asIScriptContext* context, void* l, void* r)const;
+				};
+
+			}//namespace scriptcmpfunctor_internal
+
+			template<typename T> class scriptcmpfunctor_globalfunction {
+			public:
+				asIScriptContext* context;
+				asIScriptFunction* func;
+				int reverse_multiplier;
+
+				bool operator()(T const& lhs, T const& rhs) {
+					context->Prepare(func);
+					scriptcmpfunctor_internal::functor_SetArgs<T> functor_setargs;
+					functor_setargs(context, lhs, rhs);
+					context->Execute();
+					return (context->GetReturnDWord() * reverse_multiplier) == -1;
+				}
+			};
+			template<> class scriptcmpfunctor_globalfunction<scriptcmpfunctor_internal::dummytype_object> {
+			public:
+				asIScriptContext* context;
+				asIScriptFunction* func;
+				int reverse_multiplier;
+
+				bool operator()(void* lhs, void* rhs) const {
+					context->Prepare(func);
+					scriptcmpfunctor_internal::functor_SetArgs<scriptcmpfunctor_internal::dummytype_object> functor_setargs;
+					functor_setargs(context, lhs, rhs);
+					context->Execute();
+					return (context->GetReturnDWord() * reverse_multiplier) == -1;
+				}
+			};
+			template<> class scriptcmpfunctor_globalfunction<scriptcmpfunctor_internal::dummytype_handle> {
+			public:
+				asIScriptContext* context;
+				asIScriptFunction* func;
+				int reverse_multiplier;
+
+				bool operator()(void* lhs, void* rhs) const {
+					context->Prepare(func);
+					scriptcmpfunctor_internal::functor_SetArgs<scriptcmpfunctor_internal::dummytype_handle> functor_setargs;
+					functor_setargs(context, lhs, rhs);
+					context->Execute();
+					return (context->GetReturnDWord() * reverse_multiplier) == -1;
+				}
+			};
+
+			template<typename T> class scriptcmpfunctor_method {
+			public:
+				asIScriptContext* context;
+				asIScriptFunction* func;
+				int reverse_multiplier;
+				void* aux_object;
+
+				bool operator()(T const& lhs, T const& rhs) {
+					context->Prepare(func);
+					context->SetObject(aux_object);
+					scriptcmpfunctor_internal::functor_SetArgs<T> functor_setargs;
+					functor_setargs(context, lhs, rhs);
+					context->Execute();
+					return (context->GetReturnDWord() * reverse_multiplier) == -1;
+				}
+			};
+			template<> class scriptcmpfunctor_method<scriptcmpfunctor_internal::dummytype_object> {
+			public:
+				asIScriptContext* context;
+				asIScriptFunction* func;
+				int reverse_multiplier;
+				void* aux_object;
+
+				bool operator()(void* lhs, void* rhs) {
+					context->Prepare(func);
+					context->SetObject(aux_object);
+					scriptcmpfunctor_internal::functor_SetArgs<scriptcmpfunctor_internal::dummytype_object> functor_setargs;
+					functor_setargs(context, lhs, rhs);
+					context->Execute();
+					return (context->GetReturnDWord() * reverse_multiplier) == -1;
+				}
+			};
+			template<> class scriptcmpfunctor_method<scriptcmpfunctor_internal::dummytype_handle> {
+			public:
+				asIScriptContext* context;
+				asIScriptFunction* func;
+				int reverse_multiplier;
+				void* aux_object;
+
+				bool operator()(void* lhs, void* rhs) {
+					context->Prepare(func);
+					context->SetObject(aux_object);
+					scriptcmpfunctor_internal::functor_SetArgs<scriptcmpfunctor_internal::dummytype_handle> functor_setargs;
+					functor_setargs(context, lhs, rhs);
+					context->Execute();
+					return (context->GetReturnDWord() * reverse_multiplier) == -1;
+				}
+			};
+
+
+
 			namespace autoregister {
 				template<template<typename T_content> typename tempspec_container_template> void register_all_tempspec_basics_for_container(asIScriptEngine* engine) {
 					common::RegistrationState rs(engine);

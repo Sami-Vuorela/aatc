@@ -34,6 +34,8 @@
 #include "aatc_common.hpp"
 #include "aatc_container_listing.hpp"
 
+#include <set>
+
 
 
 BEGIN_AS_NAMESPACE
@@ -111,6 +113,8 @@ namespace aatc {
 				std::vector<serializer_helper> serializer_tempspec_helpers[container::listing::CONTAINER::_COUNT];
 			#endif
 
+			std::set<std::string> registered_funcdefs;
+
 
 			engine_level_storage(asIScriptEngine* engine);
 			~engine_level_storage();
@@ -121,6 +125,8 @@ namespace aatc {
 			void contextcache_Return(asIScriptContext* a);
 
 			void Clean();
+
+			void RegisterFuncdefIfNeeded(std::string const& def);
 		};
 
 		//convenience, uses engine level storage, aatc must be initialized

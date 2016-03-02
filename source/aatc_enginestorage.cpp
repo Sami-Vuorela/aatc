@@ -198,6 +198,14 @@ namespace aatc {
 			delete els;
 		}
 
+		void enginestorage::engine_level_storage::RegisterFuncdefIfNeeded(std::string const& this_funcdef_def) {
+			if (registered_funcdefs.find(this_funcdef_def) == registered_funcdefs.end()) {
+				engine->RegisterFuncdef(this_funcdef_def.c_str());
+
+				registered_funcdefs.insert(this_funcdef_def);
+			}
+		}
+
 
 
 	};//namespace enginestorage

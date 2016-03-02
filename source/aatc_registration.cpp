@@ -79,6 +79,7 @@ namespace aatc {
 		{
 			int r = 0;
 			char textbuf[common::RegistrationState::bufsize];
+
 			{//register script_Funcpointer
 				using common::script_Funcpointer;
 

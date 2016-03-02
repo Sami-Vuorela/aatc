@@ -185,6 +185,7 @@ namespace config {
 
 		static const char* iterator_suffix = "_iterator";
 		static const char* funcpointer = "aatc_funcpointer";
+		static const char* funcdef_cmp_prefix = "aatc_funcdef_cmp_";
 
 		namespace method {
 			namespace content {
@@ -209,6 +210,7 @@ namespace config {
 				static const char* insert = "insert";
 				static const char* erase = "erase";
 				static const char* sort = "sort";
+				static const char* sort_scriptfunc = "sort_scriptfunc";
 				static const char* sort_funcptr = sort;
 				static const char* contains = "contains";
 				static const char* find = "find";
