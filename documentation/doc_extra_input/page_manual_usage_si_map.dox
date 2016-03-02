@@ -1,27 +1,30 @@
 /*! \page page_manual_usage_si_map map
 \code{.cpp}
 template<typename T_key,typename T_value> class map{
-	//default constructor
 	map();
-	//copy constructor
 	map(map &in other);
-	//operator=
 	map& opAssign(map &in other);
-	
+	map& swap(map &in other);
 	void SetDirectcomp(bool yesno);
+	
+	
 	
 	int size();
 	void clear();
 	bool empty();
 	
 	void insert(T_key &in key,T_value &in value);
+	
 	void erase(T_key &in key);
-	bool contains(T_key &in key);
+	bool erase(const map_iterator<T> &in iterator);
+	int erase(const map_iterator<T> &in iterator_range_begin, const map_iterator<T> &in iterator_range_end);
 	
 	//find without success notice
 	T_value& find(const T_key &in key);
 	//find with success notice
 	T_value& find(const T_key &in key,bool &out success);
+	//find that returns an iterator, returns end if not found
+	map_iterator<T> find_iterator(const T &in key);
 	
 	//property accessors for opIndex
 	const T_value& get_opIndex(const T_key &in) const;
@@ -47,11 +50,11 @@ template<typename T_key,typename T_value> class map{
 	map_iterator<T> begin();
 	map_iterator<T> end();
 	
-	bool erase(const map_iterator<T> &in iterator);
-	int erase(const map_iterator<T> &in iterator_range_begin, const map_iterator<T> &in iterator_range_end);
 	
-	//find that returns an iterator, returns end if not found
-	map_iterator<T> find_iterator(const T &in key);
+	
+	//Nonstandard convenience functions
+	
+	bool contains(T_key &in key);
 };
 \endcode
 */

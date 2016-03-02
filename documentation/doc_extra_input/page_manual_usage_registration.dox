@@ -1,7 +1,7 @@
 /*! \page page_manual_usage_registration Registration
 <p>You can register all containers for an engine like this:</p>
 \code{.cpp}
-#include "/source/aatc.hpp"
+#include "aatc.hpp"
 
 asIScriptEngine* your_engine_initialization(){
 	asIScriptEngine* engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
@@ -10,7 +10,7 @@ asIScriptEngine* your_engine_initialization(){
 	
 	//register more things
 	
-	aatc_RegisterAllContainers(engine);
+	aatc::RegisterAllContainers(engine);
 	
 	//register aatc container template specializations for your cpp classes
 	
@@ -20,7 +20,7 @@ asIScriptEngine* your_engine_initialization(){
 \n
 <p>If you want some engine-specific settings you should use the initializer object:</p>
 \code{.cpp}
-#include "/source/aatc.hpp"
+#include "aatc.hpp"
 
 asIScriptEngine* your_engine_initialization(){
 	asIScriptEngine* engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
@@ -29,10 +29,10 @@ asIScriptEngine* your_engine_initialization(){
 	
 	//register more things
 	
-	aatc_Initializer aatcinit(engine);
+	aatc::Initializer aatcinit(engine);
 	
-	//include only the list container for this engine
-	aatcinit.include_container[aatc_CONTAINERTYPE::LIST] = 1;
+	//include only the vector container for this engine
+	aatcinit.include_container[aatc::container::listing::CONTAINER::VECTOR] = 1;
 	
 	aatcinit.Go();
 	

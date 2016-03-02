@@ -1,20 +1,17 @@
 /*! \page page_manual_usage_si_list list
 \code{.cpp}
 template<typename T> class list{
-	//default constructor
 	list();
-	//copy constructor
 	list(list &in other);
-	//operator=
 	list& opAssign(list &in other);
-	
+	list& swap(list &in other);
 	void SetDirectcomp(bool yesno);
+	
+	
 	
 	int size();
 	void clear();
 	bool empty();
-	
-	int count(T &in value);
 	
 	void push_back(T &in value);
 	void push_front(T &in value);
@@ -23,11 +20,14 @@ template<typename T> class list{
 	T& back();
 	T& front();
 	
-	void insert_index_before(int index,const T &in value);
+	void insert(int index,const T &in value);
+	void insert(const list_iterator<T> &in iterator, const T &in value);
 	
-	void erase_index(int index);
-	void erase_index(int index_range_begin,int index_range_end);
+	void erase(int index);
+	void erase(int index_range_begin,int index_range_end);
 	void erase_value(T &in value,bool all = false);
+	bool erase(const list_iterator<T> &in iterator);
+	int erase(const list_iterator<T> &in iterator_range_begin, const list_iterator<T> &in iterator_range_end);
 	
 	//sort with opCmp
 	void sort(bool ascending = true);
@@ -37,13 +37,15 @@ template<typename T> class list{
 	list_iterator<T> begin();
 	list_iterator<T> end();
 	
-	bool erase(const list_iterator<T> &in iterator);
-	int erase(const list_iterator<T> &in iterator_range_begin, const list_iterator<T> &in iterator_range_end);
+	
+	
+	//Nonstandard convenience functions
+	
+	bool contains(T &in value);
+	int count(T &in value);
 	
 	//find that returns an iterator, returns end if not found
 	list_iterator<T> find_iterator(const T &in value);
-	
-	void insert(const list_iterator<T> &in iterator, const T &in value) //insert value before iterator, using end iterator will insert at the end
 };
 \endcode
 */

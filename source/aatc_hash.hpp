@@ -85,7 +85,7 @@ namespace aatc {
 			Because you can't register functors with RegisterObjectMethod.
 		*/
 
-		template<typename T_your_cpp_type> void Register_aatc_func_hash_value(asIScriptEngine* engine, const char* name_your_type_in_script) {
+		template<typename T_your_cpp_type> void Register(asIScriptEngine* engine, const char* name_your_type_in_script) {
 			char textbuf[common::RegistrationState::bufsize];
 			sprintf_s(textbuf, common::RegistrationState::bufsize, "%s %s()", config::scriptname::t::hash_actual, config::scriptname::method::content::hash);
 			int error = engine->RegisterObjectMethod(name_your_type_in_script, textbuf, asFUNCTION(detail::function_wrapping_a_functor<T_your_cpp_type>), asCALL_CDECL_OBJLAST); assert(error >= 0);

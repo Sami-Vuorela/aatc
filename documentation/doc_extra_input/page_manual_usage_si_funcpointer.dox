@@ -49,8 +49,8 @@ void main(){
 	
 	cont.sort(func);
 	
-	for(vector_iterator<Material> it(@cont);it++;){
-		Print("content = "+it.current().name);
+	for(auto it = cont.begin();it++;){
+		Print("content = "+it.value.name);
 	}
 }
 \endcode
@@ -92,8 +92,8 @@ void main(){
 	
 	cont.sort(func);
 	
-	for(list_iterator<Material> it(@cont);it++;){
-		Print("content = "+it.current().name);
+	for(auto it = cont.begin();it++;){
+		Print("content = "+it.value.name);
 	}
 }
 \endcode

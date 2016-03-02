@@ -3,16 +3,18 @@
 <p>Serializing any c++ side objects with the serializer requires you to register some functions telling the serializer how to do it.</p>
 <p>You can register the required functions for aatc containers with the following code:</p>
 \code{.cpp}
+	#include "aatc.hpp"
+	
 	CSerializer* my_serializer = new CSerializer();
 	
-	aatc_serializer_register(engine, my_serializer);
+	aatc::serializer::Register(engine, my_serializer);
 
 	my_serializer->Store(my_module);
 
 	//Do_Things_Requiring_Script_Serialization()
 
 	my_serializer->Restore(my_module);
-	aatc_serializer_cleanup(engine, my_serializer);
+	aatc::serializer::Cleanup(engine, my_serializer);
 
 	delete my_serializer;
 \endcode

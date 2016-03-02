@@ -216,7 +216,6 @@ namespace config {
 				static const char* erase_position_range = erase_position;
 				static const char* erase_value = "erase_value";
 				static const char* insert_position_before = insert;
-				static const char* insert_position_after = insert;
 
 				static const char* operator_index = "opIndex";
 

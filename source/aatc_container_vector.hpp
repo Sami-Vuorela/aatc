@@ -177,6 +177,10 @@ namespace aatc {
 					register_method::genericcc::contains<vector>(rs);
 					register_method::genericcc::count<vector>(rs);
 				}
+				static void Register(asIScriptEngine* engine, const char* n_content) {
+					common::RegistrationState rs(engine);
+					Register(rs, c_content);
+				}
 			};
 
 

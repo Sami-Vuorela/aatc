@@ -7,73 +7,58 @@
 - unordered_set
 <p>map and unordered_map are not available because they take 2 template parameters and that would require partial template specialization which angelscript probably doesnt support.</p>
 \n
-<p>Some of the containers might require your class to have these operators implemented:</p>
-- operator equals is required for
-	- vector and list :: count and erase_value
-	- the unordered_set container to work
-- operator less is required for
-	- vector and list :: sort
-	- the set container to work
-- hash is required for
-	- the unordered_set container to work
-	
-<p>Hash is not an operator, but a functor by name of aatc_functor_hash</p>
+
+<p>The containers require certain operators to be implemented before they can be specialized:</p>
+- vector
+	- operator equals
+	- operator less
+- list
+	- operator equals
+	- operator less
+- set
+	- operator less
+- unordered_set
+	- operator equals
+	- meta operator hash
+
+<p>Hash is not an operator, but a functor by name of aatc::hash::hashfunctor</p>
+See: \ref page_manual_usage_registration_hash for all your hashing needs
+
 \n
 <p>The tempspec registration functions work like this:</p>
 \code{.cpp}
-#include "aatc_vector.hpp"
+#include "aatc_container_vector.hpp"
 
-/*
-	Syntax:
-	
-	template parameters
-		c++ typename
-		bool does_the_type_have_function_operator_equals
-		bool does_the_type_have_function_operator_less
-		bool does_the_type_have_function_hash
-	function parameters
-		as engine*
-		name of class in script
-*/
-
-aatc_register_container_tempspec_vector<myVec3, 1, 0, 0>(engine, "myVec3");
+aatc::container::tempspec::vector<MyCppClass>::Register(engine, "MyCppClass_name_in_script");
 \endcode
-\n
-<p>You can register a tempspec even if your class doesnt have all the required operators. The container's functions that require the missing operators will simply not be registered to the script and your c++ compiler probably wont cry about it (because the troublesome functions are hidden by template magics). If you try to register a tempspec for a container that totally requires an operator (for example set requires operator less) it probably wont work at all.</p>
 \n
 \par Examples
 <p>Registering a template specialization of the class "myVec3" for the containers vector and list:</p>
 \code{.cpp}
 //include the container headers that you will be needing
-#include "aatc_vector.hpp"
-#include "aatc_list.hpp"
+#include "aatc_container_vector.hpp"
+#include "aatc_container_list.hpp"
 
 class myVec3{
 public:
 	float x,y,z;
 	myVec3(float x,float y,float z);
-	bool operator==(const myVec3& other);//we have an operator equals, but no operator less
+	
+	bool operator==(const myVec3& other);
+	int angelscript_opCmp(const myVec3& other);
 };
 
 void your_aatc_tempspec_registration(asIScriptEngine* engine){
-	aatc_register_container_tempspec_vector<myVec3, 1, 0, 0>(engine, "myVec3");
-	aatc_register_container_tempspec_list<myVec3, 1, 0, 0>(engine, "myVec3");
+	aatc::RegisterAllContainers(engine);
+	
+	engine->RegisterObjectType("myVec3", ...);
+	engine->RegisterObjectMethod("myVec3", "bool opEquals(const myVec3 &in)", asMETHOD(myVec3,operator==),asCALL_THISCALL);
+	engine->RegisterObjectMethod("myVec3", "int opCmp(const myVec3 &in)",  asMETHOD(myVec3,angelscript_opCmp),asCALL_THISCALL);
+	
+	aatc::container::tempspec::vector<myVec3>::Register(engine, "myVec3");
+	aatc::container::tempspec::list<myVec3>::Register(engine, "myVec3");
 }
 \endcode
-<p>
-Because myVec3 does not have an operator<\n
-vector<myVec3>::sort and list<myVec3>::sort will not be available, but you can still register a tempspec of it.
-</p>
 
 \n
-<p>Registering a hash function for the class "myVec3", so that we can use it in unordered_set:</p>
-\code{.cpp}
-template<> class aatc_functor_hash<myVec3>{
-public:
-	std::size_t operator()(const myVec3& a) const{
-		//terribad hash function, do not try this at home
-		return a.x + a.y + a.z;
-	}
-};
-\endcode
 */

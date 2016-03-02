@@ -539,7 +539,7 @@ namespace aatc {
 						}
 
 						template<typename T_container> static void find_iterator(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s(const %s &in)", rs.n_iterator_T, config::scriptname::method::container::find_iterator, rs.n_content);
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s(const %s &in)", rs.n_iterator_T, config::scriptname::method::container::find, rs.n_content);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::find_iterator<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 

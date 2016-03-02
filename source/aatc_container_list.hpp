@@ -175,6 +175,10 @@ namespace aatc {
 					register_method::genericcc::contains<list>(rs);
 					register_method::genericcc::count<list>(rs);
 				}
+				static void Register(asIScriptEngine* engine, const char* n_content) {
+					common::RegistrationState rs(engine);
+					Register(rs, c_content);
+				}
 			};
 
 

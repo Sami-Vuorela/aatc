@@ -135,8 +135,12 @@ namespace aatc {
 					register_method::native::erase_iterator<set>(rs);
 					register_method::native::erase_iterator_range<set>(rs);
 
-					register_method::genericcc::find_iterator<set>(rs);
+					register_method::native::find_iterator<set>(rs);
 					register_method::native::contains<set>(rs);
+				}
+				static void Register(asIScriptEngine* engine, const char* n_content) {
+					common::RegistrationState rs(engine);
+					Register(rs, c_content);
 				}
 			};
 

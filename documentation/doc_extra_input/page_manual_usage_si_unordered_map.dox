@@ -1,14 +1,13 @@
 /*! \page page_manual_usage_si_unordered_map unordered_map
 \code{.cpp}
 template<typename T_key,typename T_value> class unordered_map{
-	//default constructor
 	unordered_map();
-	//copy constructor
 	unordered_map(unordered_map &in other);
-	//operator=
 	unordered_map& opAssign(unordered_map &in other);
-	
+	unordered_map& swap(unordered_map &in other);
 	void SetDirectcomp(bool yesno);
+	
+	
 	
 	int size();
 	void clear();
@@ -16,12 +15,15 @@ template<typename T_key,typename T_value> class unordered_map{
 	
 	void insert(T_key &in key,T_value &in value);
 	void erase(T_key &in key);
-	bool contains(T_key &in key);
+	bool erase(const unordered_map_iterator<T> &in iterator);
+	int erase(const unordered_map_iterator<T> &in iterator_range_begin, const unordered_map_iterator<T> &in iterator_range_end);
 	
 	//find without success notice
 	T_value& find(const T_key &in key);
 	//find with success notice
 	T_value& find(const T_key &in key,bool &out success);
+	//find that returns an iterator, returns end if not found
+	unordered_map_iterator<T> find_iterator(const T &in key);
 	
 	//property accessors for opIndex
 	const T_value& get_opIndex(const T_key &in) const;
@@ -47,11 +49,11 @@ template<typename T_key,typename T_value> class unordered_map{
 	unordered_map_iterator<T> begin();
 	unordered_map_iterator<T> end();
 	
-	bool erase(const unordered_map_iterator<T> &in iterator);
-	int erase(const unordered_map_iterator<T> &in iterator_range_begin, const unordered_map_iterator<T> &in iterator_range_end);
 	
-	//find that returns an iterator, returns end if not found
-	unordered_map_iterator<T> find_iterator(const T &in key);
+	
+	//Nonstandard convenience functions
+	
+	bool contains(T_key &in key);
 };
 \endcode
 */

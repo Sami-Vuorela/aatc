@@ -139,8 +139,12 @@ namespace aatc {
 					register_method::native::erase_iterator<unordered_set>(rs);
 					register_method::native::erase_iterator_range<unordered_set>(rs);
 
-					register_method::genericcc::find_iterator<unordered_set>(rs);
+					register_method::native::find_iterator<unordered_set>(rs);
 					register_method::native::contains<unordered_set>(rs);
+				}
+				static void Register(asIScriptEngine* engine, const char* n_content) {
+					common::RegistrationState rs(engine);
+					Register(rs, c_content);
 				}
 			};
 
