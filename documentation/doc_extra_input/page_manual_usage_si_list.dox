@@ -2,9 +2,9 @@
 \code{.cpp}
 template<typename T> class list{
 	list();
-	list(list &in other);
-	list& opAssign(list &in other);
-	list& swap(list &in other);
+	list(const list@ other);
+	list& opAssign(const list@ other);
+	list& swap(list@ other);
 	void SetDirectcomp(bool yesno);
 	
 	

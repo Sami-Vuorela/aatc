@@ -2,9 +2,9 @@
 \code{.cpp}
 template<typename T> class set{
 	set();
-	set(set &in other);
-	set& opAssign(set &in other);
-	set& swap(set &in other);
+	set(const set@ other);
+	set& opAssign(const set@ other);
+	set& swap(set@ other);
 	void SetDirectcomp(bool yesno);
 	
 	

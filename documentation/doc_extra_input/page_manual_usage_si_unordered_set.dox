@@ -2,9 +2,9 @@
 \code{.cpp}
 template<typename T> class unordered_set{
 	unordered_set();
-	unordered_set(unordered_set &in other);
-	unordered_set& opAssign(unordered_set &in other);
-	unordered_set& swap(unordered_set &in other);
+	unordered_set(const unordered_set@ other);
+	unordered_set& opAssign(const unordered_set@ other);
+	unordered_set& swap(unordered_set@ other);
 	void SetDirectcomp(bool yesno);
 	
 	

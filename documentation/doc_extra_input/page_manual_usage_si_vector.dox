@@ -2,9 +2,9 @@
 \code{.cpp}
 template<typename T> class vector{
 	vector();
-	vector(vector &in other);
-	vector& opAssign(vector &in other);
-	vector& swap(vector &in other);
+	vector(const vector@ other);
+	vector& opAssign(const vector@ other);
+	vector& swap(vector@ other);
 	void SetDirectcomp(bool yesno);
 	
 	
