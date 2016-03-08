@@ -73,7 +73,7 @@ namespace aatc {
 				void* front();
 
 				void sort(bool ascending = true);
-				void sort_funcptr(common::script_Funcpointer* funcptr, bool ascending = true);
+				void sort(common::script_Funcpointer* funcptr, bool ascending = true);
 
 				void erase(config::t::sizetype position);
 				void erase(const Iterator& position);
@@ -134,6 +134,7 @@ namespace aatc {
 				Iterator find(const T_content& value) { return shared::method::genericcc::find_iterator(this, value); }
 
 				void sort(bool ascending = true) { shared::method::genericcc::sort(this, ascending); }
+				void sort(common::script_Funcpointer* funcptr, bool ascending = true) { shared::method::genericcc::sort_aatcfuncptr(this, funcptr, ascending); }
 
 				bool contains(const T_content& value) { return shared::method::genericcc::contains(this, value); }
 				config::t::sizetype count(const T_content& value) { return shared::method::genericcc::count(this, value); }

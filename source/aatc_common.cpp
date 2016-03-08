@@ -179,7 +179,8 @@ namespace aatc {
 		script_Funcpointer::script_Funcpointer() :
 			//dedicated_context(NULL),
 			ready(0),
-			func(NULL)
+			func(NULL),
+			so(NULL)
 		{
 		}
 		script_Funcpointer::~script_Funcpointer(){
@@ -198,6 +199,7 @@ namespace aatc {
 			ready = 0;
 			func = NULL;
 			is_thiscall = 0;
+			so = NULL;
 
 			const char* funcname_c = funcname.c_str();
 

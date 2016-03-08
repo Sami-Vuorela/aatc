@@ -45,9 +45,11 @@ template<typename T> class vector{
 	vector_iterator<T> find_iterator(const T &in value);
 	
 	//sort with opCmp
-	void sort(bool ascending = true);
-	//sort with another function
-	void sort(aatc_funcpointer@ func,bool ascending = true)
+	void sort(bool ascending);
+	//sort with aatc_funcpointer
+	void sort(aatc_funcpointer@ func,bool ascending)
+	//sort with any angelscript function, even anonymous functions or delegates. Only works with tempspec'd containers for now.
+	void sort(aatc_funcdef_cmp_T@ func,bool ascending)
 };
 \endcode
 */

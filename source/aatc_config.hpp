@@ -210,8 +210,8 @@ namespace config {
 				static const char* insert = "insert";
 				static const char* erase = "erase";
 				static const char* sort = "sort";
-				static const char* sort_scriptfunc = "sort_scriptfunc";
-				static const char* sort_funcptr = sort;
+				static const char* sort_scriptfunc = sort;
+				static const char* sort_aatcfuncptr = sort;
 				static const char* contains = "contains";
 				static const char* find = "find";
 				static const char* erase_position = erase;

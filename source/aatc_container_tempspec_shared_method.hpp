@@ -168,6 +168,58 @@ namespace aatc {
 								//);
 							}
 						}
+						template<typename T_container> void sort_aatcfuncptr(T_container* t, common::script_Funcpointer* funcptr, bool ascending) {
+							t->safety_iteratorversion_Increment();
+
+							asIScriptFunction* scriptfunc = funcptr->func;
+							asIScriptContext* context = NULL;
+							asIScriptEngine* engine = t->engine;
+							asIScriptContext* old_context = asGetActiveContext();
+
+							if (old_context) {
+								if (old_context->PushState() > -1) {
+									context = old_context;
+								} else {
+									context = engine->RequestContext();
+								}
+							} else {
+								context = engine->RequestContext();
+							}
+
+
+
+							int reverse_multiplier = -1;
+							if (ascending) {
+								reverse_multiplier = 1;
+							}
+
+							void* aux_object = funcptr->so;
+							if (aux_object) {
+								typename container::shared::scriptcmpfunctor_method<T_container::T_content> functor;
+								functor.context = context;
+								functor.func = scriptfunc;
+								functor.reverse_multiplier = reverse_multiplier;
+
+								functor.aux_object = aux_object;
+
+								t->container.sort(functor);
+							} else {
+								typename container::shared::scriptcmpfunctor_globalfunction<T_container::T_content> functor;
+								functor.context = context;
+								functor.func = scriptfunc;
+								functor.reverse_multiplier = reverse_multiplier;
+
+								t->container.sort(functor);
+							}
+
+
+
+							if (context == old_context) {
+								old_context->PopState();
+							} else {
+								engine->ReturnContext(context);
+							}
+						}
 						template<typename T_container> void sort_scriptfunc(T_container* t, asIScriptFunction* scriptfunc, bool ascending) {
 							t->safety_iteratorversion_Increment();
 
@@ -414,6 +466,58 @@ namespace aatc {
 								std::sort(t->container.begin(), t->container.end(), common::functor_notcmp<T_container::T_content, std::less<T_container::T_content>>());
 							}
 						}
+						template<typename T_container> void sort_aatcfuncptr(T_container* t, common::script_Funcpointer* funcptr, bool ascending) {
+							t->safety_iteratorversion_Increment();
+
+							asIScriptFunction* scriptfunc = funcptr->func;
+							asIScriptContext* context = NULL;
+							asIScriptEngine* engine = t->engine;
+							asIScriptContext* old_context = asGetActiveContext();
+
+							if (old_context) {
+								if (old_context->PushState() > -1) {
+									context = old_context;
+								} else {
+									context = engine->RequestContext();
+								}
+							} else {
+								context = engine->RequestContext();
+							}
+
+
+
+							int reverse_multiplier = -1;
+							if (ascending) {
+								reverse_multiplier = 1;
+							}
+
+							void* aux_object = funcptr->so;
+							if (aux_object) {
+								typename container::shared::scriptcmpfunctor_method<T_container::T_content> functor;
+								functor.context = context;
+								functor.func = scriptfunc;
+								functor.reverse_multiplier = reverse_multiplier;
+
+								functor.aux_object = aux_object;
+
+								std::sort(t->container.begin(), t->container.end(), functor);
+							} else {
+								typename container::shared::scriptcmpfunctor_globalfunction<T_container::T_content> functor;
+								functor.context = context;
+								functor.func = scriptfunc;
+								functor.reverse_multiplier = reverse_multiplier;
+
+								std::sort(t->container.begin(), t->container.end(), functor);
+							}
+
+
+
+							if (context == old_context) {
+								old_context->PopState();
+							} else {
+								engine->ReturnContext(context);
+							}
+						}
 
 						template<typename T_container> void sort_scriptfunc(T_container* t, asIScriptFunction* scriptfunc,bool ascending) {
 							t->safety_iteratorversion_Increment();
@@ -625,8 +729,11 @@ namespace aatc {
 						}
 
 						template<typename T_container> static void sort(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool ascending = true)", config::scriptname::method::container::sort);
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool ascending)", config::scriptname::method::container::sort);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::sort<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const %s&in, bool ascending)", config::scriptname::method::container::sort_aatcfuncptr, config::scriptname::funcpointer);
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::sort_aatcfuncptr<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 
 
 
@@ -638,7 +745,7 @@ namespace aatc {
 
 							enginestorage::Get_ELS(rs.engine)->RegisterFuncdefIfNeeded(this_funcdef_def);
 
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(%s@, bool ascending = true)", config::scriptname::method::container::sort_scriptfunc, this_funcdef_name.c_str());
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(%s@, bool ascending)", config::scriptname::method::container::sort_scriptfunc, this_funcdef_name.c_str());
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::sort_scriptfunc<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 
@@ -694,8 +801,11 @@ namespace aatc {
 						}
 
 						template<typename T_container> static void sort(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool ascending = true)", config::scriptname::method::container::sort);
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool ascending)", config::scriptname::method::container::sort);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::sort<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const %s&in, bool ascending)", config::scriptname::method::container::sort_aatcfuncptr, config::scriptname::funcpointer);
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::sort_aatcfuncptr<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 
 							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s%s", config::scriptname::funcdef_cmp_prefix, rs.n_content);
 							std::string this_funcdef_name(rs.textbuf);
@@ -705,7 +815,7 @@ namespace aatc {
 
 							enginestorage::Get_ELS(rs.engine)->RegisterFuncdefIfNeeded(this_funcdef_def);
 
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(%s@, bool ascending = true)", config::scriptname::method::container::sort_scriptfunc, this_funcdef_name.c_str());
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(%s@, bool ascending)", config::scriptname::method::container::sort_scriptfunc, this_funcdef_name.c_str());
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::sort_scriptfunc<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 

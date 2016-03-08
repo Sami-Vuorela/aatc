@@ -75,7 +75,7 @@ namespace aatc {
 			void* list::front() { return shared::method::native::front(this); }
 
 			void list::sort(bool ascending) { shared::method::native::sort(this, ascending); }
-			void list::sort_funcptr(common::script_Funcpointer* funcptr, bool ascending) { shared::method::native::sort_funcptr(this,funcptr, ascending); }
+			void list::sort(common::script_Funcpointer* funcptr, bool ascending) { shared::method::native::sort_aatcfuncptr(this,funcptr, ascending); }
 
 			void list::erase(config::t::sizetype position) { shared::method::genericcc::erase_position_linear(this, position); }
 			void list::erase(const Iterator& position) { shared::method::native::erase_iterator(this, position); }

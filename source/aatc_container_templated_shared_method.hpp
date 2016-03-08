@@ -290,15 +290,8 @@ namespace aatc {
 							t->els->contextcache_Return(functor.cc);
 						}
 
-						template<typename T_container> void sort_funcptr(T_container* t, common::script_Funcpointer* funcptr, bool ascending) {
+						template<typename T_container> void sort_aatcfuncptr(T_container* t, common::script_Funcpointer* funcptr, bool ascending) {
 							if (t->handlemode_directcomp) { return; }
-
-							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
-							if (t->missing_functions & common::CONTAINER_OPERATION::SORT) {
-								common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::sort);
-								return;
-							}
-							#endif
 
 							t->safety_iteratorversion_Increment();
 
@@ -314,11 +307,15 @@ namespace aatc {
 
 							t->els->contextcache_Return(functor.cc);
 						}
-						template<typename T_container> void sort_scriptfunc(T_container* t, asIScriptFunction* scriptfunc, bool ascending) {
+
+						/*
+						?&in wont compile in AS 2.31.0 with funcptr as argument
+						template<typename T_container> void sort_scriptfunc(T_container* t, void* scriptfunc_, int tid, bool ascending) {
 							if (t->handlemode_directcomp) { return; }
 
 							t->safety_iteratorversion_Increment();
 
+							asIScriptFunction* scriptfunc = (asIScriptFunction*)scriptfunc_;
 							asIScriptContext* context = NULL;
 							asIScriptEngine* engine = t->engine;
 							asIScriptContext* old_context = asGetActiveContext();
@@ -386,6 +383,7 @@ namespace aatc {
 								engine->ReturnContext(context);
 							}
 						}
+						*/
 
 						template<typename T_container> bool contains(T_container* t, void* value) {
 							if (!t->handlemode_directcomp) {
@@ -550,7 +548,7 @@ namespace aatc {
 							t->els->contextcache_Return(functor.cc);
 						}
 
-						template<typename T_container> void sort_funcptr(T_container* t, common::script_Funcpointer* funcptr, bool ascending) {
+						template<typename T_container> void sort_aatcfuncptr(T_container* t, common::script_Funcpointer* funcptr, bool ascending) {
 							if (t->handlemode_directcomp) { return; }
 
 							t->safety_iteratorversion_Increment();
@@ -567,11 +565,15 @@ namespace aatc {
 
 							t->els->contextcache_Return(functor.cc);
 						}
-						template<typename T_container> void sort_scriptfunc(T_container* t, asIScriptFunction* scriptfunc, bool ascending) {
+
+						/*
+						?&in wont compile in AS 2.31.0 with funcptr as argument
+						template<typename T_container> void sort_scriptfunc(T_container* t, void* scriptfunc_, int tid, bool ascending) {
 							if (t->handlemode_directcomp) { return; }
 
 							t->safety_iteratorversion_Increment();
 
+							asIScriptFunction* scriptfunc = (asIScriptFunction*)scriptfunc_;
 							asIScriptContext* context = NULL;
 							asIScriptEngine* engine = t->engine;
 							asIScriptContext* old_context = asGetActiveContext();
@@ -639,6 +641,7 @@ namespace aatc {
 								engine->ReturnContext(context);
 							}
 						}
+						*/
 
 						template<typename T_container> void insert_position_before_constant(T_container* t, config::t::sizetype position, void* value) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
@@ -1059,11 +1062,15 @@ namespace aatc {
 						}
 
 						template<typename T_container> static void sort(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool ascending = false)", config::scriptname::method::container::sort);
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool ascending)", config::scriptname::method::container::sort);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::sort<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const %s&in, bool ascending = false)", config::scriptname::method::container::sort_funcptr, config::scriptname::funcpointer);
-							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::sort_funcptr<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const %s&in funcptr, bool ascending)", config::scriptname::method::container::sort_aatcfuncptr, config::scriptname::funcpointer);
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::sort_aatcfuncptr<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+
+							//?&in wont compile in AS 2.31.0 with funcptr as argument
+							//sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const ?&in scriptfunc, bool ascending)", config::scriptname::method::container::sort_scriptfunc);
+							//rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::native::sort_aatcfuncptr<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 
 						template<typename T_container> static void contains(common::RegistrationState& rs) {
@@ -1098,11 +1105,15 @@ namespace aatc {
 
 
 						template<typename T_container> static void sort(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool ascending = false)", config::scriptname::method::container::sort);
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(bool ascending)", config::scriptname::method::container::sort);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::sort<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const %s&in, bool ascending = false)", config::scriptname::method::container::sort_funcptr, config::scriptname::funcpointer);
-							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::sort_funcptr<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const %s&in, bool ascending)", config::scriptname::method::container::sort_aatcfuncptr, config::scriptname::funcpointer);
+							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::sort_aatcfuncptr<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
+
+							//?&in wont compile in AS 2.31.0 with funcptr as argument
+							//sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const ?&in scriptfunc, bool ascending)", config::scriptname::method::container::sort_scriptfunc);
+							//rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::genericcc::sort_aatcfuncptr<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 
 						template<typename T_container> static void insert_position_before_constant(common::RegistrationState& rs) {
