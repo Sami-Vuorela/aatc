@@ -261,7 +261,7 @@ namespace aatc {
 							clear();
 						}
 
-						void operator=(const Containerbase& other) {
+						Containerbase& operator=(const Containerbase& other) {
 							safety_iteratorversion_Increment();
 
 							clear();//will delete script objects or decrement handles
@@ -406,6 +406,8 @@ namespace aatc {
 									container.insert(std::pair<common::primunion, common::primunion>(pu_key, pu_value));
 								}
 							}
+
+							return *this;
 						}
 
 

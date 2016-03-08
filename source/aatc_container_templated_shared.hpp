@@ -205,7 +205,7 @@ namespace aatc {
 						clear();
 					}
 
-					void operator=(const Containerbase& other) {
+					Containerbase& operator=(const Containerbase& other) {
 						safety_iteratorversion_Increment();
 
 						clear();//will delete script objects or decrement handles
@@ -244,6 +244,8 @@ namespace aatc {
 								it_other++;
 							}
 						}
+
+						return *this;
 					}
 
 					void SetDirectcomp(bool ss) {

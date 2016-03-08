@@ -102,9 +102,12 @@ namespace aatc {
 
 
 
-					void operator=(const Containerbase& other) {
-						container.operator=(other.container);
+					Containerbase& operator=(const Containerbase& other) {
 						safety_iteratorversion_Increment();
+
+						container.operator=(other.container);
+
+						return *this;
 					}
 
 					void clear() {
