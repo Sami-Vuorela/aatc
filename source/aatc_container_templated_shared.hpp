@@ -89,10 +89,10 @@ namespace aatc {
 
 
 
-				template<typename T_container> T_container* Factory(asITypeInfo* objtype) {
-					return new T_container(objtype);
+				template<typename T_container> T_container* Factory(asITypeInfo* typeinfo) {
+					return new T_container(typeinfo);
 				}
-				template<typename T_container> T_container* Factory_copy(asITypeInfo* objtype, const T_container& other) {
+				template<typename T_container> T_container* Factory_copy(asITypeInfo* typeinfo, const T_container& other) {
 					return new T_container(other);
 				}
 
@@ -125,7 +125,7 @@ namespace aatc {
 
 					enginestorage::engine_level_storage* els;
 
-					asITypeInfo* objtype_container;
+					asITypeInfo* typeinfo_container;
 					asITypeInfo* objtype_content;
 					config::t::astypeid astypeid_container;
 					config::t::astypeid astypeid_content;
@@ -138,20 +138,20 @@ namespace aatc {
 
 					bool directcomp_forced;
 					
-					Containerbase(asIScriptEngine* _engine, asITypeInfo* _objtype) :
+					Containerbase(asIScriptEngine* _engine, asITypeInfo* _typeinfo) :
 						aatc::container::shared::container_basicbase(_engine),
 						container(_engine, this),
-						objtype_container(_objtype),
+						typeinfo_container(_typeinfo),
 						directcomp_forced(0)
 					{
 						handlemode_directcomp = config::DEFAULT_HANDLEMODE_DIRECTCOMP;
 
-						objtype_content = objtype_container->GetSubType();
+						objtype_content = typeinfo_container->GetSubType();
 
-						astypeid_container = objtype_container->GetTypeId();
-						astypeid_content = objtype_container->GetSubTypeId();
+						astypeid_container = typeinfo_container->GetTypeId();
+						astypeid_content = typeinfo_container->GetSubTypeId();
 
-						typeflags_container = objtype_container->GetFlags();
+						typeflags_container = typeinfo_container->GetFlags();
 						typeflags_content = objtype_content->GetFlags();
 
 						//problem_nofunc_eq_or_cmp = 0;
@@ -192,13 +192,13 @@ namespace aatc {
 
 									if (bad) {
 										char msg[1000];
-										sprintf_s(msg, 1000, "Type '%s' has missing methods required for container '%s'.", objtype_content->GetName(), objtype_container->GetName());
+										sprintf_s(msg, 1000, "Type '%s' has missing methods required for container '%s'.", objtype_content->GetName(), typeinfo_container->GetName());
 										asGetActiveContext()->SetException(msg);
 									}
 								}
 						#endif
 
-						engine->NotifyGarbageCollectorOfNewObject(this, objtype_container);
+						engine->NotifyGarbageCollectorOfNewObject(this, typeinfo_container);
 					}
 
 					virtual ~Containerbase() {
@@ -464,20 +464,20 @@ namespace aatc {
 
 
 
-						static void static_constructor_default(asITypeInfo* objtype, void *memory) {
+						static void static_constructor_default(asITypeInfo* typeinfo, void *memory) {
 							new(memory)Iterator();
 						}
-						static void static_constructor_copy(asITypeInfo* objtype, Iterator* other, void *memory) {
+						static void static_constructor_copy(asITypeInfo* typeinfo, Iterator* other, void *memory) {
 							new(memory)Iterator(*other);
 						}
-						//static void static_constructor_parentcontainer(asITypeInfo* objtype, void *ref, config::t::astypeid typeId, void *memory) {
+						//static void static_constructor_parentcontainer(asITypeInfo* typeinfo, void *ref, config::t::astypeid typeId, void *memory) {
 						//	new(memory)Iterator(ref, typeId);
 						//}
-						static void static_constructor_parentcontainer(asITypeInfo* objtype, Containerbase* host, void *memory) {
+						static void static_constructor_parentcontainer(asITypeInfo* typeinfo, Containerbase* host, void *memory) {
 							new(memory)Iterator(host);
 							host->refcount_Release();
 						}
-						//static void static_constructor_copy(asITypeInfo* objtype, const aatc_iterator& other, void *memory){
+						//static void static_constructor_copy(asITypeInfo* typeinfo, const aatc_iterator& other, void *memory){
 						//	new(memory)aatc_iterator(other);
 						//}
 

@@ -52,11 +52,11 @@ namespace aatc {
 
 
 
-			list::list(asITypeInfo* _objtype) :
-				Containerbase(_objtype->GetEngine(), _objtype)
+			list::list(asITypeInfo* _typeinfo) :
+				Containerbase(_typeinfo->GetEngine(), _typeinfo)
 			{}
 			list::list(const list& other) :
-				Containerbase(other.engine, other.objtype_container)
+				Containerbase(other.engine, other.typeinfo_container)
 			{
 				(*this) = other;
 			}

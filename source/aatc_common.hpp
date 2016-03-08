@@ -147,7 +147,7 @@ namespace aatc {
 			template<typename T_out, typename T_host> T_out construct_hosted(T_host cont) {
 				return T_out(cont);
 			}
-			template<class T> void constructor_template_default(asITypeInfo* objtype, void *memory) { new(memory)T(); }
+			template<class T> void constructor_template_default(asITypeInfo* typeinfo, void *memory) { new(memory)T(); }
 
 			template<class T> void generic_destructor(void *memory) {
 				((T*)memory)->~T();

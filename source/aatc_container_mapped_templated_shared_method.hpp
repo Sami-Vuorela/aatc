@@ -59,7 +59,7 @@ namespace aatc {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (t->need_errorcheck_missing_functions) {
 									if (t->missing_functions & common::CONTAINER_OPERATION::INSERT) {
-										common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_key->GetName(), "insert");
+										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_key->GetName(), "insert");
 										return;
 									}
 								}
@@ -88,7 +88,7 @@ namespace aatc {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (t->need_errorcheck_missing_functions) {
 									if (t->missing_functions & common::CONTAINER_OPERATION::ERASE_VALUE) {
-										common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_key->GetName(), "erase");
+										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_key->GetName(), "erase");
 										return;
 									}
 								}
@@ -125,7 +125,7 @@ namespace aatc {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (t->need_errorcheck_missing_functions) {
 									if (t->missing_functions & common::CONTAINER_OPERATION::FIND) {
-										common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_key->GetName(), "find");
+										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_key->GetName(), "find");
 										return T_container::DefaultPrimunion(t->datahandlingid_value, t->primitiveid_value);
 									}
 								}
@@ -169,7 +169,7 @@ namespace aatc {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (t->need_errorcheck_missing_functions) {
 									if (t->missing_functions & common::CONTAINER_OPERATION::FIND) {
-										common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_key->GetName(), "find");
+										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_key->GetName(), "find");
 										return t->end();
 									}
 								}

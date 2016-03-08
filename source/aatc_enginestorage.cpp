@@ -85,15 +85,15 @@ namespace aatc {
 			func_hash(NULL)
 		{
 			asIScriptEngine* engine = ctss->els->engine;
-			asITypeInfo* objtype = engine->GetTypeInfoById(subtypeid);
+			asITypeInfo* typeinfo = engine->GetTypeInfoById(subtypeid);
 
 			//get opEquals or opCmp function for this type to be stored
 
 			bool mustBeConst = (subtypeid & asTYPEID_HANDLETOCONST) ? true : false;
 
-			if (objtype){
-				for (asUINT i = 0; i < objtype->GetMethodCount(); i++){
-					asIScriptFunction *func = objtype->GetMethodByIndex(i);
+			if (typeinfo){
+				for (asUINT i = 0; i < typeinfo->GetMethodCount(); i++){
+					asIScriptFunction *func = typeinfo->GetMethodByIndex(i);
 
 					asDWORD flags = 0;
 					int returnTypeId = func->GetReturnTypeId(&flags);

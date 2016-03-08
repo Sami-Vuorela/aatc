@@ -60,6 +60,8 @@ void main_contents(){
 
 	engine->ReturnContext(cc);
 
+	test_Interop(engine, module);
+
 	engine->Release();
 
 	std::cout << "\nTesting finished, press enter to close console.";

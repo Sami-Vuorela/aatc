@@ -156,6 +156,7 @@
     <ClCompile Include="..\..\..\source\aatc_serializer.cpp" />
     <ClCompile Include="..\..\as_engine.cpp" />
     <ClCompile Include="..\..\main.cpp" />
+    <ClCompile Include="..\..\test_interop.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\..\source\aatc.hpp" />

@@ -12,10 +12,19 @@
 
 
 
-
+int aet_print_tab_counter;
 
 void aet_Print(const std::string& a){
+	for (int i = 0; i < aet_print_tab_counter; i++) {
+		std::cout << "  ";
+	}
 	std::cout << a << "\n";
+}
+void aet_PrintTabIncrement() {
+	aet_print_tab_counter++;
+}
+void aet_PrintTabDecrement(){
+	aet_print_tab_counter--;
 }
 
 
@@ -48,6 +57,10 @@ void aet_engine_contextcallback_return(asIScriptEngine* engine, asIScriptContext
 
 
 asIScriptEngine* aet_CreateEngine(){
+	aet_print_tab_counter = 0;
+
+
+
 	asIScriptEngine* engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
 
 	engine->SetMessageCallback(asFUNCTION(aet_MessageCallback), nullptr, asCALL_CDECL);
@@ -70,7 +83,11 @@ asIScriptEngine* aet_CreateEngine(){
 
 	int r = 0;
 	r = engine->RegisterGlobalFunction("void Print(string &in)", asFUNCTION(aet_Print), asCALL_CDECL); assert(r >= 0);
+	r = engine->RegisterGlobalFunction("void PrintTabIncrement()", asFUNCTION(aet_PrintTabIncrement), asCALL_CDECL); assert(r >= 0);
+	r = engine->RegisterGlobalFunction("void PrintTabDecrement()", asFUNCTION(aet_PrintTabDecrement), asCALL_CDECL); assert(r >= 0);
 
+
+	test_Interop_register(engine);
 
 
 	return engine;

@@ -74,7 +74,7 @@ namespace aatc {
 				>
 			> {
 			public:
-				unordered_set(asITypeInfo* objtype);
+				unordered_set(asITypeInfo* typeinfo);
 				unordered_set(const unordered_set& other);
 				unordered_set& operator=(const unordered_set& other);
 				unordered_set& swap(unordered_set& other);

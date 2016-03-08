@@ -141,7 +141,7 @@ namespace aatc {
 						template<typename T_container> void* back(T_container* t) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->empty()) {
-								aatc::common::errorprint::container::access_empty(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::back);
+								aatc::common::errorprint::container::access_empty(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::back);
 								return nullptr;
 							}
 							#endif
@@ -155,7 +155,7 @@ namespace aatc {
 						template<typename T_container> void* front(T_container* t) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->empty()) {
-								aatc::common::errorprint::container::access_empty(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::back);
+								aatc::common::errorprint::container::access_empty(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::back);
 								return nullptr;
 							}
 							#endif
@@ -172,7 +172,7 @@ namespace aatc {
 								if (!t->handlemode_directcomp) {
 									#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 										if (t->missing_functions & common::CONTAINER_OPERATION::ERASE_VALUE) {
-											common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase_value);
+											common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase_value);
 											return 0;
 										}
 									#endif
@@ -189,7 +189,7 @@ namespace aatc {
 							} else {
 								#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 									if (t->missing_functions & common::CONTAINER_OPERATION::ERASE_VALUE) {
-										common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase_value);
+										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase_value);
 										return 0;
 									}
 								#endif
@@ -211,11 +211,11 @@ namespace aatc {
 						template<typename T_container> void* operator_index_position(T_container* t, config::t::sizetype position) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->empty()) {
-								common::errorprint::container::access_empty(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::operator_index);
+								common::errorprint::container::access_empty(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::operator_index);
 								return nullptr;
 							}
 							if (position >= t->container.size()) {
-								common::errorprint::container::access_bounds(position, (config::t::sizetype)t->container.size(), t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::operator_index);
+								common::errorprint::container::access_bounds(position, (config::t::sizetype)t->container.size(), t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::operator_index);
 								return nullptr;
 							}
 							#endif
@@ -241,7 +241,7 @@ namespace aatc {
 								if (!t->handlemode_directcomp) {
 									#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 										if (t->missing_functions & common::CONTAINER_OPERATION::INSERT) {
-											common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::insert);
+											common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::insert);
 											return;
 										}
 									#endif
@@ -253,7 +253,7 @@ namespace aatc {
 							} else {
 								#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 									if (t->missing_functions & common::CONTAINER_OPERATION::INSERT) {
-										common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::insert);
+										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::insert);
 										return;
 									}
 								#endif
@@ -270,7 +270,7 @@ namespace aatc {
 
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->missing_functions & common::CONTAINER_OPERATION::SORT) {
-								common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::sort);
+								common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::sort);
 								return;
 							}
 							#endif
@@ -389,7 +389,7 @@ namespace aatc {
 							if (!t->handlemode_directcomp) {
 								#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 									if (t->missing_functions & common::CONTAINER_OPERATION::CONTAINS) {
-										common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::contains);
+										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::contains);
 										return 0;
 									}
 								#endif
@@ -471,7 +471,7 @@ namespace aatc {
 							if (!t->handlemode_directcomp) {
 								#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 									if (t->missing_functions & common::CONTAINER_OPERATION::FIND) {
-										common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::find);
+										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::find);
 
 										T_container::Iterator result(t);
 										result.SetToEnd();
@@ -528,7 +528,7 @@ namespace aatc {
 
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->missing_functions & common::CONTAINER_OPERATION::SORT) {
-								common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::sort);
+								common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::sort);
 								return;
 							}
 							#endif
@@ -646,11 +646,11 @@ namespace aatc {
 						template<typename T_container> void insert_position_before_constant(T_container* t, config::t::sizetype position, void* value) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->empty()) {
-								common::errorprint::container::access_empty(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::insert_position_before);
+								common::errorprint::container::access_empty(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::insert_position_before);
 								return;
 							}
 							if (position >= t->container.size()) {
-								common::errorprint::container::access_bounds(position, (config::t::sizetype)t->container.size(), t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::insert_position_before);
+								common::errorprint::container::access_bounds(position, (config::t::sizetype)t->container.size(), t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::insert_position_before);
 								return;
 							}
 							#endif
@@ -668,11 +668,11 @@ namespace aatc {
 						template<typename T_container> void insert_position_before_linear(T_container* t, config::t::sizetype position, void* value) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->empty()) {
-								common::errorprint::container::access_empty(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::insert_position_before);
+								common::errorprint::container::access_empty(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::insert_position_before);
 								return;
 							}
 							if (position >= t->container.size()) {
-								common::errorprint::container::access_bounds(position, (config::t::sizetype)t->container.size(), t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::insert_position_before);
+								common::errorprint::container::access_bounds(position, (config::t::sizetype)t->container.size(), t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::insert_position_before);
 								return;
 							}
 							#endif
@@ -692,11 +692,11 @@ namespace aatc {
 						template<typename T_container> void erase_position_constant(T_container* t, config::t::sizetype position) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->empty()) {
-								common::errorprint::container::access_empty(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
+								common::errorprint::container::access_empty(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
 								return;
 							}
 							if (position >= t->container.size()) {
-								common::errorprint::container::access_bounds(position, (config::t::sizetype)t->container.size(), t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
+								common::errorprint::container::access_bounds(position, (config::t::sizetype)t->container.size(), t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
 								return;
 							}
 							#endif
@@ -716,11 +716,11 @@ namespace aatc {
 						template<typename T_container> void erase_position_linear(T_container* t, config::t::sizetype position) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->empty()) {
-								common::errorprint::container::access_empty(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
+								common::errorprint::container::access_empty(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
 								return;
 							}
 							if (position >= t->container.size()) {
-								common::errorprint::container::access_bounds(position, (config::t::sizetype)t->container.size(), t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
+								common::errorprint::container::access_bounds(position, (config::t::sizetype)t->container.size(), t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
 								return;
 							}
 							#endif
@@ -746,15 +746,15 @@ namespace aatc {
 
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->empty()) {
-								common::errorprint::container::access_empty(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
+								common::errorprint::container::access_empty(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
 								return 0;
 							}
 							if (range_begin >= t->container.size()) {
-								common::errorprint::container::access_bounds(range_begin, (config::t::sizetype)t->container.size(), t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
+								common::errorprint::container::access_bounds(range_begin, (config::t::sizetype)t->container.size(), t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
 								return 0;
 							}
 							if (range_end > t->container.size()) {
-								common::errorprint::container::access_bounds(range_end, (config::t::sizetype)t->container.size(), t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
+								common::errorprint::container::access_bounds(range_end, (config::t::sizetype)t->container.size(), t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
 								return 0;
 							}
 							#endif
@@ -791,15 +791,15 @@ namespace aatc {
 
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 							if (t->empty()) {
-								common::errorprint::container::access_empty(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
+								common::errorprint::container::access_empty(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
 								return 0;
 							}
 							if (range_begin >= t->container.size()) {
-								common::errorprint::container::access_bounds(range_begin, (config::t::sizetype)t->container.size(), t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
+								common::errorprint::container::access_bounds(range_begin, (config::t::sizetype)t->container.size(), t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
 								return 0;
 							}
 							if (range_end > t->container.size()) {
-								common::errorprint::container::access_bounds(range_end, (config::t::sizetype)t->container.size(), t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
+								common::errorprint::container::access_bounds(range_end, (config::t::sizetype)t->container.size(), t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase);
 								return 0;
 							}
 							#endif
@@ -861,7 +861,7 @@ namespace aatc {
 							} else {
 								#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 									if (t->missing_functions & common::CONTAINER_OPERATION::ERASE_VALUE) {
-										common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase_value);
+										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::erase_value);
 										return 0;
 									}
 								#endif
@@ -914,7 +914,7 @@ namespace aatc {
 							if (!t->handlemode_directcomp) {
 								#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (t->missing_functions & common::CONTAINER_OPERATION::FIND) {
-									common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::find);
+									common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::find);
 
 									T_container::Iterator result(t);
 									result.SetToEnd();
@@ -948,7 +948,7 @@ namespace aatc {
 							} else {
 								#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (t->missing_functions & common::CONTAINER_OPERATION::COUNT) {
-									common::errorprint::container::missingfunctions_operation_missing(t->objtype_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::count);
+									common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::count);
 
 									T_container::Iterator result(t);
 									result.SetToEnd();

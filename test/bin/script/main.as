@@ -11,6 +11,9 @@ bool test_enable_print_failure = true;
 #include "test_container_unordered_map.as"
 
 #include "test_lambda.as"
+
+#include "test_interop.as"
+
 //#include "00 auto iterator tests.as"
 #include "00 serializer tests.as"
 

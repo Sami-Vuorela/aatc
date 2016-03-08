@@ -71,7 +71,7 @@ namespace aatc {
 					>
 				> {
 				public:
-					map(asITypeInfo* objtype);
+					map(asITypeInfo* typeinfo);
 					map(const map& other);
 					map& operator=(const map& other);
 

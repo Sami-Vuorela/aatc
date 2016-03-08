@@ -90,10 +90,10 @@ namespace aatc {
 
 
 
-					template<typename T_container> T_container* Factory(asITypeInfo* objtype) {
-						return new T_container(objtype);
+					template<typename T_container> T_container* Factory(asITypeInfo* typeinfo) {
+						return new T_container(typeinfo);
 					}
-					template<typename T_container> T_container* Factory_copy(asITypeInfo* objtype, const T_container& other) {
+					template<typename T_container> T_container* Factory_copy(asITypeInfo* typeinfo, const T_container& other) {
 						return new T_container(other);
 					}
 
@@ -129,7 +129,7 @@ namespace aatc {
 						common::DATAHANDLINGTYPE datahandlingid_value;
 						common::PRIMITIVE_TYPE primitiveid_value;
 
-						asITypeInfo* objtype_container;
+						asITypeInfo* typeinfo_container;
 						asITypeInfo* objtype_key;
 						asITypeInfo* objtype_value;
 
@@ -146,11 +146,11 @@ namespace aatc {
 						bool directcomp_forced;
 						bool need_errorcheck_missing_functions;
 
-						Containerbase(asIScriptEngine* _engine, asITypeInfo* _objtype) :
+						Containerbase(asIScriptEngine* _engine, asITypeInfo* _typeinfo) :
 							container::shared::container_basicbase(_engine),
 							container(_engine, this),
 							basetype_refcounted_GC(),
-							objtype_container(_objtype),
+							typeinfo_container(_typeinfo),
 							needref_key(1),
 							needref_value(1),
 							directcomp_forced(0),
@@ -160,8 +160,8 @@ namespace aatc {
 						{
 							engine = _engine;
 
-							astypeid_key = objtype_container->GetSubTypeId(0);
-							astypeid_value = objtype_container->GetSubTypeId(1);
+							astypeid_key = typeinfo_container->GetSubTypeId(0);
+							astypeid_value = typeinfo_container->GetSubTypeId(1);
 
 							datahandlingid_key = common::Determine_Datahandlingtype(engine, astypeid_key);
 							datahandlingid_value = common::Determine_Datahandlingtype(engine, astypeid_value);
@@ -195,7 +195,7 @@ namespace aatc {
 									need_errorcheck_missing_functions = 0;
 								}
 
-								objtype_key = objtype_container->GetSubType(0);
+								objtype_key = typeinfo_container->GetSubType(0);
 								if (astypeid_key & asOBJ_NOCOUNT) { needref_key = 0; }
 								break;
 							}
@@ -216,7 +216,7 @@ namespace aatc {
 							default:
 							{
 								objectmode_value = 1;
-								objtype_value = objtype_container->GetSubType(1);
+								objtype_value = typeinfo_container->GetSubType(1);
 								if (astypeid_value & asOBJ_NOCOUNT) { needref_value = 0; }
 								break;
 							}
@@ -247,7 +247,7 @@ namespace aatc {
 
 									if (bad) {
 										char msg[1000];
-										sprintf_s(msg, 1000, "Type '%s' has missing methods required for container '%s'.", objtype_content->GetName(), objtype_container->GetName());
+										sprintf_s(msg, 1000, "Type '%s' has missing methods required for container '%s'.", objtype_content->GetName(), typeinfo_container->GetName());
 										asGetActiveContext()->SetException(msg);
 									}
 								}
@@ -255,7 +255,7 @@ namespace aatc {
 							}
 
 
-							engine->NotifyGarbageCollectorOfNewObject(this, objtype_container);
+							engine->NotifyGarbageCollectorOfNewObject(this, typeinfo_container);
 						}
 						~Containerbase() {
 							clear();
@@ -455,13 +455,13 @@ namespace aatc {
 						//handle input is void* that points at handle which is a void*
 						//handle output is void* that points at handle which is a void*
 
-						void StoreHandle(void** target, void* ptr_to_handle, asITypeInfo* objtype) {
+						void StoreHandle(void** target, void* ptr_to_handle, asITypeInfo* typeinfo) {
 							*target = ptr_to_handle;
-							engine->AddRefScriptObject(*target, objtype);
+							engine->AddRefScriptObject(*target, typeinfo);
 						}
-						void* StoreHandle2(void* ptr_to_handle, asITypeInfo* objtype) {
+						void* StoreHandle2(void* ptr_to_handle, asITypeInfo* typeinfo) {
 							void* result = *(void**)ptr_to_handle;
-							engine->AddRefScriptObject(result, objtype);
+							engine->AddRefScriptObject(result, typeinfo);
 							return result;
 						}
 
@@ -697,13 +697,13 @@ namespace aatc {
 								return *this;
 							}
 
-							static void static_constructor_default(asITypeInfo* objtype, void *memory) {
+							static void static_constructor_default(asITypeInfo* typeinfo, void *memory) {
 								new(memory)Iterator();
 							}
-							static void static_constructor_copy(asITypeInfo* objtype, Iterator* other, void *memory) {
+							static void static_constructor_copy(asITypeInfo* typeinfo, Iterator* other, void *memory) {
 								new(memory)Iterator(*other);
 							}
-							static void static_constructor_parentcontainer(asITypeInfo* objtype, Containerbase* host, void *memory) {
+							static void static_constructor_parentcontainer(asITypeInfo* typeinfo, Containerbase* host, void *memory) {
 								new(memory)Iterator(host);
 								host->refcount_Release();
 							}

@@ -53,11 +53,11 @@ namespace aatc {
 
 
 
-				unordered_map::unordered_map(asITypeInfo* _objtype) :
-					Containerbase(_objtype->GetEngine(), _objtype)
+				unordered_map::unordered_map(asITypeInfo* _typeinfo) :
+					Containerbase(_typeinfo->GetEngine(), _typeinfo)
 				{}
 				unordered_map::unordered_map(const unordered_map& other) :
-					Containerbase(other.engine, other.objtype_container)
+					Containerbase(other.engine, other.typeinfo_container)
 				{
 					(*this) = other;
 				}

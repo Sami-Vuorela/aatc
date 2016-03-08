@@ -74,6 +74,9 @@
     <ClCompile Include="..\..\..\..\..\..\..\..\..\dev\angelscript\2_31_0\sdk\add_on\serializer\serializer.cpp">
       <Filter>as addons</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\test_interop.cpp">
+      <Filter>test</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\as_engine.hpp">

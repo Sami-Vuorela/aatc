@@ -55,7 +55,7 @@ namespace aatc {
 				container::listing::tags_of_container::vector
 			> {
 			public:
-				vector(asITypeInfo* objtype);
+				vector(asITypeInfo* typeinfo);
 				vector(const vector& other);
 				vector& operator=(const vector& other);
 				vector& swap(vector& other);

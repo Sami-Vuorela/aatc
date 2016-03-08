@@ -52,11 +52,11 @@ namespace aatc {
 
 
 
-			unordered_set::unordered_set(asITypeInfo* _objtype) :
-				Containerbase(_objtype->GetEngine(), _objtype)
+			unordered_set::unordered_set(asITypeInfo* _typeinfo) :
+				Containerbase(_typeinfo->GetEngine(), _typeinfo)
 			{}
 			unordered_set::unordered_set(const unordered_set& other) :
-				Containerbase(other.engine, other.objtype_container)
+				Containerbase(other.engine, other.typeinfo_container)
 			{
 				(*this) = other;
 			}

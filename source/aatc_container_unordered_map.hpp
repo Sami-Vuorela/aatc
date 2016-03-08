@@ -73,7 +73,7 @@ namespace aatc {
 					>
 				> {
 				public:
-					unordered_map(asITypeInfo* objtype);
+					unordered_map(asITypeInfo* typeinfo);
 					unordered_map(const unordered_map& other);
 					unordered_map& operator=(const unordered_map& other);
 

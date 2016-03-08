@@ -52,11 +52,11 @@ namespace aatc {
 
 
 
-			vector::vector(asITypeInfo* _objtype) :
-				Containerbase(_objtype->GetEngine(), _objtype)
+			vector::vector(asITypeInfo* _typeinfo) :
+				Containerbase(_typeinfo->GetEngine(), _typeinfo)
 			{}
 			vector::vector(const vector& other) :
-				Containerbase(other.engine, other.objtype_container)
+				Containerbase(other.engine, other.typeinfo_container)
 			{
 				(*this) = other;
 			}
