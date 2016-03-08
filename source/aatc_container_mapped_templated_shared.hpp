@@ -90,13 +90,6 @@ namespace aatc {
 
 
 
-<<<<<<< HEAD
-					template<typename T_container> T_container* Factory(asITypeInfo* typeinfo) {
-						return new T_container(typeinfo);
-					}
-					template<typename T_container> T_container* Factory_copy(asITypeInfo* typeinfo, const T_container& other) {
-						return new T_container(other);
-=======
 					namespace factory {
 						template<typename T_container> T_container* Factory_default(asITypeInfo* objtype) {
 							return new T_container(objtype);
@@ -116,7 +109,6 @@ namespace aatc {
 							*t = *other;
 							return *t;
 						}
->>>>>>> refs/heads/throwaway-useless-asglue-handle-params-for-copy-etc
 					}
 
 

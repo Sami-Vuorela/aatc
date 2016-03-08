@@ -117,15 +117,8 @@ namespace aatc {
 
 
 					Containerbase& operator=(const Containerbase& other) {
-<<<<<<< HEAD
 						safety_iteratorversion_Increment();
-
 						container.operator=(other.container);
-
-=======
-						container.operator=(other.container);
-						safety_iteratorversion_Increment();
->>>>>>> refs/heads/throwaway-useless-asglue-handle-params-for-copy-etc
 						return *this;
 					}
 
