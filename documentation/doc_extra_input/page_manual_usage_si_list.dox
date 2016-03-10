@@ -4,7 +4,7 @@ template<typename T> class list{
 	list();
 	list(const list@ other);
 	list& opAssign(const list@ other);
-	list& swap(list@ other);
+	list& swap(list &inout other);
 	void SetDirectcomp(bool yesno);
 	
 	

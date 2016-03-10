@@ -4,7 +4,7 @@ template<typename T_key,typename T_value> class unordered_map{
 	unordered_map();
 	unordered_map(const unordered_map@ other);
 	unordered_map& opAssign(const unordered_map@ other);
-	unordered_map& swap(unordered_map@ other);
+	unordered_map& swap(unordered_map &inout other);
 	void SetDirectcomp(bool yesno);
 	
 	

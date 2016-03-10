@@ -4,7 +4,7 @@ template<typename T_key,typename T_value> class map{
 	map();
 	map(const map@ other);
 	map& opAssign(const map@ other);
-	map& swap(map@ other);
+	map& swap(map &inout other);
 	void SetDirectcomp(bool yesno);
 	
 	

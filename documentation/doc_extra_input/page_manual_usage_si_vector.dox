@@ -4,7 +4,7 @@ template<typename T> class vector{
 	vector();
 	vector(const vector@ other);
 	vector& opAssign(const vector@ other);
-	vector& swap(vector@ other);
+	vector& swap(vector &inout other);
 	void SetDirectcomp(bool yesno);
 	
 	

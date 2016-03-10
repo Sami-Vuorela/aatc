@@ -4,7 +4,7 @@ template<typename T> class set{
 	set();
 	set(const set@ other);
 	set& opAssign(const set@ other);
-	set& swap(set@ other);
+	set& swap(set &inout other);
 	void SetDirectcomp(bool yesno);
 	
 	

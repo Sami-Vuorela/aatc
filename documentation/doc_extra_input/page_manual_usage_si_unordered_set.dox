@@ -4,7 +4,7 @@ template<typename T> class unordered_set{
 	unordered_set();
 	unordered_set(const unordered_set@ other);
 	unordered_set& opAssign(const unordered_set@ other);
-	unordered_set& swap(unordered_set@ other);
+	unordered_set& swap(unordered_set &inout other);
 	void SetDirectcomp(bool yesno);
 	
 	
