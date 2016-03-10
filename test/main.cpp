@@ -31,6 +31,8 @@ void main_contents(){
 	asIScriptModule* module = engine->GetModule("testmodule");
 
 
+	test_Interop(engine, module);
+
 
 	asIScriptFunction* func_scriptmain = module->GetFunctionByName("scriptmain");
 
@@ -59,8 +61,6 @@ void main_contents(){
 
 
 	engine->ReturnContext(cc);
-
-	test_Interop(engine, module);
 
 	engine->Release();
 

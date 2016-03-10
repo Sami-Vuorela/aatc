@@ -59,7 +59,7 @@ namespace aatc {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (t->need_errorcheck_missing_functions) {
 									if (t->missing_functions & common::CONTAINER_OPERATION::INSERT) {
-										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_key->GetName(), "insert");
+										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->typeinfo_key->GetName(), "insert");
 										return;
 									}
 								}
@@ -75,8 +75,8 @@ namespace aatc {
 							if (it == t->container.end()) {
 								common::primunion_pair insertpair;
 
-								t->store_Scriptany_to_Primunion(key, insertpair.first, t->datahandlingid_key, t->primitiveid_key, t->objtype_key);
-								t->store_Scriptany_to_Primunion(value, insertpair.second, t->datahandlingid_value, t->primitiveid_value, t->objtype_value);
+								t->store_Scriptany_to_Primunion(key, insertpair.first, t->datahandlingid_key, t->primitiveid_key, t->typeinfo_key);
+								t->store_Scriptany_to_Primunion(value, insertpair.second, t->datahandlingid_value, t->primitiveid_value, t->typeinfo_value);
 
 								t->container.insert(insertpair);
 							}
@@ -88,7 +88,7 @@ namespace aatc {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (t->need_errorcheck_missing_functions) {
 									if (t->missing_functions & common::CONTAINER_OPERATION::ERASE_VALUE) {
-										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_key->GetName(), "erase");
+										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->typeinfo_key->GetName(), "erase");
 										return;
 									}
 								}
@@ -112,10 +112,10 @@ namespace aatc {
 								t->container.erase(it);
 
 								if (t->datahandlingid_key != common::DATAHANDLINGTYPE::PRIMITIVE) {
-									t->engine->ReleaseScriptObject(old_key.ptr, t->objtype_key);
+									t->engine->ReleaseScriptObject(old_key.ptr, t->typeinfo_key);
 								}
 								if (t->datahandlingid_value != common::DATAHANDLINGTYPE::PRIMITIVE) {
-									t->engine->ReleaseScriptObject(old_value.ptr, t->objtype_value);
+									t->engine->ReleaseScriptObject(old_value.ptr, t->typeinfo_value);
 								}
 							}
 						}
@@ -125,7 +125,7 @@ namespace aatc {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (t->need_errorcheck_missing_functions) {
 									if (t->missing_functions & common::CONTAINER_OPERATION::FIND) {
-										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_key->GetName(), "find");
+										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->typeinfo_key->GetName(), "find");
 										return T_container::DefaultPrimunion(t->datahandlingid_value, t->primitiveid_value);
 									}
 								}
@@ -169,7 +169,7 @@ namespace aatc {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (t->need_errorcheck_missing_functions) {
 									if (t->missing_functions & common::CONTAINER_OPERATION::FIND) {
-										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_key->GetName(), "find");
+										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->typeinfo_key->GetName(), "find");
 										return t->end();
 									}
 								}
@@ -218,12 +218,12 @@ namespace aatc {
 								case common::DATAHANDLINGTYPE::PRIMITIVE: { break; }
 								case common::DATAHANDLINGTYPE::STRING:
 								{
-									t->engine->ReleaseScriptObject(old_key.ptr, t->objtype_key);
+									t->engine->ReleaseScriptObject(old_key.ptr, t->typeinfo_key);
 									break;
 								}
 								default:
 								{
-									t->engine->ReleaseScriptObject(old_key.ptr, t->objtype_key);
+									t->engine->ReleaseScriptObject(old_key.ptr, t->typeinfo_key);
 									break;
 								}
 								};
@@ -231,12 +231,12 @@ namespace aatc {
 								case common::DATAHANDLINGTYPE::PRIMITIVE: { break; }
 								case common::DATAHANDLINGTYPE::STRING:
 								{
-									t->engine->ReleaseScriptObject(old_value.ptr, t->objtype_value);
+									t->engine->ReleaseScriptObject(old_value.ptr, t->typeinfo_value);
 									break;
 								}
 								default:
 								{
-									t->engine->ReleaseScriptObject(old_value.ptr, t->objtype_value);
+									t->engine->ReleaseScriptObject(old_value.ptr, t->typeinfo_value);
 									break;
 								}
 								};
@@ -300,17 +300,17 @@ namespace aatc {
 								if (nonprimitives) {
 									if (nonprimitives == 2) {
 										for (auto it = old_items.begin(); it != old_items.end(); it++) {
-											t->engine->ReleaseScriptObject((*it).first.ptr, t->objtype_key);
-											t->engine->ReleaseScriptObject((*it).second.ptr, t->objtype_value);
+											t->engine->ReleaseScriptObject((*it).first.ptr, t->typeinfo_key);
+											t->engine->ReleaseScriptObject((*it).second.ptr, t->typeinfo_value);
 										}
 									} else {
 										if (t->datahandlingid_key != common::DATAHANDLINGTYPE::PRIMITIVE) {
 											for (auto it = old_items.begin(); it != old_items.end(); it++) {
-												t->engine->ReleaseScriptObject((*it).first.ptr, t->objtype_key);
+												t->engine->ReleaseScriptObject((*it).first.ptr, t->typeinfo_key);
 											}
 										} else {
 											for (auto it = old_items.begin(); it != old_items.end(); it++) {
-												t->engine->ReleaseScriptObject((*it).second.ptr, t->objtype_value);
+												t->engine->ReleaseScriptObject((*it).second.ptr, t->typeinfo_value);
 											}
 										}
 									}
@@ -332,8 +332,8 @@ namespace aatc {
 								} else {
 									common::primunion_pair insertpair;
 
-									t->store_Scriptany_to_Primunion(key, insertpair.first, t->datahandlingid_key, t->primitiveid_key, t->objtype_key);
-									t->DefaultConstructPrimunion(insertpair.second, t->datahandlingid_value, t->primitiveid_value, t->objtype_value);
+									t->store_Scriptany_to_Primunion(key, insertpair.first, t->datahandlingid_key, t->primitiveid_key, t->typeinfo_key);
+									t->DefaultConstructPrimunion(insertpair.second, t->datahandlingid_value, t->primitiveid_value, t->typeinfo_value);
 
 									std::pair<T_container::T_iterator_native,bool> insert_result = t->container.insert(insertpair);
 

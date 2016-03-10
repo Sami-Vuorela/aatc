@@ -34,6 +34,10 @@ samivuorela@gmail.com
 #include "aatc_enginestorage.hpp"
 
 
+//int debug_containercount = 0;
+//#include <iostream>
+
+
 
 BEGIN_AS_NAMESPACE
 namespace aatc {
@@ -48,8 +52,13 @@ namespace aatc {
 				#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 					safety_iteratorversion = 0;
 				#endif
+
+				//debug_containercount++;
 			}
-			container_basicbase::~container_basicbase() {}
+			container_basicbase::~container_basicbase() {
+				//debug_containercount--;
+				//std::cout << "debug_containercount = " << debug_containercount << "\n";
+			}
 
 			void container_basicbase::safety_iteratorversion_Increment() {
 				#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS

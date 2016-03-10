@@ -379,9 +379,9 @@ namespace aatc {
 
 					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s@ f()", rs.n_container_T);
 					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTION(shared::asglue::Factory_default<T_container>), asCALL_CDECL); assert(rs.error >= 0);
-					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s@ f(const %s@)", rs.n_container_T, rs.n_container_T);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s@ f(%s@)", rs.n_container_T, rs.n_container_T);
 					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTION(shared::asglue::Factory_copy<T_container>), asCALL_CDECL); assert(rs.error >= 0);
-					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& opAssign(const %s@)", rs.n_container_T, rs.n_container_T);
+					sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& opAssign(%s@)", rs.n_container_T, rs.n_container_T);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(shared::asglue::Assign<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 
 					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_ADDREF, "void f()", asMETHOD(T_container, refcount_Add), asCALL_THISCALL); assert(rs.error >= 0);

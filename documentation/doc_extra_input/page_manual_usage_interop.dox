@@ -1,0 +1,302 @@
+/*! \page page_manual_usage_interop C++ / Angelscript interoperability
+<p>All containers can be created in C++ or angelscript. The angelscript side is more convenient.</p>
+<p>C++ side quirks</p>
+- All containers are registered with angelscript as ref types
+	- They must be created with new and deleted with container->refcount_Release()
+- Tempspec'd containers use real C++ types and are actually nice to use unlike...
+- Templated containers support all types and thus their interface is full of voidpointers.
+	- Templated containers internally store each item in an aatc::common::primunion to avoid different allocation code
+		- If the content is object or handle, primunion.ptr is a void* which points at the object
+- AATC containers hold their native container in my_aatc_container.container
+	- The native container should be used for iteration, the AATC container's functions should be used for everything else
+
+\n
+<p>Angelscript side quirks</p>
+- You must be careful when passing around containers to avoid accidental copies of entire containers
+	- "Container@" will not copy
+	- "Container &in" would copy, but doesn't even compile (because containers' opAssign and copy constructor are registered to take a handle)
+	- "Container &out" will copy
+	- "Container &inout" will not copy
+
+\n
+<p>Example of creating a vector<int> in C++ then passing it to angelscript:</p>
+\code{.cpp}
+//C++ side
+//C++ side
+//C++ side
+#include "aatc_container_vector.hpp"
+
+
+{
+	aatc::container::tempspec::vector<int>* cont = new aatc::container::tempspec::vector<int>;
+
+	for (int i = 0; i < 4; i++) {
+		cont->push_back(i);
+	}
+	
+	//Increment refcount here if you want C++ to have ownership of your container
+	//cont->refcount_Add()
+
+	asIScriptFunction* scriptfunc = my_module->GetFunctionByName("angelscript_function_who_wants_a_vector");
+		context->Prepare(scriptfunc);
+		context->SetArgAddress(0, cont);
+	context->Execute();
+	
+	//The angelscript function will decrement the container's refcount after its done running and delete it unless you incremented the refcount above with cont->refcount_Add()
+}
+
+//Angelscript side
+//Angelscript side
+//Angelscript side
+
+void angelscript_function_who_wants_a_vector(vector<int>@ cont){
+	for(auto it = cont.begin();it++;){
+		Print("value = " + it.value);
+	}
+}
+
+//Prints
+//Prints
+//Prints
+value = 0
+value = 1
+value = 2
+value = 3
+
+
+
+\endcode
+\n
+<p>Example of creating a map<int,int> in C++ then passing it to angelscript:</p>
+\code{.cpp}
+//C++ side
+//C++ side
+//C++ side
+#include "aatc_container_map.hpp"
+
+
+{
+	//typeinfo is required for templated containers
+	asITypeInfo* tinfo = my_engine->GetTypeInfoByDecl("map<int,int>");
+	
+	aatc::container::mapped::templated::map* cont = new aatc::container::mapped::templated::map(tinfo);
+
+	//Working with templated containers is a pain in C++, because everything wants a void*
+	for (int i = 0; i < 4; i++) {
+		int key = i;
+		int value = 100 + i;
+		cont->insert(&key, &value);
+	}
+	
+	//Increment refcount here if you want C++ to have ownership of your container
+	//cont->refcount_Add()
+
+	asIScriptFunction* scriptfunc = my_module->GetFunctionByName("angelscript_function_who_wants_a_map");
+		context->Prepare(scriptfunc);
+		context->SetArgAddress(0, cont);
+	context->Execute();
+	
+	//The angelscript function will decrement the container's refcount after its done running and delete it unless you incremented the refcount above with cont->refcount_Add()
+}
+
+//Angelscript side
+//Angelscript side
+//Angelscript side
+
+void angelscript_function_who_wants_a_map(map<int,int>@ cont){
+	for(auto it = cont.begin();it++;){
+		Print("key = " + it.key + "   value = " + it.value);
+	}
+}
+
+//Prints
+//Prints
+//Prints
+key = 0   value = 100
+key = 1   value = 101
+key = 2   value = 102
+key = 3   value = 103
+
+
+
+\endcode
+\n
+<p>Example of creating a vector<int> in angelscript then passing it to C++:</p>
+\code{.cpp}
+//C++ side
+//C++ side
+//C++ side
+#include "aatc_container_vector.hpp"
+
+
+
+void cpp_read_vector(aatc::container::tempspec::vector<int>* cont) {
+	MySuperPrint("size = " + cont->size());
+	
+	//cont->container is the native std::vector<int> which the AATC container uses for storage
+	for(int v : cont->container){
+		MySuperPrint("value = " + v);
+	}
+}
+
+{//Registration
+	engine->RegisterGlobalFunction("void cpp_read_vector(vector<int>@)", asFUNCTION(cpp_read_vector), asCALL_CDECL);
+}
+
+//Angelscript side
+//Angelscript side
+//Angelscript side
+
+void my_scriptmain(){
+	vector<int> cont;
+	
+	for(int i=0; i<5;i++){
+		cont.push_back(i);
+	}
+	
+	cpp_read_vector(cont);
+}
+
+//Prints
+//Prints
+//Prints
+size = 5
+value = 0
+value = 1
+value = 2
+value = 3
+value = 4
+
+\endcode
+\n
+<p>Example of creating a map<int,int> in angelscript then passing it to C++ and iterating the map in C++:</p>
+\code{.cpp}
+//C++ side
+//C++ side
+//C++ side
+#include "aatc_container_map.hpp"
+
+
+
+void cpp_read_map(aatc::container::mapped::templated::map& cont) {
+	/*
+		Cont has its typeinfo set during construction in angelscript.
+		
+		We could examine it here with:
+			cont->typeinfo_container
+			cont->typeinfo_key
+			cont->typeinfo_value
+		
+		But we already know that:
+			cont->typeinfo_container == my_engine->GetTypeInfoByDecl("map<int,int>")
+				cont->typeinfo_container->GetSubTypeId(0) == asTYPEID_INT32
+				cont->typeinfo_container->GetSubTypeId(1) == asTYPEID_INT32
+			
+			cont->typeinfo_key == NULL
+			cont->typeinfo_value == NULL
+	*/
+	
+	MySuperPrint("size = " + cont->size());
+	
+	//cont->container is the native std::map<primunion,primunion> which the AATC container uses for storage
+	for(aatc::common::primunion_pair const& pup : cont.container){
+		MySuperPrint("key = " + pup.first.i32 + "   value = " + pup.second.i32);
+	}
+}
+
+{//Registration
+	engine->RegisterGlobalFunction("void cpp_read_map(map<int,int> &inout)", asFUNCTION(cpp_read_map), asCALL_CDECL);
+}
+
+//Angelscript side
+//Angelscript side
+//Angelscript side
+
+void my_scriptmain(){
+	map<int,int> cont;
+	
+	for(int i=0; i<5;i++){
+		cont.insert(i,100 + i);
+	}
+	
+	cpp_read_map(cont);
+}
+
+//Prints
+//Prints
+//Prints
+size = 5
+key = 0   value = 100
+key = 1   value = 101
+key = 2   value = 102
+key = 3   value = 103
+key = 4   value = 104
+
+\endcode
+\n
+<p>Example of creating a map<string,string> in angelscript then passing it to C++ and iterating the map in C++:</p>
+\code{.cpp}
+//C++ side
+//C++ side
+//C++ side
+#include "aatc_container_map.hpp"
+
+
+
+void cpp_read_map(aatc::container::mapped::templated::map& cont) {
+	/*
+		Cont has its typeinfo set during construction in angelscript.
+		
+		We could examine it here with:
+			cont->typeinfo_container
+			cont->typeinfo_key
+			cont->typeinfo_value
+		
+		But we already know that:
+			cont->typeinfo_container == my_engine->GetTypeInfoByDecl("map<string,string>")
+			cont->typeinfo_key == my_engine->GetTypeInfoByDecl("string")
+			cont->typeinfo_value == my_engine->GetTypeInfoByDecl("string")
+	*/
+	
+	MySuperPrint("size = " + cont->size());
+	
+	//cont->container is the native std::map<primunion,primunion> which the AATC container uses for storage
+	for(aatc::common::primunion_pair const& pup : cont.container){
+		std::string* key = (std::string*)pup.first.ptr;
+		std::string* value = (std::string*)pup.second.ptr;
+		
+		MySuperPrint("key = " + *key + "   value = " + *value);
+	}
+}
+
+{//Registration
+	engine->RegisterGlobalFunction("void cpp_read_map(map<string,string> &inout)", asFUNCTION(cpp_read_map), asCALL_CDECL);
+}
+
+//Angelscript side
+//Angelscript side
+//Angelscript side
+
+void my_scriptmain(){
+	map<string,string> cont;
+	
+	for(int i=0; i<5;i++){
+		cont.insert("s" + i,"ss" + 100 + i);
+	}
+	
+	cpp_read_map(cont);
+}
+
+//Prints
+//Prints
+//Prints
+size = 5
+key = s0   value = ss100
+key = s1   value = ss101
+key = s2   value = ss102
+key = s3   value = ss103
+key = s4   value = ss104
+
+\endcode
+\n
+*/

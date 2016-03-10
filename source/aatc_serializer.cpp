@@ -309,7 +309,7 @@ namespace aatc {
 						case common::DATAHANDLINGTYPE::OBJECT:
 						{
 							void* serialized_object = nullptr;
-							serialized_object = container_base->engine->CreateScriptObject(container->objtype_key);
+							serialized_object = container_base->engine->CreateScriptObject(container->typeinfo_key);
 							val_key->Restore(serialized_object, container->astypeid_key);
 							insertpair.first.ptr = serialized_object;
 							break;
@@ -332,7 +332,7 @@ namespace aatc {
 						case common::DATAHANDLINGTYPE::OBJECT:
 						{
 							void* serialized_object = nullptr;
-							serialized_object = container_base->engine->CreateScriptObject(container->objtype_value);
+							serialized_object = container_base->engine->CreateScriptObject(container->typeinfo_value);
 							val_value->Restore(serialized_object, container->astypeid_value);
 							insertpair.second.ptr = serialized_object;
 							break;

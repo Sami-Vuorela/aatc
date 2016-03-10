@@ -144,8 +144,8 @@ namespace aatc {
 						common::PRIMITIVE_TYPE primitiveid_value;
 
 						asITypeInfo* typeinfo_container;
-						asITypeInfo* objtype_key;
-						asITypeInfo* objtype_value;
+						asITypeInfo* typeinfo_key;
+						asITypeInfo* typeinfo_value;
 
 						config::t::astypeid astypeid_key;
 						config::t::astypeid astypeid_value;
@@ -169,8 +169,8 @@ namespace aatc {
 							needref_value(1),
 							directcomp_forced(0),
 							need_errorcheck_missing_functions(1),
-							objtype_key(nullptr),
-							objtype_value(nullptr)
+							typeinfo_key(nullptr),
+							typeinfo_value(nullptr)
 						{
 							engine = _engine;
 
@@ -194,7 +194,7 @@ namespace aatc {
 							{
 								need_errorcheck_missing_functions = 0;
 								objectmode_key = 0;
-								objtype_key = engine->GetTypeInfoById(engine->GetStringFactoryReturnTypeId());
+								typeinfo_key = engine->GetTypeInfoById(engine->GetStringFactoryReturnTypeId());
 								break;
 							}
 							default:
@@ -209,7 +209,7 @@ namespace aatc {
 									need_errorcheck_missing_functions = 0;
 								}
 
-								objtype_key = typeinfo_container->GetSubType(0);
+								typeinfo_key = typeinfo_container->GetSubType(0);
 								if (astypeid_key & asOBJ_NOCOUNT) { needref_key = 0; }
 								break;
 							}
@@ -224,13 +224,13 @@ namespace aatc {
 							case common::DATAHANDLINGTYPE::STRING:
 							{
 								objectmode_value = 0;
-								objtype_value = engine->GetTypeInfoById(engine->GetStringFactoryReturnTypeId());
+								typeinfo_value = engine->GetTypeInfoById(engine->GetStringFactoryReturnTypeId());
 								break;
 							}
 							default:
 							{
 								objectmode_value = 1;
-								objtype_value = typeinfo_container->GetSubType(1);
+								typeinfo_value = typeinfo_container->GetSubType(1);
 								if (astypeid_value & asOBJ_NOCOUNT) { needref_value = 0; }
 								break;
 							}
@@ -292,7 +292,7 @@ namespace aatc {
 
 									for (; it != it_end; it++) {
 										void*& iii = const_cast<void*&>((*it).first.ptr);
-										iii = engine->CreateScriptObjectCopy(iii, objtype_key);
+										iii = engine->CreateScriptObjectCopy(iii, typeinfo_key);
 									}
 								}
 
@@ -307,7 +307,7 @@ namespace aatc {
 										void*& iii = const_cast<void*&>((*it).second.ptr);
 										void*& iii_other = const_cast<void*&>((*it_other).second.ptr);
 
-										iii = engine->CreateScriptObjectCopy(iii_other, objtype_value);
+										iii = engine->CreateScriptObjectCopy(iii_other, typeinfo_value);
 
 										it++;
 										it_other++;
@@ -317,7 +317,7 @@ namespace aatc {
 								case common::DATAHANDLINGTYPE::HANDLE:
 								{
 									for (auto it = container.begin(); it != container.end(); it++) {
-										engine->AddRefScriptObject((*it).second.ptr, objtype_value);
+										engine->AddRefScriptObject((*it).second.ptr, typeinfo_value);
 									}
 									break;
 								}
@@ -331,7 +331,7 @@ namespace aatc {
 										void*& iii = const_cast<void*&>((*it).second.ptr);
 										void*& iii_other = const_cast<void*&>((*it_other).second.ptr);
 
-										iii = engine->CreateScriptObjectCopy(iii_other, objtype_value);
+										iii = engine->CreateScriptObjectCopy(iii_other, typeinfo_value);
 
 										it++;
 										it_other++;
@@ -351,17 +351,17 @@ namespace aatc {
 									case common::DATAHANDLINGTYPE::HANDLE:
 									{
 										pu_key.ptr = otherpu_key.ptr;
-										engine->AddRefScriptObject(pu_key.ptr, objtype_key);
+										engine->AddRefScriptObject(pu_key.ptr, typeinfo_key);
 										break;
 									}
 									case common::DATAHANDLINGTYPE::OBJECT:
 									{
-										pu_key.ptr = engine->CreateScriptObjectCopy(otherpu_key.ptr, objtype_key);
+										pu_key.ptr = engine->CreateScriptObjectCopy(otherpu_key.ptr, typeinfo_key);
 										break;
 									}
 									case common::DATAHANDLINGTYPE::STRING:
 									{
-										pu_key.ptr = engine->CreateScriptObjectCopy(otherpu_key.ptr, objtype_key);
+										pu_key.ptr = engine->CreateScriptObjectCopy(otherpu_key.ptr, typeinfo_key);
 										break;
 									}
 									case common::DATAHANDLINGTYPE::PRIMITIVE:
@@ -386,17 +386,17 @@ namespace aatc {
 									case common::DATAHANDLINGTYPE::HANDLE:
 									{
 										pu_value.ptr = otherpu_value.ptr;
-										engine->AddRefScriptObject(pu_value.ptr, objtype_value);
+										engine->AddRefScriptObject(pu_value.ptr, typeinfo_value);
 										break;
 									}
 									case common::DATAHANDLINGTYPE::OBJECT:
 									{
-										pu_value.ptr = engine->CreateScriptObjectCopy(otherpu_value.ptr, objtype_value);
+										pu_value.ptr = engine->CreateScriptObjectCopy(otherpu_value.ptr, typeinfo_value);
 										break;
 									}
 									case common::DATAHANDLINGTYPE::STRING:
 									{
-										pu_value.ptr = engine->CreateScriptObjectCopy(otherpu_value.ptr, objtype_value);
+										pu_value.ptr = engine->CreateScriptObjectCopy(otherpu_value.ptr, typeinfo_value);
 										break;
 									}
 									case common::DATAHANDLINGTYPE::PRIMITIVE:
@@ -633,14 +633,14 @@ namespace aatc {
 								auto it = container.begin();
 								auto itend = container.end();
 								for (; it != itend; it++) {
-									engine->ReleaseScriptObject((*it).first.ptr, objtype_key);
+									engine->ReleaseScriptObject((*it).first.ptr, typeinfo_key);
 								}
 							}
 							if (datahandlingid_value != common::DATAHANDLINGTYPE::PRIMITIVE) {
 								auto it = container.begin();
 								auto itend = container.end();
 								for (; it != itend; it++) {
-									engine->ReleaseScriptObject((*it).second.ptr, objtype_value);
+									engine->ReleaseScriptObject((*it).second.ptr, typeinfo_value);
 								}
 							}
 
@@ -850,10 +850,10 @@ namespace aatc {
 									void** it_inner = &((*it).second.ptr);//convenience
 
 									if (*it_inner) {
-										host->engine->ReleaseScriptObject(*it_inner, host->objtype_value);
+										host->engine->ReleaseScriptObject(*it_inner, host->typeinfo_value);
 									}
 									if (value) {
-										*it_inner = host->StoreHandle2(value, host->objtype_value);
+										*it_inner = host->StoreHandle2(value, host->typeinfo_value);
 									} else {
 										*it_inner = nullptr;
 									}
@@ -863,8 +863,8 @@ namespace aatc {
 								case common::DATAHANDLINGTYPE::STRING:
 								{
 									void** it_inner = &((*it).second.ptr);//convenience
-									host->engine->ReleaseScriptObject(*it_inner, host->objtype_value);
-									*it_inner = host->engine->CreateScriptObjectCopy(value, host->objtype_value);
+									host->engine->ReleaseScriptObject(*it_inner, host->typeinfo_value);
+									*it_inner = host->engine->CreateScriptObjectCopy(value, host->typeinfo_value);
 									break;
 								}
 								case common::DATAHANDLINGTYPE::PRIMITIVE:
