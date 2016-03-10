@@ -15,7 +15,7 @@ bool test_enable_print_failure = true;
 #include "test_interop.as"
 
 //#include "00 auto iterator tests.as"
-#include "00 serializer tests.as"
+// #include "00 serializer tests.as"
 
 
 void tester_1(vector<int>@ cont){
@@ -32,27 +32,34 @@ void tester_4(vector<int> &inout cont){
 }
 
 void scriptmain(){
-	// TestContainer_vector();
-	// TestContainer_list();
-	// TestContainer_set();
-	// TestContainer_unordered_set();
-	// TestContainer_map();
-	// TestContainer_unordered_map();
+	TestContainer_vector();
+	TestContainer_list();
+	TestContainer_set();
+	TestContainer_unordered_set();
+	TestContainer_map();
+	TestContainer_unordered_map();
 	
-	// Test_lambda();
+	Test_lambda();
 	
 	{
 		vector<int> cont;
 		cont.push_back(1);
 		
 		tester_1(cont);
+		
+		
+		vector<int> cont2(cont);
+		
+		// cont2 = cont;
+		
+		
 		// Print("size = " + cont.size());
 		// tester_2(cont);
 		// Print("size = " + cont.size());
 		// tester_3(cont);
 		// Print("size = " + cont.size());
-		tester_4(cont);
-		Print("size = " + cont.size());
+		tester_4(cont2);
+		Print("size = " + cont2.size());
 	}
 	
 	

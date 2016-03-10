@@ -54,10 +54,11 @@ namespace aatc {
 				#endif
 
 				//debug_containercount++;
+				//std::cout << "debug_containercount ++ = " << debug_containercount << "\n";
 			}
 			container_basicbase::~container_basicbase() {
 				//debug_containercount--;
-				//std::cout << "debug_containercount = " << debug_containercount << "\n";
+				//std::cout << "debug_containercount -- = " << debug_containercount << "\n";
 			}
 
 			void container_basicbase::safety_iteratorversion_Increment() {

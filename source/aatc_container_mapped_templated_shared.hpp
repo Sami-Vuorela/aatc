@@ -102,11 +102,14 @@ namespace aatc {
 						template<typename T_container> T_container* Factory_default(asITypeInfo* objtype) {
 							return factory::Factory_default<T_container>(objtype);
 						}
-						template<typename T_container> T_container* Factory_copy(asITypeInfo* objtype, const T_container* other) {
-							return factory::Factory_copy<T_container>(objtype, *other);
+						template<typename T_container> T_container* Factory_copy(asITypeInfo* objtype, T_container* other) {
+							T_container* result = factory::Factory_copy<T_container>(objtype, *other);
+							other->refcount_Release();
+							return result;
 						}
-						template<typename T_container> T_container& Assign(T_container* t, const T_container* other) {
+						template<typename T_container> T_container& Assign(T_container* t, T_container* other) {
 							*t = *other;
+							other->refcount_Release();
 							return *t;
 						}
 					}
@@ -1051,9 +1054,9 @@ namespace aatc {
 
 						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s@ f(int&in)", rs.n_container_T);
 						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTION(shared::asglue::Factory_default<T_container>), asCALL_CDECL); assert(rs.error >= 0);
-						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s@ f(int&in,const %s &in)", rs.n_container_T, rs.n_container_T);
+						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s@ f(int&in,%s@)", rs.n_container_T, rs.n_container_T);
 						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_FACTORY, rs.textbuf, asFUNCTION(shared::asglue::Factory_copy<T_container>), asCALL_CDECL); assert(rs.error >= 0);
-						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& opAssign(const %s &in)", rs.n_container_T, rs.n_container_T);
+						sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& opAssign(%s@)", rs.n_container_T, rs.n_container_T);
 						rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(shared::asglue::Assign<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 
 						rs.error = rs.engine->RegisterObjectBehaviour(rs.n_container_T, asBEHAVE_TEMPLATE_CALLBACK, "bool f(int&in, bool&out)", asFUNCTION(aatc::common::templatecallback_func::map), asCALL_CDECL); assert(rs.error >= 0);

@@ -351,7 +351,7 @@ namespace aatc {
 					namespace register_method {
 
 						template<typename T_container> static void swap(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& %s(%s@)", rs.n_container_T, config::scriptname::method::container::swap, rs.n_container_T);
+							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& %s(%s &inout)", rs.n_container_T, config::scriptname::method::container::swap, rs.n_container_T);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container,swap), asCALL_THISCALL); assert(rs.error >= 0);
 						}
 

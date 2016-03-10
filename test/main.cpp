@@ -31,7 +31,7 @@ void main_contents(){
 	asIScriptModule* module = engine->GetModule("testmodule");
 
 
-	test_Interop(engine, module);
+	//test_Interop(engine, module);
 
 
 	asIScriptFunction* func_scriptmain = module->GetFunctionByName("scriptmain");
