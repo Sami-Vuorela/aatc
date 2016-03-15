@@ -144,39 +144,40 @@ namespace aatc {
 
 				static void Register(common::RegistrationState& rs, const char* n_content) {
 					using namespace tempspec::shared;
+					typedef vector T_container;
 
-					register_containerbase<vector>(rs, n_content);
+					register_containerbase<T_container>(rs, n_content);
 
 
 
-					register_method::swap<vector>(rs);
+					register_method::swap<T_container>(rs);
 
-					register_method::native::reserve<vector>(rs);
+					register_method::native::reserve<T_container>(rs);
 
-					register_method::native::push_back<vector>(rs);
-					register_method::native::pop_back<vector>(rs);
+					register_method::native::push_back<T_container>(rs);
+					register_method::native::pop_back<T_container>(rs);
 
-					register_method::native::back<vector>(rs);
-					register_method::native::front<vector>(rs);
+					register_method::native::back<T_container>(rs);
+					register_method::native::front<T_container>(rs);
 
-					register_method::genericcc::insert_position_before_constant<vector>(rs);
-					register_method::native::insert_iterator<vector>(rs);
+					register_method::genericcc::insert_position_before_constant<T_container>(rs);
+					register_method::native::insert_iterator<T_container>(rs);
 
-					register_method::genericcc::erase_position_constant<vector>(rs);
-					register_method::native::erase_iterator<vector>(rs);
-					register_method::native::erase_iterator_range<vector>(rs);
-					register_method::genericcc::erase_position_range_constant<vector>(rs);
+					register_method::genericcc::erase_position_constant<T_container>(rs);
+					register_method::native::erase_iterator<T_container>(rs);
+					register_method::native::erase_iterator_range<T_container>(rs);
+					register_method::genericcc::erase_position_range_constant<T_container>(rs);
 
-					register_method::genericcc::erase_value<vector>(rs);
+					register_method::genericcc::erase_value<T_container>(rs);
 
-					register_method::native::operator_index_position<vector>(rs);
+					register_method::native::operator_index_position<T_container>(rs);
 
-					register_method::genericcc::sort<vector>(rs);
+					register_method::genericcc::sort<T_container>(rs);
 
-					register_method::genericcc::find_iterator<vector>(rs);
+					register_method::genericcc::find_iterator<T_container>(rs);
 
-					register_method::genericcc::contains<vector>(rs);
-					register_method::genericcc::count<vector>(rs);
+					register_method::genericcc::contains<T_container>(rs);
+					register_method::genericcc::count<T_container>(rs);
 				}
 				static void Register(asIScriptEngine* engine, const char* n_content) {
 					common::RegistrationState rs(engine);

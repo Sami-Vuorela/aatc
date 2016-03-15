@@ -90,25 +90,24 @@ namespace aatc {
 				common::RegistrationState rs(engine);
 
 				{
-					using mapped::templated::unordered_map;
 					using namespace mapped::templated::shared;
+					typedef mapped::templated::unordered_map T_container;
 
-					register_containerbase<unordered_map>(rs);
+					register_containerbase<T_container>(rs);
+					register_method::swap<T_container>(rs);
 
 
 
-					register_method::swap<unordered_map>(rs);
+					register_method::insert<T_container>(rs);
+					register_method::erase<T_container>(rs);
 
-					register_method::insert<unordered_map>(rs);
-					register_method::erase<unordered_map>(rs);
+					register_method::find<T_container>(rs);
+					register_method::find_iterator<T_container>(rs);
 
-					register_method::find<unordered_map>(rs);
-					register_method::find_iterator<unordered_map>(rs);
+					register_method::erase_iterator<T_container>(rs);
+					register_method::erase_iterator_range<T_container>(rs);
 
-					register_method::erase_iterator<unordered_map>(rs);
-					register_method::erase_iterator_range<unordered_map>(rs);
-
-					register_method::operator_index<unordered_map>(rs);
+					register_method::operator_index<T_container>(rs);
 				}
 			}
 			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::UNORDERED_MAP>(enginestorage::template_specific_storage* tss) {

@@ -36,6 +36,7 @@ samivuorela@gmail.com
 //include all containers
 #include "aatc_container_vector.hpp"
 #include "aatc_container_list.hpp"
+#include "aatc_container_deque.hpp"
 #include "aatc_container_set.hpp"
 #include "aatc_container_unordered_set.hpp"
 #include "aatc_container_map.hpp"
@@ -54,6 +55,7 @@ namespace aatc {
 				typedef std::tuple<
 					container::templated::vector,
 					container::templated::list,
+					container::templated::deque,
 					container::templated::set,
 					container::templated::unordered_set,
 					container::mapped::templated::map,
@@ -74,6 +76,7 @@ namespace aatc {
 
 				container::tempspec::vector<T_content>::Register(rs, scriptname_content);
 				container::tempspec::list<T_content>::Register(rs, scriptname_content);
+				container::tempspec::deque<T_content>::Register(rs, scriptname_content);
 				container::tempspec::set<T_content>::Register(rs, scriptname_content);
 				container::tempspec::unordered_set<T_content>::Register(rs, scriptname_content);
 			}

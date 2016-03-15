@@ -48,6 +48,7 @@ namespace aatc {
 			enum CONTAINER {
 				VECTOR,
 				LIST,
+				DEQUE,
 				SET,
 				UNORDERED_SET,
 				MAP,
@@ -69,6 +70,15 @@ namespace aatc {
 				};
 
 				struct list : public shared::tagbase {
+					typedef shared::tag::iterator_access::access_is_mutable iterator_access;
+					typedef shared::tag::serializer_insert_value_func::push_back serializer_insert_value_func;
+					typedef shared::tag::is_map::is_not_map is_map;
+					typedef shared::tag::is_associative::is_not_associative is_associative;
+
+					static const char* scriptname_container;
+				};
+
+				struct deque : public shared::tagbase {
 					typedef shared::tag::iterator_access::access_is_mutable iterator_access;
 					typedef shared::tag::serializer_insert_value_func::push_back serializer_insert_value_func;
 					typedef shared::tag::is_map::is_not_map is_map;
@@ -124,6 +134,9 @@ namespace aatc {
 
 			template<> void register_container<CONTAINER::LIST>(asIScriptEngine* engine);
 			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::LIST>(enginestorage::template_specific_storage* tss);
+
+			template<> void register_container<CONTAINER::DEQUE>(asIScriptEngine* engine);
+			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::DEQUE>(enginestorage::template_specific_storage* tss);
 
 			template<> void register_container<CONTAINER::SET>(asIScriptEngine* engine);
 			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::SET>(enginestorage::template_specific_storage* tss);

@@ -29,7 +29,7 @@ samivuorela@gmail.com
 
 
 
-#include "aatc_container_vector.hpp"
+#include "aatc_container_deque.hpp"
 
 #include "aatc_container_listing.hpp"
 #include "aatc_container_templated_shared_method.hpp"
@@ -43,7 +43,7 @@ namespace aatc {
 
 
 
-			const char* container::listing::tags_of_container::vector::scriptname_container = config::scriptname::container::vector;
+			const char* container::listing::tags_of_container::deque::scriptname_container = config::scriptname::container::deque;
 
 
 
@@ -52,48 +52,49 @@ namespace aatc {
 
 
 
-			vector::vector(asITypeInfo* _typeinfo) :
+			deque::deque(asITypeInfo* _typeinfo) :
 				Containerbase(_typeinfo->GetEngine(), _typeinfo)
 			{}
-			vector::vector(const vector& other) :
+			deque::deque(const deque& other) :
 				Containerbase(other.engine, other.typeinfo_container)
 			{
 				(*this) = other;
 			}
-			vector& vector::operator=(const vector& other) { Containerbase::operator=(other); return *this; }
+			deque& deque::operator=(const deque& other) { Containerbase::operator=(other); return *this; }
 
-			vector& vector::swap(vector& other) {
+			deque& deque::swap(deque& other) {
 				shared::method::swap(this, other);
 				return *this;
 			}
 
 
 
-			void vector::reserve(config::t::sizetype size) { shared::method::native::reserve(this, size); }
+			void deque::push_back(void* value) { shared::method::native::push_back(this, value); }
+			void deque::pop_back() { shared::method::native::pop_back(this); }
+			void deque::push_front(void* value) { shared::method::native::push_front(this, value); }
+			void deque::pop_front() { shared::method::native::pop_front(this); }
 
-			void vector::push_back(void* value) { shared::method::native::push_back(this, value); }
-			void vector::pop_back() { shared::method::native::pop_back(this); }
-			void* vector::back() { return shared::method::native::back(this); }
-			void* vector::front() { return shared::method::native::front(this); }
+			void* deque::back() { return shared::method::native::back(this); }
+			void* deque::front() { return shared::method::native::front(this); }
 
-			void* vector::operator[](config::t::sizetype position) { return shared::method::native::operator_index_position(this, position); }
+			void* deque::operator[](config::t::sizetype position) { return shared::method::native::operator_index_position(this, position); }
 
-			void vector::sort(bool ascending) { shared::method::genericcc::sort(this, ascending); }
-			void vector::sort(common::script_Funcpointer* funcptr, bool ascending) { shared::method::genericcc::sort_aatcfuncptr(this,funcptr, ascending); }
+			void deque::sort(bool ascending) { shared::method::genericcc::sort(this, ascending); }
+			void deque::sort(common::script_Funcpointer* funcptr, bool ascending) { shared::method::genericcc::sort_aatcfuncptr(this,funcptr, ascending); }
 
-			void vector::erase(config::t::sizetype position) { shared::method::genericcc::erase_position_constant(this, position); }
-			void vector::erase(const Iterator& position) { shared::method::native::erase_iterator(this, position); }
-			config::t::sizetype vector::erase(config::t::sizetype range_begin, config::t::sizetype range_end) { return shared::method::genericcc::erase_position_range_constant(this, range_begin, range_end); }
-			config::t::sizetype vector::erase(const Iterator& range_begin, const Iterator& range_end) { return shared::method::native::erase_iterator_range(this, range_begin, range_end); }
+			void deque::erase(config::t::sizetype position) { shared::method::genericcc::erase_position_constant(this, position); }
+			void deque::erase(const Iterator& position) { shared::method::native::erase_iterator(this, position); }
+			config::t::sizetype deque::erase(config::t::sizetype range_begin, config::t::sizetype range_end) { return shared::method::genericcc::erase_position_range_constant(this, range_begin, range_end); }
+			config::t::sizetype deque::erase(const Iterator& range_begin, const Iterator& range_end) { return shared::method::native::erase_iterator_range(this, range_begin, range_end); }
 
-			config::t::sizetype vector::erase_value(void* value, bool all) { return shared::method::genericcc::erase_value(this, value, all); }
+			config::t::sizetype deque::erase_value(void* value, bool all) { return shared::method::genericcc::erase_value(this, value, all); }
 
-			vector::Iterator vector::find(void* value) { return shared::method::genericcc::find_iterator(this, value); }
+			deque::Iterator deque::find(void* value) { return shared::method::genericcc::find_iterator(this, value); }
 
-			void vector::insert(const Iterator& position, void* value) { shared::method::native::insert_iterator(this, position, value); }
+			void deque::insert(const Iterator& position, void* value) { shared::method::native::insert_iterator(this, position, value); }
 
-			bool vector::contains(void* value) { return shared::method::genericcc::contains(this, value); }
-			config::t::sizetype vector::count(void* value) { return shared::method::genericcc::count(this, value); }
+			bool deque::contains(void* value) { return shared::method::genericcc::contains(this, value); }
+			config::t::sizetype deque::count(void* value) { return shared::method::genericcc::count(this, value); }
 
 
 
@@ -102,23 +103,23 @@ namespace aatc {
 
 
 
-			template<> void register_container<CONTAINER::VECTOR>(asIScriptEngine* engine) {
+			template<> void register_container<CONTAINER::DEQUE>(asIScriptEngine* engine) {
 				common::RegistrationState rs(engine);
 
 				{
 					using namespace templated::shared;
-					typedef templated::vector T_container;
+					typedef templated::deque T_container;
 
 					register_containerbase<T_container>(rs);
-
-
-
 					register_method::swap<T_container>(rs);
 
-					register_method::native::reserve<T_container>(rs);
+
 
 					register_method::native::push_back<T_container>(rs);
 					register_method::native::pop_back<T_container>(rs);
+
+					register_method::native::push_front<T_container>(rs);
+					register_method::native::pop_front<T_container>(rs);
 
 					register_method::native::back<T_container>(rs);
 					register_method::native::front<T_container>(rs);
@@ -142,9 +143,9 @@ namespace aatc {
 					register_method::genericcc::count<T_container>(rs);
 				}
 
-				container::shared::autoregister::register_all_tempspec_basics_for_container<tempspec::vector>(engine);
+				container::shared::autoregister::register_all_tempspec_basics_for_container<tempspec::deque>(engine);
 			}
-			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::VECTOR>(enginestorage::template_specific_storage* tss) {
+			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::DEQUE>(enginestorage::template_specific_storage* tss) {
 				common::container_operations_bitmask_type mask = 0;
 				
 				if (!tss->func_cmp) {

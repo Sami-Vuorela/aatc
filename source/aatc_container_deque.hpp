@@ -28,8 +28,8 @@ samivuorela@gmail.com
 */
 
 
-#ifndef _includedh_aatc_container_list
-#define _includedh_aatc_container_list
+#ifndef _includedh_aatc_container_deque
+#define _includedh_aatc_container_deque
 
 
 
@@ -49,16 +49,16 @@ namespace aatc {
 
 
 
-			class list : public shared::Containerbase <
-				aatc_acit_list<void*>,
-				container::listing::CONTAINER::LIST,
-				container::listing::tags_of_container::list
+			class deque : public shared::Containerbase <
+				aatc_acit_deque<void*>,
+				container::listing::CONTAINER::DEQUE,
+				container::listing::tags_of_container::deque
 			> {
 			public:
-				list(asITypeInfo* typeinfo);
-				list(const list& other);
-				list& operator=(const list& other);
-				list& swap(list& other);
+				deque(asITypeInfo* typeinfo);
+				deque(const deque& other);
+				deque& operator=(const deque& other);
+				deque& swap(deque& other);
 
 
 
@@ -70,6 +70,8 @@ namespace aatc {
 
 				void* back();
 				void* front();
+
+				void* operator[](config::t::sizetype position);
 
 				void sort(bool ascending = true);
 				void sort(common::script_Funcpointer* funcptr, bool ascending = true);
@@ -95,19 +97,19 @@ namespace aatc {
 
 
 
-			template<typename T_content> class list : public shared::Containerbase <
-				aatc_acit_list<T_content>,
+			template<typename T_content> class deque : public shared::Containerbase <
+				aatc_acit_deque<T_content>,
 				T_content,
-				container::listing::CONTAINER::LIST,
-				container::listing::tags_of_container::list
+				container::listing::CONTAINER::DEQUE,
+				container::listing::tags_of_container::deque
 			> {
 			public:
-				list() {}
-				list(const list& other):
+				deque() {}
+				deque(const deque& other):
 					Containerbase(other)
 				{}
-				list& list::operator=(const list& other) { Containerbase::operator=(other); return *this; }
-				list& swap(list& other) { shared::method::swap(this, other); return *this; }
+				deque& deque::operator=(const deque& other) { Containerbase::operator=(other); return *this; }
+				deque& swap(deque& other) { shared::method::swap(this, other); return *this; }
 
 
 
@@ -120,15 +122,17 @@ namespace aatc {
 				T_content& back() { return shared::method::native::back(this); }
 				T_content& front() { return shared::method::native::front(this); }
 
-				void insert(config::t::sizetype position, const T_content& value) { shared::method::genericcc::insert_position_before_linear(this, position, value); }
+				void insert(config::t::sizetype position, const T_content& value) { shared::method::genericcc::insert_position_before_constant(this, position, value); }
 				void insert(const Iterator& position, const T_content& value){ shared::method::native::insert_iterator(this, position, value); }
 
-				void erase(config::t::sizetype position) { shared::method::genericcc::erase_position_linear(this, position); }
+				void erase(config::t::sizetype position) { shared::method::genericcc::erase_position_constant(this, position); }
 				void erase(const Iterator& position) { shared::method::native::erase_iterator(this, position); }
 				config::t::sizetype erase(const Iterator& range_begin, const Iterator& range_end) { return shared::method::native::erase_iterator_range(this, range_begin, range_end); }
-				config::t::sizetype erase(config::t::sizetype position_range_begin, config::t::sizetype position_range_end) { return shared::method::genericcc::erase_position_range_linear(this, position_range_begin, position_range_end); }
+				config::t::sizetype erase(config::t::sizetype position_range_begin, config::t::sizetype position_range_end) { return shared::method::genericcc::erase_position_range_constant(this, position_range_begin, position_range_end); }
 
 				config::t::sizetype erase_value(const T_content& value, bool all = false) { shared::method::genericcc::erase_value(this, value, all); }
+
+				T_content& operator[](config::t::sizetype position) { return shared::method::native::operator_index_position(this,position); }
 
 				Iterator find(const T_content& value) { return shared::method::genericcc::find_iterator(this, value); }
 
@@ -142,34 +146,32 @@ namespace aatc {
 
 				static void Register(common::RegistrationState& rs, const char* n_content) {
 					using namespace tempspec::shared;
-					typedef list T_container;
+					typedef deque T_container;
 
 					register_containerbase<T_container>(rs, n_content);
-
-
-
 					register_method::swap<T_container>(rs);
+
+
 
 					register_method::native::push_back<T_container>(rs);
 					register_method::native::pop_back<T_container>(rs);
 
-					register_method::native::push_front<T_container>(rs);
-					register_method::native::pop_front<T_container>(rs);
-
 					register_method::native::back<T_container>(rs);
 					register_method::native::front<T_container>(rs);
 
-					register_method::genericcc::insert_position_before_linear<T_container>(rs);
+					register_method::genericcc::insert_position_before_constant<T_container>(rs);
 					register_method::native::insert_iterator<T_container>(rs);
 
-					register_method::genericcc::erase_position_linear<T_container>(rs);
+					register_method::genericcc::erase_position_constant<T_container>(rs);
 					register_method::native::erase_iterator<T_container>(rs);
 					register_method::native::erase_iterator_range<T_container>(rs);
-					register_method::genericcc::erase_position_range_linear<T_container>(rs);
+					register_method::genericcc::erase_position_range_constant<T_container>(rs);
 
 					register_method::genericcc::erase_value<T_container>(rs);
 
-					register_method::native::sort<T_container>(rs);
+					register_method::native::operator_index_position<T_container>(rs);
+
+					register_method::genericcc::sort<T_container>(rs);
 
 					register_method::genericcc::find_iterator<T_container>(rs);
 

@@ -52,6 +52,7 @@
 
 #include <vector>
 #include <list>
+#include <deque>
 #include <set>
 #include <unordered_set>
 #include <map>
@@ -113,8 +114,36 @@ namespace aatc {
 #define aatc_ENABLE_REGISTER_TYPEDEF_HASH_TYPE 1
 
 
+
+
+
+/*
+	Actual container classes to use.
+	ait  = actual implementation type
+	acit = actual container implementation type
+*/
+#define aatc_ait_storage_map std::unordered_map
+#define aatc_ait_storage_pair std::pair
+#define aatc_acit_vector std::vector
+#define aatc_acit_list std::list
+#define aatc_acit_deque std::deque
+#define aatc_acit_set std::set
+#define aatc_acit_unordered_set std::unordered_set
+#define aatc_acit_map std::map
+#define aatc_acit_unordered_map std::unordered_map
+
+
+
+
+
 namespace config {
-	static const int engine_userdata_id = 8899;
+	/*
+	Directly compare handles as pointers in c++ instead of comparing the script objects by calling script functions.
+	Blazing c++ speed but no script flexibility. Good for "stupid" pools of handles.
+	This option is but a default, all container objects can have this set individually.
+	*/
+	static const int DEFAULT_HANDLEMODE_DIRECTCOMP = 0;
+
 
 
 	namespace t {
@@ -143,22 +172,7 @@ namespace config {
 		#elif aatc_ENABLE_HASHTYPE_BITS == 64
 			typedef uint64 hash;
 		#endif
-	};
-
-	/*
-	Directly compare handles as pointers in c++ instead of comparing the script objects by calling script functions.
-	Blazing c++ speed but no script flexibility. Good for "stupid" pools of handles.
-	This option is but a default, all container objects can have this set individually.
-	*/
-	static const int DEFAULT_HANDLEMODE_DIRECTCOMP = 0;
-
-	/*
-		Random magical optimization numbers ahead.
-	*/
-	//this number was used by boost, so it must be legit ... right?
-	static const int DEFAULT_CONTAINER_UNORDERED_SET_DEFAULTBUCKETCOUNT = 11;
-	static const int DEFAULT_CONTAINER_UNORDERED_MAP_DEFAULTBUCKETCOUNT = 11;
-
+	};//namespace t
 
 
 
@@ -172,16 +186,17 @@ namespace config {
 			#elif aatc_ENABLE_HASHTYPE_BITS == 64
 				static const char* hash_actual = "uint64";
 			#endif
-		};
+		};//namespace t
 
 		namespace container {
 			static const char* vector = "vector";
 			static const char* list = "list";
+			static const char* deque = "deque";
 			static const char* set = "set";
 			static const char* unordered_set = "unordered_set";
 			static const char* map = "map";
 			static const char* unordered_map = "unordered_map";
-		};
+		};//namespace container
 
 		static const char* iterator_suffix = "_iterator";
 		static const char* funcpointer = "aatc_funcpointer";
@@ -190,7 +205,8 @@ namespace config {
 		namespace method {
 			namespace content {
 				static const char* hash = "hash";
-			};
+			};//namespace content
+
 			namespace container {
 				static const char* set_directcomp = "SetDirectcomp";
 
@@ -227,7 +243,8 @@ namespace config {
 				static const char* erase_iterator = erase;
 				static const char* erase_iterator_range = erase_iterator;
 				static const char* insert_iterator = insert;
-			};
+			};//namespace container
+
 			namespace iterator {
 				static const char* access_property = "value";
 				static const char* access_property_key = "key";
@@ -237,9 +254,26 @@ namespace config {
 				static const char* access_function_value = "current_value";
 				static const char* is_end = "IsEnd";
 				static const char* is_valid = "IsValid";
-			};
-		};
-	};
+			};//namespace iterator
+		};//namespace method
+	};//namespace scriptname
+
+
+
+	namespace detail {
+		/*
+			ID that the engine level userdata will use.
+			Must not collide with other angelscript addons using engine level userdata;
+		*/
+		static const int engine_userdata_id = 8899;
+
+		/*
+			Random magical optimization numbers ahead.
+		*/
+		//this number was used by boost, so it must be legit ... right?
+		static const int DEFAULT_CONTAINER_UNORDERED_SET_DEFAULTBUCKETCOUNT = 11;
+		static const int DEFAULT_CONTAINER_UNORDERED_MAP_DEFAULTBUCKETCOUNT = 11;
+	};//namespace detail
 
 
 
@@ -261,9 +295,9 @@ namespace config {
 				myvec.erase(it);//this line will cause this exception, because the first erase changed the container state and invalidated all iterators
 			*/
 			static const char* is_invalid = "Invalid iterator.";
-		};
-	};
-};
+		};//namespace iterator
+	};//namespace errormessage
+};//namespace config
 
 
 
@@ -271,23 +305,6 @@ namespace common { class std_Spinlock; };
 namespace config {
 	typedef common::std_Spinlock ait_fastlock;
 };
-
-
-
-
-/*
-	Actual container classes to use.
-	ait  = actual implementation type
-	acit = actual container implementation type
-*/
-#define aatc_ait_storage_map std::unordered_map
-#define aatc_ait_storage_pair std::pair
-#define aatc_acit_vector std::vector
-#define aatc_acit_list std::list
-#define aatc_acit_set std::set
-#define aatc_acit_unordered_set std::unordered_set
-#define aatc_acit_map std::map
-#define aatc_acit_unordered_map std::unordered_map
 
 
 

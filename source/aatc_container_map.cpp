@@ -92,26 +92,25 @@ namespace aatc {
 				common::RegistrationState rs(engine);
 
 				{
-					using mapped::templated::map;
 					using namespace mapped::templated::shared;
+					typedef mapped::templated::map T_container;
 
-					register_containerbase<map>(rs);
+					register_containerbase<T_container>(rs);
+					register_method::swap<T_container>(rs);
 
 
 
-					register_method::swap<map>(rs);
+					register_method::insert<T_container>(rs);
+					register_method::erase<T_container>(rs);
 
-					register_method::insert<map>(rs);
-					register_method::erase<map>(rs);
+					register_method::find<T_container>(rs);
 
-					register_method::find<map>(rs);
+					register_method::find_iterator<T_container>(rs);
 
-					register_method::find_iterator<map>(rs);
+					register_method::erase_iterator<T_container>(rs);
+					register_method::erase_iterator_range<T_container>(rs);
 
-					register_method::erase_iterator<map>(rs);
-					register_method::erase_iterator_range<map>(rs);
-
-					register_method::operator_index<map>(rs);
+					register_method::operator_index<T_container>(rs);
 				}
 			}
 			template<> common::container_operations_bitmask_type errorcheck_missing_functions_make_bitfield_for_template<CONTAINER::MAP>(enginestorage::template_specific_storage* tss) {

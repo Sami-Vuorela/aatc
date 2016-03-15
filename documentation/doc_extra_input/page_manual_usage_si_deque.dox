@@ -1,0 +1,55 @@
+/*! \page page_manual_usage_si_deque deque
+\code{.cpp}
+template<typename T> class deque{
+	deque();
+	deque(const deque@ other);
+	deque& opAssign(const deque@ other);
+	deque& swap(deque &inout other);
+	void SetDirectcomp(bool yesno);
+	
+	
+	
+	int size();
+	void clear();
+	bool empty();
+	
+	void push_back(T &in value);
+	void push_front(T &in value);
+	void pop_back();
+	void pop_front();
+	T& back();
+	T& front();
+	
+	void insert(int index,const T &in value);
+	void insert(const deque_iterator<T> &in iterator, const T &in value);
+	
+	void erase(int index);
+	void erase(int index_range_begin,int index_range_end);
+	void erase_value(const T &in value,bool all = false);
+	bool erase(const deque_iterator<T> &in iterator);
+	int erase(const deque_iterator<T> &in iterator_range_begin, const deque_iterator<T> &in iterator_range_end);
+	
+	T& opIndex(int index);//operator[]
+	
+	deque_iterator<T> begin();
+	deque_iterator<T> end();
+	
+	
+	
+	//Nonstandard convenience functions
+	
+	bool contains(T &in value);
+	int count(T &in value);
+	
+	//find that returns an iterator, returns end if not found
+	deque_iterator<T> find_iterator(const T &in value);
+	
+	//sort with opCmp
+	void sort(bool ascending);
+	//sort with aatc_funcpointer
+	void sort(aatc_funcpointer@ func,bool ascending)
+	//sort with any angelscript function, even anonymous functions or delegates. Only works with tempspec'd containers for now.
+	void sort(aatc_funcdef_cmp_T@ func,bool ascending)
+};
+\endcode
+*/

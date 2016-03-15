@@ -102,39 +102,39 @@ namespace aatc {
 				common::RegistrationState rs(engine);
 
 				{
-					using templated::list;
+					typedef templated::list T_container;
 					using namespace templated::shared;
 
-					register_containerbase<list>(rs);
+					register_containerbase<T_container>(rs);
 
 
 
-					register_method::swap<list>(rs);
+					register_method::swap<T_container>(rs);
 
-					register_method::native::push_back<list>(rs);
-					register_method::native::pop_back<list>(rs);
+					register_method::native::push_back<T_container>(rs);
+					register_method::native::pop_back<T_container>(rs);
 
-					register_method::native::push_front<list>(rs);
-					register_method::native::pop_front<list>(rs);
+					register_method::native::push_front<T_container>(rs);
+					register_method::native::pop_front<T_container>(rs);
 
-					register_method::native::back<list>(rs);
-					register_method::native::front<list>(rs);
+					register_method::native::back<T_container>(rs);
+					register_method::native::front<T_container>(rs);
 
-					register_method::native::sort<list>(rs);
+					register_method::native::sort<T_container>(rs);
 
-					register_method::native::erase_iterator<list>(rs);
-					register_method::genericcc::erase_position_linear<list>(rs);
-					register_method::native::erase_iterator_range<list>(rs);
-					register_method::genericcc::erase_position_range_linear<list>(rs);
+					register_method::native::erase_iterator<T_container>(rs);
+					register_method::genericcc::erase_position_linear<T_container>(rs);
+					register_method::native::erase_iterator_range<T_container>(rs);
+					register_method::genericcc::erase_position_range_linear<T_container>(rs);
 
-					register_method::genericcc::erase_value<list>(rs);
+					register_method::genericcc::erase_value<T_container>(rs);
 
-					register_method::genericcc::find_iterator<list>(rs);
+					register_method::genericcc::find_iterator<T_container>(rs);
 
-					register_method::native::insert_iterator<list>(rs);
+					register_method::native::insert_iterator<T_container>(rs);
 
-					register_method::genericcc::contains<list>(rs);
-					register_method::genericcc::count<list>(rs);
+					register_method::genericcc::contains<T_container>(rs);
+					register_method::genericcc::count<T_container>(rs);
 				}
 
 				container::shared::autoregister::register_all_tempspec_basics_for_container<tempspec::list>(engine);

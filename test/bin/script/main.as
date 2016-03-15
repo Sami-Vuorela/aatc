@@ -5,6 +5,7 @@ bool test_enable_print_failure = true;
 #include "basics.as"
 #include "test_container_vector.as"
 #include "test_container_list.as"
+#include "test_container_deque.as"
 #include "test_container_set.as"
 #include "test_container_unordered_set.as"
 #include "test_container_map.as"
@@ -34,6 +35,7 @@ void tester_4(vector<int> &inout cont){
 void scriptmain(){
 	TestContainer_vector();
 	TestContainer_list();
+	TestContainer_deque();
 	TestContainer_set();
 	TestContainer_unordered_set();
 	TestContainer_map();
@@ -60,6 +62,18 @@ void scriptmain(){
 		// Print("size = " + cont.size());
 		tester_4(cont2);
 		Print("size = " + cont2.size());
+	}
+	
+	{
+		deque<int> cont;
+		
+		for(int i=0; i<100; i++){
+			cont.push_back(i);
+		}
+		
+		for(auto it = cont.begin();it++;){
+			Print("" + it.value);
+		}
 	}
 	
 	

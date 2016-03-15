@@ -84,22 +84,22 @@ namespace aatc {
 				common::RegistrationState rs(engine);
 
 				{
-					using templated::unordered_set;
 					using namespace templated::shared;
+					typedef templated::unordered_set T_container;
 
-					register_containerbase<unordered_set>(rs);
-					register_method::swap<unordered_set>(rs);
+					register_containerbase<T_container>(rs);
+					register_method::swap<T_container>(rs);
 
 
 
-					register_method::native::insert_value<unordered_set>(rs);
+					register_method::native::insert_value<T_container>(rs);
 
-					register_method::native::erase_value<unordered_set>(rs);
-					register_method::native::erase_iterator<unordered_set>(rs);
-					register_method::native::erase_iterator_range<unordered_set>(rs);
+					register_method::native::erase_value<T_container>(rs);
+					register_method::native::erase_iterator<T_container>(rs);
+					register_method::native::erase_iterator_range<T_container>(rs);
 
-					register_method::native::find_iterator<unordered_set>(rs);
-					register_method::native::contains<unordered_set>(rs);
+					register_method::native::find_iterator<T_container>(rs);
+					register_method::native::contains<T_container>(rs);
 				}
 
 				container::shared::autoregister::register_all_tempspec_basics_for_container<tempspec::unordered_set>(engine);

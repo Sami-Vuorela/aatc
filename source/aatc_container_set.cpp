@@ -84,22 +84,22 @@ namespace aatc {
 				common::RegistrationState rs(engine);
 
 				{
-					using templated::set;
 					using namespace templated::shared;
+					typedef templated::set T_container;
 
-					register_containerbase<set>(rs);
-					register_method::swap<set>(rs);
+					register_containerbase<T_container>(rs);
+					register_method::swap<T_container>(rs);
 
 
 
-					register_method::native::insert_value<set>(rs);
+					register_method::native::insert_value<T_container>(rs);
 
-					register_method::native::erase_value<set>(rs);
-					register_method::native::erase_iterator<set>(rs);
-					register_method::native::erase_iterator_range<set>(rs);
+					register_method::native::erase_value<T_container>(rs);
+					register_method::native::erase_iterator<T_container>(rs);
+					register_method::native::erase_iterator_range<T_container>(rs);
 
-					register_method::native::find_iterator<set>(rs);
-					register_method::native::contains<set>(rs);
+					register_method::native::find_iterator<T_container>(rs);
+					register_method::native::contains<T_container>(rs);
 				}
 
 				container::shared::autoregister::register_all_tempspec_basics_for_container<tempspec::set>(engine);

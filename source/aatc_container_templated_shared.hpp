@@ -75,7 +75,7 @@ namespace aatc {
 						typename T_container,
 						typename T_param1,
 						typename T_param2,
-						std::size_t default_bucket_count = config::DEFAULT_CONTAINER_UNORDERED_SET_DEFAULTBUCKETCOUNT
+						std::size_t default_bucket_count = config::detail::DEFAULT_CONTAINER_UNORDERED_SET_DEFAULTBUCKETCOUNT
 					> class Hashed : public T_container {
 					public:
 						Hashed(asIScriptEngine* _engine, aatc::container::shared::containerfunctor::Settings* settings) :
