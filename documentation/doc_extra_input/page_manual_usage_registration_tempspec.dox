@@ -3,6 +3,7 @@
 <p>You can only register template specializations for these containers:</p>
 - vector
 - list
+- deque
 - set
 - unordered_set
 <p>map and unordered_map are not available because they take 2 template parameters and that would require partial template specialization which angelscript probably doesnt support.</p>
@@ -15,11 +16,14 @@
 - list
 	- operator equals
 	- operator less
+- deque
+	- operator equals
+	- operator less
 - set
 	- operator less
 - unordered_set
 	- operator equals
-	- meta operator hash
+	- pseudo-operator hash
 
 <p>Hash is not an operator, but a functor by name of aatc::hash::hashfunctor</p>
 See: \ref page_manual_usage_registration_hash for all your hashing needs
@@ -31,6 +35,8 @@ See: \ref page_manual_usage_registration_hash for all your hashing needs
 
 aatc::container::tempspec::vector<MyCppClass>::Register(engine, "MyCppClass_name_in_script");
 \endcode
+\n
+<p>Warning: You should not register MyCppClass* as a tempspec. If you want to store handles, you should use a templated container instead.</p>
 \n
 \par Examples
 <p>Registering a template specialization of the class "myVec3" for the containers vector and list:</p>

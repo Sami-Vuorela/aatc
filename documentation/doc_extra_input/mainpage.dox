@@ -4,6 +4,7 @@
 <p>These container types are provided:</p>
 - vector
 - list
+- deque
 - set
 - unordered_set
 - map
@@ -27,6 +28,4 @@
 - \subpage page_manual_requirements
 - \subpage page_manual_installation
 - \subpage page_manual_usage
-<p>The actual doxygen class list on the left probably isn't very useful because it only tells you about the c++ implementation, which is an abomination made up of templates of templates of stl templates. If you are looking for the script interface, you can find it here \ref page_manual_usage_script_interface</p>
-
 */

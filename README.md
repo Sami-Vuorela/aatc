@@ -5,6 +5,7 @@ Bringing over your good old friends, the STL containers from c++ to angelscript.
 Currently these container types are supported:
  * vector
  * list
+ * deque
  * set
  * unordered_set
  * map
