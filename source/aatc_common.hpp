@@ -221,6 +221,9 @@ namespace aatc {
 			int error;
 
 			RegistrationState(asIScriptEngine* engine);
+
+			void Format(const char* msg, ...);
+			static void Format_static(char* buffer,int buffer_size,const char* msg, ...);
 		};
 
 

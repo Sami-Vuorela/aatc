@@ -87,7 +87,7 @@ namespace aatc {
 
 				r = engine->RegisterObjectType(n_funcpointer, 0, asOBJ_REF); assert(r >= 0);
 
-				sprintf_s(textbuf, common::RegistrationState::bufsize, "%s@ f()", n_funcpointer);
+				common::RegistrationState::Format_static(textbuf, common::RegistrationState::bufsize, "%s@ f()", n_funcpointer);
 
 				r = engine->RegisterObjectBehaviour(n_funcpointer, asBEHAVE_FACTORY, textbuf, asFUNCTIONPR(script_Funcpointer::Factory, (), script_Funcpointer*), asCALL_CDECL); assert(r >= 0);
 				r = engine->RegisterObjectBehaviour(n_funcpointer, asBEHAVE_ADDREF, "void f()", asMETHOD(script_Funcpointer, refcount_Add), asCALL_THISCALL); assert(r >= 0);
@@ -103,7 +103,7 @@ namespace aatc {
 			}
 
 			{//register hash functions
-				sprintf_s(textbuf, 1000, "%s aatc_Hashfunc_djb2(string &in)", config::scriptname::t::hash_actual);
+				common::RegistrationState::Format_static(textbuf, 1000, "%s aatc_Hashfunc_djb2(string &in)", config::scriptname::t::hash_actual);
 				r = engine->RegisterGlobalFunction(textbuf, asFUNCTION(hash::hashfunc::djb2), asCALL_CDECL); assert(r >= 0);
 			}
 		}

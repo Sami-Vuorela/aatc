@@ -33,12 +33,12 @@ BEGIN_AS_NAMESPACE
 
 void aet_MessageCallback(const asSMessageInfo* msg, void* param){
 	char textbuf[2000];
-	sprintf_s(textbuf, 2000, "SCRIPT ERROR :: %s , row %i , type=%i , msg=%s", msg->section, msg->row, msg->type, msg->message);
+	aatc::common::RegistrationState::Format_static(textbuf, 2000, "SCRIPT ERROR :: %s , row %i , type=%i , msg=%s", msg->section, msg->row, msg->type, msg->message);
 	aet_Print(textbuf);
 }
 void aet_RuntimeExceptionCallback(asIScriptContext* ctx, void* obj){
 	char textbuf[2000];
-	sprintf_s(textbuf, 2000, "SCRIPT RUNTIME EXCEPTION :: %s :: %s ::at line %i :: %s", ctx->GetExceptionFunction()->GetModuleName(), ctx->GetExceptionFunction()->GetDeclaration(), ctx->GetExceptionLineNumber(), ctx->GetExceptionString());
+	aatc::common::RegistrationState::Format_static(textbuf, 2000, "SCRIPT RUNTIME EXCEPTION :: %s :: %s ::at line %i :: %s", ctx->GetExceptionFunction()->GetModuleName(), ctx->GetExceptionFunction()->GetDeclaration(), ctx->GetExceptionLineNumber(), ctx->GetExceptionString());
 	aet_Print(textbuf);
 }
 

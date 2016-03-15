@@ -32,6 +32,8 @@ samivuorela@gmail.com
 #include "aatc_common.hpp"
 #include "aatc_enginestorage.hpp"
 
+#include "stdarg.h"
+
 
 
 BEGIN_AS_NAMESPACE
@@ -239,7 +241,7 @@ namespace aatc {
 					engine = ctx->GetEngine();
 
 					char textbuf[1024];
-					sprintf_s(textbuf,1024, aatc_errormessage_funcpointer_nothandle,engine->GetTypeInfoById(tid)->GetName());
+					RegistrationState::Format_static(textbuf,1024, aatc_errormessage_funcpointer_nothandle,engine->GetTypeInfoById(tid)->GetName());
 					ctx->SetException(textbuf);
 				}
 			}
@@ -276,24 +278,21 @@ namespace aatc {
 				void missingfunctions_operation_missing(const char* name_container, const char* name_content, const char* name_operation) {
 					#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
 						char msg[1000];
-						//sprintf_s(msg, 1000, aatc_errormessage_container_missing_method_formatting, name_content, name_container, name_operation);
-						sprintf_s(msg, 1000, aatc_errormessage_container_missingfunctions_formatting, aatc_errormessage_container_missingfunctions_formatting_param1, aatc_errormessage_container_missingfunctions_formatting_param2, aatc_errormessage_container_missingfunctions_formatting_param3);
+						RegistrationState::Format_static(msg, 1000, aatc_errormessage_container_missingfunctions_formatting, aatc_errormessage_container_missingfunctions_formatting_param1, aatc_errormessage_container_missingfunctions_formatting_param2, aatc_errormessage_container_missingfunctions_formatting_param3);
 						asGetActiveContext()->SetException(msg);
 					#endif
 				}
 				void access_empty(const char* name_container, const char* name_content, const char* name_operation) {
 					#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
 						char msg[1000];
-						//sprintf_s(msg, 1000, aatc_errormessage_container_missing_method_formatting, name_content, name_container, name_operation);
-						sprintf_s(msg, 1000, aatc_errormessage_container_access_empty_formatting, aatc_errormessage_container_access_empty_formatting_param1, aatc_errormessage_container_access_empty_formatting_param2, aatc_errormessage_container_access_empty_formatting_param3);
+						RegistrationState::Format_static(msg, 1000, aatc_errormessage_container_access_empty_formatting, aatc_errormessage_container_access_empty_formatting_param1, aatc_errormessage_container_access_empty_formatting_param2, aatc_errormessage_container_access_empty_formatting_param3);
 						asGetActiveContext()->SetException(msg);
 					#endif
 				}
 				void access_bounds(config::t::sizetype index, config::t::sizetype size, const char* name_container, const char* name_content, const char* name_operation) {
 					#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
 						char msg[1000];
-						//sprintf_s(msg, 1000, aatc_errormessage_container_missing_method_formatting, name_content, name_container, name_operation);
-						sprintf_s(msg, 1000,
+						RegistrationState::Format_static(msg, 1000,
 							aatc_errormessage_container_access_bounds_formatting,
 							aatc_errormessage_container_access_bounds_formatting_param1,
 							aatc_errormessage_container_access_bounds_formatting_param2,
@@ -413,6 +412,22 @@ namespace aatc {
 			engine(engine),
 			error(0)
 		{}
+		void RegistrationState::Format(const char* msg, ...) {
+			va_list argptr;
+			va_start(argptr, msg);
+
+			vsprintf_s(textbuf, RegistrationState::bufsize, msg, argptr);
+
+			va_end(argptr);
+		}
+		void RegistrationState::Format_static(char* buffer, int buffer_size, const char* msg, ...) {
+			va_list argptr;
+			va_start(argptr, msg);
+
+			vsprintf_s(buffer, buffer_size, msg, argptr);
+
+			va_end(argptr);
+		}
 
 
 

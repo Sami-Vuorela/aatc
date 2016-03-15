@@ -351,42 +351,42 @@ namespace aatc {
 					namespace register_method {
 
 						template<typename T_container> static void swap(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s& %s(%s &inout)", rs.n_container_T, config::scriptname::method::container::swap, rs.n_container_T);
+							rs.Format("%s& %s(%s &inout)", rs.n_container_T, config::scriptname::method::container::swap, rs.n_container_T);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asMETHOD(T_container,swap), asCALL_THISCALL); assert(rs.error >= 0);
 						}
 
 						template<typename T_container> static void insert(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const T_key&in,const T_value&in)", config::scriptname::method::container::insert);
+							rs.Format("void %s(const T_key&in,const T_value&in)", config::scriptname::method::container::insert);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::insert<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 
 						template<typename T_container> static void erase(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "void %s(const T_key&in)", config::scriptname::method::container::erase);
+							rs.Format("void %s(const T_key&in)", config::scriptname::method::container::erase);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::erase<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 
 						template<typename T_container> static void find(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "T_value& %s(const T_key &in)", config::scriptname::method::container::find);
+							rs.Format("T_value& %s(const T_key &in)", config::scriptname::method::container::find);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTIONPR(method::find_value<T_container>,(T_container*, void*),void*), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "T_value& %s(const T_key &in,bool &out)", config::scriptname::method::container::find);
+							rs.Format("T_value& %s(const T_key &in,bool &out)", config::scriptname::method::container::find);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTIONPR(method::find_value<T_container>, (T_container*, void*, bool&), void*), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s(const T_key&in)", config::scriptname::method::container::contains);
+							rs.Format("bool %s(const T_key&in)", config::scriptname::method::container::contains);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::contains<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 
 						template<typename T_container> static void find_iterator(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s(const T_key &in)", rs.n_iterator_T, config::scriptname::method::container::find_iterator);
+							rs.Format("%s %s(const T_key &in)", rs.n_iterator_T, config::scriptname::method::container::find_iterator);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::find_iterator<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 
 						template<typename T_container> static void erase_iterator(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "bool %s(const %s &in)", config::scriptname::method::container::erase_iterator, rs.n_iterator_T);
+							rs.Format("bool %s(const %s &in)", config::scriptname::method::container::erase_iterator, rs.n_iterator_T);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::erase_iterator<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 						template<typename T_container> static void erase_iterator_range(common::RegistrationState& rs) {
-							sprintf_s(rs.textbuf, common::RegistrationState::bufsize, "%s %s(const %s &in,const %s &in)", config::scriptname::t::size, config::scriptname::method::container::erase_iterator, rs.n_iterator_T, rs.n_iterator_T);
+							rs.Format("%s %s(const %s &in,const %s &in)", config::scriptname::t::size, config::scriptname::method::container::erase_iterator, rs.n_iterator_T, rs.n_iterator_T);
 							rs.error = rs.engine->RegisterObjectMethod(rs.n_container_T, rs.textbuf, asFUNCTION(method::erase_iterator_range<T_container>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 						}
 
