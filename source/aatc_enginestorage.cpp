@@ -31,6 +31,8 @@ samivuorela@gmail.com
 
 #include "aatc_enginestorage.hpp"
 
+#include "string.h"
+
 
 
 BEGIN_AS_NAMESPACE
