@@ -231,43 +231,6 @@ namespace aatc {
 
 
 
-						template<typename T_dummy> const T_content& Current_get() {
-							if (!IsValid()) {
-								common::errorprint::iterator::container_modified();
-								return defaultvalue;
-							}
-
-							return *it;
-						}
-						template<typename T_dummy> void Current_set(const T_content& newval) {
-							if (!IsValid()) {
-								common::errorprint::iterator::container_modified();
-								return;
-							}
-
-							*it = newval;
-						}
-
-						template<typename T_dummy> T_content& Current() {
-							if (!IsValid()) {
-								common::errorprint::iterator::container_modified();
-								return defaultvalue;
-							}
-
-							return *it;
-						}
-
-						template<typename T_dummy> const T_content& Current_const() {
-							if (!IsValid()) {
-								common::errorprint::iterator::container_modified();
-								return defaultvalue;
-							}
-
-							return *it;
-						}
-
-
-
 						/*
 						Using this in script should be faster than (it == container.end()) because container.end() creates an object
 						*/
@@ -312,33 +275,85 @@ namespace aatc {
 
 
 
+				namespace iterator_method {
+
+
+
+					template<typename T_container, typename T_content, typename T_iterator> const T_content& current_get(T_iterator* thiis) {
+						if (!thiis->IsValid()) {
+							common::errorprint::iterator::container_modified();
+							return T_container::defaultvalue;
+						}
+
+						return *(thiis->it);
+					}
+					template<typename T_container, typename T_content, typename T_iterator> void current_set(T_iterator* thiis, const T_content& value) {
+						if (!thiis->IsValid()) {
+							common::errorprint::iterator::container_modified();
+							return;
+						}
+
+						*(thiis->it) = value;
+					}
+
+					template<typename T_container, typename T_content, typename T_iterator> T_content& current(T_iterator* thiis) {
+						if (!thiis->IsValid()) {
+							common::errorprint::iterator::container_modified();
+							return T_container::defaultvalue;
+						}
+
+						return *(thiis->it);
+					}
+
+					template<typename T_container, typename T_content, typename T_iterator> const T_content& current_const(T_iterator* thiis) {
+						if (!thiis->IsValid()) {
+							common::errorprint::iterator::container_modified();
+							return T_container::defaultvalue;
+						}
+
+						return *(thiis->it);
+					}
+
+
+
+				}//namespace iterator_method
+
+
+
 				namespace detail {
-					namespace register_iterator {
-						template<typename T_iterator, typename T_tag_need_const> struct register_func_current {};
-						template<typename T_iterator> struct register_func_current<T_iterator, container::shared::tag::iterator_access::access_is_mutable> {
+					namespace register_iterator_method {
+
+
+
+						template<typename T_container, typename T_content, typename T_iterator, typename T_tag_need_const> struct current {};
+						template<typename T_container, typename T_content, typename T_iterator> struct current<T_container, T_content, T_iterator, container::shared::tag::iterator_access::access_is_mutable> {
 							void operator()(common::RegistrationState& rs) const {
 								rs.Format("%s& %s()", rs.n_content, config::scriptname::method::iterator::access_function);
-								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(T_iterator, Current<int>), asCALL_THISCALL); assert(rs.error >= 0);
+								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asFunctionPtr(iterator_method::current<T_container, T_content, T_iterator>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 
 								rs.Format("%s& get_%s()", rs.n_content, config::scriptname::method::iterator::access_property);
-								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(T_iterator, Current_get<int>), asCALL_THISCALL); assert(rs.error >= 0);
+								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asFunctionPtr(iterator_method::current_get<T_container, T_content, T_iterator>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 								rs.Format("void set_%s(const %s &in)", config::scriptname::method::iterator::access_property, rs.n_content);
-								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(T_iterator, Current_set<int>), asCALL_THISCALL); assert(rs.error >= 0);
+								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asFunctionPtr(iterator_method::current_set<T_container, T_content, T_iterator>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 							}
 						};
-						template<typename T_iterator> struct register_func_current<T_iterator, container::shared::tag::iterator_access::access_is_const> {
+						template<typename T_container, typename T_content, typename T_iterator> struct current<T_container, T_content, T_iterator, container::shared::tag::iterator_access::access_is_const> {
 							void operator()(common::RegistrationState& rs) const {
 								rs.Format("const %s& %s()", rs.n_content, config::scriptname::method::iterator::access_function);
-								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(T_iterator, Current_const<int>), asCALL_THISCALL); assert(rs.error >= 0);
+								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asFunctionPtr(iterator_method::current_const<T_container, T_content, T_iterator>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 
 								rs.Format("const %s& get_%s()", rs.n_content, config::scriptname::method::iterator::access_property);
-								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(T_iterator, Current_get<int>), asCALL_THISCALL); assert(rs.error >= 0);
+								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asFunctionPtr(iterator_method::current_get<T_container, T_content, T_iterator>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 							}
 						};
-					}
-				}
+
+
+
+					}//namespace register_iterator_method
+				}//namespace detail
 
 				template<typename T_container, typename T_iterator> void register_iterator(common::RegistrationState& rs) {
+					typedef typename T_container::T_content T_content;
 					typedef typename T_container::container_tags container_tags;
 					typedef typename container_tags::iterator_access container_tags__iterator_access;
 
@@ -353,7 +368,7 @@ namespace aatc {
 
 					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_iterator_T, asBEHAVE_DESTRUCT, "void f()", asFUNCTION(common::reghelp::generic_destructor<T_iterator>), asCALL_CDECL_OBJLAST); assert(rs.error >= 0);
 
-					detail::register_iterator::register_func_current<T_iterator, container_tags__iterator_access> register_func_current; register_func_current(rs);
+					detail::register_iterator_method::current<T_container, T_content, T_iterator, container_tags__iterator_access> register_method_current; register_method_current(rs);
 
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, "bool next()", asMETHOD(T_iterator, Next), asCALL_THISCALL); assert(rs.error >= 0);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, "bool opPreInc()", asMETHOD(T_iterator, Next), asCALL_THISCALL); assert(rs.error >= 0);

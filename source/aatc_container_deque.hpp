@@ -104,11 +104,21 @@ namespace aatc {
 				container::listing::tags_of_container::deque
 			> {
 			public:
+				typedef shared::Containerbase <
+					aatc_acit_deque<T_content>,
+					T_content,
+					container::listing::CONTAINER::DEQUE,
+					container::listing::tags_of_container::deque
+				> Containerbase;
+				typedef typename Containerbase::Iterator Iterator;
+
+
+
 				deque() {}
 				deque(const deque& other):
 					Containerbase(other)
 				{}
-				deque& deque::operator=(const deque& other) { Containerbase::operator=(other); return *this; }
+				deque& operator=(const deque& other) { Containerbase::operator=(other); return *this; }
 				deque& swap(deque& other) { shared::method::swap(this, other); return *this; }
 
 
@@ -180,7 +190,7 @@ namespace aatc {
 				}
 				static void Register(asIScriptEngine* engine, const char* n_content) {
 					common::RegistrationState rs(engine);
-					Register(rs, c_content);
+					Register(rs, n_content);
 				}
 			};
 

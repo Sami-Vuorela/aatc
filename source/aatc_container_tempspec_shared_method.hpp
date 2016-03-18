@@ -60,7 +60,7 @@ namespace aatc {
 
 
 
-						template<typename T_container> void push_back(T_container* t, typename const T_container::T_content& value) {
+						template<typename T_container> void push_back(T_container* t, const typename T_container::T_content& value) {
 							t->container.push_back(value);
 
 							t->safety_iteratorversion_Increment();
@@ -77,7 +77,7 @@ namespace aatc {
 							t->safety_iteratorversion_Increment();
 						}
 
-						template<typename T_container> void push_front(T_container* t, typename const T_container::T_content& value) {
+						template<typename T_container> void push_front(T_container* t, const typename T_container::T_content& value) {
 							t->container.push_front(value);
 
 							t->safety_iteratorversion_Increment();
@@ -115,7 +115,7 @@ namespace aatc {
 							return t->container.front();
 						}
 
-						template<typename T_container> bool erase_value(T_container* t, typename const T_container::T_content& value) {
+						template<typename T_container> bool erase_value(T_container* t, const typename T_container::T_content& value) {
 							config::t::sizetype oldsize = config::t::sizetype(t->container.size());
 
 							t->container.erase(value);
@@ -123,7 +123,7 @@ namespace aatc {
 
 							return oldsize != t->container.size();
 						}
-						template<typename T_container> void insert_value(T_container* t, typename const T_container::T_content& value) {
+						template<typename T_container> void insert_value(T_container* t, const typename T_container::T_content& value) {
 							t->container.insert(value);
 							t->safety_iteratorversion_Increment();
 						}
@@ -151,9 +151,9 @@ namespace aatc {
 							t->safety_iteratorversion_Increment();
 
 							if (ascending) {
-								t->container.sort(std::less<T_container::T_content>());
+								t->container.sort(std::less<typename T_container::T_content>());
 							} else {
-								t->container.sort(common::functor_notcmp<T_container::T_content, std::less<T_container::T_content>>());
+								t->container.sort(common::functor_notcmp<typename T_container::T_content, std::less<typename T_container::T_content>>());
 
 								///*
 								//std::list didn't like common::functor_notcmp with primitives in debug mode for some reason
@@ -195,7 +195,7 @@ namespace aatc {
 
 							void* aux_object = funcptr->so;
 							if (aux_object) {
-								typename container::shared::scriptcmpfunctor_method<T_container::T_content> functor;
+								container::shared::scriptcmpfunctor_method<typename T_container::T_content> functor;
 								functor.context = context;
 								functor.func = scriptfunc;
 								functor.reverse_multiplier = reverse_multiplier;
@@ -204,7 +204,7 @@ namespace aatc {
 
 								t->container.sort(functor);
 							} else {
-								typename container::shared::scriptcmpfunctor_globalfunction<T_container::T_content> functor;
+								container::shared::scriptcmpfunctor_globalfunction<typename T_container::T_content> functor;
 								functor.context = context;
 								functor.func = scriptfunc;
 								functor.reverse_multiplier = reverse_multiplier;
@@ -246,7 +246,7 @@ namespace aatc {
 
 							void* aux_object = scriptfunc->GetAuxiliary();
 							if (aux_object) {
-								typename container::shared::scriptcmpfunctor_method<T_container::T_content> functor;
+								container::shared::scriptcmpfunctor_method<typename T_container::T_content> functor;
 								functor.context = context;
 								functor.func = scriptfunc;
 								functor.reverse_multiplier = reverse_multiplier;
@@ -255,7 +255,7 @@ namespace aatc {
 
 								t->container.sort(functor);
 							} else {
-								typename container::shared::scriptcmpfunctor_globalfunction<T_container::T_content> functor;
+								container::shared::scriptcmpfunctor_globalfunction<typename T_container::T_content> functor;
 								functor.context = context;
 								functor.func = scriptfunc;
 								functor.reverse_multiplier = reverse_multiplier;
@@ -273,11 +273,11 @@ namespace aatc {
 						}
 
 
-						template<typename T_container> bool contains(T_container* t, typename const T_container::T_content& value) {
+						template<typename T_container> bool contains(T_container* t, const typename T_container::T_content& value) {
 							return t->container.find(value) != t->container.end();
 						}
 
-						template<typename T_container> bool erase_iterator(T_container* t, typename const T_container::Iterator& aatc_it) {
+						template<typename T_container> bool erase_iterator(T_container* t, const typename T_container::Iterator& aatc_it) {
 							if (t->container.empty()) { return 0; }
 
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
@@ -300,7 +300,7 @@ namespace aatc {
 							return 1;
 						}
 
-						template<typename T_container> config::t::sizetype erase_iterator_range(T_container* t, typename const T_container::Iterator& aatc_it_range_begin, typename const T_container::Iterator& aatc_it_range_end) {
+						template<typename T_container> config::t::sizetype erase_iterator_range(T_container* t, const typename T_container::Iterator& aatc_it_range_begin, const typename T_container::Iterator& aatc_it_range_end) {
 							if (t->container.empty()) { return 0; }
 
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
@@ -324,10 +324,10 @@ namespace aatc {
 							}
 						}
 
-						template<typename T_container> typename T_container::Iterator find_iterator(T_container* t, typename const T_container::T_content& value) {
-							T_container::T_iterator_native it = t->container.find(value);
+						template<typename T_container> typename T_container::Iterator find_iterator(T_container* t, const typename T_container::T_content& value) {
+							typename T_container::T_iterator_native it = t->container.find(value);
 
-							T_container::Iterator result(t);
+							typename T_container::Iterator result(t);
 							result.it = it;
 
 							if (it == t->container.end()) {
@@ -337,7 +337,7 @@ namespace aatc {
 							return result;
 						}
 
-						template<typename T_container> void insert_iterator(T_container* t, typename T_container::Iterator position, typename const T_container::T_content& value) {
+						template<typename T_container> void insert_iterator(T_container* t, typename T_container::Iterator position, const typename T_container::T_content& value) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 								if (t->safety_iteratorversion != position.safety_iteratorversion) {
 									common::errorprint::container::iterator_invalid();
@@ -388,7 +388,7 @@ namespace aatc {
 								}
 							#endif
 
-							T_container::T_iterator_native it = t->container.begin();
+							typename T_container::T_iterator_native it = t->container.begin();
 							for (int i = 0; i < position; i++) { it++; }
 
 							t->container.erase(it);
@@ -447,8 +447,8 @@ namespace aatc {
 
 							std::size_t oldsize = t->container.size();
 
-							T_container::T_iterator_native it_begin = t->container.begin();
-							T_container::T_iterator_native it_end = t->container.begin();
+							typename T_container::T_iterator_native it_begin = t->container.begin();
+							typename T_container::T_iterator_native it_end = t->container.begin();
 							for (int i = 0; i < range_begin; i++) { it_begin++; }
 							for (int i = 0; i < range_end; i++) { it_end++; }
 
@@ -461,9 +461,9 @@ namespace aatc {
 							t->safety_iteratorversion_Increment();
 
 							if (ascending) {
-								std::sort(t->container.begin(), t->container.end(), std::less<T_container::T_content>());
+								std::sort(t->container.begin(), t->container.end(), std::less<typename T_container::T_content>());
 							} else {
-								std::sort(t->container.begin(), t->container.end(), common::functor_notcmp<T_container::T_content, std::less<T_container::T_content>>());
+								std::sort(t->container.begin(), t->container.end(), common::functor_notcmp<typename T_container::T_content, std::less<typename T_container::T_content>>());
 							}
 						}
 						template<typename T_container> void sort_aatcfuncptr(T_container* t, common::script_Funcpointer* funcptr, bool ascending) {
@@ -493,7 +493,7 @@ namespace aatc {
 
 							void* aux_object = funcptr->so;
 							if (aux_object) {
-								typename container::shared::scriptcmpfunctor_method<T_container::T_content> functor;
+								container::shared::scriptcmpfunctor_method<typename T_container::T_content> functor;
 								functor.context = context;
 								functor.func = scriptfunc;
 								functor.reverse_multiplier = reverse_multiplier;
@@ -502,7 +502,7 @@ namespace aatc {
 
 								std::sort(t->container.begin(), t->container.end(), functor);
 							} else {
-								typename container::shared::scriptcmpfunctor_globalfunction<T_container::T_content> functor;
+								container::shared::scriptcmpfunctor_globalfunction<typename T_container::T_content> functor;
 								functor.context = context;
 								functor.func = scriptfunc;
 								functor.reverse_multiplier = reverse_multiplier;
@@ -545,7 +545,7 @@ namespace aatc {
 
 							void* aux_object = scriptfunc->GetAuxiliary();
 							if (aux_object) {
-								typename container::shared::scriptcmpfunctor_method<T_container::T_content> functor;
+								container::shared::scriptcmpfunctor_method<typename T_container::T_content> functor;
 								functor.context = context;
 								functor.func = scriptfunc;
 								functor.reverse_multiplier = reverse_multiplier;
@@ -554,7 +554,7 @@ namespace aatc {
 
 								std::sort(t->container.begin(), t->container.end(), functor);
 							} else {
-								typename container::shared::scriptcmpfunctor_globalfunction<T_container::T_content> functor;
+								container::shared::scriptcmpfunctor_globalfunction<typename T_container::T_content> functor;
 								functor.context = context;
 								functor.func = scriptfunc;
 								functor.reverse_multiplier = reverse_multiplier;
@@ -572,7 +572,7 @@ namespace aatc {
 						}
 
 
-						template<typename T_container> void insert_position_before_constant(T_container* t, config::t::sizetype position, typename const T_container::T_content& value) {
+						template<typename T_container> void insert_position_before_constant(T_container* t, config::t::sizetype position, const typename T_container::T_content& value) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (t->empty()) {
 									aatc::common::errorprint::container::access_empty(T_container::staticname_container.c_str(), T_container::staticname_content.c_str(), config::scriptname::method::container::insert_position_before);
@@ -587,7 +587,7 @@ namespace aatc {
 							t->container.insert(t->container.begin() + position,value);
 							t->safety_iteratorversion_Increment();
 						}
-						template<typename T_container> void insert_position_before_linear(T_container* t, config::t::sizetype position, typename const T_container::T_content& value) {
+						template<typename T_container> void insert_position_before_linear(T_container* t, config::t::sizetype position, const typename T_container::T_content& value) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME
 								if (t->empty()) {
 									aatc::common::errorprint::container::access_empty(T_container::staticname_container.c_str(), T_container::staticname_content.c_str(), config::scriptname::method::container::insert_position_before);
@@ -599,14 +599,14 @@ namespace aatc {
 								}
 							#endif
 
-							T_container::T_iterator_native it = t->container.begin();
+							typename T_container::T_iterator_native it = t->container.begin();
 							for (int i = 0; i < position; i++) { it++; }
 
 							t->container.insert(it, value);
 							t->safety_iteratorversion_Increment();
 						}
 
-						template<typename T_container> config::t::sizetype erase_value(T_container* t, typename const T_container::T_content& value,bool all) {
+						template<typename T_container> config::t::sizetype erase_value(T_container* t, const typename T_container::T_content& value,bool all) {
 							t->safety_iteratorversion_Increment();
 
 							config::t::sizetype killcount = 0;
@@ -616,8 +616,8 @@ namespace aatc {
 								continuu = 0;
 								bool found = 0;
 
-								T_container::T_iterator_native it = t->container.begin();
-								T_container::T_iterator_native itend = t->container.end();
+								typename T_container::T_iterator_native it = t->container.begin();
+								typename T_container::T_iterator_native itend = t->container.end();
 
 								for (; it != itend; it++) {
 									if (*it == value) {
@@ -635,10 +635,10 @@ namespace aatc {
 							return killcount;
 						}
 
-						template<typename T_container> typename T_container::Iterator find_iterator(T_container* t, typename const T_container::T_content& value) {
-							T_container::T_iterator_native it = std::find(t->container.begin(), t->container.end(), value);
+						template<typename T_container> typename T_container::Iterator find_iterator(T_container* t, const typename T_container::T_content& value) {
+							typename T_container::T_iterator_native it = std::find(t->container.begin(), t->container.end(), value);
 
-							T_container::Iterator result(t);
+							typename T_container::Iterator result(t);
 							result.it = it;
 
 							if (it == t->container.end()) {
@@ -648,8 +648,8 @@ namespace aatc {
 							return result;
 						}
 
-						template<typename T_container> bool contains(T_container* t, typename const T_container::T_content& value) {
-							for (T_container::T_iterator_native_const it = t->container.begin(); it != t->container.end(); it++) {
+						template<typename T_container> bool contains(T_container* t, const typename T_container::T_content& value) {
+							for (typename T_container::T_iterator_native_const it = t->container.begin(); it != t->container.end(); it++) {
 								if (*it == value) {
 									return 1;
 								}
@@ -657,7 +657,7 @@ namespace aatc {
 							return 0;
 						}
 
-						template<typename T_container> config::t::sizetype count(T_container* t, typename const T_container::T_content& value) {
+						template<typename T_container> config::t::sizetype count(T_container* t, const typename T_container::T_content& value) {
 							return (config::t::sizetype)(std::count(t->container.begin(), t->container.end(), value));
 						}
 

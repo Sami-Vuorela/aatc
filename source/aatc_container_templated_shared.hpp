@@ -434,67 +434,6 @@ namespace aatc {
 
 
 
-						template<typename T_dummy> const void* Current_get() {
-							if (!IsValid()) {
-								common::errorprint::iterator::container_modified();
-								return nullptr;
-							}
-
-							if (handlemode) {
-								return &(*it);//return pointer to handle
-							} else {
-								return *it;//return copy of pointer to object
-							}
-						}
-						template<typename T_dummy> void Current_set(void* value) {
-							if (!IsValid()) {
-								common::errorprint::iterator::container_modified();
-								return;
-							}
-
-							if (handlemode) {
-								if (*it) {
-									host->engine->ReleaseScriptObject(*it, host->objtype_content);
-								}
-								if (value) {
-									*it = host->StoreHandle2(value);
-								} else {
-									*it = nullptr;
-								}
-							} else {
-								host->engine->ReleaseScriptObject(*it, host->objtype_content);
-								*it = host->engine->CreateScriptObjectCopy(value, host->objtype_content);
-							}
-						}
-
-						template<typename T_dummy> void* Current() {
-							if (!IsValid()) {
-								common::errorprint::iterator::container_modified();
-								return nullptr;
-							}
-
-							if (handlemode) {
-								return &(*(it));//return pointer to handle
-							} else {
-								return *(it);//return copy of pointer to object
-							}
-						}
-
-						template<typename T_dummy> const void* Current_const() {
-							if (!IsValid()) {
-								common::errorprint::iterator::container_modified();
-								return nullptr;
-							}
-
-							if (handlemode) {
-								return &(*(it));//return pointer to handle
-							} else {
-								return *(it);//return copy of pointer to object
-							}
-						}
-
-
-
 						/*
 						Using this in script should be faster than (it == container.end()) because container.end() creates an object
 						*/
@@ -533,31 +472,102 @@ namespace aatc {
 
 
 
+				namespace iterator_method {
+					template<typename T_iterator> const void* current_get(T_iterator* thiis) {
+						if (!thiis->IsValid()) {
+							common::errorprint::iterator::container_modified();
+							return nullptr;
+						}
+
+						if (thiis->handlemode) {
+							return &(*(thiis->it));//return pointer to handle
+						} else {
+							return *(thiis->it);//return copy of pointer to object
+						}
+					}
+					template<typename T_iterator> void current_set(T_iterator* thiis, void* value) {
+						if (!thiis->IsValid()) {
+							common::errorprint::iterator::container_modified();
+							return;
+						}
+
+						if (thiis->handlemode) {
+							if (*(thiis->it)) {
+								thiis->host->engine->ReleaseScriptObject(*(thiis->it), thiis->host->objtype_content);
+							}
+							if (value) {
+								*(thiis->it) = thiis->host->StoreHandle2(value);
+							} else {
+								*(thiis->it) = nullptr;
+							}
+						} else {
+							thiis->host->engine->ReleaseScriptObject(*(thiis->it), thiis->host->objtype_content);
+							*(thiis->it) = thiis->host->engine->CreateScriptObjectCopy(value, thiis->host->objtype_content);
+						}
+					}
+
+					template<typename T_iterator> void* current(T_iterator* thiis) {
+						if (!thiis->IsValid()) {
+							common::errorprint::iterator::container_modified();
+							return nullptr;
+						}
+
+						if (thiis->handlemode) {
+							return &(*(thiis->it));//return pointer to handle
+						} else {
+							return *(thiis->it);//return copy of pointer to object
+						}
+					}
+
+					template<typename T_iterator> const void* current_const(T_iterator* thiis) {
+						if (!thiis->IsValid()) {
+							common::errorprint::iterator::container_modified();
+							return nullptr;
+						}
+
+						if (thiis->handlemode) {
+							return &(*(thiis->it));//return pointer to handle
+						} else {
+							return *(thiis->it);//return copy of pointer to object
+						}
+					}
+				}//namespace iterator_method
+
+
+
 				namespace detail {
-					namespace register_iterator {
-						template<typename T_iterator, typename T_tag_need_const> struct register_func_current {};
-						template<typename T_iterator> struct register_func_current<T_iterator, container::shared::tag::iterator_access::access_is_mutable> {
+					namespace register_iterator_method {
+
+
+
+						template<typename T_iterator, typename T_tag_need_const> struct current {};
+						template<typename T_iterator> struct current<T_iterator, container::shared::tag::iterator_access::access_is_mutable> {
 							void operator()(common::RegistrationState& rs) const{
 								rs.Format("T& %s()", config::scriptname::method::iterator::access_function);
-								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHODPR(T_iterator, Current<int>,(),void*), asCALL_THISCALL); assert(rs.error >= 0);
+								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asFunctionPtr(iterator_method::current<T_iterator>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 
 								rs.Format("T& get_%s()", config::scriptname::method::iterator::access_property);
-								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(T_iterator, Current_get<int>), asCALL_THISCALL); assert(rs.error >= 0);
+								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asFunctionPtr(iterator_method::current_get<T_iterator>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 								rs.Format("void set_%s(const T &in)", config::scriptname::method::iterator::access_property);
-								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(T_iterator, Current_set<int>), asCALL_THISCALL); assert(rs.error >= 0);
+								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asFunctionPtr(iterator_method::current_set<T_iterator>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 							}
 						};
-						template<typename T_iterator> struct register_func_current<T_iterator, container::shared::tag::iterator_access::access_is_const> {
+						template<typename T_iterator> struct current<T_iterator, container::shared::tag::iterator_access::access_is_const> {
 							void operator()(common::RegistrationState& rs) const {
 								rs.Format("const T& %s()", config::scriptname::method::iterator::access_function);
-								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(T_iterator, Current_const<int>), asCALL_THISCALL); assert(rs.error >= 0);
+								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asFunctionPtr(iterator_method::current_const<T_iterator>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 
 								rs.Format("const T& get_%s()", config::scriptname::method::iterator::access_property);
-								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asMETHOD(T_iterator, Current_get<int>), asCALL_THISCALL); assert(rs.error >= 0);
+								rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, rs.textbuf, asFunctionPtr(iterator_method::current_get<T_iterator>), asCALL_CDECL_OBJFIRST); assert(rs.error >= 0);
 							}
 						};
-					}
-				}
+
+
+
+					}//namespace register_iterator_method
+				}//namespace detail
+
+
 
 				template<typename T_container, typename T_iterator> void register_iterator(common::RegistrationState& rs) {
 					typedef typename T_container::container_tags container_tags;
@@ -573,7 +583,7 @@ namespace aatc {
 
 					rs.error = rs.engine->RegisterObjectBehaviour(rs.n_iterator_T, asBEHAVE_DESTRUCT, "void f()", asFUNCTION(aatc::common::reghelp::generic_destructor<T_iterator>), asCALL_CDECL_OBJLAST); assert(rs.error >= 0);
 
-					detail::register_iterator::register_func_current<T_iterator, container_tags__iterator_access> register_func_current; register_func_current(rs);
+					detail::register_iterator_method::current<T_iterator, container_tags__iterator_access> register_method_current; register_method_current(rs);
 
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, "bool next()", asMETHOD(T_iterator, Next), asCALL_THISCALL); assert(rs.error >= 0);
 					rs.error = rs.engine->RegisterObjectMethod(rs.n_iterator_T, "bool opPreInc()", asMETHOD(T_iterator, Next), asCALL_THISCALL); assert(rs.error >= 0);

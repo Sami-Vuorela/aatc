@@ -130,16 +130,16 @@ namespace aatc {
 						public container::shared::containerfunctor_map::Settings
 					{
 					public:
-						typename typedef T_container T_container_native;
-						typename typedef T_container_native::iterator T_iterator_native;
-						typename typedef T_container_native::const_iterator T_iterator_native_const;
+						typedef T_container T_container_native;
+						typedef typename T_container_native::iterator T_iterator_native;
+						typedef typename T_container_native::const_iterator T_iterator_native_const;
 
 						static const int containertype_id = _containertype_id;
-						typename typedef T_container_tags container_tags;
+						typedef T_container_tags container_tags;
 
 
 
-						typename bcw container;
+						bcw container;
 
 						enginestorage::engine_level_storage* els;
 

@@ -416,7 +416,11 @@ namespace aatc {
 			va_list argptr;
 			va_start(argptr, msg);
 
-			vsprintf_s(textbuf, RegistrationState::bufsize, msg, argptr);
+			#if __STDC_WANT_SECURE_LIB__
+				vsprintf_s(textbuf, RegistrationState::bufsize, msg, argptr);
+			#else
+				vsprintf(textbuf, msg, argptr);
+			#endif
 
 			va_end(argptr);
 		}
@@ -424,7 +428,11 @@ namespace aatc {
 			va_list argptr;
 			va_start(argptr, msg);
 
-			vsprintf_s(buffer, buffer_size, msg, argptr);
+			#if __STDC_WANT_SECURE_LIB__
+				vsprintf_s(buffer, buffer_size, msg, argptr);
+			#else
+				vsprintf(buffer, msg, argptr);
+			#endif
 
 			va_end(argptr);
 		}

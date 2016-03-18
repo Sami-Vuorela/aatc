@@ -177,7 +177,7 @@ namespace aatc {
 										}
 									#endif
 								}
-								T_container::T_iterator_native it = t->container.find(*(void**)value);
+								typename T_container::T_iterator_native it = t->container.find(*(void**)value);
 								if (it != t->container.end()) {
 									t->ReleaseHandle(*it);
 									t->container.erase(it);
@@ -194,7 +194,7 @@ namespace aatc {
 									}
 								#endif
 
-								T_container::T_iterator_native it = t->container.find(value);
+								typename T_container::T_iterator_native it = t->container.find(value);
 								if (it != t->container.end()) {
 									void* object_to_release = *it;
 									t->container.erase(it);//erasing needs object alive to call opCmp
@@ -246,7 +246,7 @@ namespace aatc {
 										}
 									#endif
 								}
-								std::pair<T_container::T_iterator_native, bool> rr = t->container.insert(*(void**)value);
+								std::pair<typename T_container::T_iterator_native, bool> rr = t->container.insert(*(void**)value);
 								if (rr.second) {
 									t->StoreHandle((void**)&(*rr.first), value);
 								}
@@ -258,7 +258,7 @@ namespace aatc {
 									}
 								#endif
 
-								T_container::T_iterator_native it = t->container.find(value);
+								typename T_container::T_iterator_native it = t->container.find(value);
 								if (it == t->container.end()) {
 									t->container.insert(t->engine->CreateScriptObjectCopy(value, t->objtype_content));
 								}
@@ -396,11 +396,11 @@ namespace aatc {
 							}
 							if (t->handlemode) { value = *(void**)value; }
 
-							T_container::T_iterator_native_const it = t->container.find(value);
+							typename T_container::T_iterator_native_const it = t->container.find(value);
 							return it != t->container.end();
 						}
 
-						template<typename T_container> void erase_iterator(T_container* t, typename const T_container::Iterator& position) {
+						template<typename T_container> void erase_iterator(T_container* t, const typename T_container::Iterator& position) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 								if (t->safety_iteratorversion != position.safety_iteratorversion) {
 									common::errorprint::container::iterator_invalid();
@@ -410,7 +410,7 @@ namespace aatc {
 
 							t->safety_iteratorversion_Increment();
 
-							T_container::T_iterator_native it = position.it;
+							typename T_container::T_iterator_native it = position.it;
 
 							if (it != t->container.end()) {
 								if (t->handlemode) {
@@ -423,7 +423,7 @@ namespace aatc {
 								}
 							}
 						}
-						template<typename T_container> config::t::sizetype erase_iterator_range(T_container* t, typename const T_container::Iterator& range_begin, typename const T_container::Iterator& range_end) {
+						template<typename T_container> config::t::sizetype erase_iterator_range(T_container* t, const typename T_container::Iterator& range_begin, const typename T_container::Iterator& range_end) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 								if ((t->safety_iteratorversion != range_begin.safety_iteratorversion) || (t->safety_iteratorversion != range_end.safety_iteratorversion)) {
 									common::errorprint::container::iterator_invalid();
@@ -433,8 +433,8 @@ namespace aatc {
 
 							t->safety_iteratorversion_Increment();
 
-							T_container::T_iterator_native it_range_begin = range_begin.it;
-							T_container::T_iterator_native it_range_end = range_end.it;
+							typename T_container::T_iterator_native it_range_begin = range_begin.it;
+							typename T_container::T_iterator_native it_range_end = range_end.it;
 
 							if (it_range_begin == it_range_end) {
 								return 0;
@@ -473,7 +473,7 @@ namespace aatc {
 									if (t->missing_functions & common::CONTAINER_OPERATION::FIND) {
 										common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::find);
 
-										T_container::Iterator result(t);
+										typename T_container::Iterator result(t);
 										result.SetToEnd();
 										return result;
 									}
@@ -484,7 +484,7 @@ namespace aatc {
 
 							auto it = t->container.find(value);
 
-							T_container::Iterator result(t);
+							typename T_container::Iterator result(t);
 
 							if (it == t->container.end()) {
 								result.SetToEnd();
@@ -495,7 +495,7 @@ namespace aatc {
 							return result;
 						}
 
-						template<typename T_container> void insert_iterator(T_container* t, typename const T_container::Iterator& position, void* value) {
+						template<typename T_container> void insert_iterator(T_container* t, const typename T_container::Iterator& position, void* value) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 								if (t->safety_iteratorversion != position.safety_iteratorversion) {
 									common::errorprint::container::iterator_invalid();
@@ -657,7 +657,7 @@ namespace aatc {
 
 							t->safety_iteratorversion_Increment();
 
-							T_container::T_iterator_native ii = t->container.begin() + position;
+							typename T_container::T_iterator_native ii = t->container.begin() + position;
 
 							if (t->handlemode) {
 								t->container.insert(ii, t->StoreHandle2(value));
@@ -679,7 +679,7 @@ namespace aatc {
 
 							t->safety_iteratorversion_Increment();
 
-							T_container::T_iterator_native ii = t->container.begin();
+							typename T_container::T_iterator_native ii = t->container.begin();
 							for (int i = 0; i < position; i++) { ii++; }
 
 							if (t->handlemode) {
@@ -703,7 +703,7 @@ namespace aatc {
 
 							t->safety_iteratorversion_Increment();
 
-							T_container::T_iterator_native ii = t->container.begin() + position;
+							typename T_container::T_iterator_native ii = t->container.begin() + position;
 
 							if (t->handlemode) {
 								t->ReleaseHandle(*ii);
@@ -727,7 +727,7 @@ namespace aatc {
 
 							t->safety_iteratorversion_Increment();
 
-							T_container::T_iterator_native ii = t->container.begin();
+							typename T_container::T_iterator_native ii = t->container.begin();
 							for (int i = 0; i < position; i++) { ii++; }
 
 							if (t->handlemode) {
@@ -761,11 +761,11 @@ namespace aatc {
 
 							t->safety_iteratorversion_Increment();
 
-							T_container::T_iterator_native ii_begin = t->container.begin() + range_begin;
-							T_container::T_iterator_native ii_end = t->container.begin() + range_end;
+							typename T_container::T_iterator_native ii_begin = t->container.begin() + range_begin;
+							typename T_container::T_iterator_native ii_end = t->container.begin() + range_end;
 
 							{
-								T_container::T_iterator_native ii = ii_begin;
+								typename T_container::T_iterator_native ii = ii_begin;
 
 								if (t->handlemode) {
 									for (; ii != ii_end; ii++) {
@@ -806,13 +806,13 @@ namespace aatc {
 
 							t->safety_iteratorversion_Increment();
 
-							T_container::T_iterator_native ii_begin = t->container.begin();
-							T_container::T_iterator_native ii_end = t->container.begin();
+							typename T_container::T_iterator_native ii_begin = t->container.begin();
+							typename T_container::T_iterator_native ii_end = t->container.begin();
 							for (int i = 0; i < range_begin; i++) { ii_begin++; }
 							for (int i = 0; i < range_end; i++) { ii_end++; }
 
 							{
-								T_container::T_iterator_native ii = ii_begin;
+								typename T_container::T_iterator_native ii = ii_begin;
 
 								if (t->handlemode) {
 									for (; ii != ii_end; ii++) {
@@ -843,8 +843,8 @@ namespace aatc {
 									continuu = 0;
 									bool found = 0;
 
-									T_container::T_iterator_native it = t->container.begin();
-									T_container::T_iterator_native itend = t->container.end();
+									typename T_container::T_iterator_native it = t->container.begin();
+									typename T_container::T_iterator_native itend = t->container.end();
 
 									for (; it != itend; it++) {
 										if (*it == value) {
@@ -876,8 +876,8 @@ namespace aatc {
 									continuu = 0;
 									bool found = 0;
 
-									T_container::T_iterator_native it = t->container.begin();
-									T_container::T_iterator_native itend = t->container.end();
+									typename T_container::T_iterator_native it = t->container.begin();
+									typename T_container::T_iterator_native itend = t->container.end();
 
 									for (; it != itend; it++) {
 										cc->Prepare(func);
@@ -916,7 +916,7 @@ namespace aatc {
 								if (t->missing_functions & common::CONTAINER_OPERATION::FIND) {
 									common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::find);
 
-									T_container::Iterator result(t);
+									typename T_container::Iterator result(t);
 									result.SetToEnd();
 									return result;
 								}
@@ -932,7 +932,7 @@ namespace aatc {
 
 							auto it = std::find_if(t->container.begin(), t->container.end(), eq_fi);
 
-							T_container::Iterator result(t);
+							typename T_container::Iterator result(t);
 							result.it = it;
 
 							if (it == t->container.end()) {
@@ -950,7 +950,7 @@ namespace aatc {
 								if (t->missing_functions & common::CONTAINER_OPERATION::COUNT) {
 									common::errorprint::container::missingfunctions_operation_missing(t->typeinfo_container->GetName(), t->objtype_content->GetName(), config::scriptname::method::container::count);
 
-									T_container::Iterator result(t);
+									typename T_container::Iterator result(t);
 									result.SetToEnd();
 									return 0;
 								}
@@ -961,8 +961,8 @@ namespace aatc {
 								asIScriptContext* cc = t->els->contextcache_Get();
 
 								config::t::sizetype count = 0;
-								T_container::T_iterator_native it = t->container.begin();
-								T_container::T_iterator_native itend = t->container.end();
+								typename T_container::T_iterator_native it = t->container.begin();
+								typename T_container::T_iterator_native itend = t->container.end();
 
 								asIScriptFunction* func = t->func_cmp;
 								if (t->func_equals) { func = t->func_equals; }
