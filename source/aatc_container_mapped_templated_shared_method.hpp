@@ -71,7 +71,7 @@ namespace aatc {
 
 							t->BuildPrimunion(findkey, key, t->datahandlingid_key, t->primitiveid_key);
 
-							T_container::T_iterator_native it = t->container.find(findkey);
+							typename T_container::T_iterator_native it = t->container.find(findkey);
 							if (it == t->container.end()) {
 								common::primunion_pair insertpair;
 
@@ -100,7 +100,7 @@ namespace aatc {
 
 							t->BuildPrimunion(findkey, key, t->datahandlingid_key, t->primitiveid_key);
 
-							T_container::T_iterator_native it = t->container.find(findkey);
+							typename T_container::T_iterator_native it = t->container.find(findkey);
 
 							if (it != t->container.end()) {
 								common::primunion old_key;
@@ -134,7 +134,7 @@ namespace aatc {
 							common::primunion findkey;
 							t->BuildPrimunion(findkey, key, t->datahandlingid_key, t->primitiveid_key);
 
-							T_container::T_iterator_native_const it = t->container.find(findkey);
+							typename T_container::T_iterator_native_const it = t->container.find(findkey);
 							if (it == t->container.end()) {
 								success = 0;
 
@@ -178,10 +178,10 @@ namespace aatc {
 							common::primunion findkey;
 							t->BuildPrimunion(findkey, key, t->datahandlingid_key, t->primitiveid_key);
 
-							T_container::T_iterator_native it = t->container.find(findkey);
+							typename T_container::T_iterator_native it = t->container.find(findkey);
 
 
-							T_container::Iterator result(t);
+							typename T_container::Iterator result(t);
 							result.it = it;
 
 							if (it == t->container.end()) {
@@ -191,7 +191,7 @@ namespace aatc {
 							return result;
 						}
 
-						template<typename T_container> bool erase_iterator(T_container* t, typename const T_container::Iterator& aatc_it) {
+						template<typename T_container> bool erase_iterator(T_container* t, const typename T_container::Iterator& aatc_it) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 								if (t->safety_iteratorversion != aatc_it.safety_iteratorversion) {
 									common::errorprint::container::iterator_invalid();
@@ -199,7 +199,7 @@ namespace aatc {
 								}
 							#endif
 
-							T_container::T_iterator_native it = aatc_it.it;
+							typename T_container::T_iterator_native it = aatc_it.it;
 
 							if (it == t->container.end()) {
 								return 0;
@@ -245,7 +245,7 @@ namespace aatc {
 							}
 						}
 
-						template<typename T_container> config::t::sizetype erase_iterator_range(T_container* t, typename const T_container::Iterator& aatc_it_range_begin, typename const T_container::Iterator& aatc_it_range_end) {
+						template<typename T_container> config::t::sizetype erase_iterator_range(T_container* t, const typename T_container::Iterator& aatc_it_range_begin, const typename T_container::Iterator& aatc_it_range_end) {
 							#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
 								if ((t->safety_iteratorversion != aatc_it_range_begin.safety_iteratorversion) || (t->safety_iteratorversion != aatc_it_range_end.safety_iteratorversion)) {
 									common::errorprint::container::iterator_invalid();
@@ -254,8 +254,8 @@ namespace aatc {
 							#endif
 
 
-							T_container::T_iterator_native it_range_begin = aatc_it_range_begin.it;
-							T_container::T_iterator_native it_range_end = aatc_it_range_end.it;
+							typename T_container::T_iterator_native it_range_begin = aatc_it_range_begin.it;
+							typename T_container::T_iterator_native it_range_end = aatc_it_range_end.it;
 
 							if (it_range_begin == it_range_end) {
 								return 0;
@@ -335,7 +335,7 @@ namespace aatc {
 									t->store_Scriptany_to_Primunion(key, insertpair.first, t->datahandlingid_key, t->primitiveid_key, t->typeinfo_key);
 									t->DefaultConstructPrimunion(insertpair.second, t->datahandlingid_value, t->primitiveid_value, t->typeinfo_value);
 
-									std::pair<T_container::T_iterator_native,bool> insert_result = t->container.insert(insertpair);
+									std::pair<typename T_container::T_iterator_native,bool> insert_result = t->container.insert(insertpair);
 
 									return T_container::Scriptany_ref_from_Primunion(insert_result.first->second, t->datahandlingid_value, t->primitiveid_value);
 								}

@@ -105,11 +105,21 @@ namespace aatc {
 				container::listing::tags_of_container::unordered_set
 			> {
 			public:
+				typedef shared::Containerbase <
+					aatc_acit_unordered_set<T_content, hash::hashfunctor<T_content>>,
+					T_content,
+					container::listing::CONTAINER::UNORDERED_SET,
+					container::listing::tags_of_container::unordered_set
+				> Containerbase;
+				typedef typename Containerbase::Iterator Iterator;
+
+
+
 				unordered_set() {}
 				unordered_set(const unordered_set& other):
 					Containerbase(other)
 				{}
-				unordered_set& unordered_set::operator=(const unordered_set& other) { Containerbase::operator=(other); return *this; }
+				unordered_set& operator=(const unordered_set& other) { Containerbase::operator=(other); return *this; }
 				unordered_set& swap(unordered_set& other) { shared::method::swap(this, other); return *this; }
 
 
@@ -145,7 +155,7 @@ namespace aatc {
 				}
 				static void Register(asIScriptEngine* engine, const char* n_content) {
 					common::RegistrationState rs(engine);
-					Register(rs, c_content);
+					Register(rs, n_content);
 				}
 			};
 

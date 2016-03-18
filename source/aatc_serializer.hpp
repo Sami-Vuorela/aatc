@@ -36,6 +36,7 @@ samivuorela@gmail.com
 
 #include "aatc.hpp"
 #include "aatc_common.hpp"
+#include "aatc_enginestorage.hpp"
 #include "aatc_container_shared.hpp"
 #include aatc_serializer_addonpath
 

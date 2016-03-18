@@ -101,11 +101,21 @@ namespace aatc {
 				container::listing::tags_of_container::set
 			> {
 			public:
+				typedef shared::Containerbase <
+					aatc_acit_set<T_content>,
+					T_content,
+					container::listing::CONTAINER::SET,
+					container::listing::tags_of_container::set
+				> Containerbase;
+				typedef typename Containerbase::Iterator Iterator;
+
+
+
 				set() {}
 				set(const set& other):
 					Containerbase(other)
 				{}
-				set& set::operator=(const set& other) { Containerbase::operator=(other); return *this; }
+				set& operator=(const set& other) { Containerbase::operator=(other); return *this; }
 				set& swap(set& other) { shared::method::swap(this, other); return *this; }
 
 
@@ -141,7 +151,7 @@ namespace aatc {
 				}
 				static void Register(asIScriptEngine* engine, const char* n_content) {
 					common::RegistrationState rs(engine);
-					Register(rs, c_content);
+					Register(rs, n_content);
 				}
 			};
 
