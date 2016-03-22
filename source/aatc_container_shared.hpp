@@ -88,6 +88,21 @@ namespace aatc {
 
 
 
+			class iterator_base {
+			public:
+				bool firstt;
+				bool cont;
+
+				#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
+					int_fast16_t safety_iteratorversion;
+				#endif
+
+				iterator_base();
+				iterator_base(const iterator_base& other);
+			};
+
+
+
 			namespace containerfunctor {
 				class Settings {
 				public:

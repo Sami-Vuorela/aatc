@@ -37,10 +37,10 @@ void Test_lambda(){
 			return 0;
 		},true);
 		
-		Print(""); Print("------------");
-		for(auto it = cont.begin();it++;){
-			Print("it.value = " + it.value);
-		}
+		// Print(""); Print("------------");
+		// for(auto it = cont.begin();it++;){
+			// Print("it.value = " + it.value);
+		// }
 	}
 	{//sort with delegate
 		vector<int> cont;
@@ -55,11 +55,11 @@ void Test_lambda(){
 		lambdatest_Comparizor compa;
 		cont.sort(aatc_funcdef_cmp_int(compa.comp),true);
 		
-		Print(""); Print("------------");
-		for(auto it = cont.begin();it++;){
-			Print("it.value = " + it.value);
-		}
-		Print("Delegate counter = " + compa.counter);
+		// Print(""); Print("------------");
+		// for(auto it = cont.begin();it++;){
+			// Print("it.value = " + it.value);
+		// }
+		// Print("Delegate counter = " + compa.counter);
 	}
 	{//sort with aatcfuncptr delegate
 		vector<int> cont;
@@ -79,11 +79,11 @@ void Test_lambda(){
 		
 		cont.sort(fp,true);
 		
-		Print(""); Print("------------");
-		for(auto it = cont.begin();it++;){
-			Print("it.value = " + it.value);
-		}
-		Print("Delegate counter = " + compa.counter);
+		// Print(""); Print("------------");
+		// for(auto it = cont.begin();it++;){
+			// Print("it.value = " + it.value);
+		// }
+		// Print("Delegate counter = " + compa.counter);
 	}
 	
 	{//sort with lambda
@@ -103,10 +103,10 @@ void Test_lambda(){
 			return 0;
 		},true);
 		
-		Print(""); Print("------------");
-		for(auto it = cont.begin();it++;){
-			Print("it.value = " + it.value);
-		}
+		// Print(""); Print("------------");
+		// for(auto it = cont.begin();it++;){
+			// Print("it.value = " + it.value);
+		// }
 	}
 	{
 		vector<Material> cont;
@@ -126,9 +126,9 @@ void Test_lambda(){
 			// return 0;
 		// },true);
 		
-		Print(""); Print("------------");
-		for(auto it = cont.begin();it++;){
-			Print("it.value.id = " + it.value.id);
-		}
+		// Print(""); Print("------------");
+		// for(auto it = cont.begin();it++;){
+			// Print("it.value.id = " + it.value.id);
+		// }
 	}
 }

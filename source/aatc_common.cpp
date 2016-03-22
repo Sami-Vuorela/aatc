@@ -354,16 +354,6 @@ namespace aatc {
 
 
 
-		iterator_base::iterator_base():
-			firstt(1)
-		{}
-		iterator_base::iterator_base(const iterator_base& other) :
-			firstt(other.firstt),
-			cont(other.cont)
-		{}
-
-
-
 		void* primunion::Get_Ptr_To_Primitive_Type(PRIMITIVE_TYPE primtype){
 			switch(primtype){
 				case PRIMITIVE_TYPE::INT8:{return &i8; }

@@ -284,7 +284,7 @@ namespace aatc {
 							if (ascending) {
 								t->container.sort(functor);
 							} else {
-								t->container.sort(common::functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp>(functor));
+								t->container.sort(common::detail::functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp>(functor));
 							}
 
 							t->els->contextcache_Return(functor.cc);
@@ -302,7 +302,7 @@ namespace aatc {
 							if (ascending) {
 								t->container.sort(functor);
 							} else {
-								t->container.sort(common::functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp_customscript>(functor));
+								t->container.sort(common::detail::functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp_customscript>(functor));
 							}
 
 							t->els->contextcache_Return(functor.cc);
@@ -542,7 +542,7 @@ namespace aatc {
 							if (ascending) {
 								std::sort(t->container.begin(), t->container.end(), functor);
 							} else {
-								std::sort(t->container.begin(), t->container.end(), common::functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp>(functor));
+								std::sort(t->container.begin(), t->container.end(), common::detail::functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp>(functor));
 							}
 
 							t->els->contextcache_Return(functor.cc);
@@ -560,7 +560,7 @@ namespace aatc {
 							if (ascending) {
 								std::sort(t->container.begin(), t->container.end(), functor);
 							} else {
-								std::sort(t->container.begin(), t->container.end(), common::functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp_customscript>(functor));
+								std::sort(t->container.begin(), t->container.end(), common::detail::functor_notcmp_persistent_noconst<void*, detail::scriptfunctor_cmp_customscript>(functor));
 							}
 
 							t->els->contextcache_Return(functor.cc);

@@ -322,7 +322,7 @@ namespace aatc {
 
 
 
-					class Iterator : public aatc::common::iterator_base {
+					class Iterator : public aatc::container::shared::iterator_base {
 					public:
 						Containerbase* host;
 

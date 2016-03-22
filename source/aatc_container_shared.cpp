@@ -68,6 +68,17 @@ namespace aatc {
 			}
 
 
+
+			iterator_base::iterator_base() :
+				firstt(1)
+			{}
+			iterator_base::iterator_base(const iterator_base& other) :
+				firstt(other.firstt),
+				cont(other.cont)
+			{}
+
+
+
 			namespace containerfunctor {
 				Base::Base(asIScriptEngine* _engine, Settings* settings) :
 					engine(_engine),

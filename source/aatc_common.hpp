@@ -81,40 +81,25 @@ namespace aatc {
 
 		//doxygen skip
 		#ifndef DOXYGEN_SHOULD_SKIP_THIS
-
-			template<typename T, typename T_other_functor> class functor_notcmp{
+		namespace detail {
+			template<typename T, typename T_other_functor> class functor_notcmp {
 			public:
-				bool operator()(const T& lhs, const T& rhs) const{
+				bool operator()(const T& lhs, const T& rhs) const {
 					return !(T_other_functor()(lhs, rhs));
 				}
 			};
-			template<typename T, typename T_other_functor> class functor_notcmp_persistent_noconst : public T_other_functor{
+			template<typename T, typename T_other_functor> class functor_notcmp_persistent_noconst : public T_other_functor {
 			public:
 				functor_notcmp_persistent_noconst(const T_other_functor& base) :
 					T_other_functor(base)
 				{}
-				bool operator()(T& lhs, T& rhs){
+				bool operator()(T& lhs, T& rhs) {
 					return !(T_other_functor::operator()(lhs, rhs));
 				}
 			};
-
+		}
 		#endif
 		//doxygen skip
-
-
-
-		class iterator_base{
-		public:
-			bool firstt;
-			bool cont;
-
-			#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
-				int_fast16_t safety_iteratorversion;
-			#endif
-
-			iterator_base();
-			iterator_base(const iterator_base& other);
-		};
 
 
 

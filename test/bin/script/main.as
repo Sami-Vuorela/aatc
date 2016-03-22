@@ -19,18 +19,6 @@ bool test_enable_print_failure = true;
 // #include "00 serializer tests.as"
 
 
-void tester_1(vector<int>@ cont){
-	Print("size = " + cont.size());
-}
-void tester_2(vector<int> &in cont){
-	Print("size = " + cont.size());
-}
-void tester_3(vector<int> &out cont){
-	cont.push_back(2);
-}
-void tester_4(vector<int> &inout cont){
-	cont.push_back(2);
-}
 
 void scriptmain(){
 	TestContainer_vector();
@@ -42,39 +30,6 @@ void scriptmain(){
 	TestContainer_unordered_map();
 	
 	Test_lambda();
-	
-	{
-		vector<int> cont;
-		cont.push_back(1);
-		
-		tester_1(cont);
-		
-		
-		vector<int> cont2(cont);
-		
-		// cont2 = cont;
-		
-		
-		// Print("size = " + cont.size());
-		// tester_2(cont);
-		// Print("size = " + cont.size());
-		// tester_3(cont);
-		// Print("size = " + cont.size());
-		tester_4(cont2);
-		Print("size = " + cont2.size());
-	}
-	
-	{
-		deque<int> cont;
-		
-		for(int i=0; i<100; i++){
-			cont.push_back(i);
-		}
-		
-		for(auto it = cont.begin();it++;){
-			Print("" + it.value);
-		}
-	}
 	
 	
 	
