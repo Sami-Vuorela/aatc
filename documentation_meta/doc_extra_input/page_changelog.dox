@@ -1,0 +1,10 @@
+/*! \page page_changelog Changelog
+<p>2.31.0</p>
+- Supports Angelscript 2.31.0
+- New container: deque
+- Proper cpp <-> script interoperability
+- Sort tempspec'd containers using native AS functions (including lambdas and delegates)
+- Compiles on linux (only tested with GCC)
+- Cleaner C++ code, more namespaces etc
+
+*/

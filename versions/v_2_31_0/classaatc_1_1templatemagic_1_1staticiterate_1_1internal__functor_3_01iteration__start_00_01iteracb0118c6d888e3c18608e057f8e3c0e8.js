@@ -1,0 +1,4 @@
+var classaatc_1_1templatemagic_1_1staticiterate_1_1internal__functor_3_01iteration__start_00_01iteracb0118c6d888e3c18608e057f8e3c0e8 =
+[
+    [ "operator()", "classaatc_1_1templatemagic_1_1staticiterate_1_1internal__functor_3_01iteration__start_00_01iteracb0118c6d888e3c18608e057f8e3c0e8.html#aec0a09d538f34fbda65697a88c282cbc", null ]
+];
