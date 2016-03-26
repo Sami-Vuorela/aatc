@@ -242,6 +242,8 @@ AS_DEBUG/
 
 #whatever this is
 *.exp
+*.db
+*.opendb
 
 .exe
 .lib
