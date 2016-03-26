@@ -19,7 +19,7 @@ It is quite free indeed.
 
 You can read the license over at  
 http://opensource.org/licenses/zlib-license.php  
-or in the source files.
+or in the source files or in LICENSE.txt.
 
 
 
