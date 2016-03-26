@@ -1,31 +1,34 @@
 /*! \page page_manual_usage_si_unordered_set unordered_set
 \code{.cpp}
 template<typename T> class unordered_set{
-	//default constructor
 	unordered_set();
-	//copy constructor
-	unordered_set(unordered_set &in other);
-	//operator=
-	unordered_set& opAssign(unordered_set &in other);
-	
+	unordered_set(const unordered_set@ other);
+	unordered_set& opAssign(const unordered_set@ other);
+	unordered_set& swap(unordered_set &inout other);
 	void SetDirectcomp(bool yesno);
+	
+	
 	
 	int size();
 	void clear();
 	bool empty();
 	
 	void insert(T &in value);
+	
 	void erase(T &in value);
-	bool contains(T &in value);
+	bool erase(const unordered_set_iterator<T> &in iterator);
+	int erase(const unordered_set_iterator<T> &in iterator_range_begin, const unordered_set_iterator<T> &in iterator_range_end);
+	
+	unordered_set_iterator<T> find(const T &in value);
 	
 	unordered_set_iterator<T> begin();
 	unordered_set_iterator<T> end();
 	
-	bool erase(const unordered_set_iterator<T> &in iterator);
-	int erase(const unordered_set_iterator<T> &in iterator_range_begin, const unordered_set_iterator<T> &in iterator_range_end);
 	
-	//find that returns an iterator, returns end if not found
-	unordered_set_iterator<T> find_iterator(const T &in value);
+	
+	//Nonstandard convenience functions
+	
+	bool contains(T &in value);
 };
 \endcode
 */

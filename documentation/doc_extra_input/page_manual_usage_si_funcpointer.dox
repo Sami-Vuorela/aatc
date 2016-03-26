@@ -1,5 +1,6 @@
 /*! \page page_manual_usage_si_funcpointer aatc_funcpointer
-<p>aatc_funcpointer is used to pass a function name from script to host. It is a ref object. Right now its only used by vector::sort and list::sort, but you can use it for whatever you like. Right now container template specializations cant be sorted with a function pointer.</p>
+<p>aatc_funcpointer is used to pass a function name from script to host. It is a ref object. Right now its only used by vector::sort and list::sort, but you can use it for whatever you like.</p>
+<p>aatc_funcpointer was created in ancient times to make sorting by angelscript functions possible. Nowadays angelscript has anonymous functions and everyone likes to use those for sorting instead of global functions. Anonymous function support for sorting is available, but only for tempspec'd containers for now, templated containers would probably require angelscript language support for templated funcdefs.</p>
 
 <p>aatc_funcpointer script interface:</p>
 \code{.cpp}
@@ -47,10 +48,10 @@ void main(){
 	aatc_funcpointer func;
 	func.Set("global_comp");
 	
-	cont.sort(func);
+	cont.sort(func,true);
 	
-	for(vector_iterator<Material> it(@cont);it++;){
-		Print("content = "+it.current().name);
+	for(auto it = cont.begin();it++;){
+		Print("content = "+it.value.name);
 	}
 }
 \endcode
@@ -90,10 +91,10 @@ void main(){
 	aatc_funcpointer func;
 	func.Set("method_comp",@compa);//remember that @@@
 	
-	cont.sort(func);
+	cont.sort(func,true);
 	
-	for(list_iterator<Material> it(@cont);it++;){
-		Print("content = "+it.current().name);
+	for(auto it = cont.begin();it++;){
+		Print("content = "+it.value.name);
 	}
 }
 \endcode

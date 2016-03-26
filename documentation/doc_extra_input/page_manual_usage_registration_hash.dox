@@ -1,0 +1,61 @@
+/*! \page page_manual_usage_registration_hash Registering hash functions
+
+<p>Unordered containers require your classes to have a hash function registered.</p>
+<p>A C++ class requires a hash function registered on the c++ side and the angelscript side.</p>
+<p>An Angelscript class requires a hash function as a method of the class.</p>
+
+<p>Registering a hash function for a c++ class:</p>
+\code{.cpp}
+
+#include "aatc_hash.hpp"
+
+class MyCppClass{
+	int something;
+};
+
+/*
+	Specialize the aatc hashfunctor, to let the c++ side of aatc to know about your class.
+	
+	With this your c++ class can be used with tempspec'd versions of unordered containers.
+*/
+namespace aatc {
+	namespace hash {
+		template<> class hashfunctor<MyCppClass> {
+		public:
+			config::t::hash operator()(const MyCppClass& a) const{
+				return a.something * 12345;
+			}
+		};
+	};//namespace hash
+};//namespace aatc
+
+/*
+	Tell Angelscript that this c++ class does indeed have a hashing function available.
+	
+	With this and the specializaton above, your c++ class can be used with templated or tempspec'd versions of unordered containers.
+*/
+aatc::hash::Register(engine,"MyCppClass_name_in_script");
+
+\endcode
+
+<p>Registering a hash function for an Angelscript class:</p>
+\code{.cpp}
+
+class Material{
+	int id;
+	
+	aatc_hash_t hash(){
+		return id * 12345;
+	}
+}
+
+\endcode
+
+<p>The return type of the Angelscript method and its name are both required to be exact for AATC to find them.</p>
+<p>Both of the names can be set in the config:</p>
+- The return typedef name can be set in aatc::config::scriptname::t::hash
+- The return type itself can be set in aatc::config::scriptname::t::hash_actual
+- The method name can be set in aatc::config::scriptname::method::content::hash
+
+\n
+*/

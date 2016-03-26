@@ -3,8 +3,7 @@
 
 #include "serializer\serializer.h"
 
-#include "../source/aatc_common.hpp"
-
+#include "../source/aatc.hpp"
 
 
 
@@ -31,6 +30,10 @@ void main_contents(){
 
 	asIScriptModule* module = engine->GetModule("testmodule");
 
+
+	//test_Interop(engine, module);
+
+
 	asIScriptFunction* func_scriptmain = module->GetFunctionByName("scriptmain");
 
 	asIScriptContext* cc = engine->RequestContext();
@@ -44,13 +47,13 @@ void main_contents(){
 
 
 					CSerializer backup;
-					aatc_serializer_register(engine, &backup);
+					aatc::serializer::Register(engine, &backup);
 					backup.Store(module);
 
 					cc->Prepare(module->GetFunctionByName("serializer_test_2")); cc->Execute();
 
 					backup.Restore(module);
-					aatc_serializer_cleanup(engine, &backup);
+					aatc::serializer::Cleanup(engine, &backup);
 
 					cc->Prepare(module->GetFunctionByName("serializer_test_3")); cc->Execute();
 				}

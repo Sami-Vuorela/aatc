@@ -12,10 +12,19 @@
 
 
 
-
+int aet_print_tab_counter;
 
 void aet_Print(const std::string& a){
+	for (int i = 0; i < aet_print_tab_counter; i++) {
+		std::cout << "  ";
+	}
 	std::cout << a << "\n";
+}
+void aet_PrintTabIncrement() {
+	aet_print_tab_counter++;
+}
+void aet_PrintTabDecrement(){
+	aet_print_tab_counter--;
 }
 
 
@@ -24,12 +33,12 @@ BEGIN_AS_NAMESPACE
 
 void aet_MessageCallback(const asSMessageInfo* msg, void* param){
 	char textbuf[2000];
-	sprintf_s(textbuf, 2000, "SCRIPT ERROR :: %s , row %i , type=%i , msg=%s", msg->section, msg->row, msg->type, msg->message);
+	aatc::common::RegistrationState::Format_static(textbuf, 2000, "SCRIPT ERROR :: %s , row %i , type=%i , msg=%s", msg->section, msg->row, msg->type, msg->message);
 	aet_Print(textbuf);
 }
 void aet_RuntimeExceptionCallback(asIScriptContext* ctx, void* obj){
 	char textbuf[2000];
-	sprintf_s(textbuf, 2000, "SCRIPT RUNTIME EXCEPTION :: %s :: %s ::at line %i :: %s", ctx->GetExceptionFunction()->GetModuleName(), ctx->GetExceptionFunction()->GetDeclaration(), ctx->GetExceptionLineNumber(), ctx->GetExceptionString());
+	aatc::common::RegistrationState::Format_static(textbuf, 2000, "SCRIPT RUNTIME EXCEPTION :: %s :: %s ::at line %i :: %s", ctx->GetExceptionFunction()->GetModuleName(), ctx->GetExceptionFunction()->GetDeclaration(), ctx->GetExceptionLineNumber(), ctx->GetExceptionString());
 	aet_Print(textbuf);
 }
 
@@ -48,6 +57,10 @@ void aet_engine_contextcallback_return(asIScriptEngine* engine, asIScriptContext
 
 
 asIScriptEngine* aet_CreateEngine(){
+	aet_print_tab_counter = 0;
+
+
+
 	asIScriptEngine* engine = asCreateScriptEngine(ANGELSCRIPT_VERSION);
 
 	engine->SetMessageCallback(asFUNCTION(aet_MessageCallback), nullptr, asCALL_CDECL);
@@ -64,13 +77,17 @@ asIScriptEngine* aet_CreateEngine(){
 	//RegisterScriptArray(engine, 0);
 
 
-	aatc_RegisterAllContainers(engine);
+	aatc::RegisterAllContainers(engine);
 
 
 
 	int r = 0;
 	r = engine->RegisterGlobalFunction("void Print(string &in)", asFUNCTION(aet_Print), asCALL_CDECL); assert(r >= 0);
+	r = engine->RegisterGlobalFunction("void PrintTabIncrement()", asFUNCTION(aet_PrintTabIncrement), asCALL_CDECL); assert(r >= 0);
+	r = engine->RegisterGlobalFunction("void PrintTabDecrement()", asFUNCTION(aet_PrintTabDecrement), asCALL_CDECL); assert(r >= 0);
 
+
+	test_Interop_register(engine);
 
 
 	return engine;

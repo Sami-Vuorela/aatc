@@ -1,5 +1,5 @@
 /*! \page page_manual_installation Installation
 <p>This library is not meant to be built and linked to your main project.</p>
-<p>Simply add all the files in /source to your main project and build them along with your main project.</p>
+<p>Simply add all the files in /source to your main project and build them along with your main project, much like with the other Angelscript addons.</p>
 see next: \ref page_manual_usage_registration
 */

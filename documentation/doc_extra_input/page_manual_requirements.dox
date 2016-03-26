@@ -1,8 +1,10 @@
 /*! \page page_manual_requirements Requirements
-<p>Angelscript version >= 2.30.0</p>
+<p>Angelscript version >= 2.31.0</p>
 A c++ compiler that supports these c++11 features
--# std::conditional
--# header <atomic>
+-# header <atomic> (for a spinlock)
+-# container <unordered_set>
+-# container <unordered_map>
+<p>The c++11 features required can be quite easily replaced with boost equivalents if you want to use AATC with an older compiler.</p>
 <p>Your angelscript engine needs a string registered (been developing with the official addon scriptstdstring)</p>
 <p>There is no generic call convention interface available yet, so if your angelscript project was dependant on that, you can't use AATC yet.</p>
 */

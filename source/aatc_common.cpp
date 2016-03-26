@@ -30,862 +30,405 @@ samivuorela@gmail.com
 
 
 #include "aatc_common.hpp"
+#include "aatc_enginestorage.hpp"
 
-
-aatc_std_Spinlock::aatc_std_Spinlock() : state(1) {}
-void aatc_std_Spinlock::lock(){while (state.exchange(0, std::memory_order_acquire) == 0);}
-void aatc_std_Spinlock::unlock(){state.store(1, std::memory_order_release);}
-
-
+#include "stdarg.h"
 
 
 
 BEGIN_AS_NAMESPACE
-
-aatc_primunion aatc_primunion_defaultvalue = aatc_primunion();
-
-aatc_hash_type aatc_hashfunc_djb2(const aatc_type_string& a){
-	aatc_hash_type hash = 5381;
-	for(int i = 0; i < a.size(); i++){
-		hash = ((hash << 5) + hash) + a[i];
-	}
-	return hash;
-}
-
-aatc_hash_type aatc_functor_hash<aatc_type_float32>::operator()(const aatc_type_float32& a) const{
-	aatc_primunion pu;
-	pu.f32 = a;
-	return pu.ui64;
-}
-aatc_hash_type aatc_functor_hash<aatc_type_float64>::operator()(const aatc_type_float64& a) const{
-	aatc_primunion pu;
-	pu.f64 = a;
-	return pu.ui64;
-}
-aatc_hash_type aatc_functor_hash<aatc_type_string>::operator()(const aatc_type_string& a) const{
-	return aatc_hashfunc_djb2(a);
-}
+namespace aatc {
+	namespace common {
 
 
 
-aatc_engine_level_storage::aatc_engine_level_storage(asIScriptEngine* _engine) :
-	engine(_engine)
-{}
-aatc_engine_level_storage::~aatc_engine_level_storage(){}
+		std_Spinlock::std_Spinlock() : state(1) {}
+		void std_Spinlock::lock(){while (state.exchange(0, std::memory_order_acquire) == 0);}
+		void std_Spinlock::unlock(){state.store(1, std::memory_order_release);}
 
-aatc_template_specific_storage* aatc_containertype_specific_storage::GetTemplateSpecificStorage(aatc_type_uint32 id){
-	aatc_template_specific_storage* result;
 
-	//template_specific_storages_lock.lock();
-	els->containertype_specific_storages_lock.lock();
-		tmap_tss::iterator it = template_specific_storages.find(id);
-		if (it == template_specific_storages.end()){
-			result = new aatc_template_specific_storage(this,id);
-			template_specific_storages.insert(tpair_tss(id, result));
-		}else{
-			result = it->second;
+
+
+
+
+		primunion primunion_defaultvalue = primunion();
+
+
+
+
+
+
+		//refcounted and gc basetype
+		//refcounted and gc basetype
+		basetype_refcounted::basetype_refcounted() :
+			refcount(1)
+		{}
+		basetype_refcounted::~basetype_refcounted(){}
+		void basetype_refcounted::refcount_Add(){
+			asAtomicInc(refcount);
 		}
-	els->containertype_specific_storages_lock.unlock();
-	//template_specific_storages_lock.unlock();
-
-	return result;
-}
-aatc_containertype_specific_storage* aatc_engine_level_storage::GetContainerTypeSpecificStorage(aatc_type_uint32 id){
-	aatc_containertype_specific_storage* result;
-
-	containertype_specific_storages_lock.lock();
-		tmap_ctss::iterator it = containertype_specific_storages.find(id);
-		if (it == containertype_specific_storages.end()){
-			result = new aatc_containertype_specific_storage(this, id);
-			containertype_specific_storages.insert(tpair_ctss(id, result));
+		void basetype_refcounted::refcount_Release(){
+			if (asAtomicDec(refcount) == 0){
+				delete this;
+			}
 		}
-		else{
-			result = it->second;
+
+		basetype_refcounted_GC::basetype_refcounted_GC():
+			refCount(1),
+			gcFlag(0)
+		{}
+		basetype_refcounted_GC::~basetype_refcounted_GC(){}
+
+		void basetype_refcounted_GC::refcount_Add(){
+			gcFlag = false;
+			asAtomicInc(refCount);
 		}
-	containertype_specific_storages_lock.unlock();
+		void basetype_refcounted_GC::refcount_Release(){
+			gcFlag = false;
+			if (asAtomicDec(refCount) == 0){
+				delete this;
+			}
+		}
+		int basetype_refcounted_GC::GetRefCount(){return refCount;}
+		void basetype_refcounted_GC::SetGCFlag(){gcFlag = true;}
+		bool basetype_refcounted_GC::GetGCFlag(){return gcFlag;}
+		void basetype_refcounted_GC::EnumReferences(asIScriptEngine *engine){}
+		void basetype_refcounted_GC::ReleaseAllReferences(asIScriptEngine* engine){}
+		//refcounted and gc basetype
+		//refcounted and gc basetype
 
-	return result;
-}
 
-aatc_containertype_specific_storage::aatc_containertype_specific_storage(aatc_engine_level_storage* _els, aatc_type_uint32 container_id) :
-	els(_els),
-	container_id(container_id)
-{}
-aatc_containertype_specific_storage::~aatc_containertype_specific_storage(){
-	for (auto it = template_specific_storages.begin(); it != template_specific_storages.end(); it++){
-		const auto& pp = *it;
-		delete pp.second;
-	}
-}
 
-void aatc_engine_level_storage::Clean(){
-	for (auto it = containertype_specific_storages.begin(); it != containertype_specific_storages.end(); it++){
-		const auto& pp = *it;
-		delete pp.second;
-	}
-	containertype_specific_storages.clear();
+		bool templatecallback_func::templated_singleparam(asITypeInfo *ot, bool &dontGarbageCollect){
+			return templatecallback_func::typeidd(ot, ot->GetSubTypeId(), dontGarbageCollect);
+		}
+		bool templatecallback_func::map(asITypeInfo *ot, bool &dontGarbageCollect){
+			int typeId_key = ot->GetSubTypeId(0);
+			int typeId_value = ot->GetSubTypeId(1);
 
-	for (auto it = context_cache.begin(); it != context_cache.end(); it++){
-		auto* a = *it;
-		a->Release();
+			bool dont_gc_key = 0;
+			bool dont_gc_value = 0;
+			bool result_key = templatecallback_func::typeidd(ot, typeId_key, dont_gc_key);
+			bool result_value = templatecallback_func::typeidd(ot, typeId_value, dont_gc_value);
 
-	}
-	context_cache.clear();
-}
+			dontGarbageCollect = dont_gc_key && dont_gc_value;
 
-aatc_template_specific_storage::aatc_template_specific_storage(aatc_containertype_specific_storage* ctss,aatc_type_uint32 subtypeid) :
-	ctss(ctss),
-	func_equals(NULL),
-	func_cmp(NULL),
-	func_hash(NULL)
-{
-	asIScriptEngine* engine = asGetActiveContext()->GetEngine();
-	asIObjectType* objtype = engine->GetObjectTypeById(subtypeid);
+			return result_key && result_value;
+		}
+		bool templatecallback_func::typeidd(asITypeInfo *ot, int typeId, bool &dontGarbageCollect){
+			if ((typeId & asTYPEID_MASK_OBJECT) && !(typeId & asTYPEID_OBJHANDLE)){
+				asITypeInfo *subtype = ot->GetEngine()->GetTypeInfoById(typeId);
+				asDWORD flags = subtype->GetFlags();
+				if ((flags & asOBJ_VALUE) && !(flags & asOBJ_POD)){
+					// Verify that there is a default constructor
+					bool found = false;
+					for (asUINT n = 0; n < subtype->GetBehaviourCount(); n++){
+						asEBehaviours beh;
+						asIScriptFunction *func = subtype->GetBehaviourByIndex(n, &beh);
+						if (beh != asBEHAVE_CONSTRUCT){ continue; }
 
-	//get opEquals or opCmp function for this type to be stored
+						if (func->GetParamCount() == 0){
+							// Found the default constructor
+							found = true;
+							break;
+						}
+					}
 
-	bool mustBeConst = (subtypeid & asTYPEID_HANDLETOCONST) ? true : false;
-
-	if (objtype){
-		for (asUINT i = 0; i < objtype->GetMethodCount(); i++){
-			asIScriptFunction *func = objtype->GetMethodByIndex(i);
-
-			asDWORD flags = 0;
-			int returnTypeId = func->GetReturnTypeId(&flags);
-
-			if(func->GetParamCount() == 0){
-				if(strcmp(func->GetName(), aatc_name_script_requiredmethod_hash) == 0){
-					if((returnTypeId == asTYPEID_UINT64) || (returnTypeId == asTYPEID_UINT32) || (returnTypeId == asTYPEID_UINT16) || (returnTypeId == asTYPEID_UINT8)){
-						func_hash = func;
+					if (!found){
+						// There is no default constructor
+						return false;
 					}
 				}
-			}
-			if (func->GetParamCount() == 1 && (!mustBeConst || func->IsReadOnly())){
+				else if ((flags & asOBJ_REF)){
+					bool found = false;
 
-				// The method must not return a reference
-				if (flags != asTM_NONE)
-					continue;
-
-				// opCmp returns an int and opEquals returns a bool
-				bool isCmp = false, isEq = false;
-				if (returnTypeId == asTYPEID_INT32 && strcmp(func->GetName(), "opCmp") == 0){
-					isCmp = true;
-				}
-				if (returnTypeId == asTYPEID_BOOL && strcmp(func->GetName(), "opEquals") == 0){
-					isEq = true;
-				}
-
-				if(!isCmp && !isEq){
-					continue;
-				}
-
-
-				// The parameter must either be a reference to the subtype or a handle to the subtype
-				int paramTypeId;
-				func->GetParam(0, &paramTypeId, &flags);
-
-				if ((paramTypeId & ~(asTYPEID_OBJHANDLE | asTYPEID_HANDLETOCONST)) != (subtypeid &  ~(asTYPEID_OBJHANDLE | asTYPEID_HANDLETOCONST))){
-					continue;
-				}
-
-				if ((flags & asTM_INREF)){
-					if ((paramTypeId & asTYPEID_OBJHANDLE) || (mustBeConst && !(flags & asTM_CONST))){
-						continue;
+					// If value assignment for ref type has been disabled then the array
+					// can be created if the type has a default factory function
+					if (!ot->GetEngine()->GetEngineProperty(asEP_DISALLOW_VALUE_ASSIGN_FOR_REF_TYPE)){
+						// Verify that there is a default factory
+						for (asUINT n = 0; n < subtype->GetFactoryCount(); n++){
+							asIScriptFunction *func = subtype->GetFactoryByIndex(n);
+							if (func->GetParamCount() == 0){
+								// Found the default factory
+								found = true;
+								break;
+							}
+						}
 					}
-				}else if (paramTypeId & asTYPEID_OBJHANDLE){
-					if (mustBeConst && !(paramTypeId & asTYPEID_HANDLETOCONST)){
-						continue;
-					}
-				}else{
-					continue;
-				}
 
-				if (isCmp){
-					func_cmp = func;
-				}else if (isEq){
-					func_equals = func;
-				}
-			}
-		}
-	}
-
-	missing_functions = aatc_errorcheck_container_type_missing_functions_base(ctss->container_id,this);
-}
-
-asIScriptContext* aatc_engine_level_storage::contextcache_Get(){
-	asIScriptContext* result;
-
-	context_cache_lock.lock();
-		if (context_cache.empty()){
-			result = engine->CreateContext();
-		}else{
-			result = context_cache.back();
-			context_cache.pop_back();
-		}
-	context_cache_lock.unlock();
-
-	return result;
-}
-void aatc_engine_level_storage::contextcache_Return(asIScriptContext* a){
-	context_cache_lock.lock();
-		context_cache.push_back(a);
-	context_cache_lock.unlock();
-}
-
-
-
-//refcounted and gc basetype
-//refcounted and gc basetype
-aatc_refcounted::aatc_refcounted() :
-	refcount(1)
-{}
-aatc_refcounted::~aatc_refcounted(){}
-void aatc_refcounted::refcount_Add(){
-	asAtomicInc(refcount);
-}
-void aatc_refcounted::refcount_Release(){
-	if (asAtomicDec(refcount) == 0){
-		delete this;
-	}
-}
-
-aatc_refcounted_GC::aatc_refcounted_GC():
-	refCount(1),
-	gcFlag(0)
-{}
-aatc_refcounted_GC::~aatc_refcounted_GC(){}
-
-void aatc_refcounted_GC::refcount_Add(){
-	gcFlag = false;
-	asAtomicInc(refCount);
-}
-void aatc_refcounted_GC::refcount_Release(){
-	gcFlag = false;
-	if (asAtomicDec(refCount) == 0){
-		delete this;
-	}
-}
-int aatc_refcounted_GC::GetRefCount(){return refCount;}
-void aatc_refcounted_GC::SetGCFlag(){gcFlag = true;}
-bool aatc_refcounted_GC::GetGCFlag(){return gcFlag;}
-void aatc_refcounted_GC::EnumReferences(asIScriptEngine *engine){}
-void aatc_refcounted_GC::ReleaseAllReferences(asIScriptEngine* engine){}
-//refcounted and gc basetype
-//refcounted and gc basetype
-
-
-
-void aatc_engine_cleanup(asIScriptEngine* engine){
-	aatc_engine_level_storage* ss = (aatc_engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
-
-	ss->Clean();
-	delete ss;
-}
-
-bool aatc_templatecallback_1tp(asIObjectType *ot, bool &dontGarbageCollect){
-	return aatc_templatecallback_typeid(ot, ot->GetSubTypeId(), dontGarbageCollect);
-}
-bool aatc_templatecallback_map(asIObjectType *ot, bool &dontGarbageCollect){
-	int typeId_key = ot->GetSubTypeId(0);
-	int typeId_value = ot->GetSubTypeId(1);
-
-	bool dont_gc_key = 0;
-	bool dont_gc_value = 0;
-	bool result_key = aatc_templatecallback_typeid(ot, typeId_key, dont_gc_key);
-	bool result_value = aatc_templatecallback_typeid(ot, typeId_value, dont_gc_value);
-
-	dontGarbageCollect = dont_gc_key && dont_gc_value;
-
-	return result_key && result_value;
-}
-bool aatc_templatecallback_typeid(asIObjectType *ot, int typeId, bool &dontGarbageCollect){
-	if ((typeId & asTYPEID_MASK_OBJECT) && !(typeId & asTYPEID_OBJHANDLE)){
-		asIObjectType *subtype = ot->GetEngine()->GetObjectTypeById(typeId);
-		asDWORD flags = subtype->GetFlags();
-		if ((flags & asOBJ_VALUE) && !(flags & asOBJ_POD)){
-			// Verify that there is a default constructor
-			bool found = false;
-			for (asUINT n = 0; n < subtype->GetBehaviourCount(); n++){
-				asEBehaviours beh;
-				asIScriptFunction *func = subtype->GetBehaviourByIndex(n, &beh);
-				if (beh != asBEHAVE_CONSTRUCT){ continue; }
-
-				if (func->GetParamCount() == 0){
-					// Found the default constructor
-					found = true;
-					break;
-				}
-			}
-
-			if (!found){
-				// There is no default constructor
-				return false;
-			}
-		}
-		else if ((flags & asOBJ_REF)){
-			bool found = false;
-
-			// If value assignment for ref type has been disabled then the array
-			// can be created if the type has a default factory function
-			if (!ot->GetEngine()->GetEngineProperty(asEP_DISALLOW_VALUE_ASSIGN_FOR_REF_TYPE)){
-				// Verify that there is a default factory
-				for (asUINT n = 0; n < subtype->GetFactoryCount(); n++){
-					asIScriptFunction *func = subtype->GetFactoryByIndex(n);
-					if (func->GetParamCount() == 0){
-						// Found the default factory
-						found = true;
-						break;
+					if (!found){
+						// No default factory
+						return false;
 					}
 				}
+
+				// If the object type is not garbage collected then the array also doesn't need to be
+				if (!(flags & asOBJ_GC)){
+					dontGarbageCollect = true;
+				}
+			}
+			else if (!(typeId & asTYPEID_OBJHANDLE)){
+				// Arrays with primitives cannot form circular references,
+				// thus there is no need to garbage collect them
+				dontGarbageCollect = true;
 			}
 
-			if (!found){
-				// No default factory
-				return false;
-			}
+			return 1;
 		}
 
-		// If the object type is not garbage collected then the array also doesn't need to be
-		if (!(flags & asOBJ_GC)){
-			dontGarbageCollect = true;
+
+
+		script_Funcpointer::script_Funcpointer() :
+			//dedicated_context(NULL),
+			ready(0),
+			func(NULL),
+			so(NULL)
+		{
 		}
-	}
-	else if (!(typeId & asTYPEID_OBJHANDLE)){
-		// Arrays with primitives cannot form circular references,
-		// thus there is no need to garbage collect them
-		dontGarbageCollect = true;
-	}
-
-	return 1;
-}
-
-//do nothing
-void aect_iterator_template_generic_constructor_dummydefault(asIObjectType* objtype, void *memory){}
-
-aatc_containerfunctor_comp::aatc_containerfunctor_comp(asIScriptEngine* _engine, aatc_containerfunctor_Settings* settings) :
-	engine(_engine),
-	host_settings(settings),
-	need_init(1)
-{
-	els = (aatc_engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
-}
-bool aatc_containerfunctor_comp::operator()(const void* lhs, const void* rhs)const{
-	if (need_init){
-		(const_cast<aatc_containerfunctor_comp*>(this))->need_init = 0;
-		(const_cast<aatc_containerfunctor_comp*>(this))->handlemode_directcomp = host_settings->handlemode_directcomp;
-		(const_cast<aatc_containerfunctor_comp*>(this))->func_cmp = host_settings->func_cmp;
-	}
-	if(handlemode_directcomp){
-		return lhs < rhs;
-	}
-
-	bool result;
-
-	asIScriptContext* cc = els->contextcache_Get();
-		cc->Prepare(func_cmp);
-		cc->SetObject(const_cast<void*>(lhs));
-		cc->SetArgObject(0, const_cast<void*>(rhs));
-		cc->Execute();
-		//result = (bool)cc->GetReturnByte();
-	result = (cc->GetReturnDWord() == -1);
-
-	els->contextcache_Return(cc);
-
-	return result;
-}
-
-aatc_containerfunctor_equals::aatc_containerfunctor_equals(asIScriptEngine* _engine, aatc_containerfunctor_Settings* settings) :
-	engine(_engine),
-	host_settings(settings),
-	need_init(1)
-{
-	els = (aatc_engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
-}
-bool aatc_containerfunctor_equals::operator()(const void* lhs, const void* rhs)const{
-	if(need_init){
-		(const_cast<aatc_containerfunctor_equals*>(this))->need_init = 0;
-		(const_cast<aatc_containerfunctor_equals*>(this))->handlemode_directcomp = host_settings->handlemode_directcomp;
-		(const_cast<aatc_containerfunctor_equals*>(this))->func_equals = host_settings->func_equals;
-	}
-	if(handlemode_directcomp){
-		return lhs == rhs;
-	}
-
-	bool result;
-
-	asIScriptContext* cc = els->contextcache_Get();
-	cc->Prepare(func_equals);
-		cc->SetObject(const_cast<void*>(lhs));
-		cc->SetArgObject(0, const_cast<void*>(rhs));
-	cc->Execute();
-	result = (cc->GetReturnDWord() != 0);
-
-	els->contextcache_Return(cc);
-
-	return result;
-}
-bool aatc_containerfunctor_equals::findif_version::operator()(const void* rhs) const{
-	return (*f)(target, rhs);
-}
-
-aatc_containerfunctor_hash::aatc_containerfunctor_hash(asIScriptEngine* _engine, aatc_containerfunctor_Settings* settings) :
-	engine(_engine),
-	host_settings(settings),
-	need_init(1)
-{
-	els = (aatc_engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
-}
-aatc_hash_type aatc_containerfunctor_hash::operator()(const void* ptr) const{
-	if(need_init){
-		//need_init = 0;
-		//func_hash = host_settings->func_hash;
-		//handlemode_directcomp = host_settings->handlemode_directcomp;
-		(const_cast<aatc_containerfunctor_hash*>(this))->need_init = 0;
-		(const_cast<aatc_containerfunctor_hash*>(this))->handlemode_directcomp = host_settings->handlemode_directcomp;
-		(const_cast<aatc_containerfunctor_hash*>(this))->func_hash = host_settings->func_hash;
-	}
-	if(handlemode_directcomp){
-		return (aatc_hash_type)ptr;
-		//return reinterpret_cast<std::size_t>(ptr);
-	}
-
-	aatc_hash_type result;
-
-	asIScriptContext* cc = els->contextcache_Get();
-		cc->Prepare(func_hash);
-			cc->SetObject(const_cast<void*>(ptr));
-		if(cc->Execute() == asEXECUTION_EXCEPTION){
-			result = 0;
-		}else{
-			result = cc->GetReturnQWord();
+		script_Funcpointer::~script_Funcpointer(){
+			//ReleaseRef();
 		}
-	els->contextcache_Return(cc);
 
-	return result;
-}
-
-
-
-//MAP FUNCTORS
-//MAP FUNCTORS
-//MAP FUNCTORS
-aatc_containerfunctor_map_comp::aatc_containerfunctor_map_comp(asIScriptEngine* _engine, aatc_containerfunctor_map_Settings* settings) :
-	engine(_engine),
-	host_settings(settings),
-	need_init(1)
-{
-	els = (aatc_engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
-}
-bool aatc_containerfunctor_map_comp::operator()(const aatc_primunion& lhs, const aatc_primunion& rhs)const{
-	if(need_init){
-		(const_cast<aatc_containerfunctor_map_comp*>(this))->need_init = 0;
-		(const_cast<aatc_containerfunctor_map_comp*>(this))->handlemode_directcomp = host_settings->handlemode_directcomp;
-		(const_cast<aatc_containerfunctor_map_comp*>(this))->datahandlingid_key = host_settings->datahandlingid_key;
-		(const_cast<aatc_containerfunctor_map_comp*>(this))->primitiveid_key = host_settings->primitiveid_key;
-		(const_cast<aatc_containerfunctor_map_comp*>(this))->func_cmp = host_settings->func_cmp;
-	}
-	if(datahandlingid_key == aatc_DATAHANDLINGTYPE::PRIMITIVE){
-		switch(primitiveid_key){
-			case aatc_PRIMITIVE_TYPE::INT8:{return lhs.i8 < rhs.i8; }
-			case aatc_PRIMITIVE_TYPE::INT16:{return lhs.i16 < rhs.i16; }
-			case aatc_PRIMITIVE_TYPE::INT32:{return lhs.i32 < rhs.i32; }
-			case aatc_PRIMITIVE_TYPE::INT64:{return lhs.i64 < rhs.i64; }
-			case aatc_PRIMITIVE_TYPE::UINT8:{return lhs.ui8 < rhs.ui8; }
-			case aatc_PRIMITIVE_TYPE::UINT16:{return lhs.ui16 < rhs.ui16; }
-			case aatc_PRIMITIVE_TYPE::UINT32:{return lhs.ui32 < rhs.ui32; }
-			case aatc_PRIMITIVE_TYPE::UINT64:{return lhs.ui64 < rhs.ui64; }
-			case aatc_PRIMITIVE_TYPE::FLOAT32:{return lhs.f32 < rhs.f32; }
-			case aatc_PRIMITIVE_TYPE::FLOAT64:{return lhs.f64 < rhs.f64; }
-		};
-	}
-	if(datahandlingid_key == aatc_DATAHANDLINGTYPE::STRING){
-		return (*((aatc_type_string*)lhs.ptr)) < (*((aatc_type_string*)rhs.ptr));
-	}
-	if(handlemode_directcomp){
-		return lhs.ptr < rhs.ptr;
-	}
-
-	bool result;
-
-	asIScriptContext* cc = els->contextcache_Get();
-	cc->Prepare(func_cmp);
-	cc->SetObject(const_cast<void*>(lhs.ptr));
-	cc->SetArgObject(0, const_cast<void*>(rhs.ptr));
-	cc->Execute();
-	//result = (bool)cc->GetReturnByte();
-	result = (cc->GetReturnDWord() == -1);
-
-	els->contextcache_Return(cc);
-
-	return result;
-}
-
-
-aatc_containerfunctor_map_equals::aatc_containerfunctor_map_equals(asIScriptEngine* _engine, aatc_containerfunctor_map_Settings* settings) :
-	engine(_engine),
-	host_settings(settings),
-	need_init(1)
-{
-	els = (aatc_engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
-}
-bool aatc_containerfunctor_map_equals::operator()(const aatc_primunion& lhs, const aatc_primunion& rhs)const{
-	if(need_init){
-		(const_cast<aatc_containerfunctor_map_equals*>(this))->need_init = 0;
-		(const_cast<aatc_containerfunctor_map_equals*>(this))->handlemode_directcomp = host_settings->handlemode_directcomp;
-		(const_cast<aatc_containerfunctor_map_equals*>(this))->datahandlingid_key = host_settings->datahandlingid_key;
-		(const_cast<aatc_containerfunctor_map_equals*>(this))->primitiveid_key = host_settings->primitiveid_key;
-		(const_cast<aatc_containerfunctor_map_equals*>(this))->func_equals = host_settings->func_equals;
-	}
-	if(datahandlingid_key == aatc_DATAHANDLINGTYPE::PRIMITIVE){
-		switch(primitiveid_key){
-			case aatc_PRIMITIVE_TYPE::INT8:{return lhs.i8 == rhs.i8; }
-			case aatc_PRIMITIVE_TYPE::INT16:{return lhs.i16 == rhs.i16; }
-			case aatc_PRIMITIVE_TYPE::INT32:{return lhs.i32 == rhs.i32; }
-			case aatc_PRIMITIVE_TYPE::INT64:{return lhs.i64 == rhs.i64; }
-			case aatc_PRIMITIVE_TYPE::UINT8:{return lhs.ui8 == rhs.ui8; }
-			case aatc_PRIMITIVE_TYPE::UINT16:{return lhs.ui16 == rhs.ui16; }
-			case aatc_PRIMITIVE_TYPE::UINT32:{return lhs.ui32 == rhs.ui32; }
-			case aatc_PRIMITIVE_TYPE::UINT64:{return lhs.ui64 == rhs.ui64; }
-			case aatc_PRIMITIVE_TYPE::FLOAT32:{return lhs.f32 == rhs.f32; }
-			case aatc_PRIMITIVE_TYPE::FLOAT64:{return lhs.f64 == rhs.f64; }
-		};
-	}
-	if(datahandlingid_key == aatc_DATAHANDLINGTYPE::STRING){
-		return (*((aatc_type_string*)lhs.ptr)) == (*((aatc_type_string*)rhs.ptr));
-	}
-	if(handlemode_directcomp){
-		return lhs.ptr == rhs.ptr;
-	}
-
-	bool result;
-
-	asIScriptContext* cc = els->contextcache_Get();
-	cc->Prepare(func_equals);
-	cc->SetObject(const_cast<void*>(lhs.ptr));
-	cc->SetArgObject(0, const_cast<void*>(rhs.ptr));
-	cc->Execute();
-	result = (cc->GetReturnDWord() != 0);
-
-	els->contextcache_Return(cc);
-
-	return result;
-}
-
-aatc_containerfunctor_map_hash::aatc_containerfunctor_map_hash(asIScriptEngine* _engine, aatc_containerfunctor_map_Settings* settings) :
-engine(_engine),
-host_settings(settings),
-need_init(1)
-{
-	els = (aatc_engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
-}
-aatc_hash_type aatc_containerfunctor_map_hash::operator()(const aatc_primunion& pu) const{
-	if(need_init){
-		//need_init = 0;
-		//func_hash = host_settings->func_hash;
-		//handlemode_directcomp = host_settings->handlemode_directcomp;
-		(const_cast<aatc_containerfunctor_map_hash*>(this))->need_init = 0;
-		(const_cast<aatc_containerfunctor_map_hash*>(this))->handlemode_directcomp = host_settings->handlemode_directcomp;
-		(const_cast<aatc_containerfunctor_map_hash*>(this))->datahandlingid_key = host_settings->datahandlingid_key;
-		(const_cast<aatc_containerfunctor_map_hash*>(this))->primitiveid_key = host_settings->primitiveid_key;
-		(const_cast<aatc_containerfunctor_map_hash*>(this))->func_hash = host_settings->func_hash;
-	}
-	if(datahandlingid_key == aatc_DATAHANDLINGTYPE::PRIMITIVE){
-		switch(primitiveid_key){
-			case aatc_PRIMITIVE_TYPE::INT8:{return (aatc_hash_type)pu.i8; }
-			case aatc_PRIMITIVE_TYPE::INT16:{return (aatc_hash_type)pu.i16; }
-			case aatc_PRIMITIVE_TYPE::INT32:{return (aatc_hash_type)pu.i32; }
-			case aatc_PRIMITIVE_TYPE::INT64:{return (aatc_hash_type)pu.i64; }
-			case aatc_PRIMITIVE_TYPE::UINT8:{return (aatc_hash_type)pu.ui8; }
-			case aatc_PRIMITIVE_TYPE::UINT16:{return (aatc_hash_type)pu.ui16; }
-			case aatc_PRIMITIVE_TYPE::UINT32:{return (aatc_hash_type)pu.ui32; }
-			case aatc_PRIMITIVE_TYPE::UINT64:{return (aatc_hash_type)pu.ui64; }
-			case aatc_PRIMITIVE_TYPE::FLOAT32:{return (aatc_hash_type)pu.f32; }
-			case aatc_PRIMITIVE_TYPE::FLOAT64:{return (aatc_hash_type)pu.f64; }
-		};
-	}
-	if(datahandlingid_key == aatc_DATAHANDLINGTYPE::STRING){
-		return aatc_functor_hash<aatc_type_string>()(*((aatc_type_string*)pu.ptr));
-	}
-	if(handlemode_directcomp){
-		return (aatc_hash_type)pu.ptr;
-		//return reinterpret_cast<std::size_t>(ptr);
-	}
-
-	aatc_hash_type result;
-
-	asIScriptContext* cc = els->contextcache_Get();
-	cc->Prepare(func_hash);
-	cc->SetObject(const_cast<void*>(pu.ptr));
-	if(cc->Execute() == asEXECUTION_EXCEPTION){
-		result = 0;
-	} else{
-		result = cc->GetReturnQWord();
-	}
-	els->contextcache_Return(cc);
-
-	return result;
-}
-//MAP FUNCTORS
-//MAP FUNCTORS
-//MAP FUNCTORS
-
-
-
-
-
-aatc_script_Funcpointer::aatc_script_Funcpointer() :
-	//dedicated_context(NULL),
-	ready(0),
-	func(NULL)
-{
-}
-aatc_script_Funcpointer::~aatc_script_Funcpointer(){
-	//ReleaseRef();
-}
-
-aatc_script_Funcpointer* aatc_script_Funcpointer::Factory(){
-	return new aatc_script_Funcpointer();
-}
-
-bool aatc_script_Funcpointer::Set(aatc_type_string _funcname){
-	asIScriptContext* ctx = asGetActiveContext();
-	engine = ctx->GetEngine();
-
-	funcname = _funcname;
-	ready = 0;
-	func = NULL;
-	is_thiscall = 0;
-
-	const char* funcname_c = funcname.c_str();
-
-	//application registered global functions
-	func = engine->GetGlobalFunctionByDecl(funcname_c);
-	//not found? script module global functions
-	if (!func){
-		for (uint_fast32_t i = 0; i < engine->GetModuleCount(); i++){
-			func = engine->GetModuleByIndex(i)->GetFunctionByName(funcname_c);
-			if (func){ break; }
+		script_Funcpointer* script_Funcpointer::Factory(){
+			return new script_Funcpointer();
 		}
-	}
 
-	if (func){
-		ready = 1;
-	}
-	return ready;
-}
-bool aatc_script_Funcpointer::Set(aatc_type_string _funcname, void* ref, int tid){
-	funcname = _funcname;
-	ready = 0;
-	func = NULL;
-	is_thiscall = 1;
-
-	const char* funcname_c = funcname.c_str();
-
-	if (ref){
-		if ((tid & asTYPEID_MASK_OBJECT) && (tid & asTYPEID_OBJHANDLE)){//must be not primitive and a handle
-			so = static_cast<asIScriptObject*>(*((void**)ref));
-
-			func = so->GetObjectType()->GetMethodByName(funcname_c);
-			if (func){
-				ready = 1;
-			}
-		}else{//error
+		bool script_Funcpointer::Set(config::t::string _funcname){
 			asIScriptContext* ctx = asGetActiveContext();
 			engine = ctx->GetEngine();
 
-			char textbuf[1024];
-			sprintf_s(textbuf,1024, aatc_errormessage_funcpointer_nothandle,engine->GetObjectTypeById(tid)->GetName());
-			ctx->SetException(textbuf);
+			funcname = _funcname;
+			ready = 0;
+			func = NULL;
+			is_thiscall = 0;
+			so = NULL;
+
+			const char* funcname_c = funcname.c_str();
+
+			//application registered global functions
+			func = engine->GetGlobalFunctionByDecl(funcname_c);
+			//not found? script module global functions
+			if (!func){
+				for (uint_fast32_t i = 0; i < engine->GetModuleCount(); i++){
+					func = engine->GetModuleByIndex(i)->GetFunctionByName(funcname_c);
+					if (func){ break; }
+				}
+			}
+
+			if (func){
+				ready = 1;
+			}
+			return ready;
 		}
-	}
-	return ready;
-}
-void aatc_script_Funcpointer::Clear(){
-	ready = 0;
-}
+		bool script_Funcpointer::Set(config::t::string _funcname, void* ref, int tid){
+			funcname = _funcname;
+			ready = 0;
+			func = NULL;
+			is_thiscall = 1;
 
-void aatc_script_Funcpointer::Prepare(asIScriptContext* context){
-	if (ready){
-		context->Prepare(func);
-		if (is_thiscall){context->SetObject(so);}
-	}
-}
-void aatc_script_Funcpointer::Execute(asIScriptContext* context){
-	if (ready){
-		context->Execute();
-	}
-}
+			const char* funcname_c = funcname.c_str();
 
-void aatc_script_Funcpointer::scriptsidecall_CallVoid(){
-	aatc_engine_level_storage* els = (aatc_engine_level_storage*)asGetActiveContext()->GetEngine()->GetUserData(aatc_engine_userdata_id);
-	asIScriptContext* c = els->contextcache_Get();
-		Prepare(c);
-		Execute(c);
-	els->contextcache_Return(c);
-}
+			if (ref){
+				if ((tid & asTYPEID_MASK_OBJECT) && (tid & asTYPEID_OBJHANDLE)){//must be not primitive and a handle
+					so = static_cast<asIScriptObject*>(*((void**)ref));
 
-//void aatc_script_Funcpointer::ReleaseRef(){
-//	ref.Set(NULL, NULL);
-//}
+					func = so->GetObjectType()->GetMethodByName(funcname_c);
+					if (func){
+						ready = 1;
+					}
+				}else{//error
+					asIScriptContext* ctx = asGetActiveContext();
+					engine = ctx->GetEngine();
 
-aatc_engine_level_storage* aatc_Get_ELS(asIScriptEngine* engine){
-	return (aatc_engine_level_storage*)engine->GetUserData(aatc_engine_userdata_id);
-}
-asIScriptContext* aatc_contextcache_Get(){
-	aatc_engine_level_storage* els = aatc_Get_ELS(asGetActiveContext()->GetEngine());
-	return els->contextcache_Get();
-}
-void aatc_contextcache_Return(asIScriptContext* c){
-	aatc_engine_level_storage* els = aatc_Get_ELS(asGetActiveContext()->GetEngine());
-	els->contextcache_Return(c);
-}
-
-
-void aatc_errorprint_container_missingfunctions_operation_missing(const char* name_container, const char* name_content, const char* name_operation){
-#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
-	char msg[1000];
-	//sprintf_s(msg, 1000, aatc_errormessage_container_missing_method_formatting, name_content, name_container, name_operation);
-	sprintf_s(msg, 1000, aatc_errormessage_container_missingfunctions_formatting, aatc_errormessage_container_missingfunctions_formatting_param1, aatc_errormessage_container_missingfunctions_formatting_param2, aatc_errormessage_container_missingfunctions_formatting_param3);
-	asGetActiveContext()->SetException(msg);
-#endif
-}
-void aatc_errorprint_container_access_empty(const char* name_container, const char* name_content, const char* name_operation){
-#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
-	char msg[1000];
-	//sprintf_s(msg, 1000, aatc_errormessage_container_missing_method_formatting, name_content, name_container, name_operation);
-	sprintf_s(msg, 1000, aatc_errormessage_container_access_empty_formatting, aatc_errormessage_container_access_empty_formatting_param1, aatc_errormessage_container_access_empty_formatting_param2, aatc_errormessage_container_access_empty_formatting_param3);
-	asGetActiveContext()->SetException(msg);
-#endif
-}
-void aatc_errorprint_container_access_bounds(aatc_type_sizetype index, aatc_type_sizetype size, const char* name_container, const char* name_content, const char* name_operation){
-#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
-	char msg[1000];
-	//sprintf_s(msg, 1000, aatc_errormessage_container_missing_method_formatting, name_content, name_container, name_operation);
-	sprintf_s(msg, 1000,
-		aatc_errormessage_container_access_bounds_formatting,
-		aatc_errormessage_container_access_bounds_formatting_param1,
-		aatc_errormessage_container_access_bounds_formatting_param2,
-		aatc_errormessage_container_access_bounds_formatting_param3,
-		aatc_errormessage_container_access_bounds_formatting_param4,
-		aatc_errormessage_container_access_bounds_formatting_param5
-	);
-	asGetActiveContext()->SetException(msg);
-#endif
-}
-
-void aatc_errorprint_iterator_container_modified(){
-	#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
-		asGetActiveContext()->SetException(aatc_errormessage_iterator_container_modified);
-	#endif
-}
-void aatc_errorprint_container_iterator_invalid(){
-	#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
-		asGetActiveContext()->SetException(aatc_errormessage_container_iterator_invalid);
-	#endif
-}
-
-
-
-aatc_DATAHANDLINGTYPE aatc_Determine_Datahandlingtype(asIScriptEngine* engine,aatc_type_uint32 astypeid){
-	if(astypeid == engine->GetStringFactoryReturnTypeId()){
-		return aatc_DATAHANDLINGTYPE::STRING;
-	}
-	if(astypeid & asTYPEID_MASK_OBJECT){
-		if(astypeid & asTYPEID_OBJHANDLE){
-			return aatc_DATAHANDLINGTYPE::HANDLE;
-		} else{
-			return aatc_DATAHANDLINGTYPE::OBJECT;
+					char textbuf[1024];
+					RegistrationState::Format_static(textbuf,1024, aatc_errormessage_funcpointer_nothandle,engine->GetTypeInfoById(tid)->GetName());
+					ctx->SetException(textbuf);
+				}
+			}
+			return ready;
 		}
-	} else{
-		return aatc_DATAHANDLINGTYPE::PRIMITIVE;
-	}
-}
-aatc_PRIMITIVE_TYPE aatc_Determine_Primitivetype(aatc_type_uint32 astypeid){
-	switch(astypeid){
-		case asTYPEID_BOOL:{return aatc_PRIMITIVE_TYPE::INT8; }
-		case asTYPEID_INT8:{return aatc_PRIMITIVE_TYPE::INT8; }
-		case asTYPEID_INT16:{return aatc_PRIMITIVE_TYPE::INT16; }
-		case asTYPEID_INT32:{return aatc_PRIMITIVE_TYPE::INT32; }
-		case asTYPEID_INT64:{return aatc_PRIMITIVE_TYPE::INT64; }
-		case asTYPEID_UINT8:{return aatc_PRIMITIVE_TYPE::UINT8; }
-		case asTYPEID_UINT16:{return aatc_PRIMITIVE_TYPE::UINT16; }
-		case asTYPEID_UINT32:{return aatc_PRIMITIVE_TYPE::UINT32; }
-		case asTYPEID_UINT64:{return aatc_PRIMITIVE_TYPE::UINT64; }
-		case asTYPEID_FLOAT:{return aatc_PRIMITIVE_TYPE::FLOAT32; }
-		case asTYPEID_DOUBLE:{return aatc_PRIMITIVE_TYPE::FLOAT64; }
-		default: {return aatc_PRIMITIVE_TYPE::INT8; }
-	};
-}
+		void script_Funcpointer::Clear(){
+			ready = 0;
+		}
 
-aatc_container_operations_bitmask_type aatc_errorcheck_container_type_missing_functions_base(int CONTAINER_ID, aatc_template_specific_storage* tss){
-	switch(CONTAINER_ID){
-		case aatc_CONTAINERTYPE::VECTOR: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::VECTOR>(tss);
-		case aatc_CONTAINERTYPE::LIST: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::LIST>(tss);
-		case aatc_CONTAINERTYPE::SET: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::SET>(tss);
-		case aatc_CONTAINERTYPE::UNORDERED_SET: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::UNORDERED_SET>(tss);
-		case aatc_CONTAINERTYPE::MAP: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::MAP>(tss);
-		case aatc_CONTAINERTYPE::UNORDERED_MAP: return aatc_errorcheck_container_type_missing_functions<aatc_CONTAINERTYPE::UNORDERED_MAP>(tss);
-	};
-	return 0;
-}
+		void script_Funcpointer::Prepare(asIScriptContext* context){
+			if (ready){
+				context->Prepare(func);
+				if (is_thiscall){context->SetObject(so);}
+			}
+		}
+		void script_Funcpointer::Execute(asIScriptContext* context){
+			if (ready){
+				context->Execute();
+			}
+		}
+
+		void script_Funcpointer::scriptsidecall_CallVoid(){
+			enginestorage::engine_level_storage* els = enginestorage::Get_ELS(asGetActiveContext()->GetEngine());
+			asIScriptContext* c = els->contextcache_Get();
+				Prepare(c);
+				Execute(c);
+			els->contextcache_Return(c);
+		}
 
 
 
-//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<bool>(bool* input){ return asTYPEID_BOOL; }
-//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int8>(aatc_type_int8* input){ return asTYPEID_INT8; }
-//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int16>(aatc_type_int16* input){ return asTYPEID_INT16; }
-//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int32>(aatc_type_int32* input){ return asTYPEID_INT32; }
-//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_int64>(aatc_type_int64* input){ return asTYPEID_INT64; }
-//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint8>(aatc_type_uint8* input){ return asTYPEID_UINT8; }
-//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint16>(aatc_type_uint16* input){ return asTYPEID_UINT16; }
-//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint32>(aatc_type_uint32* input){ return asTYPEID_UINT32; }
-//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_uint64>(aatc_type_uint64* input){ return asTYPEID_UINT64; }
-//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float32>(aatc_type_float32* input){ return asTYPEID_FLOAT; }
-//template<> aatc_type_astypeid aatc_get_primitive_astypeid_by_cpptype<aatc_type_float64>(aatc_type_float64* input){ return asTYPEID_DOUBLE; }
-
-aatc_container_base::aatc_container_base()
-{
-	#if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS
-		iterator_safety_version = 0;
-	#endif
-}
-aatc_container_base::~aatc_container_base(){}
-
-aatc_iterator_base::aatc_iterator_base():
-	firstt(1)
-{}
-aatc_iterator_base::aatc_iterator_base(const aatc_iterator_base& other) :
-	firstt(other.firstt),
-	cont(other.cont)
-{}
-
-
-
-void* aatc_primunion::Get_Ptr_To_Primitive_Type(aatc_PRIMITIVE_TYPE primtype){
-	switch(primtype){
-		case aatc_PRIMITIVE_TYPE::INT8:{return &i8; }
-		case aatc_PRIMITIVE_TYPE::INT16:{return &i16; }
-		case aatc_PRIMITIVE_TYPE::INT32:{return &i32; }
-		case aatc_PRIMITIVE_TYPE::INT64:{return &i64; }
-		case aatc_PRIMITIVE_TYPE::UINT8:{return &ui8; }
-		case aatc_PRIMITIVE_TYPE::UINT16:{return &ui16; }
-		case aatc_PRIMITIVE_TYPE::UINT32:{return &ui32; }
-		case aatc_PRIMITIVE_TYPE::UINT64:{return &ui64; }
-		case aatc_PRIMITIVE_TYPE::FLOAT32:{return &f32; }
-		case aatc_PRIMITIVE_TYPE::FLOAT64:{return &f64; }
-	};
-	return nullptr;
-}
-const void* aatc_primunion::Get_Ptr_To_Primitive_Type_const(aatc_PRIMITIVE_TYPE primtype)const{
-	return const_cast<aatc_primunion*>(this)->Get_Ptr_To_Primitive_Type(primtype);
-	//return const_cast<void*>(Get_Ptr_To_Primitive_Type(primtype));
-}
-
-void aatc_primunion::Init(){
-	ui32 = 0;
-	ptr = nullptr;
-}
+		namespace errorprint {
+			namespace container {
+				void missingfunctions_operation_missing(const char* name_container, const char* name_content, const char* name_operation) {
+					#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+						char msg[1000];
+						RegistrationState::Format_static(msg, 1000, aatc_errormessage_container_missingfunctions_formatting, aatc_errormessage_container_missingfunctions_formatting_param1, aatc_errormessage_container_missingfunctions_formatting_param2, aatc_errormessage_container_missingfunctions_formatting_param3);
+						asGetActiveContext()->SetException(msg);
+					#endif
+				}
+				void access_empty(const char* name_container, const char* name_content, const char* name_operation) {
+					#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+						char msg[1000];
+						RegistrationState::Format_static(msg, 1000, aatc_errormessage_container_access_empty_formatting, aatc_errormessage_container_access_empty_formatting_param1, aatc_errormessage_container_access_empty_formatting_param2, aatc_errormessage_container_access_empty_formatting_param3);
+						asGetActiveContext()->SetException(msg);
+					#endif
+				}
+				void access_bounds(config::t::sizetype index, config::t::sizetype size, const char* name_container, const char* name_content, const char* name_operation) {
+					#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+						char msg[1000];
+						RegistrationState::Format_static(msg, 1000,
+							aatc_errormessage_container_access_bounds_formatting,
+							aatc_errormessage_container_access_bounds_formatting_param1,
+							aatc_errormessage_container_access_bounds_formatting_param2,
+							aatc_errormessage_container_access_bounds_formatting_param3,
+							aatc_errormessage_container_access_bounds_formatting_param4,
+							aatc_errormessage_container_access_bounds_formatting_param5
+							);
+						asGetActiveContext()->SetException(msg);
+					#endif
+				}
+				void iterator_invalid() {
+					#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+						asGetActiveContext()->SetException(config::errormessage::iterator::is_invalid);
+					#endif
+				}
+			};
+			namespace iterator {
+				void container_modified() {
+					#if aatc_CONFIG_ENABLE_ERRORCHECK_RUNTIME_EXCEPTIONS
+						asGetActiveContext()->SetException(config::errormessage::iterator::container_modified);
+					#endif
+				}
+			};
+		};
 
 
 
+
+		DATAHANDLINGTYPE Determine_Datahandlingtype(asIScriptEngine* engine,config::t::uint32 astypeid){
+			if(astypeid == engine->GetStringFactoryReturnTypeId()){
+				return DATAHANDLINGTYPE::STRING;
+			}
+			if(astypeid & asTYPEID_MASK_OBJECT){
+				if(astypeid & asTYPEID_OBJHANDLE){
+					return DATAHANDLINGTYPE::HANDLE;
+				} else{
+					return DATAHANDLINGTYPE::OBJECT;
+				}
+			} else{
+				return DATAHANDLINGTYPE::PRIMITIVE;
+			}
+		}
+		PRIMITIVE_TYPE Determine_Primitivetype(config::t::uint32 astypeid){
+			switch(astypeid){
+				case asTYPEID_BOOL:{return PRIMITIVE_TYPE::INT8; }
+				case asTYPEID_INT8:{return PRIMITIVE_TYPE::INT8; }
+				case asTYPEID_INT16:{return PRIMITIVE_TYPE::INT16; }
+				case asTYPEID_INT32:{return PRIMITIVE_TYPE::INT32; }
+				case asTYPEID_INT64:{return PRIMITIVE_TYPE::INT64; }
+				case asTYPEID_UINT8:{return PRIMITIVE_TYPE::UINT8; }
+				case asTYPEID_UINT16:{return PRIMITIVE_TYPE::UINT16; }
+				case asTYPEID_UINT32:{return PRIMITIVE_TYPE::UINT32; }
+				case asTYPEID_UINT64:{return PRIMITIVE_TYPE::UINT64; }
+				case asTYPEID_FLOAT:{return PRIMITIVE_TYPE::FLOAT32; }
+				case asTYPEID_DOUBLE:{return PRIMITIVE_TYPE::FLOAT64; }
+				default: {return PRIMITIVE_TYPE::INT8; }
+			};
+		}
+
+
+
+		void* primunion::Get_Ptr_To_Primitive_Type(PRIMITIVE_TYPE primtype){
+			switch(primtype){
+				case PRIMITIVE_TYPE::INT8:{return &i8; }
+				case PRIMITIVE_TYPE::INT16:{return &i16; }
+				case PRIMITIVE_TYPE::INT32:{return &i32; }
+				case PRIMITIVE_TYPE::INT64:{return &i64; }
+				case PRIMITIVE_TYPE::UINT8:{return &ui8; }
+				case PRIMITIVE_TYPE::UINT16:{return &ui16; }
+				case PRIMITIVE_TYPE::UINT32:{return &ui32; }
+				case PRIMITIVE_TYPE::UINT64:{return &ui64; }
+				case PRIMITIVE_TYPE::FLOAT32:{return &f32; }
+				case PRIMITIVE_TYPE::FLOAT64:{return &f64; }
+			};
+			return nullptr;
+		}
+		const void* primunion::Get_Ptr_To_Primitive_Type_const(PRIMITIVE_TYPE primtype)const{
+			return const_cast<primunion*>(this)->Get_Ptr_To_Primitive_Type(primtype);
+			//return const_cast<void*>(Get_Ptr_To_Primitive_Type(primtype));
+		}
+
+		void primunion::From_voidptr_to_primitive(void* target, PRIMITIVE_TYPE primtype) {
+			switch (primtype) {
+				case common::PRIMITIVE_TYPE::INT8: { i8 = *((config::t::int8*)target); break; }
+				case common::PRIMITIVE_TYPE::INT16: { i16 = *((config::t::int16*)target); break; }
+				case common::PRIMITIVE_TYPE::INT32: { i32 = *((config::t::int32*)target); break; }
+				case common::PRIMITIVE_TYPE::INT64: { i64 = *((config::t::int64*)target); break; }
+				case common::PRIMITIVE_TYPE::UINT8: { ui8 = *((config::t::uint8*)target); break; }
+				case common::PRIMITIVE_TYPE::UINT16: { ui16 = *((config::t::uint16*)target); break; }
+				case common::PRIMITIVE_TYPE::UINT32: { ui32 = *((config::t::uint32*)target); break; }
+				case common::PRIMITIVE_TYPE::UINT64: { ui64 = *((config::t::uint64*)target); break; }
+				case common::PRIMITIVE_TYPE::FLOAT32: { f32 = *((config::t::float32*)target); break; }
+				case common::PRIMITIVE_TYPE::FLOAT64: { f64 = *((config::t::float64*)target); break; }
+			};
+		}
+
+		void primunion::Init(){
+			ui32 = 0;
+			ptr = nullptr;
+		}
+
+
+
+
+
+		RegistrationState::RegistrationState(asIScriptEngine* engine):
+			engine(engine),
+			error(0)
+		{}
+		void RegistrationState::Format(const char* msg, ...) {
+			va_list argptr;
+			va_start(argptr, msg);
+
+			#if __STDC_WANT_SECURE_LIB__
+				vsprintf_s(textbuf, RegistrationState::bufsize, msg, argptr);
+			#else
+				vsprintf(textbuf, msg, argptr);
+			#endif
+
+			va_end(argptr);
+		}
+		void RegistrationState::Format_static(char* buffer, int buffer_size, const char* msg, ...) {
+			va_list argptr;
+			va_start(argptr, msg);
+
+			#if __STDC_WANT_SECURE_LIB__
+				vsprintf_s(buffer, buffer_size, msg, argptr);
+			#else
+				vsprintf(buffer, msg, argptr);
+			#endif
+
+			va_end(argptr);
+		}
+
+
+
+	};//namespace common
+};//namespace aatc
 END_AS_NAMESPACE

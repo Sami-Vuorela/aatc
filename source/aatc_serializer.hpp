@@ -34,87 +34,88 @@ samivuorela@gmail.com
 #include "aatc_config.hpp"
 #if aatc_CONFIG_USE_ASADDON_SERIALIZER
 
-#include <functional>
 #include "aatc.hpp"
 #include "aatc_common.hpp"
+#include "aatc_enginestorage.hpp"
+#include "aatc_container_shared.hpp"
 #include aatc_serializer_addonpath
 
 BEGIN_AS_NAMESPACE
+namespace aatc {
+	namespace serializer {
+
+
+
+		namespace engine_registration {
+			template<typename T> bool container_basicbase_is_thistype(container::shared::container_basicbase* base) {
+				return dynamic_cast<T*>(base) != nullptr;
+			}
+			template<typename T> void store(container::shared::container_basicbase* base, CSerializedValue* val_root) {
+				T* container = static_cast<T*>(base);
+				if (container) {
+					val_root->SetUserData(new T(*container));
+				}
+			}
+			template<typename T> void restore(container::shared::container_basicbase* base, CSerializedValue* val_root) {
+				T* container = static_cast<T*>(base);
+				if (container) {
+					T* buffer = (T*)val_root->GetUserData();
+					*container = *buffer;
+				}
+			}
+			template<typename T> void cleanup(container::shared::container_basicbase* base, CSerializedValue* val_root) {
+				T* buffer = (T*)val_root->GetUserData();
+				delete buffer;
+			}
+
+			template<typename T_container, int containertype_id> void Register_els_helpers_for_tempspec(enginestorage::engine_level_storage* els, const char* n_content) {
+				els->serializer_tempspec_helpers[containertype_id].push_back(enginestorage::engine_level_storage::serializer_helper());
+				enginestorage::engine_level_storage::serializer_helper& sh = els->serializer_tempspec_helpers[containertype_id].back();
+
+				sh.funcptr_is_thistype = container_basicbase_is_thistype<T_container>;
+				sh.container_content_name = n_content;
+				sh.funcptr_process_store = store<T_container>;
+				sh.funcptr_process_restore = restore<T_container>;
+				sh.funcptr_process_cleanup = cleanup<T_container>;
+			}
+		};//namespace engine_registration
 
 
 
 
+		class serializer_specific_storage{
+		public:
+			class Container_1tp{
+			public:
+				container::shared::container_basicbase* container;
+				int containertype_id;
+				std::vector<void*> objects;
+			};
+			class Container_map{
+			public:
+				container::shared::container_basicbase* container;
+				int containertype_id;
+				std::vector<common::primunion_pair> objects;
+			};
 
-template<typename T> bool aatc_serializer_containerbase_is_thistype(aatc_container_base* base){
-	return dynamic_cast<T*>(base) != nullptr;
-}
-template<typename T> void aatc_serializer_usertype_container_shared_1tp_tempspec_store(aatc_container_base* base, CSerializedValue* val_root){
-	T* container = static_cast<T*>(base);
-	if(container){
-		val_root->SetUserData(new T(*container));
-	}
-}
-template<typename T> void aatc_serializer_usertype_container_shared_1tp_tempspec_restore(aatc_container_base* base, CSerializedValue* val_root){
-	T* container = static_cast<T*>(base);
-	if(container){
-		T* buffer = (T*)val_root->GetUserData();
-		*container = *buffer;
-	}
-}
-template<typename T> void aatc_serializer_usertype_container_shared_1tp_tempspec_cleanup(aatc_container_base* base, CSerializedValue* val_root){
-	T* buffer = (T*)val_root->GetUserData();
-	delete buffer;
-}
+			struct Containertype_metadata {
+				void (*store_handle_in_container_1tp)(container::shared::container_basicbase* base, void* item);
+				void (*store_handle_in_container_map)(container::shared::container_basicbase* base, common::primunion_pair& item);
+			};
 
-template<typename dt_container, int containertype_id> void aatc_serializer_register_container_shared_1tp_tempspec_helpers(aatc_engine_level_storage* els, const char* n_content){
-	els->serializer_tempspec_helpers[containertype_id].push_back(aatc_engine_level_storage::serializer_helper());
-	els->serializer_tempspec_helpers[containertype_id].back().funcptr_is_thistype = aatc_serializer_containerbase_is_thistype<dt_container>;
-	els->serializer_tempspec_helpers[containertype_id].back().container_content_name = n_content;
-	els->serializer_tempspec_helpers[containertype_id].back().funcptr_process_store = aatc_serializer_usertype_container_shared_1tp_tempspec_store<dt_container>;
-	els->serializer_tempspec_helpers[containertype_id].back().funcptr_process_restore = aatc_serializer_usertype_container_shared_1tp_tempspec_restore<dt_container>;
-	els->serializer_tempspec_helpers[containertype_id].back().funcptr_process_cleanup = aatc_serializer_usertype_container_shared_1tp_tempspec_cleanup<dt_container>;
-}
+			std::list<Container_1tp> containers_1tp;
+			std::list<Container_map> containers_map;
 
+			Containertype_metadata containertype_metadatas[container::listing::CONTAINER::_COUNT];
+		};
 
-class aatc_serializer_specific_storage{
-public:
-	class Container_1tp{
-	public:
-		aatc_container_base* container;
-		int containertype_id;
-		std::vector<void*> objects;
-
-		Container_1tp();
-		~Container_1tp();
-	};
-	class Container_map{
-	public:
-		aatc_container_base* container;
-		int containertype_id;
-		std::vector<aatc_primunion_pair> objects;
-
-		Container_map();
-		~Container_map();
-	};
-
-	typedef std::function<void(aatc_container_base*, void*)> store_handle_in_container_1tp;
-	typedef std::function<void(aatc_container_base*, aatc_primunion_pair&)> store_handle_in_container_map;
-
-	std::list<Container_1tp> containers_1tp;
-	std::list<Container_map> containers_map;
-
-	store_handle_in_container_1tp funcs_store_handle_1tp[aatc_CONTAINERTYPE::_COUNT];
-	store_handle_in_container_map funcs_store_handle_map[aatc_CONTAINERTYPE::_COUNT];
-
-
-	aatc_serializer_specific_storage(asIScriptEngine* engine, CSerializer* serializer);
-	~aatc_serializer_specific_storage();
-};
-//global for now, while as addon serializer does not have serializer-object-specific userdata
-extern aatc_serializer_specific_storage* aatc_serializer_specific_storage_global;
+		//global for now, while as addon serializer does not have serializer-object-specific userdata
+		extern serializer_specific_storage* aatc_serializer_specific_storage_global;
 
 
 
+	};//namespace serializer
+};//namespace aatc
 END_AS_NAMESPACE
 #endif
 #endif

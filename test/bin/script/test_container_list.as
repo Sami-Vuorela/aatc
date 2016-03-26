@@ -134,6 +134,7 @@ void TestContainer_list(){
 			}else{
 				cont.erase_value(m3);
 			}
+			
 			cont.pop_front();
 			cont.pop_back();
 			cont.push_back(Material("Xx40xX",0));
@@ -148,6 +149,7 @@ void TestContainer_list(){
 			//	Print("  content["+i+"] = "+it.current().name);
 			//	i++;
 			//}
+			
 			if(cont.size() == 4){
 				test_success = true;
 				list_iterator<Material@> it(@cont);

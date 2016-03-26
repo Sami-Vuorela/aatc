@@ -4,6 +4,8 @@ http://www.cplusplus.com/reference/stl/
 \n
 - \subpage page_manual_usage_registration
 - \subpage page_manual_usage_registration_tempspec
+- \subpage page_manual_usage_registration_hash
 - \subpage page_manual_usage_script_interface
 - \subpage page_manual_usage_serializer_addon
+- \subpage page_manual_usage_interop
 */

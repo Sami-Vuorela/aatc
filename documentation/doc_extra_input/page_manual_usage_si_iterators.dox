@@ -16,28 +16,28 @@
 		void set_value(T value);
 		
 		bool next();
+		bool opPreInc();//++operator, same thing as next, but with 71% less keypresses and 100% more operator overloading swag
 		bool opPostInc();//operator++, same thing as next, but with 71% less keypresses and 100% more operator overloading swag
 		
 		bool opEquals(const vector_iterator &in other);
 		
 		//check if this iterator equals it's container's end() without building any AS objects
 		bool IsEnd();
+		
+		/*
+			Ensure that this iterator's host container has not been modified during iteration.
+			Using an invalid iterator will cause an Angelscript exception.
+			
+			if aatc_CONFIG_ENABLE_ERRORCHECK_ITERATOR_SAFETY_VERSION_NUMBERS is not set to 1, this will always return true
+		*/
+		bool IsValid();
 	};
 \endcode
 <p>The "next" method evaluates iteration ending and advances the iterator.</p>
 <p>The "map" and "unordered_map" containers' iterators can access both the key and value with the same iterator. Their iterators dont have a "current" method, instead they have "current_key" and "current_value". "current_key" returns a const reference to preserve the container's ordering.</p>
 \n
 \par Examples
-<p>Example of iterating through a vector, clunkiest syntax:</p>
-\code{.cpp}
-	vector<int> cont;
-	cont.push_back(1);
-	cont.push_back(2);
-	cont.push_back(3);
-	for(vector_iterator<int> it(@cont); it++;){
-		Print("content = "+it.current());
-	}
-\endcode
+
 <p>Example of iterating through a vector, neatest syntax:</p>
 \code{.cpp}
 	vector<int> cont;
@@ -48,12 +48,25 @@
 		Print("content = " + it.value);
 	}
 \endcode
+
+<p>Example of iterating through a vector, clunkiest syntax:</p>
+\code{.cpp}
+	vector<int> cont;
+	cont.push_back(1);
+	cont.push_back(2);
+	cont.push_back(3);
+	for(vector_iterator<int> it(@cont); it++;){
+		Print("content = "+it.current());
+	}
+\endcode
+
 <p>Both print:</p>
 \code{.cpp}
 content = 1
 content = 2
 content = 3
 \endcode
+
 <p>Note how the third parameter of the for loop is empty.</p>
 \n
 <p>Example of iterating through a map:</p>

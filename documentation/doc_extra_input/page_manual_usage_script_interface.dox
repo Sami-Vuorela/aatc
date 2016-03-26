@@ -7,6 +7,7 @@
 <p>Script interfaces of the containers themselves:</p>
 - \subpage page_manual_usage_si_vector
 - \subpage page_manual_usage_si_list
+- \subpage page_manual_usage_si_deque
 - \subpage page_manual_usage_si_set
 - \subpage page_manual_usage_si_unordered_set
 - \subpage page_manual_usage_si_map
