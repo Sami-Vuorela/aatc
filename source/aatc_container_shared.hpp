@@ -338,7 +338,7 @@ namespace aatc {
 
 
 			namespace autoregister {
-				template<template<typename T_content> typename tempspec_container_template> void register_all_tempspec_basics_for_container(asIScriptEngine* engine) {
+				template<template<typename T_content> class tempspec_container_template> void register_all_tempspec_basics_for_container(asIScriptEngine* engine) {
 					common::RegistrationState rs(engine);
 
 					tempspec_container_template<config::t::int8>::Register(rs, "int8");
