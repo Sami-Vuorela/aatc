@@ -94,7 +94,7 @@ namespace aatc {
 					int iteration_start,
 					int iteration_end,
 					int iteration_current,
-					template<int iteration_current> class functor_operate,
+					template<int > class functor_operate,
 					typename T_arg1
 				> class internal_functor {
 				public:
@@ -107,7 +107,7 @@ namespace aatc {
 				template<
 					int iteration_start,
 					int iteration_end,
-					template<int iteration_current> class functor_operate,
+					template<int > class functor_operate,
 					typename T_arg1
 				> class internal_functor<iteration_start, iteration_end, -1, functor_operate, T_arg1> {
 				public:
@@ -139,7 +139,7 @@ namespace aatc {
 					int iteration_start,
 					int iteration_end,
 					int iteration_current,
-					template<int iteration_current> class functor_operate,
+					template<int > class functor_operate,
 					typename T_arg1,
 					typename T_arg2
 				> struct internal_functor {
